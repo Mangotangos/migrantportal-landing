@@ -335,6 +335,45 @@
     .footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; }
     .footer-bottom a:hover { color: white; }
 
+    /* ─── HERO IMAGE ─────────────────────────────── */
+    .hero-image-wrap {
+      margin-top: 56px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.12);
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-image-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ─── MOBILE NAV DRAWER ───────────────────────── */
+    .mobile-nav-drawer {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px 16px 16px;
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .mobile-nav-drawer.open { display: flex; }
+    .mobile-nav-drawer a {
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 15px; font-weight: 500;
+      color: var(--gray-700); text-decoration: none;
+    }
+    .mobile-nav-drawer a:hover { background: var(--gray-100); }
+    .mobile-nav-drawer .mobile-cta {
+      margin-top: 4px;
+      background: var(--orange); color: white;
+      text-align: center; font-weight: 600; border-radius: 8px;
+    }
+    .mobile-nav-drawer .mobile-cta:hover { background: var(--orange-dark); }
+
     /* ─── RESPONSIVE ──────────────────────────────── */
     @media (max-width: 640px) {
       nav { padding: 0 16px; }
@@ -375,6 +414,14 @@
     </svg>
   </button>
 </nav>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav-drawer" id="mobileDrawer">
+  <a href="#how-it-works">How It Works</a>
+  <a href="#features">Features</a>
+  <a href="#impact">Impact</a>
+  <a href="#get-involved" class="mobile-cta">Get Involved</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -421,6 +468,9 @@
         <div class="hero-stat-num">Free</div>
         <div class="hero-stat-label">Always</div>
       </div>
+    </div>
+    <div class="hero-image-wrap">
+      <img src="community.png" alt="MigrantPortal — diverse community together" />
     </div>
   </div>
 </section>
@@ -636,5 +686,12 @@
   </div>
 </footer>
 
+<script>
+  // Mobile nav toggle
+  const menuBtn = document.querySelector('.nav-mobile-menu');
+  const drawer = document.getElementById('mobileDrawer');
+  menuBtn.addEventListener('click', () => drawer.classList.toggle('open'));
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
+</script>
 </body>
 </html>
