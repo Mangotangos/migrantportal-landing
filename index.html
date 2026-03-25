@@ -351,6 +351,39 @@
       display: block;
     }
 
+    /* ─── TESTIMONIALS ───────────────────────────── */
+    .testimonials { background: var(--gray-50); }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px; margin-top: 56px;
+    }
+    .testimonial-card {
+      background: white; border-radius: 20px; padding: 32px;
+      border: 1px solid var(--gray-200);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .testimonial-quote {
+      font-size: 16px; color: var(--gray-700);
+      line-height: 1.8; font-style: italic; margin-bottom: 24px;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .author-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--orange); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 16px; flex-shrink: 0;
+    }
+    .author-name { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+    .author-role { font-size: 13px; color: var(--gray-500); }
+
+    /* ─── FADE-IN ANIMATIONS ──────────────────────── */
+    .fade-in {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
     /* ─── MOBILE NAV DRAWER ───────────────────────── */
     .mobile-nav-drawer {
       display: none;
@@ -480,7 +513,7 @@
     <p class="section-sub">Every person in the MigrantPortal community plays a specific role in moving a family from crisis to stability.</p>
     <div class="how-grid">
 
-      <div class="role-card role-card-connector">
+      <div class="role-card role-card-connector fade-in">
         <div class="role-icon role-icon-connector">🤝</div>
         <span class="role-tag role-tag-connector">Connector</span>
         <h3>Submit Needs</h3>
@@ -493,7 +526,7 @@
         </div>
       </div>
 
-      <div class="role-card role-card-responder">
+      <div class="role-card role-card-responder fade-in">
         <div class="role-icon role-icon-responder">💚</div>
         <span class="role-tag role-tag-responder">Responder</span>
         <h3>Meet the Need</h3>
@@ -506,7 +539,7 @@
         </div>
       </div>
 
-      <div class="role-card role-card-admin">
+      <div class="role-card role-card-admin fade-in">
         <div class="role-icon role-icon-admin">🛡️</div>
         <span class="role-tag role-tag-admin">Admin</span>
         <h3>Verify &amp; Protect</h3>
@@ -540,55 +573,55 @@
     <p class="section-sub">Built from real needs of real families — every feature exists to move people from crisis to community.</p>
     <div class="features-grid">
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">📋</div>
         <h3>Live Needs Feed</h3>
         <p>Responders see a real-time feed of verified needs filtered by category, urgency, and location. Claim with one tap.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">👨‍👩‍👧</div>
         <h3>Family Profiles</h3>
         <p>Connectors build rich family profiles — origin country, language, adults, children — so responders can serve with context.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">💳</div>
         <h3>Secure Donations</h3>
         <p>Responders can donate directly to a specific need through Stripe. 100% of donations are tied to a verified family need.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">📅</div>
         <h3>Volunteer Scheduling</h3>
         <p>Organizations post volunteer shifts. Responders sign up, track hours, and build a lasting commitment to the community.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">📍</div>
         <h3>Map View</h3>
         <p>See all active needs plotted on a map. Color-coded by urgency. Tap to view details, claim, or donate from the map.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">📊</div>
         <h3>Impact Dashboard</h3>
         <p>Public stats showing fulfilled needs, categories served, top cities, and community leaderboard. Proof that it's working.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">💬</div>
         <h3>In-App Chat</h3>
         <p>Connectors and responders communicate directly within each need thread — no phone numbers shared, full privacy protected.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">🔔</div>
         <h3>Smart Notifications</h3>
         <p>Matched responders are notified the moment a relevant need is approved. Connectors are updated at every step of fulfillment.</p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card fade-in">
         <div class="feature-icon">📚</div>
         <h3>Resource Directory</h3>
         <p>Community-contributed directory of local services — legal aid, food banks, ESL classes, housing — searchable and categorized.</p>
@@ -620,6 +653,37 @@
       <div class="impact-card">
         <div class="impact-num">$0</div>
         <div class="impact-label">Cost to Families</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <p class="section-label">Community Voices</p>
+    <h2 class="section-title">Real stories, real impact</h2>
+    <p class="section-sub">Hear from the connectors and responders who make MigrantPortal possible.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-in">
+        <p class="testimonial-quote">"When Maria's family lost their apartment, I submitted a need through MigrantPortal. Within 48 hours, a local church had provided temporary housing and meals. The speed and compassion was overwhelming."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">SJ</div>
+          <div>
+            <div class="author-name">Sarah Johnson</div>
+            <div class="author-role">ESL Teacher &amp; Connector</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in">
+        <p class="testimonial-quote">"As a pastor, I've seen how MigrantPortal removes the barriers between wanting to help and actually helping. We now have a direct line to families in our community who need exactly what we can offer."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">DR</div>
+          <div>
+            <div class="author-name">Rev. David Rodriguez</div>
+            <div class="author-role">Grace Community Church</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -684,6 +748,12 @@
 </footer>
 
 <script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
   // Mobile nav toggle
   const menuBtn = document.querySelector('.nav-mobile-menu');
   const drawer = document.getElementById('mobileDrawer');
