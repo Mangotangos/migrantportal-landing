@@ -14,6 +14,7 @@
       --teal:    #009DA5;
       --teal-d:  #007c84;
       --orange:  #FF6129;
+      --orange-d:#e05020;
       --blue:    #0973A7;
       --text:    #0D0D0D;
       --gray-600:#555;
@@ -24,18 +25,15 @@
     }
     html { height: 100%; }
     body {
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      background: var(--gray-bg);
-      min-height: 100%;
+      font-family: 'Inter', sans-serif; color: var(--text);
+      background: var(--gray-bg); min-height: 100%;
       display: flex; flex-direction: column;
     }
     a { text-decoration: none; }
 
     /* ─── NAV ───────────────────────────────────── */
     nav {
-      background: white;
-      border-bottom: 1px solid var(--gray-200);
+      background: white; border-bottom: 1px solid var(--gray-200);
       padding: 0 40px; height: 56px;
       display: flex; align-items: center; justify-content: space-between;
     }
@@ -45,20 +43,18 @@
       font-weight: 800; font-size: 18px; color: var(--text);
     }
     .nav-logo-icon {
-      width: 32px; height: 32px; border-radius: 7px;
-      background: var(--orange);
+      width: 32px; height: 32px; border-radius: 7px; background: var(--orange);
       display: flex; align-items: center; justify-content: center;
       color: white; font-size: 16px; font-weight: 800;
     }
     .nav-back {
       font-size: 13px; color: var(--gray-600);
-      display: flex; align-items: center; gap: 6px;
-      transition: color 0.15s;
+      display: flex; align-items: center; gap: 6px; transition: color 0.15s;
     }
     .nav-back:hover { color: var(--teal); }
     .nav-back svg { width: 16px; height: 16px; }
 
-    /* ─── WIZARD SHELL ──────────────────────────── */
+    /* ─── WIZARD ────────────────────────────────── */
     .wizard-wrap {
       flex: 1; display: flex; align-items: flex-start;
       justify-content: center; padding: 48px 20px 80px;
@@ -68,61 +64,112 @@
       box-shadow: 0 2px 16px rgba(0,0,0,0.07);
       width: 100%; max-width: 560px;
       padding: 40px 48px 48px;
-      display: flex; flex-direction: column; gap: 0;
+      display: flex; flex-direction: column;
     }
 
-    /* ─── PROGRESS BAR ──────────────────────────── */
-    .progress-wrap {
-      display: flex; gap: 8px; margin-bottom: 36px;
+    /* ─── PROGRESS + BACK ───────────────────────── */
+    .progress-row {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 36px;
     }
+    .prog-back {
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: var(--gray-600); display: flex; align-items: center;
+      flex-shrink: 0; transition: color 0.15s;
+    }
+    .prog-back:hover { color: var(--teal); }
+    .prog-back svg { width: 20px; height: 20px; }
+    .prog-back.hidden { visibility: hidden; }
+    .progress-wrap { display: flex; gap: 8px; flex: 1; }
     .progress-seg {
       height: 8px; border-radius: 999px; flex: 1;
-      background: var(--gray-200);
-      transition: background 0.3s;
+      background: var(--gray-200); transition: background 0.3s;
     }
     .progress-seg.active { background: var(--teal); }
-    .progress-seg.done   { background: var(--teal); opacity: 0.5; }
+    .progress-seg.done   { background: var(--teal); opacity: 0.55; }
 
     /* ─── STEP ──────────────────────────────────── */
-    .step { display: none; flex-direction: column; gap: 0; }
+    .step { display: none; flex-direction: column; }
     .step.visible { display: flex; }
 
     .step-heading {
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(20px, 3vw, 26px);
-      font-weight: 800; color: var(--text);
-      text-align: center; margin-bottom: 12px;
+      font-size: clamp(20px, 3vw, 26px); font-weight: 800;
+      color: var(--text); margin-bottom: 12px;
     }
     .step-sub {
       font-size: 14px; color: var(--gray-600);
-      text-align: center; line-height: 1.6;
-      margin-bottom: 8px;
+      text-align: center; line-height: 1.6; margin-bottom: 8px;
     }
     .step-note {
       font-size: 14px; color: var(--gray-600);
-      text-align: center; line-height: 1.6;
-      margin-bottom: 28px;
+      text-align: center; line-height: 1.6; margin-bottom: 28px;
     }
     .step-note strong { color: var(--text); }
+    /* steps 1 center, others left-align */
+    #step-1 .step-heading { text-align: center; }
 
     /* ─── CHOICE CARDS ──────────────────────────── */
     .cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
     .card {
-      border: 1.5px solid var(--gray-200);
-      border-radius: 12px; padding: 20px 20px;
-      display: flex; gap: 16px; align-items: flex-start;
+      border: 1.5px solid var(--gray-200); border-radius: 12px;
+      padding: 20px; display: flex; gap: 16px; align-items: flex-start;
       cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
     }
     .card:hover { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,157,165,0.08); }
     .card.selected { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,157,165,0.12); }
     .card-icon { font-size: 36px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
-    .card-body {}
     .card-title {
       font-family: 'Montserrat', sans-serif;
-      font-size: 16px; font-weight: 700; color: var(--text);
-      margin-bottom: 6px;
+      font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px;
     }
     .card-desc { font-size: 14px; color: var(--gray-600); line-height: 1.55; }
+
+    /* ─── LOCATION STEP ─────────────────────────── */
+    .loc-label { font-size: 12px; color: var(--gray-600); margin-bottom: 8px; font-weight: 500; }
+    .loc-search-box {
+      border: 1.5px solid var(--gray-200); border-radius: 8px;
+      padding: 8px 12px; display: flex; align-items: center;
+      flex-wrap: wrap; gap: 6px; cursor: text; min-height: 46px;
+      transition: border-color 0.15s; margin-bottom: 24px;
+    }
+    .loc-search-box:focus-within { border-color: var(--teal); }
+    .loc-tag {
+      background: var(--gray-100); border-radius: 5px;
+      padding: 4px 8px; font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 6px; color: var(--text);
+    }
+    .loc-tag button {
+      background: none; border: none; cursor: pointer;
+      color: var(--gray-400); font-size: 15px; line-height: 1;
+      padding: 0; display: flex; align-items: center;
+    }
+    .loc-tag button:hover { color: var(--text); }
+    .loc-search-input {
+      border: none; outline: none; font-size: 14px;
+      font-family: 'Inter', sans-serif; flex: 1; min-width: 80px;
+      color: var(--text); background: transparent;
+    }
+    .loc-search-input::placeholder { color: var(--gray-400); }
+    .loc-search-icon { color: var(--gray-400); flex-shrink: 0; }
+    .loc-search-icon svg { width: 18px; height: 18px; display: block; }
+
+    .vuln-heading {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px; font-weight: 800; color: var(--text);
+      margin-bottom: 6px;
+    }
+    .vuln-desc {
+      font-size: 13px; color: var(--teal); line-height: 1.55; margin-bottom: 16px;
+    }
+    .loc-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+    .loc-chip {
+      border: 1.5px solid var(--gray-200); border-radius: 7px;
+      padding: 8px 14px; font-size: 13px; font-weight: 500; color: var(--text);
+      cursor: pointer; background: white; transition: border-color 0.15s, background 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .loc-chip:hover { border-color: var(--teal); background: #f0fbfb; }
+    .loc-chip.selected { border-color: var(--teal); background: #e6f7f8; color: var(--teal-d); }
 
     /* ─── FORM FIELDS ───────────────────────────── */
     .fields { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
@@ -133,17 +180,15 @@
       padding: 12px 14px; border-radius: 8px;
       border: 1.5px solid var(--gray-200);
       font-size: 14px; font-family: 'Inter', sans-serif;
-      color: var(--text); outline: none;
+      color: var(--text); outline: none; background: white;
       transition: border-color 0.15s;
-      background: white;
     }
     .field input:focus, .field select:focus { border-color: var(--teal); }
     .field input::placeholder { color: var(--gray-400); }
 
     /* ─── CHECKBOX ──────────────────────────────── */
     .check-row {
-      display: flex; gap: 12px; align-items: flex-start;
-      margin-bottom: 8px;
+      display: flex; gap: 12px; align-items: flex-start; margin-bottom: 8px;
     }
     .check-row input[type="checkbox"] {
       width: 18px; height: 18px; margin-top: 1px;
@@ -152,37 +197,31 @@
     .check-row label { font-size: 13px; color: var(--gray-600); line-height: 1.5; cursor: pointer; }
     .check-row label a { color: var(--teal); }
 
-    /* ─── NEXT / BACK BUTTONS ───────────────────── */
+    /* ─── BUTTONS ───────────────────────────────── */
     .btn-row { display: flex; gap: 12px; align-items: center; }
     .btn-next {
-      flex: 1; padding: 15px;
-      border-radius: 8px; border: none; cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-size: 15px; font-weight: 700;
+      flex: 1; padding: 15px; border-radius: 8px; border: none;
+      font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700;
       background: var(--gray-200); color: var(--gray-400);
-      transition: background 0.2s, color 0.2s;
-      letter-spacing: 0.02em;
+      transition: background 0.2s, color 0.2s; letter-spacing: 0.02em;
+      cursor: default;
     }
     .btn-next.ready {
-      background: var(--teal); color: white;
-      cursor: pointer;
+      background: var(--orange); color: white; cursor: pointer;
     }
-    .btn-next.ready:hover { background: var(--teal-d); }
+    .btn-next.ready:hover { background: var(--orange-d); }
     .btn-back {
       padding: 15px 20px; border-radius: 8px;
-      border: 1.5px solid var(--gray-200);
-      background: none; cursor: pointer;
+      border: 1.5px solid var(--gray-200); background: none; cursor: pointer;
       font-size: 14px; font-weight: 600; color: var(--gray-600);
-      font-family: 'Inter', sans-serif;
-      transition: border-color 0.15s, color 0.15s;
+      font-family: 'Inter', sans-serif; transition: border-color 0.15s, color 0.15s;
     }
     .btn-back:hover { border-color: var(--teal); color: var(--teal); }
 
     /* ─── SUCCESS ───────────────────────────────── */
     .success-icon { font-size: 56px; text-align: center; margin-bottom: 16px; }
     .success-heading {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 24px; font-weight: 800;
+      font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 800;
       text-align: center; margin-bottom: 12px;
     }
     .success-text {
@@ -193,8 +232,7 @@
       display: block; text-align: center;
       background: var(--teal); color: white;
       font-size: 15px; font-weight: 700;
-      padding: 15px; border-radius: 8px;
-      transition: background 0.15s;
+      padding: 15px; border-radius: 8px; transition: background 0.15s;
     }
     .btn-home:hover { background: var(--teal-d); }
 
@@ -207,7 +245,6 @@
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <a href="/" class="nav-logo">
       <div class="nav-logo-icon">M</div>
@@ -219,24 +256,28 @@
     </a>
   </nav>
 
-  <!-- WIZARD -->
   <div class="wizard-wrap">
     <div class="wizard">
 
-      <!-- PROGRESS BAR (4 steps) -->
-      <div class="progress-wrap" id="progress">
-        <div class="progress-seg active" id="seg-1"></div>
-        <div class="progress-seg" id="seg-2"></div>
-        <div class="progress-seg" id="seg-3"></div>
-        <div class="progress-seg" id="seg-4"></div>
+      <!-- PROGRESS ROW -->
+      <div class="progress-row">
+        <button class="prog-back hidden" id="prog-back-btn" onclick="goBack()" aria-label="Previous step">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div class="progress-wrap" id="progress">
+          <div class="progress-seg active" id="seg-1"></div>
+          <div class="progress-seg" id="seg-2"></div>
+          <div class="progress-seg" id="seg-3"></div>
+          <div class="progress-seg" id="seg-4"></div>
+          <div class="progress-seg" id="seg-5"></div>
+        </div>
       </div>
 
-      <!-- ── STEP 1: How to serve ─────────────────── -->
+      <!-- ── STEP 1: How to serve ───────────────── -->
       <div class="step visible" id="step-1">
         <h1 class="step-heading">How would you like to serve?</h1>
         <p class="step-sub">Your choice shapes how you impact families in your community.</p>
         <p class="step-note">If you are connected with a church, we encourage you to choose <strong>Serve with my church</strong>.</p>
-
         <div class="cards" id="cards-1">
           <div class="card" data-val="own" onclick="selectCard('cards-1', this, 'btn-1')">
             <div class="card-icon">🧑‍💻</div>
@@ -253,57 +294,86 @@
             </div>
           </div>
         </div>
-
         <div class="btn-row">
           <button class="btn-next" id="btn-1" disabled onclick="goTo(2)">Next</button>
         </div>
       </div>
 
-      <!-- ── STEP 2: About you ─────────────────────── -->
+      <!-- ── STEP 2: Where to meet requests ────── -->
       <div class="step" id="step-2">
-        <h1 class="step-heading">Tell us about yourself</h1>
-        <p class="step-sub" style="margin-bottom:28px;">We'll use this to set up your account and match you with needs in your area.</p>
+        <h1 class="step-heading">Where would you like to meet requests?</h1>
+        <p class="step-sub" style="text-align:left; margin-bottom:20px;">Select at least one county, city, or zip code you'd like to receive request notifications for.</p>
 
-        <div class="fields">
-          <div class="field-row">
-            <div class="field">
-              <label for="fname">First name</label>
-              <input type="text" id="fname" placeholder="Jane" oninput="checkStep2()" />
-            </div>
-            <div class="field">
-              <label for="lname">Last name</label>
-              <input type="text" id="lname" placeholder="Doe" oninput="checkStep2()" />
-            </div>
-          </div>
-          <div class="field">
-            <label for="email">Email address</label>
-            <input type="email" id="email" placeholder="jane@example.com" oninput="checkStep2()" />
-          </div>
-          <div class="field">
-            <label for="phone">Phone number</label>
-            <input type="tel" id="phone" placeholder="(555) 000-0000" oninput="checkStep2()" />
-          </div>
-          <div class="field">
-            <label for="zip">ZIP code</label>
-            <input type="text" id="zip" placeholder="66202" maxlength="10" oninput="checkStep2()" />
-          </div>
+        <div class="loc-label">Search locations</div>
+        <div class="loc-search-box" id="loc-search-box" onclick="document.getElementById('loc-input').focus()">
+          <div id="loc-tags"></div>
+          <input type="text" id="loc-input" class="loc-search-input" placeholder="Search" oninput="filterChips(this.value)" />
+          <span class="loc-search-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </span>
+        </div>
+
+        <div class="vuln-heading">Most vulnerable communities</div>
+        <p class="vuln-desc">Geographic areas where migrant families face the greatest risk due to overlapping factors like poverty, limited resources, and high need density.</p>
+
+        <div class="loc-chips" id="loc-chips">
+          <button class="loc-chip" onclick="toggleChip(this)">Kansas City, KS</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Wyandotte, KS</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Kansas City, MO</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Jackson, MO</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Sedgwick, KS</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Johnson, KS</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Wichita, KS</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Tulsa, OK</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Saint Louis, MO</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Oklahoma City, OK</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Omaha, NE</button>
+          <button class="loc-chip" onclick="toggleChip(this)">Douglas, NE</button>
         </div>
 
         <div class="btn-row">
-          <button class="btn-back" onclick="goTo(1)">Back</button>
           <button class="btn-next" id="btn-2" disabled onclick="goTo(3)">Next</button>
         </div>
       </div>
 
-      <!-- ── STEP 3: How did you hear + interest ──── -->
+      <!-- ── STEP 3: About you ──────────────────── -->
       <div class="step" id="step-3">
-        <h1 class="step-heading">A little more about you</h1>
-        <p class="step-sub" style="margin-bottom:28px;">This helps us connect you with the right needs and partners.</p>
+        <h1 class="step-heading">Tell us about yourself</h1>
+        <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">We'll use this to set up your account and match you with needs in your area.</p>
+        <div class="fields">
+          <div class="field-row">
+            <div class="field">
+              <label for="fname">First name</label>
+              <input type="text" id="fname" placeholder="Jane" oninput="checkStep3()" />
+            </div>
+            <div class="field">
+              <label for="lname">Last name</label>
+              <input type="text" id="lname" placeholder="Doe" oninput="checkStep3()" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" placeholder="jane@example.com" oninput="checkStep3()" />
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input type="tel" id="phone" placeholder="(555) 000-0000" oninput="checkStep3()" />
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goTo(2)">Back</button>
+          <button class="btn-next" id="btn-3" disabled onclick="goTo(4)">Next</button>
+        </div>
+      </div>
 
+      <!-- ── STEP 4: Interests ───────────────────── -->
+      <div class="step" id="step-4">
+        <h1 class="step-heading">A little more about you</h1>
+        <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">This helps us connect you with the right needs and partners.</p>
         <div class="fields">
           <div class="field">
             <label for="hear">How did you hear about MigrantPortal?</label>
-            <select id="hear" onchange="checkStep3()">
+            <select id="hear" onchange="checkStep4()">
               <option value="">Select one...</option>
               <option>From a church or faith community</option>
               <option>From a caseworker or social worker</option>
@@ -315,7 +385,7 @@
           </div>
           <div class="field">
             <label for="interest">What type of needs would you like to help with?</label>
-            <select id="interest" onchange="checkStep3()">
+            <select id="interest" onchange="checkStep4()">
               <option value="">Select one...</option>
               <option>Food &amp; essentials</option>
               <option>Clothing &amp; supplies</option>
@@ -327,45 +397,41 @@
             </select>
           </div>
         </div>
-
         <div class="btn-row">
-          <button class="btn-back" onclick="goTo(2)">Back</button>
-          <button class="btn-next" id="btn-3" disabled onclick="goTo(4)">Next</button>
+          <button class="btn-back" onclick="goTo(3)">Back</button>
+          <button class="btn-next" id="btn-4" disabled onclick="goTo(5)">Next</button>
         </div>
       </div>
 
-      <!-- ── STEP 4: Confirm + create account ──────── -->
-      <div class="step" id="step-4">
+      <!-- ── STEP 5: Create account ─────────────── -->
+      <div class="step" id="step-5">
         <h1 class="step-heading">Create your account</h1>
-        <p class="step-sub" style="margin-bottom:28px;">Set a password to complete your registration.</p>
-
+        <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">Set a password to complete your registration.</p>
         <div class="fields">
           <div class="field">
             <label for="pw">Password</label>
-            <input type="password" id="pw" placeholder="At least 8 characters" oninput="checkStep4()" />
+            <input type="password" id="pw" placeholder="At least 8 characters" oninput="checkStep5()" />
           </div>
           <div class="field">
             <label for="pw2">Confirm password</label>
-            <input type="password" id="pw2" placeholder="Re-enter password" oninput="checkStep4()" />
+            <input type="password" id="pw2" placeholder="Re-enter password" oninput="checkStep5()" />
           </div>
         </div>
-
         <div class="check-row" style="margin-bottom:24px;">
-          <input type="checkbox" id="agree" onchange="checkStep4()" />
+          <input type="checkbox" id="agree" onchange="checkStep5()" />
           <label for="agree">
             I agree to the MigrantPortal
             <a href="/terms.html" target="_blank">Terms of Service</a> and
             <a href="/privacy.html" target="_blank">Privacy Policy</a>.
           </label>
         </div>
-
         <div class="btn-row">
-          <button class="btn-back" onclick="goTo(3)">Back</button>
-          <button class="btn-next" id="btn-4" disabled onclick="submitForm()">Create Account</button>
+          <button class="btn-back" onclick="goTo(4)">Back</button>
+          <button class="btn-next" id="btn-5" disabled onclick="submitForm()">Create Account</button>
         </div>
       </div>
 
-      <!-- ── SUCCESS ───────────────────────────────── -->
+      <!-- ── SUCCESS ────────────────────────────── -->
       <div class="step" id="step-success">
         <div class="success-icon">🎉</div>
         <h1 class="success-heading">You're in!</h1>
@@ -376,33 +442,46 @@
         <a href="/" class="btn-home">Go to Homepage</a>
       </div>
 
-    </div><!-- /wizard -->
-  </div><!-- /wizard-wrap -->
+    </div>
+  </div>
 
   <script>
+    const TOTAL = 5;
     let currentStep = 1;
-    const TOTAL = 4;
+    const selectedLocations = new Set();
 
+    /* ── Navigation ─────────────────────────── */
     function goTo(n) {
       document.getElementById('step-' + currentStep).classList.remove('visible');
       currentStep = n;
-      if (n <= TOTAL) {
-        document.getElementById('step-' + n).classList.add('visible');
-      } else {
+      const isSuccess = n > TOTAL;
+      if (isSuccess) {
         document.getElementById('step-success').classList.add('visible');
         document.getElementById('progress').style.display = 'none';
+        document.getElementById('prog-back-btn').style.display = 'none';
         return;
       }
-      // Update progress bar
-      for (let i = 1; i <= TOTAL; i++) {
-        const seg = document.getElementById('seg-' + i);
-        seg.className = 'progress-seg';
-        if (i < n)       seg.classList.add('done');
-        else if (i === n) seg.classList.add('active');
-      }
+      document.getElementById('step-' + n).classList.add('visible');
+      updateProgress(n);
       window.scrollTo(0, 0);
     }
 
+    function goBack() {
+      if (currentStep > 1) goTo(currentStep - 1);
+    }
+
+    function updateProgress(n) {
+      for (let i = 1; i <= TOTAL; i++) {
+        const seg = document.getElementById('seg-' + i);
+        seg.className = 'progress-seg';
+        if (i < n)        seg.classList.add('done');
+        else if (i === n) seg.classList.add('active');
+      }
+      const backBtn = document.getElementById('prog-back-btn');
+      backBtn.classList.toggle('hidden', n === 1);
+    }
+
+    /* ── Step 1: Card selection ──────────────── */
     function selectCard(groupId, el, btnId) {
       document.querySelectorAll('#' + groupId + ' .card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
@@ -411,40 +490,107 @@
       btn.classList.add('ready');
     }
 
-    function checkStep2() {
+    /* ── Step 2: Location ────────────────────── */
+    function toggleChip(el) {
+      const loc = el.textContent.trim();
+      if (selectedLocations.has(loc)) {
+        selectedLocations.delete(loc);
+        el.classList.remove('selected');
+      } else {
+        selectedLocations.add(loc);
+        el.classList.add('selected');
+      }
+      renderTags();
+      updateLocBtn();
+    }
+
+    function removeTag(loc) {
+      selectedLocations.delete(loc);
+      // deselect chip if present
+      document.querySelectorAll('.loc-chip').forEach(c => {
+        if (c.textContent.trim() === loc) c.classList.remove('selected');
+      });
+      renderTags();
+      updateLocBtn();
+    }
+
+    function renderTags() {
+      const container = document.getElementById('loc-tags');
+      container.innerHTML = '';
+      selectedLocations.forEach(loc => {
+        const tag = document.createElement('div');
+        tag.className = 'loc-tag';
+        tag.innerHTML = `${loc} <button onclick="removeTag('${loc}')" aria-label="Remove ${loc}">×</button>`;
+        container.appendChild(tag);
+      });
+    }
+
+    function updateLocBtn() {
+      const btn = document.getElementById('btn-2');
+      const ok = selectedLocations.size > 0;
+      btn.disabled = !ok;
+      btn.classList.toggle('ready', ok);
+    }
+
+    function filterChips(val) {
+      const q = val.toLowerCase();
+      document.querySelectorAll('.loc-chip').forEach(c => {
+        c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+      // add custom location on Enter
+    }
+
+    document.getElementById('loc-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && this.value.trim()) {
+        const loc = this.value.trim();
+        selectedLocations.add(loc);
+        renderTags();
+        updateLocBtn();
+        this.value = '';
+        filterChips('');
+      }
+    });
+
+    /* ── Step 3: Personal info ───────────────── */
+    function checkStep3() {
       const ok = document.getElementById('fname').value.trim() &&
                  document.getElementById('lname').value.trim() &&
-                 document.getElementById('email').value.includes('@') &&
-                 document.getElementById('zip').value.trim().length >= 4;
-      const btn = document.getElementById('btn-2');
-      btn.disabled = !ok;
-      btn.classList.toggle('ready', ok);
+                 document.getElementById('email').value.includes('@');
+      setBtn('btn-3', ok);
     }
 
-    function checkStep3() {
+    /* ── Step 4: Interests ───────────────────── */
+    function checkStep4() {
       const ok = document.getElementById('hear').value &&
                  document.getElementById('interest').value;
-      const btn = document.getElementById('btn-3');
-      btn.disabled = !ok;
-      btn.classList.toggle('ready', ok);
+      setBtn('btn-4', ok);
     }
 
-    function checkStep4() {
+    /* ── Step 5: Password ────────────────────── */
+    function checkStep5() {
       const pw  = document.getElementById('pw').value;
       const pw2 = document.getElementById('pw2').value;
       const ok  = pw.length >= 8 && pw === pw2 && document.getElementById('agree').checked;
-      const btn = document.getElementById('btn-4');
+      setBtn('btn-5', ok);
+    }
+
+    function setBtn(id, ok) {
+      const btn = document.getElementById(id);
       btn.disabled = !ok;
       btn.classList.toggle('ready', ok);
     }
 
+    /* ── Submit ──────────────────────────────── */
     function submitForm() {
-      // In production this would POST to the backend
-      // For now, send a sign-up email and show success
       const name  = document.getElementById('fname').value;
       const email = document.getElementById('email').value;
-      window.location.href = `mailto:support@migrantportal.com?subject=New+Registration&body=Name:+${encodeURIComponent(name)}%0AEmail:+${encodeURIComponent(email)}`;
-      goTo(5);
+      const locs  = Array.from(selectedLocations).join(', ');
+      window.location.href =
+        `mailto:support@migrantportal.com?subject=New+Registration&body=` +
+        `Name:+${encodeURIComponent(name)}%0A` +
+        `Email:+${encodeURIComponent(email)}%0A` +
+        `Locations:+${encodeURIComponent(locs)}`;
+      goTo(6);
     }
   </script>
 
