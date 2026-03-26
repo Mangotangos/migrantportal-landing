@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — MigrantPortal</title>
+  <meta name="description" content="Join MigrantPortal — choose how you'd like to help migrant families in your community." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #007c84;
+      --teal-bg: #0D7A8A;
+      --orange:  #FF6129;
+      --orange-d:#e05020;
+      --blue:    #0973A7;
+      --blue-d:  #075f8a;
+      --cream:   #FAF7F0;
+      --text:    #0D0D0D;
+      --gray-500:#6B6B6B;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.65; }
+    a { text-decoration: none; }
+
+    /* ─── ANNOUNCE ──────────────────────────────── */
+    .announce {
+      background: var(--teal-bg); color: white;
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; padding: 10px 24px;
+      font-size: 13px; font-weight: 500; flex-wrap: wrap;
+    }
+    .announce-btn {
+      background: var(--orange); color: white;
+      font-size: 11px; font-weight: 800;
+      padding: 8px 14px; border-radius: 6px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: background 0.15s;
+    }
+    .announce-btn:hover { background: var(--orange-d); }
+
+    /* ─── NAV ───────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 19px; color: var(--text);
+    }
+    .nav-logo-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 18px; font-weight: 800;
+    }
+    .nav-links { display: flex; }
+    .nav-link {
+      font-size: 14px; font-weight: 500; color: var(--text);
+      padding: 8px 16px; border-radius: 6px; transition: background 0.15s;
+    }
+    .nav-link:hover { background: var(--gray-100); }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .nav-login {
+      font-size: 14px; font-weight: 500; color: var(--text);
+      padding: 8px 14px; border-radius: 6px; transition: background 0.15s;
+    }
+    .nav-login:hover { background: var(--gray-100); }
+    .nav-signup {
+      background: var(--blue); color: white;
+      font-size: 13px; font-weight: 700;
+      padding: 9px 22px; border-radius: 7px;
+      letter-spacing: 0.04em; transition: background 0.15s;
+    }
+    .nav-signup:hover { background: var(--blue-d); }
+    .hamburger { display: none; cursor: pointer; background: none; border: none; padding: 8px; }
+    .hamburger svg { width: 22px; height: 22px; }
+
+    /* ─── MOBILE NAV ────────────────────────────── */
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: white; padding: 24px; flex-direction: column;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+    .mobile-close { background: none; border: none; cursor: pointer; font-size: 28px; }
+    .mobile-link { font-size: 18px; font-weight: 600; color: var(--text); padding: 14px 0; border-bottom: 1px solid var(--gray-200); display: block; }
+    .mobile-cta {
+      margin-top: 24px; background: var(--blue); color: white;
+      font-size: 16px; font-weight: 700; padding: 14px; border-radius: 8px;
+      text-align: center; display: block;
+    }
+
+    /* ─── MAIN ──────────────────────────────────── */
+    main {
+      max-width: 860px; margin: 0 auto;
+      padding: 72px 40px 96px;
+    }
+    main h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800; color: var(--text);
+      line-height: 1.2; margin-bottom: 48px;
+      max-width: 640px;
+    }
+
+    /* ─── ROLE ROWS ─────────────────────────────── */
+    .role-list { border-top: 1px solid var(--gray-200); }
+    .role-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--gray-200);
+      cursor: pointer;
+      transition: background 0.15s;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .role-item:hover { background: var(--gray-100); margin: 0 -24px; padding-left: 24px; padding-right: 24px; }
+    .role-text {
+      font-size: clamp(15px, 2.2vw, 19px);
+      font-weight: 500;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .role-text strong {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .role-arrow {
+      flex-shrink: 0;
+      margin-left: 24px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500);
+      transition: background 0.15s, color 0.15s;
+    }
+    .role-item:hover .role-arrow {
+      background: var(--teal);
+      color: white;
+    }
+    .role-arrow svg { width: 18px; height: 18px; }
+
+    /* ─── FOOTER ────────────────────────────────── */
+    .footer { background: white; }
+    .footer-trusted {
+      border-top: 1px solid var(--gray-200);
+      padding: 48px 40px;
+    }
+    .footer-trusted-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
+    .footer-trusted h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gray-500); margin-bottom: 32px;
+    }
+    .trusted-logos {
+      display: flex; gap: 24px; align-items: center;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .trusted-logo {
+      padding: 10px 24px; border: 1px solid var(--gray-200); border-radius: 8px;
+      font-size: 13px; font-weight: 600; color: var(--gray-500);
+    }
+    .footer-main {
+      border-top: 1px solid var(--gray-200);
+      padding: 48px 40px;
+    }
+    .footer-main-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; gap: 24px; flex-wrap: wrap; justify-content: space-between;
+    }
+    .footer-brand { max-width: 240px; }
+    .footer-brand-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 17px; color: var(--text);
+      margin-bottom: 12px;
+    }
+    .footer-brand-logo-icon {
+      width: 30px; height: 30px; border-radius: 6px;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 15px; font-weight: 800;
+    }
+    .footer-brand p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+    .footer-col { min-width: 140px; }
+    .footer-col-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text); margin-bottom: 14px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul li a { font-size: 14px; color: var(--gray-500); transition: color 0.15s; }
+    .footer-col ul li a:hover { color: var(--teal); }
+    .footer-bottom {
+      border-top: 1px solid var(--gray-200);
+      padding: 20px 40px;
+    }
+    .footer-bottom-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-social { display: flex; gap: 10px; }
+    .footer-social a {
+      width: 34px; height: 34px; border-radius: 7px;
+      background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500); transition: background 0.15s, color 0.15s;
+    }
+    .footer-social a:hover { background: var(--teal); color: white; }
+    .footer-legal { display: flex; gap: 16px; }
+    .footer-legal a { font-size: 12px; color: var(--gray-500); }
+    .footer-legal a:hover { color: var(--teal); }
+    .footer-copy { font-size: 12px; color: #bbb; }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links, .nav-login { display: none; }
+      .nav-signup { display: none; }
+      .hamburger { display: flex; align-items: center; }
+      main { padding: 48px 20px 72px; }
+      .footer-trusted, .footer-main, .footer-bottom { padding-left: 20px; padding-right: 20px; }
+      .announce { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCE -->
+  <div class="announce">
+    <strong>Android Beta Now Available · Help a migrant family in your community</strong>
+    <a href="mailto:support@migrantportal.com?subject=Download+MigrantPortal+Beta" class="announce-btn">REQUEST BETA</a>
+  </div>
+
+  <!-- NAV -->
+  <nav aria-label="Main navigation">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">M</div>
+      MigrantPortal
+    </a>
+    <div class="nav-links">
+      <a href="/#how-it-works" class="nav-link">How It Works</a>
+      <a href="/#about" class="nav-link">About</a>
+      <a href="/#impact" class="nav-link">Impact</a>
+      <a href="/#get-involved" class="nav-link">Get Involved</a>
+    </div>
+    <div class="nav-right">
+      <a href="mailto:support@migrantportal.com?subject=Login+Help" class="nav-login">Log In</a>
+      <a href="/signup.html" class="nav-signup">SIGN UP</a>
+      <button class="hamburger" aria-label="Open menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" role="dialog" aria-modal="true">
+    <div class="mobile-nav-header">
+      <span style="font-family:Montserrat,sans-serif;font-weight:800;font-size:18px;">MigrantPortal</span>
+      <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close">×</button>
+    </div>
+    <a href="/#how-it-works" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
+    <a href="/#about" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">About</a>
+    <a href="/#impact" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Impact</a>
+    <a href="/#get-involved" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Get Involved</a>
+    <a href="/signup.html" class="mobile-cta">SIGN UP</a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <h1>Ready to get started? Tell us how you'd like to join.</h1>
+
+    <div class="role-list" role="list">
+
+      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Individual+Helper" class="role-item" role="listitem">
+        <span class="role-text">AS AN <strong>INDIVIDUAL</strong> TO MEET NEEDS</span>
+        <span class="role-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Church" class="role-item" role="listitem">
+        <span class="role-text">AS A <strong>CHURCH</strong> TO MEET NEEDS</span>
+        <span class="role-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Community+Organization" class="role-item" role="listitem">
+        <span class="role-text">AS A <strong>COMMUNITY ORGANIZATION</strong> TO MEET NEEDS</span>
+        <span class="role-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Caseworker" class="role-item" role="listitem">
+        <span class="role-text">AS A <strong>CASEWORKER</strong> WHOSE AGENCY HAS ALREADY ENROLLED</span>
+        <span class="role-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Requesting+Agency" class="role-item" role="listitem">
+        <span class="role-text">AS A <strong>REQUESTING AGENCY</strong> TO SUBMIT NEEDS</span>
+        <span class="role-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Implementing+Partner" class="role-item" role="listitem">
+        <span class="role-text">AS AN <strong>IMPLEMENTING PARTNER</strong> TO LAUNCH A NETWORK</span>
+        <span class="role-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-trusted">
+      <div class="footer-trusted-inner">
+        <h3>Supported By:</h3>
+        <div class="trusted-logos">
+          <div class="trusted-logo">Local Churches</div>
+          <div class="trusted-logo">Social Workers</div>
+          <div class="trusted-logo">Community Orgs</div>
+          <div class="trusted-logo">Faith Communities</div>
+          <div class="trusted-logo">Non-profits</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-main">
+      <div class="footer-main-inner">
+        <div class="footer-brand">
+          <div class="footer-brand-logo">
+            <div class="footer-brand-logo-icon">M</div>
+            MigrantPortal
+          </div>
+          <p>Connecting migrant families with churches, volunteers, and donors — one need at a time.</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">About</div>
+          <ul>
+            <li><a href="/#how-it-works">How It Works</a></li>
+            <li><a href="/#impact">Impact</a></li>
+            <li><a href="/#about">Our Solution</a></li>
+            <li><a href="mailto:support@migrantportal.com">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Get Involved</div>
+          <ul>
+            <li><a href="/signup.html">Sign Up</a></li>
+            <li><a href="mailto:support@migrantportal.com?subject=Submit+a+Family+Need">Submit a Need</a></li>
+            <li><a href="mailto:support@migrantportal.com?subject=Meet+a+Need">Meet a Need</a></li>
+            <li><a href="mailto:support@migrantportal.com?subject=Partnership+Inquiry">Launch a Network</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Resources</div>
+          <ul>
+            <li><a href="/privacy.html">Privacy Policy</a></li>
+            <li><a href="/terms.html">Terms of Service</a></li>
+            <li><a href="mailto:support@migrantportal.com?subject=Help">Help Center</a></li>
+            <li><a href="#">Samru LLC</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <div class="footer-social">
+          <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="Twitter / X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+          </a>
+        </div>
+        <div class="footer-legal">
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+          <a href="mailto:support@migrantportal.com">Contact</a>
+        </div>
+        <p class="footer-copy">MigrantPortal © 2026 · Built with compassion by Samru LLC</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
