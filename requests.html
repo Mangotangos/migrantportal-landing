@@ -622,7 +622,7 @@
       const m = L.marker([need.lat, need.lng], { icon })
         .addTo(map)
         .bindPopup(`
-          <div class="popup-id">#MP${String(need.id).padStart(3,'0')}</div>
+          <div class="popup-id">#${need.case_number || need.id.slice(0,6).toUpperCase()}</div>
           <div class="popup-title">${need.title}</div>
           <div class="popup-loc">${loc}</div>
           <div style="margin-top:8px">
