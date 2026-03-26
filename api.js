@@ -1,9 +1,10 @@
 const API = 'https://migrant-portal-production-3826.up.railway.app';
 
 async function apiPost(path, body) {
+  const token = localStorage.getItem('mp_token');
   const r = await fetch(API + path, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...(token ? { 'Authorization': 'Bearer ' + token } : {}) },
     body: JSON.stringify(body)
   });
   const data = await r.json();
