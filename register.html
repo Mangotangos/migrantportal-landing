@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — MigrantPortal</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #007c84;
+      --orange:  #FF6129;
+      --blue:    #0973A7;
+      --text:    #0D0D0D;
+      --gray-600:#555;
+      --gray-400:#999;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+      --gray-bg: #F0F2F5;
+    }
+    html { height: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--gray-bg);
+      min-height: 100%;
+      display: flex; flex-direction: column;
+    }
+    a { text-decoration: none; }
+
+    /* ─── NAV ───────────────────────────────────── */
+    nav {
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 40px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 18px; color: var(--text);
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px; border-radius: 7px;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 16px; font-weight: 800;
+    }
+    .nav-back {
+      font-size: 13px; color: var(--gray-600);
+      display: flex; align-items: center; gap: 6px;
+      transition: color 0.15s;
+    }
+    .nav-back:hover { color: var(--teal); }
+    .nav-back svg { width: 16px; height: 16px; }
+
+    /* ─── WIZARD SHELL ──────────────────────────── */
+    .wizard-wrap {
+      flex: 1; display: flex; align-items: flex-start;
+      justify-content: center; padding: 48px 20px 80px;
+    }
+    .wizard {
+      background: white; border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      width: 100%; max-width: 560px;
+      padding: 40px 48px 48px;
+      display: flex; flex-direction: column; gap: 0;
+    }
+
+    /* ─── PROGRESS BAR ──────────────────────────── */
+    .progress-wrap {
+      display: flex; gap: 8px; margin-bottom: 36px;
+    }
+    .progress-seg {
+      height: 8px; border-radius: 999px; flex: 1;
+      background: var(--gray-200);
+      transition: background 0.3s;
+    }
+    .progress-seg.active { background: var(--teal); }
+    .progress-seg.done   { background: var(--teal); opacity: 0.5; }
+
+    /* ─── STEP ──────────────────────────────────── */
+    .step { display: none; flex-direction: column; gap: 0; }
+    .step.visible { display: flex; }
+
+    .step-heading {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 800; color: var(--text);
+      text-align: center; margin-bottom: 12px;
+    }
+    .step-sub {
+      font-size: 14px; color: var(--gray-600);
+      text-align: center; line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .step-note {
+      font-size: 14px; color: var(--gray-600);
+      text-align: center; line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .step-note strong { color: var(--text); }
+
+    /* ─── CHOICE CARDS ──────────────────────────── */
+    .cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .card {
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px; padding: 20px 20px;
+      display: flex; gap: 16px; align-items: flex-start;
+      cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .card:hover { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,157,165,0.08); }
+    .card.selected { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,157,165,0.12); }
+    .card-icon { font-size: 36px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+    .card-body {}
+    .card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px; font-weight: 700; color: var(--text);
+      margin-bottom: 6px;
+    }
+    .card-desc { font-size: 14px; color: var(--gray-600); line-height: 1.55; }
+
+    /* ─── FORM FIELDS ───────────────────────────── */
+    .fields { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+    .field-row { display: flex; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .field label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .field input, .field select {
+      padding: 12px 14px; border-radius: 8px;
+      border: 1.5px solid var(--gray-200);
+      font-size: 14px; font-family: 'Inter', sans-serif;
+      color: var(--text); outline: none;
+      transition: border-color 0.15s;
+      background: white;
+    }
+    .field input:focus, .field select:focus { border-color: var(--teal); }
+    .field input::placeholder { color: var(--gray-400); }
+
+    /* ─── CHECKBOX ──────────────────────────────── */
+    .check-row {
+      display: flex; gap: 12px; align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .check-row input[type="checkbox"] {
+      width: 18px; height: 18px; margin-top: 1px;
+      accent-color: var(--teal); flex-shrink: 0; cursor: pointer;
+    }
+    .check-row label { font-size: 13px; color: var(--gray-600); line-height: 1.5; cursor: pointer; }
+    .check-row label a { color: var(--teal); }
+
+    /* ─── NEXT / BACK BUTTONS ───────────────────── */
+    .btn-row { display: flex; gap: 12px; align-items: center; }
+    .btn-next {
+      flex: 1; padding: 15px;
+      border-radius: 8px; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px; font-weight: 700;
+      background: var(--gray-200); color: var(--gray-400);
+      transition: background 0.2s, color 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .btn-next.ready {
+      background: var(--teal); color: white;
+      cursor: pointer;
+    }
+    .btn-next.ready:hover { background: var(--teal-d); }
+    .btn-back {
+      padding: 15px 20px; border-radius: 8px;
+      border: 1.5px solid var(--gray-200);
+      background: none; cursor: pointer;
+      font-size: 14px; font-weight: 600; color: var(--gray-600);
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-back:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ─── SUCCESS ───────────────────────────────── */
+    .success-icon { font-size: 56px; text-align: center; margin-bottom: 16px; }
+    .success-heading {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px; font-weight: 800;
+      text-align: center; margin-bottom: 12px;
+    }
+    .success-text {
+      font-size: 15px; color: var(--gray-600);
+      text-align: center; line-height: 1.7; margin-bottom: 32px;
+    }
+    .btn-home {
+      display: block; text-align: center;
+      background: var(--teal); color: white;
+      font-size: 15px; font-weight: 700;
+      padding: 15px; border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .btn-home:hover { background: var(--teal-d); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .wizard { padding: 28px 24px 32px; }
+      .field-row { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">M</div>
+      MigrantPortal
+    </a>
+    <a href="/signup.html" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to sign-up options
+    </a>
+  </nav>
+
+  <!-- WIZARD -->
+  <div class="wizard-wrap">
+    <div class="wizard">
+
+      <!-- PROGRESS BAR (4 steps) -->
+      <div class="progress-wrap" id="progress">
+        <div class="progress-seg active" id="seg-1"></div>
+        <div class="progress-seg" id="seg-2"></div>
+        <div class="progress-seg" id="seg-3"></div>
+        <div class="progress-seg" id="seg-4"></div>
+      </div>
+
+      <!-- ── STEP 1: How to serve ─────────────────── -->
+      <div class="step visible" id="step-1">
+        <h1 class="step-heading">How would you like to serve?</h1>
+        <p class="step-sub">Your choice shapes how you impact families in your community.</p>
+        <p class="step-note">If you are connected with a church, we encourage you to choose <strong>Serve with my church</strong>.</p>
+
+        <div class="cards" id="cards-1">
+          <div class="card" data-val="own" onclick="selectCard('cards-1', this, 'btn-1')">
+            <div class="card-icon">🧑‍💻</div>
+            <div class="card-body">
+              <div class="card-title">Serve on my own</div>
+              <div class="card-desc">Meet real-time, vetted needs for migrant families — wherever and whenever they arise.</div>
+            </div>
+          </div>
+          <div class="card" data-val="church" onclick="selectCard('cards-1', this, 'btn-1')">
+            <div class="card-icon">⛪</div>
+            <div class="card-body">
+              <div class="card-title">Serve with my church</div>
+              <div class="card-desc">Serve as part of your church's ministry and step into deeper care opportunities.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-next" id="btn-1" disabled onclick="goTo(2)">Next</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: About you ─────────────────────── -->
+      <div class="step" id="step-2">
+        <h1 class="step-heading">Tell us about yourself</h1>
+        <p class="step-sub" style="margin-bottom:28px;">We'll use this to set up your account and match you with needs in your area.</p>
+
+        <div class="fields">
+          <div class="field-row">
+            <div class="field">
+              <label for="fname">First name</label>
+              <input type="text" id="fname" placeholder="Jane" oninput="checkStep2()" />
+            </div>
+            <div class="field">
+              <label for="lname">Last name</label>
+              <input type="text" id="lname" placeholder="Doe" oninput="checkStep2()" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" placeholder="jane@example.com" oninput="checkStep2()" />
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input type="tel" id="phone" placeholder="(555) 000-0000" oninput="checkStep2()" />
+          </div>
+          <div class="field">
+            <label for="zip">ZIP code</label>
+            <input type="text" id="zip" placeholder="66202" maxlength="10" oninput="checkStep2()" />
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goTo(1)">Back</button>
+          <button class="btn-next" id="btn-2" disabled onclick="goTo(3)">Next</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: How did you hear + interest ──── -->
+      <div class="step" id="step-3">
+        <h1 class="step-heading">A little more about you</h1>
+        <p class="step-sub" style="margin-bottom:28px;">This helps us connect you with the right needs and partners.</p>
+
+        <div class="fields">
+          <div class="field">
+            <label for="hear">How did you hear about MigrantPortal?</label>
+            <select id="hear" onchange="checkStep3()">
+              <option value="">Select one...</option>
+              <option>From a church or faith community</option>
+              <option>From a caseworker or social worker</option>
+              <option>Friend or family member</option>
+              <option>Social media</option>
+              <option>Internet search</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="interest">What type of needs would you like to help with?</label>
+            <select id="interest" onchange="checkStep3()">
+              <option value="">Select one...</option>
+              <option>Food &amp; essentials</option>
+              <option>Clothing &amp; supplies</option>
+              <option>Housing &amp; shelter referrals</option>
+              <option>Transportation</option>
+              <option>Education &amp; school enrollment</option>
+              <option>Language &amp; translation help</option>
+              <option>Any / all types</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goTo(2)">Back</button>
+          <button class="btn-next" id="btn-3" disabled onclick="goTo(4)">Next</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: Confirm + create account ──────── -->
+      <div class="step" id="step-4">
+        <h1 class="step-heading">Create your account</h1>
+        <p class="step-sub" style="margin-bottom:28px;">Set a password to complete your registration.</p>
+
+        <div class="fields">
+          <div class="field">
+            <label for="pw">Password</label>
+            <input type="password" id="pw" placeholder="At least 8 characters" oninput="checkStep4()" />
+          </div>
+          <div class="field">
+            <label for="pw2">Confirm password</label>
+            <input type="password" id="pw2" placeholder="Re-enter password" oninput="checkStep4()" />
+          </div>
+        </div>
+
+        <div class="check-row" style="margin-bottom:24px;">
+          <input type="checkbox" id="agree" onchange="checkStep4()" />
+          <label for="agree">
+            I agree to the MigrantPortal
+            <a href="/terms.html" target="_blank">Terms of Service</a> and
+            <a href="/privacy.html" target="_blank">Privacy Policy</a>.
+          </label>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goTo(3)">Back</button>
+          <button class="btn-next" id="btn-4" disabled onclick="submitForm()">Create Account</button>
+        </div>
+      </div>
+
+      <!-- ── SUCCESS ───────────────────────────────── -->
+      <div class="step" id="step-success">
+        <div class="success-icon">🎉</div>
+        <h1 class="success-heading">You're in!</h1>
+        <p class="success-text">
+          Thanks for joining MigrantPortal. We've sent a confirmation to your email.<br /><br />
+          You'll receive notifications when migrant families in your area have urgent needs you can help with.
+        </p>
+        <a href="/" class="btn-home">Go to Homepage</a>
+      </div>
+
+    </div><!-- /wizard -->
+  </div><!-- /wizard-wrap -->
+
+  <script>
+    let currentStep = 1;
+    const TOTAL = 4;
+
+    function goTo(n) {
+      document.getElementById('step-' + currentStep).classList.remove('visible');
+      currentStep = n;
+      if (n <= TOTAL) {
+        document.getElementById('step-' + n).classList.add('visible');
+      } else {
+        document.getElementById('step-success').classList.add('visible');
+        document.getElementById('progress').style.display = 'none';
+        return;
+      }
+      // Update progress bar
+      for (let i = 1; i <= TOTAL; i++) {
+        const seg = document.getElementById('seg-' + i);
+        seg.className = 'progress-seg';
+        if (i < n)       seg.classList.add('done');
+        else if (i === n) seg.classList.add('active');
+      }
+      window.scrollTo(0, 0);
+    }
+
+    function selectCard(groupId, el, btnId) {
+      document.querySelectorAll('#' + groupId + ' .card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      const btn = document.getElementById(btnId);
+      btn.disabled = false;
+      btn.classList.add('ready');
+    }
+
+    function checkStep2() {
+      const ok = document.getElementById('fname').value.trim() &&
+                 document.getElementById('lname').value.trim() &&
+                 document.getElementById('email').value.includes('@') &&
+                 document.getElementById('zip').value.trim().length >= 4;
+      const btn = document.getElementById('btn-2');
+      btn.disabled = !ok;
+      btn.classList.toggle('ready', ok);
+    }
+
+    function checkStep3() {
+      const ok = document.getElementById('hear').value &&
+                 document.getElementById('interest').value;
+      const btn = document.getElementById('btn-3');
+      btn.disabled = !ok;
+      btn.classList.toggle('ready', ok);
+    }
+
+    function checkStep4() {
+      const pw  = document.getElementById('pw').value;
+      const pw2 = document.getElementById('pw2').value;
+      const ok  = pw.length >= 8 && pw === pw2 && document.getElementById('agree').checked;
+      const btn = document.getElementById('btn-4');
+      btn.disabled = !ok;
+      btn.classList.toggle('ready', ok);
+    }
+
+    function submitForm() {
+      // In production this would POST to the backend
+      // For now, send a sign-up email and show success
+      const name  = document.getElementById('fname').value;
+      const email = document.getElementById('email').value;
+      window.location.href = `mailto:support@migrantportal.com?subject=New+Registration&body=Name:+${encodeURIComponent(name)}%0AEmail:+${encodeURIComponent(email)}`;
+      goTo(5);
+    }
+  </script>
+
+</body>
+</html>
