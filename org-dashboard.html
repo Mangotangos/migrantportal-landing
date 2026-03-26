@@ -486,18 +486,29 @@
     let allNeeds = [];
 
     async function loadData() {
-      try {
-        const data = await apiGet('/needs?limit=100');
-        allNeeds = Array.isArray(data) ? data : (data.items || data.needs || []);
-      } catch (_) {
-        allNeeds = [];
-      }
+      const [needsRes, orgRes, statsRes, membersRes] = await Promise.allSettled([
+        apiGet('/needs?limit=100'),
+        apiGet('/orgs/mine'),
+        apiGet('/orgs/mine/stats'),
+        apiGet('/orgs/mine/members'),
+      ]);
+
+      allNeeds = needsRes.status === 'fulfilled'
+        ? (Array.isArray(needsRes.value) ? needsRes.value : (needsRes.value.items || needsRes.value.needs || []))
+        : [];
+
+      const org     = orgRes.status     === 'fulfilled' ? orgRes.value     : null;
+      const stats   = statsRes.status   === 'fulfilled' ? statsRes.value   : null;
+      const members = membersRes.status === 'fulfilled' ? membersRes.value : [];
+
+      // Org name
+      if (org) document.getElementById('orgName').textContent = org.name;
 
       // Stats
-      document.getElementById('statTotal').textContent   = allNeeds.length || '0';
-      document.getElementById('statOpen').textContent    = allNeeds.filter(n => n.status !== 'closed').length || '0';
-      document.getElementById('statFamilies').textContent = allNeeds.length || '0';
-      document.getElementById('statMembers').textContent  = '1';
+      document.getElementById('statTotal').textContent    = allNeeds.length || '0';
+      document.getElementById('statOpen').textContent     = allNeeds.filter(n => n.status !== 'closed').length || '0';
+      document.getElementById('statFamilies').textContent = stats ? stats.needs_fulfilled : allNeeds.filter(n => n.status === 'fulfilled').length || '0';
+      document.getElementById('statMembers').textContent  = stats ? stats.member_count : (members.length || '1');
       document.getElementById('needsBadge').textContent   = allNeeds.filter(n => n.status !== 'closed').length || '0';
 
       // Recent needs table (5 rows)
@@ -513,13 +524,18 @@
       // Activity feed
       renderActivity(allNeeds);
 
-      // Team
+      // Team members
       const teamList = document.getElementById('teamList');
-      teamList.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;">${initials}</div>
-        <div><div style="font-size:13px;font-weight:600;">${user.name||'You'}</div><div style="font-size:11px;color:var(--gray-400);">Admin</div></div>
-      </div>
-      <a href="#" style="font-size:12px;color:var(--teal);font-weight:600;display:block;margin-top:8px;">+ Invite a team member</a>`;
+      const memberRows = (members.length ? members : [{ id: user.id, name: user.name, email: user.email }])
+        .map(m => {
+          const ini = (m.name || m.email || '?').split(' ').map(p => p[0]).join('').toUpperCase().slice(0,2);
+          const label = m.id === user.id ? 'Admin (You)' : (m.responder_type || 'Member');
+          return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;">${ini}</div>
+            <div><div style="font-size:13px;font-weight:600;">${m.name||m.email}</div><div style="font-size:11px;color:var(--gray-400);">${label}</div></div>
+          </div>`;
+        }).join('');
+      teamList.innerHTML = memberRows + `<a href="#" style="font-size:12px;color:var(--teal);font-weight:600;display:block;margin-top:8px;">+ Invite a team member</a>`;
     }
 
     function renderAllNeeds(needs) {
