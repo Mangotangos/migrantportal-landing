@@ -33,6 +33,21 @@
     a:hover { text-decoration: underline; }
     button { font-family: 'Inter', sans-serif; cursor: pointer; }
 
+    .amt-btn {
+      flex: 1; min-width: 46px; height: 32px; border: 1.5px solid var(--gray-200);
+      border-radius: 6px; font-size: 12px; font-weight: 600; background: white; cursor: pointer;
+    }
+    .amt-btn.selected { border-color: var(--orange); background: #fff5f0; color: var(--orange); }
+    .amt-btn:hover { border-color: var(--orange); }
+    .chat-msg { display: flex; flex-direction: column; gap: 1px; }
+    .chat-bubble {
+      max-width: 85%; padding: 8px 11px; border-radius: 10px;
+      font-size: 13px; line-height: 1.45; word-break: break-word;
+    }
+    .chat-bubble.mine { background: var(--teal); color: white; align-self: flex-end; border-bottom-right-radius: 3px; }
+    .chat-bubble.theirs { background: var(--gray-100); color: var(--text); align-self: flex-start; border-bottom-left-radius: 3px; }
+    .chat-meta { font-size: 10px; color: var(--gray-400); }
+    .chat-meta.mine { text-align: right; }
     /* ─── TAB NAV ────────────────────────────── */
     .top-nav {
       background: white; border-bottom: 1px solid var(--gray-200);
@@ -399,69 +414,18 @@
           </div>
         </div>
 
-        <!-- ACTIVITY FEED -->
-        <div class="card" id="activity-feed">
-          <div class="activity-header">
-            <div class="section-heading" style="margin-bottom:0">Activity Feed</div>
-            <select class="filter-select">
-              <option>All Activity</option>
-              <option>Responses Only</option>
-              <option>Updates Only</option>
-            </select>
+        <!-- CHAT -->
+        <div class="card" id="chat-card" style="display:none">
+          <div class="section-heading" style="margin-bottom:12px">
+            Team Chat
+            <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:6px">Connector + responders only</span>
           </div>
-
-          <!-- Post box -->
-          <div class="post-box">
-            <div class="post-avatar">?</div>
-            <span class="post-placeholder">Make a Post</span>
-          </div>
-
-          <!-- Activity 1 -->
-          <div class="activity-item">
-            <div class="activity-top">
-              <div class="activity-avatar">🙋</div>
-              <div class="activity-meta">
-                <div class="activity-name">Anonymous Responder</div>
-                <div class="activity-sub"><a href="#">New Hope Community Church</a> · <a href="#">Funded $75.00</a> · 3 days ago</div>
-              </div>
-              <button class="activity-more">···</button>
-            </div>
-            <div class="activity-text">I can help with this request! Happy to contribute toward the bedding items.</div>
-            <div class="activity-footer">
-              <button class="activity-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                Like 0
-              </button>
-              <button class="activity-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                Share
-              </button>
-              <a href="#" class="reply-link">Reply</a>
-            </div>
-          </div>
-
-          <!-- Activity 2 -->
-          <div class="activity-item">
-            <div class="activity-top">
-              <div class="activity-avatar">⛪</div>
-              <div class="activity-meta">
-                <div class="activity-name">New Hope Community Church ✓</div>
-                <div class="activity-sub">Submitted this Request · 2 weeks ago</div>
-              </div>
-              <button class="activity-more">···</button>
-            </div>
-            <div class="activity-text">We have verified this family's needs and they are ready to receive help. Please reach out if you can assist with housing referrals or donated items.</div>
-            <div class="activity-footer">
-              <button class="activity-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                Like 2
-              </button>
-              <button class="activity-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                Share
-              </button>
-              <a href="#" class="reply-link">Reply</a>
-            </div>
+          <div id="chat-messages" style="display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto;margin-bottom:12px;padding-right:4px"></div>
+          <div style="display:flex;gap:8px">
+            <input id="chat-input" type="text" placeholder="Type a message…"
+              style="flex:1;height:36px;border:1px solid var(--gray-200);border-radius:7px;padding:0 10px;font-size:13px;font-family:Inter,sans-serif"
+              onkeydown="if(event.key==='Enter')sendChat()">
+            <button onclick="sendChat()" style="height:36px;padding:0 14px;background:var(--teal);color:white;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
           </div>
         </div>
 
@@ -537,6 +501,19 @@
       <div class="col-side">
         <div class="card" id="action-panel">
           <div id="panel-content" style="font-size:13px;color:var(--gray-400);text-align:center;padding:20px 0">Loading…</div>
+        </div>
+        <div class="card" id="donate-card" style="margin-top:14px;display:none">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px">Support This Family</div>
+          <div id="donate-total" style="font-size:12px;color:var(--gray-600);margin-bottom:12px"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+            <button class="amt-btn" onclick="selectAmt(this,500)">$5</button>
+            <button class="amt-btn" onclick="selectAmt(this,1000)">$10</button>
+            <button class="amt-btn" onclick="selectAmt(this,2500)">$25</button>
+            <button class="amt-btn" onclick="selectAmt(this,5000)">$50</button>
+            <button class="amt-btn" onclick="selectAmt(this,10000)">$100</button>
+          </div>
+          <button id="donate-btn" onclick="startDonation()" style="width:100%;background:var(--orange);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer">Donate</button>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:center">Secure payment via Stripe</div>
         </div>
       </div>
 
@@ -708,6 +685,90 @@
       } catch(e) { toast(e.message, true); }
     }
 
+    // ── Chat
+    let chatPollTimer = null;
+    let lastMsgCount = 0;
+
+    function timeAgo(s) {
+      const d = (Date.now() - new Date(s)) / 1000;
+      if (d < 60) return 'just now';
+      if (d < 3600) return Math.floor(d/60) + 'm ago';
+      if (d < 86400) return Math.floor(d/3600) + 'h ago';
+      return Math.floor(d/86400) + 'd ago';
+    }
+
+    function renderChat(msgs) {
+      const el = document.getElementById('chat-messages');
+      if (!msgs.length) { el.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:16px 0">No messages yet. Say hello!</div>'; return; }
+      el.innerHTML = msgs.map(m => {
+        const mine = currentUser && m.sender_id === currentUser.id;
+        return `<div class="chat-msg">
+          <div class="chat-meta ${mine?'mine':''}">${mine?'You':m.sender_name} · ${m.sender_role}</div>
+          <div class="chat-bubble ${mine?'mine':'theirs'}">${m.text.replace(/</g,'&lt;')}</div>
+          <div class="chat-meta ${mine?'mine':''}">${timeAgo(m.created_at)}</div>
+        </div>`;
+      }).join('');
+      if (msgs.length !== lastMsgCount) { el.scrollTop = el.scrollHeight; lastMsgCount = msgs.length; }
+    }
+
+    async function loadChat() {
+      if (!needId || !currentUser) return;
+      try {
+        const msgs = await apiGet(`/chat/${needId}`);
+        renderChat(msgs);
+      } catch(e) {}
+    }
+
+    async function sendChat() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      try {
+        await apiPost(`/chat/${needId}`, { text });
+        loadChat();
+      } catch(e) { toast(e.message, true); input.value = text; }
+    }
+
+    function initChat(isAuthorized) {
+      const card = document.getElementById('chat-card');
+      if (!isAuthorized || !needId) return;
+      card.style.display = '';
+      loadChat();
+      chatPollTimer = setInterval(loadChat, 10000);
+    }
+
+    // ── Donations
+    let selectedAmtCents = 2500;
+
+    function selectAmt(btn, cents) {
+      document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedAmtCents = cents;
+    }
+
+    async function loadDonationTotal() {
+      if (!needId) return;
+      try {
+        const d = await apiGet(`/donations/need/${needId}/total`);
+        const el = document.getElementById('donate-total');
+        if (el) el.textContent = d.total_usd > 0 ? `$${d.total_usd.toFixed(2)} donated so far` : 'Be the first to donate!';
+      } catch(e) {}
+    }
+
+    async function startDonation() {
+      if (!currentUser) { window.location.href = 'login.html'; return; }
+      const btn = document.getElementById('donate-btn');
+      btn.disabled = true; btn.textContent = 'Redirecting…';
+      try {
+        const data = await apiPost('/donations/checkout', { amount_cents: selectedAmtCents, need_id: needId });
+        window.location.href = data.checkout_url;
+      } catch(e) {
+        btn.disabled = false; btn.textContent = 'Donate';
+        toast(e.message.includes('not configured') ? 'Donations coming soon!' : e.message, true);
+      }
+    }
+
     // ── Load need
     async function loadNeed() {
       if (!needId) return; // keep static demo
@@ -773,6 +834,21 @@
 
         // Render sidebar
         renderPanel(need, alreadyResponded);
+
+        // Chat — visible to connector + responders who responded
+        const chatAuthorized = currentUser && (
+          currentUser.role === 'admin' ||
+          currentUser.role === 'connector' ||
+          alreadyResponded
+        );
+        initChat(chatAuthorized);
+
+        // Donations sidebar card (active needs only, non-connector)
+        if (need.status === 'active' && currentUser?.role !== 'connector' && currentUser?.role !== 'admin') {
+          document.getElementById('donate-card').style.display = '';
+          document.querySelector('.amt-btn[onclick*="2500"]')?.classList.add('selected');
+          loadDonationTotal();
+        }
 
       } catch(err) {
         console.warn('Could not load need:', err.message);
