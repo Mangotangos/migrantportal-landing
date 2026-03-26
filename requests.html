@@ -610,17 +610,15 @@
     }
 
     function addMarker(need, idx) {
+      if (!need.lat || !need.lng) { markers.push(null); return; }
       const urgent = need.urgency === 'urgent';
       const loc    = [need.city, need.state].filter(Boolean).join(', ');
-      // Use a default lat/lng near KC if the backend doesn't geocode yet
-      const lat = need.lat || (38.9 + (Math.random() - 0.5) * 2);
-      const lng = need.lng || (-94.79 + (Math.random() - 0.5) * 3);
       const icon = L.divIcon({
         html: `<div class="map-pin${urgent ? ' urgent' : ''}">${urgent ? '🔴 ' : '📍 '}Need</div>`,
         className: '',
         iconAnchor: [28, 12]
       });
-      const m = L.marker([lat, lng], { icon })
+      const m = L.marker([need.lat, need.lng], { icon })
         .addTo(map)
         .bindPopup(`
           <div class="popup-id">#MP${String(need.id).padStart(3,'0')}</div>
