@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — MigrantPortal</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #007c84;
+      --teal-lt: #e6f7f8;
+      --orange:  #FF6129;
+      --orange-d:#e05020;
+      --blue:    #0973A7;
+      --text:    #0D0D0D;
+      --gray-700:#3d3d3d;
+      --gray-600:#555;
+      --gray-400:#999;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+      --gray-bg: #F0F2F5;
+      --green:   #22C55E;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--gray-bg); line-height: 1.6; }
+    a { text-decoration: none; color: var(--teal); }
+    button { font-family: 'Inter', sans-serif; }
+
+    /* ─── TOP NAV (tabs) ─────────────────────── */
+    .top-nav {
+      background: white; border-bottom: 1px solid var(--gray-200);
+      display: flex; justify-content: center;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .tab-list { display: flex; gap: 0; }
+    .tab {
+      padding: 16px 24px; font-size: 14px; font-weight: 500;
+      color: var(--gray-600); cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      text-decoration: none;
+    }
+    .tab:hover { color: var(--teal); }
+    .tab.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 600; }
+
+    /* ─── PAGE ───────────────────────────────── */
+    .page { max-width: 920px; margin: 0 auto; padding: 32px 20px 80px; }
+
+    /* ─── USER HEADER ────────────────────────── */
+    .user-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+    .avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--gray-200); border: 2px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700; color: var(--gray-700);
+      flex-shrink: 0;
+    }
+    .user-header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 20px; font-weight: 800; color: var(--text);
+    }
+    .user-header p { font-size: 13px; color: var(--gray-600); }
+
+    /* ─── TWO-COL LAYOUT ─────────────────────── */
+    .two-col { display: flex; gap: 20px; align-items: flex-start; }
+    .col-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+    .col-side { width: 280px; flex-shrink: 0; position: sticky; top: 56px; }
+
+    /* ─── CARD ───────────────────────────────── */
+    .card {
+      background: white; border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      padding: 24px;
+    }
+    .card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px; font-weight: 800; color: var(--text);
+      margin-bottom: 4px;
+    }
+    .card-sub { font-size: 13px; color: var(--gray-600); margin-bottom: 16px; }
+    .card-sub a { color: var(--teal); }
+
+    /* ─── PROGRESS BAR ───────────────────────── */
+    .progress-label { font-size: 12px; font-weight: 700; color: var(--orange); margin-bottom: 6px; }
+    .prog-bar {
+      height: 8px; background: var(--gray-200); border-radius: 999px;
+      margin-bottom: 20px; overflow: hidden;
+    }
+    .prog-fill { height: 100%; background: var(--teal); border-radius: 999px; transition: width 0.4s; }
+
+    /* ─── CHECKLIST SECTION ──────────────────── */
+    .checklist-section { margin-bottom: 16px; }
+    .checklist-section-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+    }
+    .section-icon { font-size: 18px; }
+    .section-meta {}
+    .section-name {
+      font-size: 14px; font-weight: 700; color: var(--teal);
+    }
+    .section-count { font-size: 12px; color: var(--gray-400); }
+    .checklist-items { display: flex; flex-direction: column; gap: 2px; }
+    .checklist-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-radius: 8px;
+      background: var(--gray-bg); transition: background 0.15s;
+    }
+    .checklist-item:hover { background: var(--teal-lt); }
+    .checklist-item.done { opacity: 0.5; }
+    .checklist-item.done .item-text { text-decoration: line-through; }
+    .item-left { display: flex; align-items: center; gap: 10px; }
+    .item-check {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--gray-300, #ccc);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    }
+    .item-check.checked { background: var(--teal); border-color: var(--teal); }
+    .item-check.checked::after { content: '✓'; font-size: 10px; color: white; font-weight: 700; }
+    .item-text { font-size: 14px; color: var(--text); }
+    .item-text a { color: var(--teal); }
+    .item-badge {
+      font-size: 11px; font-weight: 700; color: var(--orange);
+      background: #fff3ee; border-radius: 4px; padding: 2px 7px; margin-left: 8px;
+    }
+    .item-arrow {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: none; border: none; cursor: pointer;
+      color: var(--teal); display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.15s;
+    }
+    .item-arrow:hover { background: var(--teal-lt); }
+    .item-arrow svg { width: 20px; height: 20px; }
+    .checklist-dismiss {
+      font-size: 12px; color: var(--gray-400); margin-top: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ─── FAQ SIDEBAR ────────────────────────── */
+    .faq-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px; font-weight: 800; color: var(--text);
+      margin-bottom: 16px;
+    }
+    .faq-item { border-bottom: 1px solid var(--gray-200); }
+    .faq-q {
+      width: 100%; background: none; border: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0; text-align: left; gap: 12px;
+    }
+    .faq-q span { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; }
+    .faq-chevron { flex-shrink: 0; color: var(--gray-400); transition: transform 0.2s; }
+    .faq-chevron svg { width: 18px; height: 18px; display: block; }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a {
+      display: none; font-size: 13px; color: var(--gray-700);
+      line-height: 1.65; padding-bottom: 14px;
+    }
+    .faq-item.open .faq-a { display: block; }
+    .faq-footer { font-size: 12px; color: var(--gray-400); margin-top: 16px; }
+    .faq-footer a { color: var(--teal); }
+
+    /* ─── REQUESTS SECTION ───────────────────── */
+    .requests-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .requests-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px; font-weight: 800; color: var(--text);
+    }
+    .req-cards { display: flex; gap: 16px; flex-wrap: wrap; }
+    .req-card {
+      background: white; border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      width: 220px; overflow: hidden; flex-shrink: 0;
+      display: flex; flex-direction: column;
+      transition: box-shadow 0.15s; cursor: pointer;
+    }
+    .req-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+    .req-card-top {
+      position: relative; height: 120px;
+      background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 52px;
+    }
+    .req-id {
+      position: absolute; top: 8px; left: 10px;
+      font-size: 11px; font-weight: 700; color: var(--gray-600);
+    }
+    .req-dot {
+      position: absolute; top: 10px; right: 10px;
+      width: 10px; height: 10px; border-radius: 50%; background: var(--green);
+    }
+    .req-card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .req-actions { display: flex; gap: 8px; align-items: center; }
+    .req-action-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--gray-400); padding: 2px; transition: color 0.15s;
+    }
+    .req-action-btn:hover { color: var(--teal); }
+    .req-action-btn svg { width: 15px; height: 15px; display: block; }
+    .req-age { font-size: 11px; color: var(--gray-400); margin-left: auto; }
+    .req-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.35; }
+    .req-desc { font-size: 12px; color: var(--gray-600); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .req-location { font-size: 11px; color: var(--gray-500); }
+    .req-location a { color: var(--teal); }
+    .req-amount {
+      font-size: 13px; font-weight: 700; color: var(--text);
+      margin-top: 4px;
+    }
+    .req-amount span { color: var(--green); }
+    .req-prog { height: 6px; background: var(--gray-200); border-radius: 999px; overflow: hidden; margin: 4px 0; }
+    .req-prog-fill { height: 100%; background: var(--teal); border-radius: 999px; }
+    .req-people { font-size: 11px; color: var(--gray-500); }
+    .req-needs { font-size: 11px; color: var(--gray-600); margin-top: 4px; }
+    .req-needs strong { color: var(--text); }
+
+    .browse-btn {
+      background: var(--orange); color: white;
+      font-size: 13px; font-weight: 700; padding: 11px 24px;
+      border-radius: 8px; border: none; cursor: pointer;
+      transition: background 0.15s; display: block;
+      text-align: center; margin-top: 20px;
+    }
+    .browse-btn:hover { background: var(--orange-d); }
+
+    /* ─── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 720px) {
+      .two-col { flex-direction: column; }
+      .col-side { width: 100%; position: static; }
+      .req-card { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TAB NAV -->
+  <nav class="top-nav" aria-label="Dashboard sections">
+    <div class="tab-list">
+      <a href="#checklist-section" class="tab active" id="tab-checklist" onclick="setTab('checklist')">Checklist</a>
+      <a href="#faqs-section"      class="tab"        id="tab-faqs"      onclick="setTab('faqs')">FAQs</a>
+      <a href="#requests-section"  class="tab"        id="tab-requests"  onclick="setTab('requests')">Requests</a>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- USER HEADER -->
+    <div class="user-header">
+      <div class="avatar" id="user-avatar">?</div>
+      <div>
+        <h2 id="user-greeting">Hi there!</h2>
+        <p>Welcome to your Dashboard!</p>
+      </div>
+    </div>
+
+    <!-- TWO-COL -->
+    <div class="two-col">
+
+      <!-- ── MAIN COL ──────────────────────── -->
+      <div class="col-main">
+
+        <!-- CHECKLIST CARD -->
+        <div class="card" id="checklist-section">
+          <div class="card-title">Onboarding checklist</div>
+          <div class="card-sub">Walk through the basics and <a href="#">see just how easy it is</a> to make an impact.</div>
+
+          <div class="progress-label" id="prog-label">0% You got this!</div>
+          <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+
+          <!-- Section 1: Get started -->
+          <div class="checklist-section">
+            <div class="checklist-section-header">
+              <span class="section-icon">☀️</span>
+              <div class="section-meta">
+                <div class="section-name">Get started</div>
+                <div class="section-count" id="count-1">0 of 3 Complete</div>
+              </div>
+            </div>
+            <div class="checklist-items" id="section-1">
+              <div class="checklist-item" id="item-1-1">
+                <div class="item-left">
+                  <div class="item-check" onclick="toggleItem('item-1-1')"></div>
+                  <span class="item-text">Add a <a href="#">profile picture</a> 🖼️</span>
+                </div>
+                <button class="item-arrow" aria-label="Go">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
+                </button>
+              </div>
+              <div class="checklist-item" id="item-1-2">
+                <div class="item-left">
+                  <div class="item-check" onclick="toggleItem('item-1-2')"></div>
+                  <span class="item-text">Review your <a href="#">notification preferences</a> 🔔</span>
+                </div>
+                <button class="item-arrow" aria-label="Go">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
+                </button>
+              </div>
+              <div class="checklist-item" id="item-1-3">
+                <div class="item-left">
+                  <div class="item-check" onclick="toggleItem('item-1-3')"></div>
+                  <span class="item-text">Download and log in to the <a href="#">MigrantPortal app</a> 📱</span>
+                </div>
+                <button class="item-arrow" aria-label="Go">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Make a difference -->
+          <div class="checklist-section">
+            <div class="checklist-section-header">
+              <span class="section-icon">🤝</span>
+              <div class="section-meta">
+                <div class="section-name">Make a difference</div>
+                <div class="section-count" id="count-2">0 of 4 Complete</div>
+              </div>
+            </div>
+            <div class="checklist-items" id="section-2">
+              <div class="checklist-item" id="item-2-1">
+                <div class="item-left">
+                  <div class="item-check" onclick="toggleItem('item-2-1')"></div>
+                  <span class="item-text">Learn how MigrantPortal works by <a href="#">watching a short video</a> 🎬</span>
+                </div>
+                <button class="item-arrow" aria-label="Go">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
+                </button>
+              </div>
+              <div class="checklist-item" id="item-2-2">
+                <div class="item-left">
+                  <div class="item-check" onclick="toggleItem('item-2-2')"></div>
+                  <span class="item-text">Learn how to respond to a need by <a href="#">watching a short video</a> 🎬</span>
+                </div>
+                <button class="item-arrow" aria-label="Go">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
+                </button>
+              </div>
+              <div class="checklist-item" id="item-2-3">
+                <div class="item-left">
+                  <div class="item-check" onclick="toggleItem('item-2-3')"></div>
+                  <span class="item-text">Browse needs near you 📍</span>
+                </div>
+                <button class="item-arrow" aria-label="Go">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
+                </button>
+              </div>
+              <div class="checklist-item" id="item-2-4">
+                <div class="item-left">
+                  <div class="item-check" onclick="toggleItem('item-2-4')"></div>
+                  <span class="item-text">Respond to your first need 🌟 <span class="item-badge">Required</span></span>
+                </div>
+                <button class="item-arrow" aria-label="Go">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-dismiss">
+            ⓘ Respond to your first need to dismiss checklist
+          </div>
+        </div>
+
+        <!-- REQUESTS CARD -->
+        <div class="card" id="requests-section">
+          <div class="requests-header">
+            <div class="requests-title">Requests for you</div>
+          </div>
+
+          <div class="req-cards">
+
+            <!-- Card 1 -->
+            <div class="req-card">
+              <div class="req-card-top">
+                🏠
+                <div class="req-id">#MP001</div>
+                <div class="req-dot"></div>
+              </div>
+              <div class="req-card-body">
+                <div class="req-actions">
+                  <button class="req-action-btn" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                  <button class="req-action-btn" aria-label="Profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+                  <button class="req-action-btn" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <span class="req-age">2d</span>
+                </div>
+                <div class="req-title">Help a Family Find Stable Housing</div>
+                <div class="req-desc">A migrant family of 5 recently arrived and needs help connecting with transitional housing resources in the area.</div>
+                <div class="req-location">Kansas City, Kansas · <a href="#">New Hope Church</a></div>
+                <div class="req-amount"><span>$0.00</span> still needed</div>
+                <div class="req-prog"><div class="req-prog-fill" style="width:0%"></div></div>
+                <div class="req-people">👶 3 Children &nbsp; 👤 2 Adults</div>
+                <div class="req-needs"><strong>2 Needs</strong> · Housing referral · School enrollment</div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="req-card">
+              <div class="req-card-top">
+                🎒
+                <div class="req-id">#MP002</div>
+                <div class="req-dot"></div>
+              </div>
+              <div class="req-card-body">
+                <div class="req-actions">
+                  <button class="req-action-btn" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                  <button class="req-action-btn" aria-label="Profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+                  <button class="req-action-btn" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <span class="req-age">5d</span>
+                </div>
+                <div class="req-title">School Supplies for 3 Children</div>
+                <div class="req-desc">Three children ages 6, 8, and 10 are starting school next week and need backpacks, notebooks, and basic supplies.</div>
+                <div class="req-location">Wyandotte, Kansas · <a href="#">Grace Community</a></div>
+                <div class="req-amount"><span>$85.00</span> still needed</div>
+                <div class="req-prog"><div class="req-prog-fill" style="width:30%"></div></div>
+                <div class="req-people">👶 3 Children &nbsp; 👤 1 Adult</div>
+                <div class="req-needs"><strong>1 Need</strong> · School supplies</div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="req-card">
+              <div class="req-card-top">
+                🏥
+                <div class="req-id">#MP003</div>
+                <div class="req-dot"></div>
+              </div>
+              <div class="req-card-body">
+                <div class="req-actions">
+                  <button class="req-action-btn" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                  <button class="req-action-btn" aria-label="Profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+                  <button class="req-action-btn" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <span class="req-age">8d</span>
+                </div>
+                <div class="req-title">Medical Appointment Transportation</div>
+                <div class="req-desc">A mother needs a ride to a pediatric appointment for her 2-year-old. No car and no English — interpreter help also welcome.</div>
+                <div class="req-location">Kansas City, Missouri · <a href="#">River of Life Church</a></div>
+                <div class="req-amount"><span>$0.00</span> still needed</div>
+                <div class="req-prog"><div class="req-prog-fill" style="width:0%"></div></div>
+                <div class="req-people">👶 1 Child &nbsp; 👤 1 Adult</div>
+                <div class="req-needs"><strong>2 Needs</strong> · Transportation · Translation help</div>
+              </div>
+            </div>
+
+          </div>
+
+          <a href="mailto:support@migrantportal.com?subject=Browse+All+Requests" class="browse-btn">Browse all requests</a>
+        </div>
+
+      </div><!-- /col-main -->
+
+      <!-- ── SIDEBAR ─────────────────────────── -->
+      <div class="col-side" id="faqs-section">
+        <div class="card">
+          <div class="faq-title">Frequently Asked Questions</div>
+
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <button class="faq-q">
+              <span>Where do MigrantPortal requests come from?</span>
+              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+            </button>
+            <div class="faq-a">Requests are entered by verified connectors — caseworkers, social workers, teachers, and faith community leaders trained and approved in each city. Every need is reviewed before it goes live.</div>
+          </div>
+
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <button class="faq-q">
+              <span>What's the difference between Providing and Funding a request?</span>
+              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+            </button>
+            <div class="faq-a">If you choose to <strong>Provide</strong>, you personally obtain or donate the item or service. If you choose to <strong>Fund</strong>, you make a monetary donation that allows a local partner church or organization to fulfill the need on your behalf.</div>
+          </div>
+
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <button class="faq-q">
+              <span>When I Fund a request, where does the money go?</span>
+              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+            </button>
+            <div class="faq-a">Your donation goes to a vetted local partner who then purchases and delivers the item or service directly to the family. If no partner claims the donation, it is refunded to you.</div>
+          </div>
+
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <button class="faq-q">
+              <span>When I respond to a request, what am I responsible for?</span>
+              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+            </button>
+            <div class="faq-a">When you claim a need, you commit to fulfilling it within the agreed timeframe. You'll receive contact information for the connector who can coordinate delivery with the family.</div>
+          </div>
+
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <button class="faq-q">
+              <span>If I have more questions, who should I contact?</span>
+              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+            </button>
+            <div class="faq-a">Email us at <a href="mailto:support@migrantportal.com">support@migrantportal.com</a> and we'll get back to you within one business day.</div>
+          </div>
+
+          <div class="faq-footer">Still have questions? Read all our FAQs <a href="/terms.html">here</a>.</div>
+        </div>
+      </div>
+
+    </div><!-- /two-col -->
+  </div><!-- /page -->
+
+  <script>
+    /* ── Personalize from URL param ─────────── */
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name') || 'there';
+    const initials = name !== 'there'
+      ? name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2)
+      : '?';
+    document.getElementById('user-greeting').textContent = 'Hi, ' + name.split(' ')[0] + '!';
+    document.getElementById('user-avatar').textContent = initials;
+
+    /* ── Tab highlight on scroll ─────────────── */
+    function setTab(t) {
+      ['checklist','faqs','requests'].forEach(id => {
+        document.getElementById('tab-' + id).classList.toggle('active', id === t);
+      });
+    }
+
+    /* ── FAQ accordion ───────────────────────── */
+    function toggleFaq(el) {
+      el.classList.toggle('open');
+    }
+
+    /* ── Checklist progress ──────────────────── */
+    const TOTAL_ITEMS = 7;
+    let doneCount = 0;
+    const section1Items = ['item-1-1','item-1-2','item-1-3'];
+    const section2Items = ['item-2-1','item-2-2','item-2-3','item-2-4'];
+
+    function toggleItem(id) {
+      const el = document.getElementById(id);
+      const check = el.querySelector('.item-check');
+      const isDone = check.classList.toggle('checked');
+      el.classList.toggle('done', isDone);
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const s1done = section1Items.filter(id => document.getElementById(id).classList.contains('done')).length;
+      const s2done = section2Items.filter(id => document.getElementById(id).classList.contains('done')).length;
+      document.getElementById('count-1').textContent = s1done + ' of 3 Complete';
+      document.getElementById('count-2').textContent = s2done + ' of 4 Complete';
+      const total = s1done + s2done;
+      const pct = Math.round((total / TOTAL_ITEMS) * 100);
+      document.getElementById('prog-fill').style.width = pct + '%';
+      document.getElementById('prog-label').textContent = pct + '% You got this!';
+    }
+  </script>
+
+</body>
+</html>
