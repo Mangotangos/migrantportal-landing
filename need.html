@@ -535,27 +535,8 @@
 
       <!-- ── SIDEBAR ─────────────────────────── -->
       <div class="col-side">
-        <div class="card" id="donations-panel">
-          <div class="donations-title">My Donations</div>
-          <div id="donations-empty">
-            <div class="donations-illus">🏘️</div>
-            <div class="donations-empty-title">You Haven't Selected Any Needs Yet!</div>
-            <div class="donations-empty-sub">Take the next step and click "Yes, I Can Help!" to select the needs you can donate.</div>
-          </div>
-          <div id="donations-active" style="display:none;">
-            <div class="need-item" style="margin-bottom:12px;">
-              <div class="need-icon">🛏️</div>
-              <div class="need-body">
-                <div class="need-name">Bedding &amp; Hygiene Items</div>
-                <div class="need-price">$75.00</div>
-              </div>
-            </div>
-            <button onclick="alert('This would open the payment flow in a full build.')" style="width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Donate Now</button>
-          </div>
-          <div class="donations-footer" style="margin-top:16px;">
-            Donations to MigrantPortal help connect families in crisis to local, proactive, and effective care.
-            <a href="/how-migrantportal-works.html">Learn More ›</a>
-          </div>
+        <div class="card" id="action-panel">
+          <div id="panel-content" style="font-size:13px;color:var(--gray-400);text-align:center;padding:20px 0">Loading…</div>
         </div>
       </div>
 
@@ -569,64 +550,232 @@
       el.classList.add('active');
     }
 
-    // "Yes I Can Help" toggles the sidebar
-    document.querySelector('.btn-help').addEventListener('click', function() {
-      document.getElementById('donations-empty').style.display = 'none';
-      document.getElementById('donations-active').style.display = 'block';
-    });
-
-    // ── Load real need from API if ?id= is present
     const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
 
+    let currentNeed = null;
+    const currentUser = getUser();
+    const needId = new URLSearchParams(location.search).get('id');
+
+    // ── Toast
+    function toast(msg, err=false) {
+      let el = document.getElementById('need-toast');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'need-toast';
+        Object.assign(el.style, {
+          position:'fixed', bottom:'24px', left:'50%', transform:'translateX(-50%)',
+          background:'#1a1a1a', color:'white', padding:'10px 20px', borderRadius:'8px',
+          fontSize:'13px', zIndex:'999', opacity:'0', pointerEvents:'none', transition:'opacity .2s'
+        });
+        document.body.appendChild(el);
+      }
+      el.textContent = msg;
+      el.style.background = err ? '#EF4444' : '#1a1a1a';
+      el.style.opacity = '1';
+      clearTimeout(el._t);
+      el._t = setTimeout(() => el.style.opacity = '0', 2800);
+    }
+
+    // ── Render sidebar panel based on need + user state
+    function renderPanel(need, alreadyResponded) {
+      const panel = document.getElementById('panel-content');
+      const role = currentUser?.role;
+      const isConnector = role === 'connector' || role === 'admin';
+      const isOwner = isConnector && (need.connector_org || role === 'admin');
+
+      if (!currentUser) {
+        panel.innerHTML = `
+          <div style="text-align:center;padding:10px 0">
+            <div style="font-size:32px;margin-bottom:10px">🤝</div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:6px">Want to Help?</div>
+            <div style="color:var(--gray-600);font-size:13px;margin-bottom:16px">Log in to offer your support to this family.</div>
+            <a href="login.html" style="display:block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px;border-radius:8px;text-align:center;text-decoration:none;">Log In to Help</a>
+          </div>`;
+        return;
+      }
+
+      if (need.status === 'pending') {
+        panel.innerHTML = `<div style="text-align:center;padding:10px 0;color:var(--gray-400)"><div style="font-size:28px;margin-bottom:8px">⏳</div><div style="font-weight:600;font-size:13px">Awaiting Admin Approval</div><div style="font-size:12px;margin-top:6px">This need will be visible to responders once approved.</div></div>`;
+        return;
+      }
+
+      if (need.status === 'fulfilled' || need.status === 'closed') {
+        panel.innerHTML = `<div style="text-align:center;padding:10px 0"><div style="font-size:28px;margin-bottom:8px">${need.status==='fulfilled'?'✅':'🔒'}</div><div style="font-weight:600;font-size:13px">${need.status==='fulfilled'?'This need has been fulfilled':'This need is closed'}</div>${need.outcome_note?`<div style="font-size:12px;color:var(--gray-600);margin-top:8px;font-style:italic">"${need.outcome_note}"</div>`:''}</div>`;
+        return;
+      }
+
+      // Active need — role-specific panels
+      if (role === 'responder') {
+        if (alreadyResponded) {
+          panel.innerHTML = `
+            <div style="text-align:center;margin-bottom:16px">
+              <div style="font-size:28px;margin-bottom:6px">🙌</div>
+              <div style="font-weight:700;font-size:14px;color:var(--green)">You're Helping!</div>
+              <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Thank you for offering your support.</div>
+            </div>
+            <button onclick="withdrawResponse()" style="width:100%;height:38px;border:1px solid #fca5a5;background:#fee2e2;color:#dc2626;font-size:13px;font-weight:600;border-radius:7px;cursor:pointer;">Withdraw My Response</button>`;
+        } else {
+          const openItems = need.items.filter(i => i.amount_received < i.amount_needed);
+          panel.innerHTML = `
+            <div style="font-weight:700;font-size:14px;margin-bottom:12px">🤝 Offer to Help</div>
+            <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px">Select what you can contribute:</div>
+            <div id="item-checks" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+              ${openItems.length ? openItems.map(i => `
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px;border:1px solid var(--gray-200);border-radius:7px">
+                  <input type="checkbox" value="${i.id}" style="accent-color:var(--teal);width:15px;height:15px">
+                  <span>${i.label} <span style="color:var(--gray-400)">(${i.amount_received}/${i.amount_needed} ${i.unit})</span></span>
+                </label>`).join('') : '<div style="color:var(--gray-400);font-size:12px">All items are covered!</div>'}
+            </div>
+            <textarea id="respond-msg" placeholder="Optional message to connector…" style="width:100%;height:70px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
+            <button onclick="submitResponse()" style="width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Yes, I Can Help!</button>`;
+        }
+        return;
+      }
+
+      // Connector / admin: fulfill panel
+      if (isConnector) {
+        panel.innerHTML = `
+          <div style="font-weight:700;font-size:14px;margin-bottom:10px">Connector Actions</div>
+          <div style="font-size:12px;color:var(--gray-600);margin-bottom:6px">Response count: <strong>${need.response_count || 0}</strong></div>
+          <hr style="border:none;border-top:1px solid var(--gray-200);margin:12px 0">
+          <div style="font-weight:600;font-size:13px;margin-bottom:8px">Mark as Fulfilled</div>
+          <textarea id="outcome-note" placeholder="Outcome note (optional)…" style="width:100%;height:70px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
+          <button onclick="fulfillNeed()" style="width:100%;background:var(--green);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer;">✅ Mark Fulfilled</button>`;
+        return;
+      }
+
+      panel.innerHTML = `<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests.html">open needs</a>.</div>`;
+    }
+
+    // ── Render items grid
+    function renderItems(need) {
+      const grid = document.querySelector('.needs-grid');
+      const badge = document.querySelector('.section-badge');
+      if (!grid) return;
+      if (badge) badge.textContent = `${need.items.length} Need${need.items.length!==1?'s':''}`;
+      if (!need.items.length) { grid.innerHTML = '<div style="color:var(--gray-400);font-size:13px">No items listed.</div>'; return; }
+      grid.innerHTML = need.items.map((item, idx) => {
+        const pct = item.amount_needed > 0 ? Math.round(item.amount_received / item.amount_needed * 100) : 0;
+        const met = pct >= 100;
+        return `
+          <div class="need-item" style="${met?'opacity:.6':''}">
+            <div class="need-num">${idx+1}</div>
+            <div class="need-icon">${CATEGORY_EMOJI[need.category]||'📦'}</div>
+            <div class="need-body">
+              <div class="need-name">${item.label}</div>
+              <div class="need-status${met?' met':''}">${met?'Need met in full!':'Still needed'}</div>
+              <div style="margin-top:6px;background:var(--gray-200);border-radius:3px;height:5px;overflow:hidden">
+                <div style="height:100%;width:${pct}%;background:${met?'var(--green)':'var(--teal)'};border-radius:3px;transition:width .5s"></div>
+              </div>
+              <div style="font-size:11px;color:var(--gray-400);margin-top:3px">${item.amount_received} / ${item.amount_needed} ${item.unit}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Submit response
+    async function submitResponse() {
+      const checkedIds = [...document.querySelectorAll('#item-checks input:checked')].map(c => c.value);
+      const msg = document.getElementById('respond-msg')?.value.trim() || '';
+      try {
+        await apiPost(`/needs/${needId}/respond`, { item_ids: checkedIds, message: msg });
+        toast('Response submitted! The connector will be notified.');
+        renderPanel(currentNeed, true);
+      } catch(e) { toast(e.message, true); }
+    }
+
+    // ── Withdraw response
+    async function withdrawResponse() {
+      if (!confirm('Withdraw your response from this need?')) return;
+      try {
+        await apiDelete(`/needs/${needId}/respond`);
+        toast('Response withdrawn.');
+        renderPanel(currentNeed, false);
+      } catch(e) { toast(e.message, true); }
+    }
+
+    // ── Fulfill need
+    async function fulfillNeed() {
+      const note = document.getElementById('outcome-note')?.value.trim() || '';
+      if (!confirm('Mark this need as fulfilled?')) return;
+      try {
+        await apiPatch(`/needs/${needId}/fulfill`, { outcome_note: note });
+        toast('Marked as fulfilled!');
+        currentNeed.status = 'fulfilled';
+        currentNeed.outcome_note = note;
+        renderPanel(currentNeed, false);
+      } catch(e) { toast(e.message, true); }
+    }
+
+    // ── Load need
     async function loadNeed() {
-      const id = new URLSearchParams(location.search).get('id');
-      if (!id) return; // no id — keep static demo content
+      if (!needId) return; // keep static demo
 
       try {
-        const need = await apiGet('/needs/' + id);
+        const need = await apiGet('/needs/' + needId);
+        currentNeed = need;
 
-        // Title
+        // Title + page meta
+        document.title = (need.title || 'Need Detail') + ' — MigrantPortal';
         const titleEl = document.querySelector('.req-title');
         if (titleEl) titleEl.textContent = need.title || '';
 
-        // Page title + breadcrumb
-        document.title = (need.title || 'Need Detail') + ' — MigrantPortal';
-        const crumb = document.querySelector('[style*="Need #MP"]') || document.querySelector('.back-bar .breadcrumb');
-        if (crumb) crumb.textContent = 'Need #MP' + String(need.id).padStart(3, '0');
+        // Breadcrumb
+        const crumb = document.querySelector('[style*="Need #MP"]');
+        if (crumb) crumb.textContent = 'Need #' + need.case_number;
 
-        // Illustration emoji
+        // Illustration
         const illus = document.querySelector('.req-illustration');
         if (illus) illus.textContent = CATEGORY_EMOJI[need.category] || '📦';
 
-        // Meta row
+        // Meta
         const meta = document.querySelector('.req-meta');
         if (meta) {
           const loc = [need.city, need.state, need.zip].filter(Boolean).join(' · ');
           const urg = need.urgency ? need.urgency.charAt(0).toUpperCase() + need.urgency.slice(1) : '—';
+          const statusColor = { active:'var(--green)', pending:'#f59e0b', fulfilled:'var(--teal)', closed:'var(--gray-400)' }[need.status] || 'var(--gray-400)';
           meta.innerHTML = `
-            <strong>Verified Request:</strong> #MP${String(need.id).padStart(3,'0')} &nbsp;·&nbsp;
-            <strong>Urgency:</strong> ${urg} &nbsp;·&nbsp;
-            <strong>Category:</strong> ${need.category || '—'}<br/>
-            <strong>Location:</strong> ${loc || '—'}<br/>
-            <strong>Family:</strong> ${need.family_adults || 1} Adult${(need.family_adults||1)!==1?'s':''}, ${need.family_children || 0} Child${(need.family_children||0)!==1?'ren':''}
+            <strong>Case:</strong> #${need.case_number} &nbsp;·&nbsp;
+            <strong>Status:</strong> <span style="color:${statusColor};font-weight:700">${need.status}</span> &nbsp;·&nbsp;
+            <strong>Urgency:</strong> ${urg} &nbsp;·&nbsp; <strong>Category:</strong> ${need.category || '—'}<br/>
+            <strong>Location:</strong> ${loc || '—'}&nbsp;·&nbsp;
+            <strong>Family:</strong> ${need.family_adults||1} Adult${(need.family_adults||1)!==1?'s':''}, ${need.family_children||0} Child${(need.family_children||0)!==1?'ren':''}
           `;
         }
 
-        // Story / description
+        // Description
         const storyText = document.querySelector('.story-text');
         if (storyText && need.description) storyText.textContent = need.description;
 
-        // Family size in story heading
+        // Family size heading
         const secMeta = document.querySelector('#story .section-meta');
         if (secMeta) {
-          const ch = need.family_children || 0;
-          const ad = need.family_adults   || 1;
+          const ch = need.family_children || 0, ad = need.family_adults || 1;
           secMeta.textContent = (ch > 0 ? `👶 ${ch} Child${ch!==1?'ren':''} ` : '') + `👤 ${ad} Adult${ad!==1?'s':''}`;
         }
 
-      } catch (err) {
-        // On error just keep static demo content visible
+        // Render items
+        renderItems(need);
+
+        // Hide "Yes I Can Help" header button — sidebar handles it now
+        const helpBtn = document.querySelector('.btn-help');
+        if (helpBtn) helpBtn.style.display = 'none';
+
+        // Check if already responded (responders only)
+        let alreadyResponded = false;
+        if (currentUser?.role === 'responder') {
+          try {
+            const responded = await apiGet('/needs/responded');
+            alreadyResponded = responded.some(n => n.id === needId);
+          } catch(e) {}
+        }
+
+        // Render sidebar
+        renderPanel(need, alreadyResponded);
+
+      } catch(err) {
         console.warn('Could not load need:', err.message);
+        document.getElementById('panel-content').innerHTML = '<div style="color:var(--gray-400);font-size:13px;text-align:center">Could not load need details.</div>';
       }
     }
 
