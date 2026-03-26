@@ -578,16 +578,18 @@
       const fn = document.getElementById('firstName').value.trim();
       const ln = document.getElementById('lastName').value.trim();
       const s  = document.getElementById('saveSuccess');
+      s.style.display = 'none';
       try {
         const updated = await apiPatch('/auth/profile', {
           name: [fn, ln].filter(Boolean).join(' '),
-          email: document.getElementById('emailField').value.trim()
         });
         localStorage.setItem('mp_user', JSON.stringify(updated));
-      } catch (_) { /* show success anyway — endpoint may not exist yet */ }
-      updateAvatar();
-      s.style.display = 'block';
-      setTimeout(() => s.style.display = 'none', 3000);
+        updateAvatar();
+        s.style.display = 'block';
+        setTimeout(() => s.style.display = 'none', 3000);
+      } catch (e) {
+        alert('Save failed: ' + (e.message || 'Unknown error'));
+      }
     }
   </script>
 
