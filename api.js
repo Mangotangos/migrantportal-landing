@@ -48,6 +48,16 @@ function logout() {
   window.location.href = '/login.html';
 }
 
+async function apiDelete(path) {
+  const token = localStorage.getItem('mp_token');
+  const r = await fetch(API + path, {
+    method: 'DELETE',
+    headers: token ? { 'Authorization': 'Bearer ' + token } : {}
+  });
+  if (!r.ok) { const data = await r.json().catch(() => ({})); throw new Error(data.detail || 'Request failed'); }
+  return r.status === 204 ? null : r.json();
+}
+
 function requireAuth() {
   if (!localStorage.getItem('mp_token')) {
     window.location.href = '/login.html';
