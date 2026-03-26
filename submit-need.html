@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit a Need — MigrantPortal</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --teal:#009DA5; --orange:#FF6129; --blue:#0973A7; --navy:#172936; --text:#0D0D0D; --gray-600:#555; --gray-400:#999; --gray-200:#E8E8E8; --gray-100:#F4F4F4; --cream:#FAF7F0; }
+    body { font-family: 'Inter', sans-serif; background: #F0F2F5; min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: var(--teal); text-decoration: none; }
+
+    /* NAV */
+    nav { background: white; border-bottom: 1px solid var(--gray-200); height: 64px; display: flex; align-items: center; padding: 0 40px; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px; color: var(--text); }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--orange); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: 800; }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--gray-600); }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-btn { background: var(--orange); color: white !important; padding: 8px 18px; border-radius: 7px; font-weight: 700 !important; }
+
+    /* BACK BAR */
+    .back-bar { background: white; border-bottom: 1px solid var(--gray-200); padding: 10px 40px; display: flex; align-items: center; gap: 16px; }
+    .back-btn { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--teal); cursor: pointer; border: none; background: none; padding: 0; }
+    .back-btn:hover { opacity: .8; }
+    .breadcrumb { font-size: 13px; color: var(--gray-400); }
+    .breadcrumb a { color: var(--gray-400); }
+    .breadcrumb a:hover { color: var(--teal); }
+
+    /* LAYOUT */
+    .page { flex: 1; max-width: 860px; margin: 0 auto; width: 100%; padding: 36px 20px 60px; }
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-family: 'Montserrat', sans-serif; font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .page-header p { font-size: 14px; color: var(--gray-600); }
+
+    /* FORM CARD */
+    .card { background: white; border-radius: 14px; border: 1px solid var(--gray-200); padding: 32px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.04); }
+    .card-title { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .card-title .step-badge { width: 24px; height: 24px; border-radius: 50%; background: var(--teal); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* FORM */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 5px; }
+    label .req { color: #dc2626; margin-left: 2px; }
+    input, select, textarea {
+      font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text);
+      border: 1px solid var(--gray-200); border-radius: 7px; outline: none;
+      transition: border-color .15s;
+      background: white;
+    }
+    input, select { height: 42px; padding: 0 12px; }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+    textarea { padding: 10px 12px; resize: vertical; min-height: 90px; }
+    input:focus, select:focus, textarea:focus { border-color: var(--teal); }
+    input::placeholder, textarea::placeholder { color: var(--gray-400); }
+
+    /* COUNTER */
+    .counter-row { display: flex; align-items: center; gap: 12px; }
+    .counter-btn { width: 32px; height: 32px; border-radius: 7px; border: 1px solid var(--gray-200); background: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--teal); font-weight: 600; flex-shrink: 0; }
+    .counter-btn:hover { background: var(--gray-100); }
+    .counter-val { width: 40px; text-align: center; font-size: 16px; font-weight: 600; color: var(--navy); }
+
+    /* ITEMS */
+    .items-list { display: flex; flex-direction: column; gap: 10px; }
+    .item-row { display: grid; grid-template-columns: 1fr 80px 28px; gap: 8px; align-items: center; }
+    .remove-btn { width: 28px; height: 28px; border-radius: 6px; border: none; background: #fef2f2; color: #dc2626; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .remove-btn:hover { background: #fee2e2; }
+    .add-item-btn { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--teal); border: none; background: none; cursor: pointer; margin-top: 8px; padding: 0; }
+    .add-item-btn:hover { opacity: .8; }
+
+    /* URGENCY */
+    .urgency-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .urgency-option { border: 2px solid var(--gray-200); border-radius: 8px; padding: 10px 8px; cursor: pointer; text-align: center; transition: all .15s; }
+    .urgency-option:hover { border-color: var(--teal); }
+    .urgency-option.selected { border-color: var(--teal); background: #f0fafa; }
+    .urgency-label { font-size: 13px; font-weight: 600; }
+    .urgency-desc { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+    .urgency-dot { width: 8px; height: 8px; border-radius: 50%; margin: 0 auto 6px; }
+    .dot-urgent { background: #dc2626; }
+    .dot-high { background: #ea580c; }
+    .dot-medium { background: #ca8a04; }
+    .dot-low { background: #16a34a; }
+
+    /* BUTTONS */
+    .submit-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
+    .btn-primary { background: var(--orange); color: white; padding: 12px 28px; border-radius: 7px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { background: #e05020; }
+    .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-secondary { background: white; color: var(--gray-600); padding: 11px 24px; border-radius: 7px; font-size: 14px; font-weight: 600; border: 1px solid var(--gray-200); cursor: pointer; }
+    .btn-secondary:hover { background: var(--gray-100); }
+
+    /* ALERT */
+    .alert { border-radius: 8px; padding: 12px 16px; font-size: 13px; margin-bottom: 20px; display: none; }
+    .alert-error { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; }
+    .alert-success { background: #f0fdf4; border: 1px solid #86efac; color: #16a34a; }
+
+    /* SUCCESS STATE */
+    .success-card { background: white; border-radius: 14px; border: 1px solid var(--gray-200); padding: 56px 32px; text-align: center; display: none; box-shadow: 0 2px 8px rgba(0,0,0,.04); }
+    .success-icon { width: 64px; height: 64px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .success-icon svg { width: 32px; height: 32px; color: #16a34a; }
+    .success-card h2 { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .success-card p { font-size: 14px; color: var(--gray-600); max-width: 400px; margin: 0 auto 28px; }
+    .success-btns { display: flex; gap: 12px; justify-content: center; }
+
+    /* SPINNER */
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: white; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* SECTION DIVIDER */
+    .section-divider { height: 1px; background: var(--gray-200); margin: 20px 0; }
+
+    /* INFO NOTE */
+    .info-note { background: #f0f8ff; border: 1px solid #bfdbfe; border-radius: 7px; padding: 10px 14px; font-size: 13px; color: #1d4ed8; display: flex; gap: 8px; align-items: flex-start; }
+    .info-note svg { flex-shrink: 0; margin-top: 1px; }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .back-bar { padding: 10px 16px; }
+      .page { padding: 20px 16px 48px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid.cols-3 { grid-template-columns: 1fr; }
+      .urgency-grid { grid-template-columns: repeat(2, 1fr); }
+      .item-row { grid-template-columns: 1fr 70px 28px; }
+      .submit-row { flex-direction: column-reverse; }
+      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">M</div>
+      MigrantPortal
+    </a>
+    <div class="nav-links">
+      <a href="requests.html">Browse Needs</a>
+      <a href="how-migrantportal-works.html">How It Works</a>
+      <a href="dashboard.html" class="nav-btn">Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="back-bar">
+    <button class="back-btn" onclick="history.back()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back
+    </button>
+    <span class="breadcrumb"><a href="dashboard.html">Dashboard</a> / Submit a Need</span>
+  </div>
+
+  <div class="page">
+    <div class="page-header">
+      <h1>Submit a Family Need</h1>
+      <p>Fill out the form below to connect a migrant family with local helpers, churches, and volunteers.</p>
+    </div>
+
+    <div class="alert alert-error" id="alertError"></div>
+
+    <!-- FORM SECTION -->
+    <div id="formSection">
+
+      <!-- STEP 1: NEED BASICS -->
+      <div class="card">
+        <div class="card-title"><span class="step-badge">1</span> Need Details</div>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Need Title <span class="req">*</span></label>
+            <input type="text" id="title" placeholder="e.g. Family of 4 needs winter clothing" maxlength="120" />
+          </div>
+          <div class="form-group">
+            <label>Category <span class="req">*</span></label>
+            <select id="category">
+              <option value="">Select category…</option>
+              <option value="housing">Housing</option>
+              <option value="food">Food</option>
+              <option value="clothing">Clothing</option>
+              <option value="furniture">Furniture</option>
+              <option value="transportation">Transportation</option>
+              <option value="employment">Employment</option>
+              <option value="legal">Legal</option>
+              <option value="medical">Medical</option>
+              <option value="education">Education</option>
+              <option value="translation">Translation</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Location — City <span class="req">*</span></label>
+            <input type="text" id="city" placeholder="e.g. Kansas City" />
+          </div>
+          <div class="form-group">
+            <label>State <span class="req">*</span></label>
+            <input type="text" id="state" placeholder="e.g. MO" maxlength="2" />
+          </div>
+          <div class="form-group">
+            <label>ZIP Code <span class="req">*</span></label>
+            <input type="text" id="zip" placeholder="e.g. 64108" maxlength="10" />
+          </div>
+          <div class="form-group full">
+            <label>Description <span class="req">*</span></label>
+            <textarea id="description" placeholder="Describe the situation and what is needed. Be specific to help responders understand the need."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: URGENCY -->
+      <div class="card">
+        <div class="card-title"><span class="step-badge">2</span> Urgency Level</div>
+        <div class="urgency-grid" id="urgencyGrid">
+          <div class="urgency-option" onclick="selectUrgency('urgent')" data-value="urgent">
+            <div class="urgency-dot dot-urgent"></div>
+            <div class="urgency-label">Urgent</div>
+            <div class="urgency-desc">Needed within 24 hrs</div>
+          </div>
+          <div class="urgency-option" onclick="selectUrgency('high')" data-value="high">
+            <div class="urgency-dot dot-high"></div>
+            <div class="urgency-label">High</div>
+            <div class="urgency-desc">Needed within 1 week</div>
+          </div>
+          <div class="urgency-option selected" onclick="selectUrgency('medium')" data-value="medium">
+            <div class="urgency-dot dot-medium"></div>
+            <div class="urgency-label">Medium</div>
+            <div class="urgency-desc">Needed within 1 month</div>
+          </div>
+          <div class="urgency-option" onclick="selectUrgency('low')" data-value="low">
+            <div class="urgency-dot dot-low"></div>
+            <div class="urgency-label">Low</div>
+            <div class="urgency-desc">No immediate deadline</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: FAMILY SIZE -->
+      <div class="card">
+        <div class="card-title"><span class="step-badge">3</span> Family Information</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Adults in household</label>
+            <div class="counter-row">
+              <button class="counter-btn" onclick="adjustCount('adults', -1)">−</button>
+              <div class="counter-val" id="adultsVal">1</div>
+              <button class="counter-btn" onclick="adjustCount('adults', 1)">+</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Children in household</label>
+            <div class="counter-row">
+              <button class="counter-btn" onclick="adjustCount('children', -1)">−</button>
+              <div class="counter-val" id="childrenVal">0</div>
+              <button class="counter-btn" onclick="adjustCount('children', 1)">+</button>
+            </div>
+          </div>
+          <div class="form-group full"><div class="section-divider"></div></div>
+          <div class="form-group">
+            <label>Family Contact Name <span style="color:var(--gray-400);font-weight:400;">(optional)</span></label>
+            <input type="text" id="migrantName" placeholder="First name or anonymous" />
+          </div>
+          <div class="form-group">
+            <label>Family Phone <span style="color:var(--gray-400);font-weight:400;">(optional)</span></label>
+            <input type="tel" id="migrantPhone" placeholder="(555) 000-0000" />
+          </div>
+        </div>
+        <div class="info-note" style="margin-top:14px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#3b82f6" stroke-width="1.4"/><path d="M8 7v4M8 5.5v.5" stroke="#3b82f6" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Family contact info is only visible to approved connectors and is never shared publicly.
+        </div>
+      </div>
+
+      <!-- STEP 4: SPECIFIC ITEMS -->
+      <div class="card">
+        <div class="card-title"><span class="step-badge">4</span> Specific Items <span style="font-size:12px;font-weight:500;color:var(--gray-400);margin-left:4px;">(optional)</span></div>
+        <div class="items-list" id="itemsList"></div>
+        <button class="add-item-btn" onclick="addItem()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Add specific item
+        </button>
+      </div>
+
+      <div class="submit-row">
+        <button class="btn-secondary" onclick="history.back()">Cancel</button>
+        <button class="btn-primary" id="submitBtn" onclick="handleSubmit()">
+          Submit Need
+        </button>
+      </div>
+
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-card" id="successCard">
+      <div class="success-icon">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16l7 7L26 9"/></svg>
+      </div>
+      <h2>Need Submitted!</h2>
+      <p>The need has been posted to MigrantPortal. Local helpers and churches will be notified and can begin responding.</p>
+      <div class="success-btns">
+        <a href="requests.html" class="btn-primary" style="text-decoration:none;">View All Needs</a>
+        <a href="dashboard.html" class="btn-secondary" style="text-decoration:none;">Back to Dashboard</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    requireAuth();
+
+    let urgency = 'medium';
+    let adults = 1;
+    let children = 0;
+    let items = [];
+
+    function selectUrgency(val) {
+      urgency = val;
+      document.querySelectorAll('.urgency-option').forEach(el => {
+        el.classList.toggle('selected', el.dataset.value === val);
+      });
+    }
+
+    function adjustCount(type, delta) {
+      if (type === 'adults') {
+        adults = Math.max(1, adults + delta);
+        document.getElementById('adultsVal').textContent = adults;
+      } else {
+        children = Math.max(0, children + delta);
+        document.getElementById('childrenVal').textContent = children;
+      }
+    }
+
+    function addItem() {
+      const id = Date.now();
+      items.push({ id, name: '', quantity: 1 });
+      renderItems();
+      // focus the new input
+      setTimeout(() => {
+        const inp = document.getElementById('item-name-' + id);
+        if (inp) inp.focus();
+      }, 50);
+    }
+
+    function removeItem(id) {
+      items = items.filter(i => i.id !== id);
+      renderItems();
+    }
+
+    function renderItems() {
+      const list = document.getElementById('itemsList');
+      if (items.length === 0) {
+        list.innerHTML = '';
+        return;
+      }
+      list.innerHTML = items.map(item => `
+        <div class="item-row">
+          <input type="text" id="item-name-${item.id}" placeholder="Item name (e.g. Winter jacket, size M)"
+            value="${item.name}" oninput="updateItem(${item.id}, 'name', this.value)" />
+          <input type="number" id="item-qty-${item.id}" placeholder="Qty" min="1" max="999"
+            value="${item.quantity}" oninput="updateItem(${item.id}, 'qty', this.value)"
+            style="text-align:center;" />
+          <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
+        </div>
+      `).join('');
+    }
+
+    function updateItem(id, field, val) {
+      const item = items.find(i => i.id === id);
+      if (!item) return;
+      if (field === 'name') item.name = val;
+      else item.quantity = parseInt(val) || 1;
+    }
+
+    async function handleSubmit() {
+      const btn = document.getElementById('submitBtn');
+      const err = document.getElementById('alertError');
+      err.style.display = 'none';
+
+      const title = document.getElementById('title').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const category = document.getElementById('category').value;
+      const city = document.getElementById('city').value.trim();
+      const state = document.getElementById('state').value.trim().toUpperCase();
+      const zip = document.getElementById('zip').value.trim();
+
+      if (!title) return showError('Please enter a title for this need.');
+      if (!category) return showError('Please select a category.');
+      if (!city || !state || !zip) return showError('Please fill in city, state, and ZIP.');
+      if (!description) return showError('Please add a description of the need.');
+
+      // Collect items (ignore incomplete rows)
+      const itemsPayload = items
+        .filter(i => i.name.trim())
+        .map(i => ({ name: i.name.trim(), quantity: i.quantity }));
+
+      const payload = {
+        title,
+        description,
+        category,
+        urgency,
+        city,
+        state,
+        zip,
+        family_adults: adults,
+        family_children: children,
+        items: itemsPayload,
+        migrant_name: document.getElementById('migrantName').value.trim() || null,
+        migrant_phone: document.getElementById('migrantPhone').value.trim() || null,
+      };
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> Submitting…';
+
+      try {
+        await apiPost('/needs', payload);
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('successCard').style.display = 'block';
+      } catch (ex) {
+        showError(ex.message);
+        btn.disabled = false;
+        btn.innerHTML = 'Submit Need';
+      }
+    }
+
+    function showError(msg) {
+      const err = document.getElementById('alertError');
+      err.textContent = msg;
+      err.style.display = 'block';
+      err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>
