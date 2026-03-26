@@ -108,7 +108,7 @@
 
     /* ── LEFT PANEL ── */
     .panel {
-      width: 370px; flex-shrink: 0; background: white;
+      width: 560px; flex-shrink: 0; background: white;
       border-right: 1px solid var(--gray-200);
       display: flex; flex-direction: column; overflow: hidden;
     }
@@ -127,7 +127,8 @@
 
     .cards-list {
       flex: 1; overflow-y: auto; padding: 12px;
-      display: flex; flex-direction: column; gap: 10px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      align-content: start;
     }
     .cards-list::-webkit-scrollbar { width: 5px; }
     .cards-list::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
