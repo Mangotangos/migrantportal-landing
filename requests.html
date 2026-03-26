@@ -598,6 +598,7 @@
         map.flyTo(markers[idx].getLatLng(), 12, { duration: 0.8 });
         markers[idx].openPopup();
       }
+      setTimeout(() => { window.location.href = 'need.html'; }, 300);
     }
 
     // ── Filter cards by search
