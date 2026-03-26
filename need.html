@@ -53,7 +53,7 @@
     .page { max-width: 960px; margin: 0 auto; padding: 28px 20px 80px; }
     .two-col { display: flex; gap: 20px; align-items: flex-start; }
     .col-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
-    .col-side { width: 260px; flex-shrink: 0; position: sticky; top: 56px; }
+    .col-side { width: 260px; flex-shrink: 0; position: sticky; top: 100px; }
 
     /* ─── CARD BASE ──────────────────────────── */
     .card {
@@ -268,8 +268,24 @@
 </head>
 <body>
 
+  <!-- BACK BAR -->
+  <div style="background:white;border-bottom:1px solid #E8E8E8;padding:0 20px;height:44px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:101;">
+    <a href="javascript:history.back()" style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#555;text-decoration:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Requests
+    </a>
+    <span style="color:#E8E8E8;">|</span>
+    <a href="/" style="font-size:13px;color:#009DA5;font-weight:600;text-decoration:none;">MigrantPortal</a>
+    <span style="font-size:13px;color:#999;">/ Requests /</span>
+    <span style="font-size:13px;color:#0D0D0D;font-weight:600;">Need #MP001</span>
+    <a href="dashboard.html" style="margin-left:auto;font-size:13px;font-weight:600;color:#009DA5;text-decoration:none;display:flex;align-items:center;gap:5px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+  </div>
+
   <!-- TAB NAV -->
-  <nav class="top-nav" aria-label="Request sections">
+  <nav class="top-nav" aria-label="Request sections" style="top:44px;">
     <div class="tab-list">
       <a href="#request-details" class="tab active" onclick="setTab(this)">Request Details</a>
       <a href="#story"           class="tab"        onclick="setTab(this)">Story</a>
