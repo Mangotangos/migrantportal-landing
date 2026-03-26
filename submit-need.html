@@ -394,7 +394,7 @@
       // Collect items (ignore incomplete rows)
       const itemsPayload = items
         .filter(i => i.name.trim())
-        .map(i => ({ name: i.name.trim(), quantity: i.quantity }));
+        .map(i => ({ label: i.name.trim(), amount_needed: i.quantity, unit: 'item' }));
 
       const payload = {
         title,

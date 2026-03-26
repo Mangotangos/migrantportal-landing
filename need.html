@@ -533,6 +533,12 @@
     let currentNeed = null;
     const currentUser = getUser();
     const needId = new URLSearchParams(location.search).get('id');
+    const _params = new URLSearchParams(location.search);
+    if (_params.get('donated') === '1') {
+      // clean URL then show success toast after page loads
+      history.replaceState(null, '', needId ? `need.html?id=${needId}` : 'requests.html');
+      window.addEventListener('load', () => toast('Thank you! Your donation was received. 🎉'));
+    }
 
     // ── Toast
     function toast(msg, err=false) {
