@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open Requests — MigrantPortal</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #007c84;
+      --orange:  #FF6129;
+      --blue:    #0973A7;
+      --navy:    #172936;
+      --text:    #0D0D0D;
+      --gray-700:#3d3d3d;
+      --gray-600:#555;
+      --gray-400:#999;
+      --gray-300:#ccc;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+      --green:   #22a861;
+    }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; color: var(--text); }
+    body { display: flex; flex-direction: column; background: #f0f2f5; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: 'Inter', sans-serif; cursor: pointer; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: white; border-bottom: 1px solid var(--gray-200);
+      height: 56px; display: flex; align-items: center; gap: 12px;
+      padding: 0 16px; flex-shrink: 0; z-index: 200;
+    }
+    .topbar-logo {
+      display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px;
+      color: var(--text);
+    }
+    .logo-icon {
+      width: 30px; height: 30px; border-radius: 7px; background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 14px; font-weight: 800; flex-shrink: 0;
+    }
+    .topbar-search {
+      flex: 1; position: relative; max-width: 520px;
+    }
+    .topbar-search input {
+      width: 100%; height: 36px; border: 1px solid var(--gray-200);
+      border-radius: 6px; padding: 0 36px 0 12px; font-size: 13px;
+      font-family: 'Inter', sans-serif; outline: none; color: var(--text);
+      background: var(--gray-100);
+    }
+    .topbar-search input:focus { border-color: var(--teal); background: white; }
+    .topbar-search svg { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .user-chip {
+      display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px;
+      border: 1px solid var(--gray-200); border-radius: 20px; cursor: pointer;
+    }
+    .user-avatar {
+      width: 28px; height: 28px; border-radius: 50%; background: var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .user-name { font-size: 13px; font-weight: 600; }
+    .user-role { font-size: 11px; color: var(--teal); }
+    .chevron-down { color: var(--gray-400); }
+
+    /* ── FILTER BAR ── */
+    .filterbar {
+      background: white; border-bottom: 1px solid var(--gray-200);
+      height: 48px; display: flex; align-items: center; gap: 8px;
+      padding: 0 16px; flex-shrink: 0; z-index: 190;
+    }
+    .search-req {
+      flex: 1; max-width: 320px; height: 34px;
+      border: 1px solid var(--gray-200); border-radius: 6px;
+      padding: 0 12px; font-size: 13px; font-family: 'Inter', sans-serif;
+      outline: none; color: var(--text);
+    }
+    .search-req:focus { border-color: var(--teal); }
+    .search-req::placeholder { color: var(--gray-400); }
+    .filter-btn {
+      height: 34px; padding: 0 14px; border: 1px solid var(--gray-200);
+      border-radius: 6px; font-size: 13px; font-weight: 500; background: white;
+      display: flex; align-items: center; gap: 6px; color: var(--gray-700);
+      transition: border-color .15s;
+    }
+    .filter-btn:hover { border-color: var(--teal); color: var(--teal); }
+    .filter-btn.active { border-color: var(--teal); color: var(--teal); background: #e6f7f8; }
+    .mapview-btn {
+      margin-left: auto; height: 34px; padding: 0 14px;
+      border: 1px solid var(--gray-200); border-radius: 6px;
+      font-size: 13px; font-weight: 500; background: white;
+      display: flex; align-items: center; gap: 6px; color: var(--gray-700);
+    }
+
+    /* ── LAYOUT ── */
+    .workspace {
+      flex: 1; display: flex; overflow: hidden;
+    }
+
+    /* ── LEFT PANEL ── */
+    .panel {
+      width: 370px; flex-shrink: 0; background: white;
+      border-right: 1px solid var(--gray-200);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid var(--gray-200); flex-shrink: 0;
+    }
+    .panel-title { font-size: 14px; font-weight: 600; }
+    .panel-header-right { display: flex; align-items: center; gap: 12px; }
+    .sort-btn {
+      font-size: 12px; color: var(--teal); background: none; border: none;
+      display: flex; align-items: center; gap: 4px; cursor: pointer; font-family: 'Inter', sans-serif;
+    }
+    .close-panel { background: none; border: none; color: var(--gray-400); font-size: 18px; line-height: 1; cursor: pointer; }
+    .close-panel:hover { color: var(--gray-700); }
+
+    .cards-list {
+      flex: 1; overflow-y: auto; padding: 12px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .cards-list::-webkit-scrollbar { width: 5px; }
+    .cards-list::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
+
+    /* ── REQUEST CARD ── */
+    .req-card {
+      border: 1px solid var(--gray-200); border-radius: 10px; overflow: hidden;
+      background: white; cursor: pointer;
+      transition: box-shadow .15s, border-color .15s;
+    }
+    .req-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,.08); border-color: var(--teal); }
+    .req-card.selected { border-color: var(--teal); box-shadow: 0 0 0 2px rgba(0,157,165,.2); }
+
+    .card-img {
+      height: 110px; background: #f5f0ea; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+    .card-img-illus {
+      font-size: 56px; line-height: 1; user-select: none;
+    }
+    .card-badge {
+      position: absolute; top: 8px; right: 8px;
+      width: 10px; height: 10px; border-radius: 50%; background: var(--green);
+    }
+    .card-body { padding: 10px 12px 12px; }
+    .card-meta-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .card-id { font-size: 11px; color: var(--gray-400); font-weight: 500; }
+    .card-age { font-size: 11px; color: var(--gray-400); display: flex; align-items: center; gap: 3px; }
+    .card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+    .card-desc { font-size: 12px; color: var(--gray-600); margin-bottom: 8px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-loc { font-size: 11px; color: var(--gray-600); margin-bottom: 2px; }
+    .card-church { font-size: 11px; color: var(--gray-500); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+
+    .card-amount {
+      display: flex; align-items: center; gap: 6px; margin-bottom: 5px;
+    }
+    .amount-badge {
+      font-size: 12px; font-weight: 700; color: var(--green);
+      display: flex; align-items: center; gap: 3px;
+    }
+    .amount-badge.zero { color: var(--gray-400); }
+    .amount-label { font-size: 11px; color: var(--gray-500); }
+    .progress-bar { height: 5px; background: var(--gray-200); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+    .progress-fill { height: 100%; background: var(--teal); border-radius: 3px; transition: width .3s; }
+    .progress-fill.full { background: var(--green); }
+
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .family-count { display: flex; align-items: center; gap: 10px; }
+    .fam-chip { font-size: 11px; color: var(--gray-600); display: flex; align-items: center; gap: 3px; }
+    .card-actions { display: flex; gap: 10px; }
+    .action-ico { background: none; border: none; color: var(--gray-400); cursor: pointer; display: flex; align-items: center; }
+    .action-ico:hover { color: var(--teal); }
+
+    .card-needs { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .need-tag {
+      font-size: 11px; padding: 2px 8px; border-radius: 10px;
+      background: #e6f7f8; color: var(--teal); font-weight: 500;
+    }
+    .need-tag.met { background: #f0f0f0; color: var(--gray-400); text-decoration: line-through; }
+
+    /* ── MAP ── */
+    .map-container { flex: 1; position: relative; }
+    #map { width: 100%; height: 100%; }
+
+    /* Leaflet popup tweak */
+    .leaflet-popup-content-wrapper { border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px; }
+    .leaflet-popup-content { margin: 10px 14px; }
+    .popup-id { font-size: 11px; color: var(--gray-400); }
+    .popup-title { font-weight: 700; margin: 2px 0; }
+    .popup-loc { font-size: 12px; color: var(--gray-600); }
+
+    /* Custom map marker */
+    .map-pin {
+      background: var(--teal); color: white; font-size: 11px; font-weight: 700;
+      padding: 3px 7px; border-radius: 12px; white-space: nowrap;
+      border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    }
+    .map-pin.urgent { background: var(--orange); }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <button style="background:none;border:none;cursor:pointer;color:var(--gray-600);padding:4px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="topbar-logo">
+      <div class="logo-icon">M</div>
+      MigrantPortal
+    </a>
+    <div class="topbar-search">
+      <input type="text" placeholder="Search requests, families, needs…" />
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <div class="topbar-right">
+      <div class="user-chip">
+        <div class="user-avatar" id="topAvatar">U</div>
+        <div>
+          <div class="user-name" id="topName">User</div>
+          <div class="user-role">Responder ▾</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filterbar">
+    <input class="search-req" type="text" placeholder="Search by Request Number, Story Details, Needs…" oninput="filterCards(this.value)" />
+    <button class="filter-btn" id="filterBtn" onclick="toggleFilter(this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      Filters
+    </button>
+    <button class="filter-btn" id="quickBtn" onclick="toggleFilter(this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      Quick Filters
+    </button>
+    <button class="mapview-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      Map View ▾
+    </button>
+  </div>
+
+  <!-- WORKSPACE -->
+  <div class="workspace">
+
+    <!-- LEFT PANEL -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Open Requests (<span id="countLabel">5</span>)</span>
+        <div class="panel-header-right">
+          <button class="sort-btn">Sort By: Newest ▾</button>
+          <button class="close-panel" onclick="window.location.href='dashboard.html'">×</button>
+        </div>
+      </div>
+
+      <div class="cards-list" id="cardsList">
+
+        <!-- Card 1 -->
+        <div class="req-card selected" onclick="selectCard(this, 0)">
+          <div class="card-img" style="background:#fdf3e7;">
+            <span class="card-img-illus">👨‍👩‍👧</span>
+            <div class="card-badge"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta-top">
+              <span class="card-id">#MP001</span>
+              <span class="card-age">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                13d
+              </span>
+            </div>
+            <div class="card-title">Help Improve a Child's Wellbeing</div>
+            <div class="card-desc">I am requesting a Hatch Rest Baby Sound Machine, Night Light & Alarm Clock to help a child sleep better.</div>
+            <div class="card-loc">Kansas City, Kansas • 66101</div>
+            <div class="card-church">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
+              Grace Community Church
+            </div>
+            <div class="card-amount">
+              <span class="amount-badge zero">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                $0.00
+              </span>
+              <span class="amount-label">still needed</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill full" style="width:100%"></div></div>
+            <div class="card-footer">
+              <div class="family-count">
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                  3 Children
+                </span>
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  1 Adult
+                </span>
+              </div>
+              <div class="card-actions">
+                <button class="action-ico" title="Save"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+                <button class="action-ico" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+              </div>
+            </div>
+            <div class="card-needs">
+              <span class="need-tag met">1 Hatch Rest Baby Sound Machine</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="req-card" onclick="selectCard(this, 1)">
+          <div class="card-img" style="background:#eef5e8;">
+            <span class="card-img-illus">🏫</span>
+            <div class="card-badge"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta-top">
+              <span class="card-id">#MP002</span>
+              <span class="card-age">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                15d
+              </span>
+            </div>
+            <div class="card-title">Help Preserve a Kinship Placement</div>
+            <div class="card-desc">A teen girl has a chance to receive the life-changing gift of braces through Smiles Change Lives. Help make it happen.</div>
+            <div class="card-loc">Wichita, Kansas • 67201</div>
+            <div class="card-church">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
+              Westside Family Church
+            </div>
+            <div class="card-amount">
+              <span class="amount-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                $650.00
+              </span>
+              <span class="amount-label">still needed</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+            <div class="card-footer">
+              <div class="family-count">
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  2 Children
+                </span>
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  2 Adults
+                </span>
+              </div>
+              <div class="card-actions">
+                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+              </div>
+            </div>
+            <div class="card-needs">
+              <span class="need-tag">2 Medical / Dental</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="req-card" onclick="selectCard(this, 2)">
+          <div class="card-img" style="background:#f0eaf8;">
+            <span class="card-img-illus">👗</span>
+            <div class="card-badge"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta-top">
+              <span class="card-id">#MP003</span>
+              <span class="card-age">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                20d
+              </span>
+            </div>
+            <div class="card-title">Help Improve a Child's Wellbeing</div>
+            <div class="card-desc">This family is in need of new clothing because she is getting too big for her old clothes. Growing fast and needs support.</div>
+            <div class="card-loc">Kansas City, Kansas • 66063</div>
+            <div class="card-church">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
+              Prince of Peace Catholic Church
+            </div>
+            <div class="card-amount">
+              <span class="amount-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                $120.00
+              </span>
+              <span class="amount-label">still needed</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+            <div class="card-footer">
+              <div class="family-count">
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  2 Children
+                </span>
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  1 Adult
+                </span>
+              </div>
+              <div class="card-actions">
+                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+              </div>
+            </div>
+            <div class="card-needs">
+              <span class="need-tag">Clothing</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="req-card" onclick="selectCard(this, 3)">
+          <div class="card-img" style="background:#e8f4fd;">
+            <span class="card-img-illus">🏠</span>
+            <div class="card-badge"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta-top">
+              <span class="card-id">#MP004</span>
+              <span class="card-age">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                3d
+              </span>
+            </div>
+            <div class="card-title">Urgent: Family Needs Housing Assistance</div>
+            <div class="card-desc">A family of 5 recently arrived and is staying in a motel. They need help with a security deposit to get into stable housing.</div>
+            <div class="card-loc">Wyandotte County, Kansas • 66102</div>
+            <div class="card-church">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
+              Nueva Vida Church
+            </div>
+            <div class="card-amount">
+              <span class="amount-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                $900.00
+              </span>
+              <span class="amount-label">still needed</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:10%"></div></div>
+            <div class="card-footer">
+              <div class="family-count">
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  3 Children
+                </span>
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  2 Adults
+                </span>
+              </div>
+              <div class="card-actions">
+                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+              </div>
+            </div>
+            <div class="card-needs">
+              <span class="need-tag">Housing</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="req-card" onclick="selectCard(this, 4)">
+          <div class="card-img" style="background:#fff3e6;">
+            <span class="card-img-illus">📚</span>
+            <div class="card-badge"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta-top">
+              <span class="card-id">#MP005</span>
+              <span class="card-age">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                7d
+              </span>
+            </div>
+            <div class="card-title">School Supplies for 4 Kids</div>
+            <div class="card-desc">Four school-age children arrived mid-year and urgently need backpacks, notebooks, pencils, and basic school supplies to start class.</div>
+            <div class="card-loc">Sedgwick County, Kansas • 67203</div>
+            <div class="card-church">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
+              Harvest Church
+            </div>
+            <div class="card-amount">
+              <span class="amount-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                $210.00
+              </span>
+              <span class="amount-label">still needed</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:35%"></div></div>
+            <div class="card-footer">
+              <div class="family-count">
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  4 Children
+                </span>
+                <span class="fam-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  2 Adults
+                </span>
+              </div>
+              <div class="card-actions">
+                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+              </div>
+            </div>
+            <div class="card-needs">
+              <span class="need-tag">Education</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /cards-list -->
+    </div><!-- /panel -->
+
+    <!-- MAP -->
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+
+  </div><!-- /workspace -->
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // ── URL params → user identity
+    const params = new URLSearchParams(location.search);
+    const name = params.get('name') || 'User';
+    const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('topAvatar').textContent = initials;
+    document.getElementById('topName').textContent = name;
+
+    // ── Map setup (centered on Kansas City / Wichita corridor)
+    const map = L.map('map', { zoomControl: true }).setView([38.9, -94.79], 9);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
+
+    // Request data
+    const requests = [
+      { id:'#MP001', lat:39.1150, lng:-94.7977, title:"Help Improve a Child's Wellbeing",      loc:"Kansas City, KS 66101", urgent:false },
+      { id:'#MP002', lat:37.6872, lng:-97.3301, title:"Help Preserve a Kinship Placement",       loc:"Wichita, KS 67201",    urgent:false },
+      { id:'#MP003', lat:39.1090, lng:-94.7550, title:"Help Improve a Child's Wellbeing",        loc:"Kansas City, KS 66063", urgent:false },
+      { id:'#MP004', lat:39.1250, lng:-94.8130, title:"Urgent: Family Needs Housing Assistance", loc:"Wyandotte Co., KS",    urgent:true  },
+      { id:'#MP005', lat:37.7000, lng:-97.3100, title:"School Supplies for 4 Kids",              loc:"Sedgwick Co., KS",     urgent:false },
+    ];
+
+    const markers = [];
+
+    function makeIcon(urgent) {
+      return L.divIcon({
+        html: `<div class="map-pin${urgent?' urgent':''}">${urgent?'🔴 ':'📍 '}Need</div>`,
+        className: '',
+        iconAnchor: [28, 12]
+      });
+    }
+
+    requests.forEach((r, i) => {
+      const m = L.marker([r.lat, r.lng], { icon: makeIcon(r.urgent) })
+        .addTo(map)
+        .bindPopup(`
+          <div class="popup-id">${r.id}</div>
+          <div class="popup-title">${r.title}</div>
+          <div class="popup-loc">${r.loc}</div>
+          <div style="margin-top:8px">
+            <a href="need.html" style="color:#009DA5;font-size:12px;font-weight:600;">View Details →</a>
+          </div>
+        `);
+      m.on('click', () => {
+        const cards = document.querySelectorAll('.req-card');
+        cards.forEach(c => c.classList.remove('selected'));
+        cards[i]?.classList.add('selected');
+        cards[i]?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+      });
+      markers.push(m);
+    });
+
+    // ── Select card → pan map
+    function selectCard(el, idx) {
+      document.querySelectorAll('.req-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      if (markers[idx]) {
+        map.flyTo(markers[idx].getLatLng(), 12, { duration: 0.8 });
+        markers[idx].openPopup();
+      }
+    }
+
+    // ── Filter cards by search
+    function filterCards(q) {
+      const term = q.toLowerCase();
+      const cards = document.querySelectorAll('.req-card');
+      let vis = 0;
+      cards.forEach(c => {
+        const text = c.textContent.toLowerCase();
+        const show = text.includes(term);
+        c.style.display = show ? '' : 'none';
+        if (show) vis++;
+      });
+      document.getElementById('countLabel').textContent = vis;
+    }
+
+    // ── Toggle filter button active state
+    function toggleFilter(btn) {
+      btn.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
