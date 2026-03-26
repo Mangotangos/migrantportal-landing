@@ -333,69 +333,151 @@
 
     <!-- ── SECURITY ── -->
     <div class="tab-panel" id="panel-security">
-      <div class="profile-form-card" style="max-width:560px;">
-        <div class="security-section">
-          <h3>Change Password</h3>
-          <div class="form-row single" style="margin-bottom:12px;">
-            <div class="form-group">
-              <label>Current Password</label>
-              <input type="password" placeholder="••••••••" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>New Password</label>
-              <input type="password" placeholder="••••••••" />
-            </div>
-            <div class="form-group">
-              <label>Confirm New Password</label>
-              <input type="password" placeholder="••••••••" />
-            </div>
-          </div>
-          <button class="save-btn">Update Password</button>
+      <div class="profile-form-card" style="max-width:660px;">
+        <!-- 2FA Alert -->
+        <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 16px;margin-bottom:24px;">
+          <p style="font-size:13px;color:#92400e;font-weight:600;margin-bottom:4px;">In an effort to enhance platform security and protect your data, Two-Factor Authentication (2FA) is required.</p>
+          <p style="font-size:13px;color:#78350f;line-height:1.6;">Two-factor authentication (2FA) enhances access security by requiring two methods (also referred to as factors) to verify your identity. Two-factor authentication protects against phishing, social engineering, and password brute force attacks, securing your logins from attackers exploiting weak or stolen credentials.</p>
+          <p style="font-size:13px;color:#78350f;margin-top:6px;">Please select a verification method (SMS/App) to continue.</p>
         </div>
+        <!-- SMS 2FA -->
+        <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gray-200);border-radius:8px;padding:18px 20px;margin-bottom:12px;">
+          <div>
+            <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;">
+              Two-factor authentication using SMS texting
+              <span style="font-size:11px;background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:10px;font-weight:700;">Disabled</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-600);margin-top:4px;">Enter your mobile phone number to receive a two-factor security code via text.</div>
+          </div>
+          <button style="background:#22c55e;color:white;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:700;white-space:nowrap;margin-left:16px;">Use SMS</button>
+        </div>
+        <!-- App 2FA -->
+        <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gray-200);border-radius:8px;padding:18px 20px;margin-bottom:24px;">
+          <div>
+            <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;">
+              Two-factor authentication using an app
+              <span style="font-size:11px;background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:10px;font-weight:700;">Disabled</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-600);margin-top:4px;">Use an app (such as Google Authenticator or Microsoft Authenticator) to authenticate by scanning a QR code to set it up, then enter a rotating code to authenticate.</div>
+          </div>
+          <button style="background:#22c55e;color:white;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:700;white-space:nowrap;margin-left:16px;">Use Authenticator App</button>
+        </div>
+        <!-- Change Password -->
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:14px;">Change Password</h3>
+        <div class="form-row single" style="margin-bottom:12px;">
+          <div class="form-group"><label>Current Password</label><input type="password" placeholder="••••••••" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>New Password</label><input type="password" placeholder="••••••••" /></div>
+          <div class="form-group"><label>Confirm New Password</label><input type="password" placeholder="••••••••" /></div>
+        </div>
+        <button class="save-btn">Update Password</button>
       </div>
     </div>
 
     <!-- ── NOTIFICATIONS ── -->
     <div class="tab-panel" id="panel-notifications">
-      <div class="profile-form-card" style="max-width:600px;">
-        <div class="notif-row">
-          <div>
-            <div class="notif-label">Email Alerts — New Nearby Needs</div>
-            <div class="notif-sub">Get emailed when a new need is posted near you</div>
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start;">
+        <!-- Left: Communication Preferences -->
+        <div class="profile-form-card">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">Communication <span style="color:var(--teal);">Preferences</span></h3>
+          <!-- Collapsible section -->
+          <div style="border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;">
+            <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.chevron').style.transform=this.querySelector('.chevron').style.transform==='rotate(180deg)'?'':'rotate(180deg)'" style="width:100%;background:var(--gray-100);border:none;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;letter-spacing:.05em;cursor:pointer;">
+              MIGRANTPORTAL
+              <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform .2s;"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div style="padding:14px 16px;">
+              <p style="font-size:13px;color:var(--gray-600);margin-bottom:4px;"><strong>MigrantPortal</strong></p>
+              <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px;line-height:1.6;">Check out the powerful impact and beautiful stories being written in homes, neighborhoods and communities across the United States. And it all starts with one simple connection.</p>
+              <p style="font-size:12px;color:#dc2626;margin-bottom:14px;">* <strong>Critical Notifications:</strong> These notifications are vital to using the MigrantPortal platform. MigrantPortal recommends always leaving critical notifications enabled.</p>
+              <!-- Table header -->
+              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;font-size:11px;font-weight:700;color:var(--gray-400);text-align:center;padding:0 0 8px;border-bottom:1px solid var(--gray-200);margin-bottom:4px;">
+                <div style="text-align:left;">
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--gray-600);">
+                    <input type="checkbox" checked onchange="document.querySelectorAll('.notif-check').forEach(c=>c.checked=this.checked)" /> Select all
+                  </label>
+                </div>
+                <div>App</div><div>Texts</div><div>Email</div>
+              </div>
+              <!-- Rows -->
+              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
+                <div><div style="font-size:12px;font-weight:600;color:var(--teal);">New Request Notifications (Critical)</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">These notifications alert you to new requests based on your location and settings.</div></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
+                <div><div style="font-size:12px;font-weight:600;color:var(--teal);">New Church-Vetted Request Notifications (Critical)</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Alerts you to new requests entered by your own church or team.</div></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
+                <div><div style="font-size:12px;font-weight:600;color:var(--teal);">Active Community Notifications (Critical)</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Be among the first to know if another church in your community needs help meeting a request.</div></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
+                <div><div style="font-size:12px;font-weight:600;">Closed Request Notifications</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Get notified when a request you have submitted, responded to, followed, or committed to has been closed.</div></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
+                <div><div style="font-size:12px;font-weight:600;">Monthly Newsletter</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Updates on how communities are giving brighter futures to migrant families.</div></div>
+                <div style="text-align:center;padding-top:2px;"></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;">
+                <div><div style="font-size:12px;font-weight:600;">User Feedback Opportunities</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Opt-in to give your feedback on existing and new MigrantPortal features.</div></div>
+                <div></div><div></div>
+                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
+              </div>
+            </div>
           </div>
-          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="notif-row">
-          <div>
-            <div class="notif-label">SMS Alerts — Urgent Needs</div>
-            <div class="notif-sub">Text message for high-priority needs only</div>
+          <!-- Footer options -->
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" /> Opt into communication from local partners</label>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gray-600);">
+              Follow MigrantPortal on Social Media!
+              <a href="https://twitter.com/" target="_blank" style="color:#1da1f2;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.731-8.836L2.25 2.25h6.895l4.258 5.624L18.244 2.25z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/" target="_blank" style="color:#e1306c;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+              </a>
+              <a href="https://www.facebook.com/migrantportalusa" target="_blank" style="color:#1877f2;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;color:#dc2626;"><input type="checkbox" /> Unsubscribe from all MigrantPortal notifications.</label>
           </div>
-          <button class="toggle" onclick="this.classList.toggle('on')"></button>
+          <button class="save-btn" style="margin-top:20px;">Save communication preferences</button>
         </div>
-        <div class="notif-row">
-          <div>
-            <div class="notif-label">Need Status Updates</div>
-            <div class="notif-sub">Notify me when a need I responded to is fulfilled</div>
+        <!-- Right: SMS verification -->
+        <div class="profile-form-card">
+          <h3 style="font-size:14px;font-weight:700;margin-bottom:10px;">MigrantPortal Requests via Text</h3>
+          <p style="font-size:12px;color:var(--gray-600);line-height:1.6;margin-bottom:14px;">Enter your phone number to receive MigrantPortal requests via text message. Texts will only include urgent requests from your community that need to be fulfilled within 24 hours. In order to update your preferences, we need to verify this phone number belongs to you.</p>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label>SMS Phone Number</label>
+            <input type="tel" id="smsPhone" placeholder="(555) 000-0000" />
           </div>
-          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="notif-row">
-          <div>
-            <div class="notif-label">Weekly Digest</div>
-            <div class="notif-sub">Summary of open needs in your area every Monday</div>
+          <button onclick="document.getElementById('smsCode').style.display='block'" style="background:#22c55e;color:white;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:700;width:100%;margin-bottom:10px;">Send Code</button>
+          <div id="smsCode" style="display:none;margin-bottom:10px;">
+            <div class="form-group">
+              <label>Enter Verification Code</label>
+              <input type="text" placeholder="6-digit code" />
+            </div>
+            <button style="background:var(--teal);color:white;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:700;width:100%;margin-top:6px;">Verify</button>
           </div>
-          <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;margin-top:4px;">
+            <input type="checkbox" /> <strong>Opt-Out</strong>
+          </label>
+          <p style="font-size:11px;color:var(--gray-400);margin-top:6px;line-height:1.5;">Check Opt-Out if you would no longer like to receive text messages, once checked you will not receive ANY SMS messages from MigrantPortal for ANY reason.</p>
         </div>
-        <div class="notif-row">
-          <div>
-            <div class="notif-label">Marketing & Updates</div>
-            <div class="notif-sub">News, tips, and MigrantPortal updates</div>
-          </div>
-          <button class="toggle" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <button class="save-btn" style="margin-top:20px;">Save Preferences</button>
       </div>
     </div>
 
@@ -413,30 +495,36 @@
 
     <!-- ── MY ROLES ── -->
     <div class="tab-panel" id="panel-roles">
-      <div class="profile-form-card" style="max-width:560px;">
-        <p style="font-size:14px;color:var(--gray-600);margin-bottom:20px;">Your active roles on MigrantPortal. Contact support to add or change roles.</p>
-        <div class="role-row">
-          <div>
-            <div style="font-size:14px;font-weight:600;">Responder</div>
-            <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">Respond to needs, make donations, volunteer</div>
+      <div class="profile-form-card">
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:16px;">Roles</h3>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--gray-200);">
+              <th style="text-align:left;padding:10px 12px;font-size:13px;font-weight:600;color:var(--gray-600);">Role</th>
+              <th style="text-align:left;padding:10px 12px;font-size:13px;font-weight:600;color:var(--gray-600);">Organization</th>
+              <th style="text-align:left;padding:10px 12px;font-size:13px;font-weight:600;color:var(--gray-600);">Org. Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--gray-100);">
+              <td style="padding:14px 12px;font-size:13px;color:var(--teal);font-weight:600;">Community Responder</td>
+              <td style="padding:14px 12px;font-size:13px;color:var(--teal);">MigrantPortal Community</td>
+              <td style="padding:14px 12px;font-size:13px;color:#22c55e;font-weight:600;">Active</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;font-size:13px;color:var(--gray-600);">
+          <span>Showing 1 result</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            Per page
+            <select style="border:1px solid var(--gray-200);border-radius:4px;padding:3px 8px;font-size:13px;">
+              <option>10</option><option>25</option><option>50</option>
+            </select>
           </div>
-          <span class="role-badge active">Active</span>
         </div>
-        <div class="role-row">
-          <div>
-            <div style="font-size:14px;font-weight:600;">Connector</div>
-            <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">Submit needs on behalf of families</div>
-          </div>
-          <span class="role-badge inactive">Not Active</span>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--gray-200);">
+          <a href="mailto:support@migrantportal.com?subject=Role+Request" style="font-size:13px;font-weight:600;color:var(--teal);">Request a role change →</a>
         </div>
-        <div class="role-row">
-          <div>
-            <div style="font-size:14px;font-weight:600;">Organization Admin</div>
-            <div style="font-size:12px;color:var(--gray-400);margin-top:2px;">Manage your church or org's response team</div>
-          </div>
-          <span class="role-badge inactive">Not Active</span>
-        </div>
-        <a href="mailto:support@migrantportal.com?subject=Role+Request" style="display:inline-block;margin-top:16px;font-size:13px;font-weight:600;color:var(--teal);">Request a role change →</a>
       </div>
     </div>
 
