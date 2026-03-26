@@ -11,6 +11,18 @@ async function apiPost(path, body) {
   return data;
 }
 
+async function apiPatch(path, body) {
+  const token = localStorage.getItem('mp_token');
+  const r = await fetch(API + path, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...(token ? { 'Authorization': 'Bearer ' + token } : {}) },
+    body: JSON.stringify(body)
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.detail || 'Request failed');
+  return data;
+}
+
 async function apiGet(path) {
   const token = localStorage.getItem('mp_token');
   const r = await fetch(API + path, {

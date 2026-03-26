@@ -562,6 +562,7 @@
     </div>
   </div>
 
+  <script src="api.js"></script>
   <script>
     function setTab(el) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -573,6 +574,63 @@
       document.getElementById('donations-empty').style.display = 'none';
       document.getElementById('donations-active').style.display = 'block';
     });
+
+    // ── Load real need from API if ?id= is present
+    const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
+
+    async function loadNeed() {
+      const id = new URLSearchParams(location.search).get('id');
+      if (!id) return; // no id — keep static demo content
+
+      try {
+        const need = await apiGet('/needs/' + id);
+
+        // Title
+        const titleEl = document.querySelector('.req-title');
+        if (titleEl) titleEl.textContent = need.title || '';
+
+        // Page title + breadcrumb
+        document.title = (need.title || 'Need Detail') + ' — MigrantPortal';
+        const crumb = document.querySelector('[style*="Need #MP"]') || document.querySelector('.back-bar .breadcrumb');
+        if (crumb) crumb.textContent = 'Need #MP' + String(need.id).padStart(3, '0');
+
+        // Illustration emoji
+        const illus = document.querySelector('.req-illustration');
+        if (illus) illus.textContent = CATEGORY_EMOJI[need.category] || '📦';
+
+        // Meta row
+        const meta = document.querySelector('.req-meta');
+        if (meta) {
+          const loc = [need.city, need.state, need.zip].filter(Boolean).join(' · ');
+          const urg = need.urgency ? need.urgency.charAt(0).toUpperCase() + need.urgency.slice(1) : '—';
+          meta.innerHTML = `
+            <strong>Verified Request:</strong> #MP${String(need.id).padStart(3,'0')} &nbsp;·&nbsp;
+            <strong>Urgency:</strong> ${urg} &nbsp;·&nbsp;
+            <strong>Category:</strong> ${need.category || '—'}<br/>
+            <strong>Location:</strong> ${loc || '—'}<br/>
+            <strong>Family:</strong> ${need.family_adults || 1} Adult${(need.family_adults||1)!==1?'s':''}, ${need.family_children || 0} Child${(need.family_children||0)!==1?'ren':''}
+          `;
+        }
+
+        // Story / description
+        const storyText = document.querySelector('.story-text');
+        if (storyText && need.description) storyText.textContent = need.description;
+
+        // Family size in story heading
+        const secMeta = document.querySelector('#story .section-meta');
+        if (secMeta) {
+          const ch = need.family_children || 0;
+          const ad = need.family_adults   || 1;
+          secMeta.textContent = (ch > 0 ? `👶 ${ch} Child${ch!==1?'ren':''} ` : '') + `👤 ${ad} Adult${ad!==1?'s':''}`;
+        }
+
+      } catch (err) {
+        // On error just keep static demo content visible
+        console.warn('Could not load need:', err.message);
+      }
+    }
+
+    loadNeed();
   </script>
 
 </body>

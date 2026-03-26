@@ -269,9 +269,12 @@
       </div>
 
       <div class="cards-list" id="cardsList">
+        <!-- dynamically populated -->
+        <div id="cardsLoading" style="padding:40px;text-align:center;color:#999;font-size:13px;">Loading needs…</div>
+        <div id="cardsEmpty" style="display:none;padding:40px;text-align:center;color:#999;font-size:13px;">No open needs found.</div>
 
-        <!-- Card 1 -->
-        <div class="req-card selected" onclick="selectCard(this, 0)">
+        <!-- Card 1 (static fallback, hidden until JS runs) -->
+        <div class="req-card selected static-card" onclick="selectCard(this, 0)">
           <div class="card-img" style="background:#fdf3e7;">
             <span class="card-img-illus">👨‍👩‍👧</span>
             <div class="card-badge"></div>
@@ -322,7 +325,7 @@
         </div>
 
         <!-- Card 2 -->
-        <div class="req-card" onclick="selectCard(this, 1)">
+        <div class="req-card static-card" onclick="selectCard(this, 1)">
           <div class="card-img" style="background:#eef5e8;">
             <span class="card-img-illus">🏫</span>
             <div class="card-badge"></div>
@@ -373,7 +376,7 @@
         </div>
 
         <!-- Card 3 -->
-        <div class="req-card" onclick="selectCard(this, 2)">
+        <div class="req-card static-card" onclick="selectCard(this, 2)">
           <div class="card-img" style="background:#f0eaf8;">
             <span class="card-img-illus">👗</span>
             <div class="card-badge"></div>
@@ -424,7 +427,7 @@
         </div>
 
         <!-- Card 4 -->
-        <div class="req-card" onclick="selectCard(this, 3)">
+        <div class="req-card static-card" onclick="selectCard(this, 3)">
           <div class="card-img" style="background:#e8f4fd;">
             <span class="card-img-illus">🏠</span>
             <div class="card-badge"></div>
@@ -475,7 +478,7 @@
         </div>
 
         <!-- Card 5 -->
-        <div class="req-card" onclick="selectCard(this, 4)">
+        <div class="req-card static-card" onclick="selectCard(this, 4)">
           <div class="card-img" style="background:#fff3e6;">
             <span class="card-img-illus">📚</span>
             <div class="card-badge"></div>
@@ -536,61 +539,164 @@
   </div><!-- /workspace -->
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="api.js"></script>
   <script>
-    // ── URL params → user identity
-    const params = new URLSearchParams(location.search);
-    const name = params.get('name') || 'User';
-    const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('topAvatar').textContent = initials;
-    document.getElementById('topName').textContent = name;
+    // ── User identity from JWT
+    const user = getUser();
+    if (user) {
+      const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('topAvatar').textContent = initials;
+      document.getElementById('topName').textContent = user.name || user.email || 'User';
+    }
 
-    // ── Map setup (centered on Kansas City / Wichita corridor)
+    // ── Map setup
     const map = L.map('map', { zoomControl: true }).setView([38.9, -94.79], 9);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 18
     }).addTo(map);
 
-    // Request data
-    const requests = [
-      { id:'#MP001', lat:39.1150, lng:-94.7977, title:"Help Improve a Child's Wellbeing",      loc:"Kansas City, KS 66101", urgent:false },
-      { id:'#MP002', lat:37.6872, lng:-97.3301, title:"Help Preserve a Kinship Placement",       loc:"Wichita, KS 67201",    urgent:false },
-      { id:'#MP003', lat:39.1090, lng:-94.7550, title:"Help Improve a Child's Wellbeing",        loc:"Kansas City, KS 66063", urgent:false },
-      { id:'#MP004', lat:39.1250, lng:-94.8130, title:"Urgent: Family Needs Housing Assistance", loc:"Wyandotte Co., KS",    urgent:true  },
-      { id:'#MP005', lat:37.7000, lng:-97.3100, title:"School Supplies for 4 Kids",              loc:"Sedgwick Co., KS",     urgent:false },
-    ];
-
     const markers = [];
+    let allNeeds = [];
 
-    function makeIcon(urgent) {
-      return L.divIcon({
-        html: `<div class="map-pin${urgent?' urgent':''}">${urgent?'🔴 ':'📍 '}Need</div>`,
+    // ── Category display helpers
+    const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
+    const CATEGORY_BG    = { housing:'#e8f4fd', food:'#edf8f0', clothing:'#f0eaf8', furniture:'#fdf3e7', transportation:'#e8f4fd', employment:'#fef9ec', legal:'#fdf3e7', medical:'#fdf2f2', education:'#fff3e6', translation:'#e8f4fd', other:'#f4f4f4' };
+    const URGENCY_DOT    = { urgent:'#dc2626', high:'#ea580c', medium:'#ca8a04', low:'#16a34a' };
+
+    function timeAgo(dateStr) {
+      const diff = Math.floor((Date.now() - new Date(dateStr)) / 86400000);
+      if (diff === 0) return 'Today';
+      if (diff === 1) return '1d';
+      return diff + 'd';
+    }
+
+    function buildCard(need, idx) {
+      const emoji = CATEGORY_EMOJI[need.category] || '📦';
+      const bg    = CATEGORY_BG[need.category]    || '#f4f4f4';
+      const dot   = URGENCY_DOT[need.urgency]     || '#999';
+      const age   = need.created_at ? timeAgo(need.created_at) : '';
+      const loc   = [need.city, need.state, need.zip].filter(Boolean).join(', ');
+      const adults   = need.family_adults   || 1;
+      const children = need.family_children || 0;
+      return `
+        <div class="req-card" onclick="selectCard(this, ${idx})" data-id="${need.id}">
+          <div class="card-img" style="background:${bg};">
+            <span class="card-img-illus">${emoji}</span>
+            <div class="card-badge" style="background:${dot};width:8px;height:8px;border-radius:50%;position:absolute;top:8px;right:8px;"></div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta-top">
+              <span class="card-id">#MP${String(need.id).padStart(3,'0')}</span>
+              ${age ? `<span class="card-age"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${age}</span>` : ''}
+            </div>
+            <div class="card-title">${need.title}</div>
+            <div class="card-desc">${need.description ? need.description.slice(0,110) + (need.description.length > 110 ? '…' : '') : ''}</div>
+            ${loc ? `<div class="card-loc">${loc}</div>` : ''}
+            <div class="card-footer">
+              <div class="family-count">
+                ${children > 0 ? `<span class="fam-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${children} Child${children !== 1 ? 'ren' : ''}</span>` : ''}
+                <span class="fam-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${adults} Adult${adults !== 1 ? 's' : ''}</span>
+              </div>
+              <div class="card-actions">
+                <button class="action-ico" title="Save"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+              </div>
+            </div>
+            <div class="card-needs">
+              <span class="need-tag">${need.category ? need.category.charAt(0).toUpperCase() + need.category.slice(1) : ''}</span>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function addMarker(need, idx) {
+      const urgent = need.urgency === 'urgent';
+      const loc    = [need.city, need.state].filter(Boolean).join(', ');
+      // Use a default lat/lng near KC if the backend doesn't geocode yet
+      const lat = need.lat || (38.9 + (Math.random() - 0.5) * 2);
+      const lng = need.lng || (-94.79 + (Math.random() - 0.5) * 3);
+      const icon = L.divIcon({
+        html: `<div class="map-pin${urgent ? ' urgent' : ''}">${urgent ? '🔴 ' : '📍 '}Need</div>`,
         className: '',
         iconAnchor: [28, 12]
       });
-    }
-
-    requests.forEach((r, i) => {
-      const m = L.marker([r.lat, r.lng], { icon: makeIcon(r.urgent) })
+      const m = L.marker([lat, lng], { icon })
         .addTo(map)
         .bindPopup(`
-          <div class="popup-id">${r.id}</div>
-          <div class="popup-title">${r.title}</div>
-          <div class="popup-loc">${r.loc}</div>
+          <div class="popup-id">#MP${String(need.id).padStart(3,'0')}</div>
+          <div class="popup-title">${need.title}</div>
+          <div class="popup-loc">${loc}</div>
           <div style="margin-top:8px">
-            <a href="need.html" style="color:#009DA5;font-size:12px;font-weight:600;">View Details →</a>
+            <a href="need.html?id=${need.id}" style="color:#009DA5;font-size:12px;font-weight:600;">View Details →</a>
           </div>
         `);
       m.on('click', () => {
-        const cards = document.querySelectorAll('.req-card');
+        const cards = document.querySelectorAll('.req-card:not(.static-card)');
         cards.forEach(c => c.classList.remove('selected'));
-        cards[i]?.classList.add('selected');
-        cards[i]?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+        cards[idx]?.classList.add('selected');
+        cards[idx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
       markers.push(m);
-    });
+    }
 
-    // ── Select card → pan map
+    async function loadNeeds() {
+      // Hide static fallback cards
+      document.querySelectorAll('.static-card').forEach(c => c.style.display = 'none');
+
+      try {
+        const data = await apiGet('/needs?limit=50');
+        const needs = Array.isArray(data) ? data : (data.items || data.needs || []);
+        allNeeds = needs;
+
+        document.getElementById('cardsLoading').style.display = 'none';
+
+        if (needs.length === 0) {
+          document.getElementById('cardsEmpty').style.display = 'block';
+          document.getElementById('countLabel').textContent = '0';
+          return;
+        }
+
+        const list = document.getElementById('cardsList');
+        needs.forEach((need, i) => {
+          list.insertAdjacentHTML('beforeend', buildCard(need, i));
+          addMarker(need, i);
+        });
+        document.getElementById('countLabel').textContent = needs.length;
+
+      } catch (err) {
+        // API not reachable — show static cards as fallback
+        document.getElementById('cardsLoading').style.display = 'none';
+        document.querySelectorAll('.static-card').forEach(c => c.style.display = '');
+        document.getElementById('countLabel').textContent = '5';
+        // Add static markers for fallback
+        const staticNeeds = [
+          { id:'MP001', lat:39.1150, lng:-94.7977, title:"Help Improve a Child's Wellbeing",      loc:"Kansas City, KS 66101", urgent:false },
+          { id:'MP002', lat:37.6872, lng:-97.3301, title:"Help Preserve a Kinship Placement",       loc:"Wichita, KS 67201",    urgent:false },
+          { id:'MP003', lat:39.1090, lng:-94.7550, title:"Help Improve a Child's Wellbeing",        loc:"Kansas City, KS 66063", urgent:false },
+          { id:'MP004', lat:39.1250, lng:-94.8130, title:"Urgent: Family Needs Housing Assistance", loc:"Wyandotte Co., KS",    urgent:true  },
+          { id:'MP005', lat:37.7000, lng:-97.3100, title:"School Supplies for 4 Kids",              loc:"Sedgwick Co., KS",     urgent:false },
+        ];
+        staticNeeds.forEach((r, i) => {
+          const icon = L.divIcon({
+            html: `<div class="map-pin${r.urgent ? ' urgent' : ''}">${r.urgent ? '🔴 ' : '📍 '}Need</div>`,
+            className: '', iconAnchor: [28, 12]
+          });
+          const m = L.marker([r.lat, r.lng], { icon }).addTo(map)
+            .bindPopup(`<div class="popup-id">${r.id}</div><div class="popup-title">${r.title}</div><div class="popup-loc">${r.loc}</div><div style="margin-top:8px"><a href="need.html" style="color:#009DA5;font-size:12px;font-weight:600;">View Details →</a></div>`);
+          m.on('click', () => {
+            const cards = document.querySelectorAll('.static-card');
+            cards.forEach(c => c.classList.remove('selected'));
+            cards[i]?.classList.add('selected');
+            cards[i]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+          markers.push(m);
+        });
+      }
+    }
+
+    loadNeeds();
+
+    // ── Select card → pan map + navigate
     function selectCard(el, idx) {
       document.querySelectorAll('.req-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
@@ -598,7 +704,9 @@
         map.flyTo(markers[idx].getLatLng(), 12, { duration: 0.8 });
         markers[idx].openPopup();
       }
-      setTimeout(() => { window.location.href = 'need.html'; }, 300);
+      const needId = el.dataset.id;
+      const href = needId ? `need.html?id=${needId}` : 'need.html';
+      setTimeout(() => { window.location.href = href; }, 300);
     }
 
     // ── Filter cards by search
