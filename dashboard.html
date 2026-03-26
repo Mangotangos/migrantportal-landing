@@ -254,10 +254,12 @@
 
     <!-- USER HEADER -->
     <div class="user-header">
-      <div class="avatar" id="user-avatar">?</div>
+      <a href="profile.html" id="avatar-link" style="text-decoration:none;">
+        <div class="avatar" id="user-avatar" title="Edit Profile" style="cursor:pointer;">?</div>
+      </a>
       <div>
         <h2 id="user-greeting">Hi there!</h2>
-        <p>Welcome to your Dashboard!</p>
+        <p>Welcome to your Dashboard! &nbsp;<a href="profile.html" id="profile-link" style="font-size:13px;color:var(--teal);font-weight:600;">Edit Profile →</a></p>
       </div>
     </div>
 
@@ -517,6 +519,8 @@
       : '?';
     document.getElementById('user-greeting').textContent = 'Hi, ' + name.split(' ')[0] + '!';
     document.getElementById('user-avatar').textContent = initials;
+    document.getElementById('avatar-link').href = 'profile.html?name=' + encodeURIComponent(name);
+    document.getElementById('profile-link').href = 'profile.html?name=' + encodeURIComponent(name);
 
     /* ── Tab highlight on scroll ─────────────── */
     function setTab(t) {
