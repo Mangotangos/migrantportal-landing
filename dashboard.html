@@ -248,6 +248,7 @@
       <a href="#faqs-section"      class="tab"        id="tab-faqs"      onclick="setTab('faqs')">FAQs</a>
       <a href="#requests-section"  class="tab"        id="tab-requests"  onclick="setTab('requests')">Requests</a>
     </div>
+    <button onclick="logout()" style="margin-left:auto;margin-right:16px;background:none;border:1px solid var(--gray-200);border-radius:6px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer;" onmouseover="this.style.color='#dc2626';this.style.borderColor='#dc2626'" onmouseout="this.style.color='var(--gray-600)';this.style.borderColor='var(--gray-200)'">Sign Out</button>
   </nav>
 
   <div class="page">
@@ -510,10 +511,11 @@
     </div><!-- /two-col -->
   </div><!-- /page -->
 
+  <script src="api.js"></script>
   <script>
-    /* ── Personalize from URL param ─────────── */
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name') || 'there';
+    /* ── Auth check + personalize ─────────── */
+    const user = requireAuth();
+    const name = user ? user.name : 'there';
     const initials = name !== 'there'
       ? name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2)
       : '?';

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — MigrantPortal</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --teal:#009DA5; --orange:#FF6129; --navy:#172936; --text:#0D0D0D; --gray-600:#555; --gray-400:#999; --gray-200:#E8E8E8; --gray-100:#F4F4F4; }
+    body { font-family: 'Inter', sans-serif; background: #F0F2F5; min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: var(--teal); text-decoration: none; }
+
+    nav { background: white; border-bottom: 1px solid var(--gray-200); height: 64px; display: flex; align-items: center; padding: 0 40px; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px; color: var(--text); }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--orange); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: 800; }
+
+    .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+    .card { background: white; border-radius: 14px; border: 1px solid var(--gray-200); padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+    h1 { font-family: 'Montserrat', sans-serif; font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .sub { font-size: 14px; color: var(--gray-600); margin-bottom: 28px; }
+
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 5px; }
+    input { width: 100%; height: 42px; border: 1px solid var(--gray-200); border-radius: 7px; padding: 0 12px; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: border-color .15s; }
+    input:focus { border-color: var(--teal); }
+
+    .pw-wrap { position: relative; }
+    .pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-400); font-size: 12px; }
+
+    .forgot { display: block; text-align: right; font-size: 12px; margin-top: 4px; color: var(--teal); }
+
+    .btn { width: 100%; height: 44px; background: var(--orange); color: white; border: none; border-radius: 7px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:hover { background: #e05020; }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .error { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; border-radius: 7px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--gray-400); font-size: 12px; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-top: 1px solid var(--gray-200); }
+
+    .signup-link { text-align: center; font-size: 14px; color: var(--gray-600); margin-top: 20px; }
+    .signup-link a { font-weight: 700; }
+
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: white; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">M</div>
+      MigrantPortal
+    </a>
+    <a href="signup.html" style="font-size:14px;font-weight:600;color:var(--teal);">Create account →</a>
+  </nav>
+
+  <div class="page">
+    <div class="card">
+      <h1>Welcome back</h1>
+      <p class="sub">Sign in to your MigrantPortal account</p>
+
+      <div class="error" id="errorBox"></div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="email" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
+            <button type="button" class="pw-toggle" onclick="togglePw()">Show</button>
+          </div>
+          <a href="forgot-password.html" class="forgot">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn" id="loginBtn">Sign In</button>
+      </form>
+
+      <div class="divider">or</div>
+      <div class="signup-link">Don't have an account? <a href="register.html">Sign up free</a></div>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (localStorage.getItem('mp_token')) window.location.href = 'dashboard.html';
+
+    function togglePw() {
+      const inp = document.getElementById('password');
+      const btn = inp.nextElementSibling;
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      btn.textContent = inp.type === 'password' ? 'Show' : 'Hide';
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const err = document.getElementById('errorBox');
+      err.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> Signing in…';
+
+      try {
+        const data = await apiPost('/auth/login', {
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value
+        });
+        saveSession(data.access_token, data.user);
+        window.location.href = 'dashboard.html';
+      } catch (ex) {
+        err.textContent = ex.message;
+        err.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = 'Sign In';
+      }
+    }
+  </script>
+</body>
+</html>

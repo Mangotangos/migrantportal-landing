@@ -445,6 +445,7 @@
     </div>
   </div>
 
+  <script src="api.js"></script>
   <script>
     const TOTAL = 5;
     let currentStep = 1;
@@ -581,16 +582,26 @@
     }
 
     /* ── Submit ──────────────────────────────── */
-    function submitForm() {
-      const name  = document.getElementById('fname').value;
-      const email = document.getElementById('email').value;
-      const locs  = Array.from(selectedLocations).join(', ');
-      window.location.href =
-        `mailto:support@migrantportal.com?subject=New+Registration&body=` +
-        `Name:+${encodeURIComponent(name)}%0A` +
-        `Email:+${encodeURIComponent(email)}%0A` +
-        `Locations:+${encodeURIComponent(locs)}`;
-      goTo(6);
+    async function submitForm() {
+      const btn   = document.getElementById('btn-5');
+      const name  = (document.getElementById('fname').value + ' ' + document.getElementById('lname').value).trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Creating account…';
+
+      try {
+        const data = await apiPost('/auth/register', { name, email, password, role: 'responder' });
+        saveSession(data.access_token, data.user);
+        goTo(6);
+        // redirect to dashboard after 2s
+        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+      } catch (ex) {
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+        alert(ex.message);
+      }
     }
   </script>
 
