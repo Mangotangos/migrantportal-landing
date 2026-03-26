@@ -591,12 +591,15 @@
       btn.disabled = true;
       btn.textContent = 'Creating account…';
 
+      const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
+      const role = serveChoice === 'church' ? 'connector' : 'responder';
+
       try {
-        const data = await apiPost('/auth/register', { name, email, password, role: 'responder' });
+        const data = await apiPost('/auth/register', { name, email, password, role });
         saveSession(data.access_token, data.user);
         goTo(6);
-        // redirect to dashboard after 2s
-        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+        const dest = role === 'connector' ? 'org-dashboard.html' : 'dashboard.html';
+        setTimeout(() => window.location.href = dest, 2000);
       } catch (ex) {
         btn.disabled = false;
         btn.textContent = 'Create Account';
