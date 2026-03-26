@@ -3,764 +3,870 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MigrantPortal — Connecting Migrants with Helpers</title>
+  <title>MigrantPortal — Help a Migrant Family Now</title>
   <meta name="description" content="MigrantPortal connects migrants in need with churches, volunteers, and donors. Submit needs, respond with compassion, and track impact — all in one app." />
-  <meta property="og:title" content="MigrantPortal" />
-  <meta property="og:description" content="Connecting migrants in need with churches, volunteers, and donors." />
+  <meta property="og:title" content="MigrantPortal — Help a Migrant Family Now" />
+  <meta property="og:description" content="Take meaningful action on the platform connecting caring people to meet the needs of migrant families in crisis." />
   <meta property="og:url" content="https://migrantportal.net" />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://migrantportal.net/community.png" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --orange: #0D9488;
-      --orange-dark: #0F766E;
-      --orange-light: #F0FDFA;
-      --teal: #0D9488;
-      --teal-light: #F0FDFA;
-      --amber: #F59E0B;
-      --amber-dark: #D97706;
-      --purple: #6366F1;
-      --gray-50: #FAFAFA;
-      --gray-100: #F4F4F5;
-      --gray-200: #E4E4E7;
-      --gray-500: #71717A;
-      --gray-700: #3F3F46;
-      --gray-900: #18181B;
+      --teal:     #009DA5;
+      --teal-d:   #007c84;
+      --teal-bg:  #0D7A8A;   /* announcement + newsletter dark bg */
+      --orange:   #FF6129;
+      --orange-d: #e05020;
+      --blue:     #0973A7;
+      --blue-d:   #075f8a;
+      --cream:    #FAF7F0;
+      --yellow:   #F5C842;
+      --text:     #0D0D0D;
+      --gray-500: #6B6B6B;
+      --gray-200: #E8E8E8;
+      --gray-100: #F4F4F4;
     }
 
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.65; }
+    a { text-decoration: none; }
+    img { display: block; max-width: 100%; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: var(--gray-900);
-      background: white;
-      line-height: 1.6;
+    /* ─── ANNOUNCEMENT BAR ─────────────────────── */
+    .announce {
+      background: var(--teal-bg);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px;
+      padding: 10px 24px;
+      font-size: 13px; font-weight: 500;
+      flex-wrap: wrap;
     }
+    .announce-logo {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(0,0,0,0.25); border-radius: 6px;
+      padding: 4px 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+    }
+    .announce-text { display: flex; flex-direction: column; align-items: center; }
+    .announce-text strong { font-weight: 700; }
+    .announce-text span { font-size: 11px; opacity: 0.8; }
+    .announce-btn {
+      background: var(--orange); color: white;
+      font-size: 11px; font-weight: 800;
+      padding: 8px 14px; border-radius: 6px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: background 0.15s;
+    }
+    .announce-btn:hover { background: var(--orange-d); }
 
-    /* ─── NAV ─────────────────────────────────────── */
+    /* ─── NAV ──────────────────────────────────── */
     nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(8px);
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(6px);
       border-bottom: 1px solid var(--gray-200);
-      padding: 0 24px;
-      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
       height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .nav-logo {
       display: flex; align-items: center; gap: 10px;
-      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 19px; color: var(--text);
     }
     .nav-logo-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      overflow: hidden;
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 18px; font-weight: 800;
     }
-    .nav-logo-icon img {
-      width: 100%; height: 100%; object-fit: cover;
-    }
-    .nav-logo-text { font-size: 18px; font-weight: 700; color: var(--gray-900); }
-    .nav-logo-text span { color: var(--orange); }
-    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links { display: flex; gap: 0; }
     .nav-link {
-      padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500;
-      color: var(--gray-700); text-decoration: none; transition: background 0.15s;
+      font-size: 14px; font-weight: 500; color: var(--text);
+      padding: 8px 16px; border-radius: 6px;
+      transition: background 0.15s;
     }
     .nav-link:hover { background: var(--gray-100); }
-    .nav-cta {
-      padding: 9px 20px; border-radius: 8px; font-size: 14px; font-weight: 600;
-      background: var(--orange); color: white; text-decoration: none; transition: background 0.15s;
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .nav-login {
+      font-size: 14px; font-weight: 500; color: var(--text);
+      padding: 8px 14px; border-radius: 6px;
+      transition: background 0.15s;
     }
-    .nav-cta:hover { background: var(--orange-dark); }
-    .nav-mobile-menu { display: none; }
+    .nav-login:hover { background: var(--gray-100); }
+    .nav-signup {
+      background: var(--blue); color: white;
+      font-size: 13px; font-weight: 700;
+      padding: 9px 22px; border-radius: 7px;
+      letter-spacing: 0.04em;
+      transition: background 0.15s;
+    }
+    .nav-signup:hover { background: var(--blue-d); }
+    .hamburger { display: none; cursor: pointer; background: none; border: none; padding: 8px; }
+    .hamburger svg { width: 22px; height: 22px; }
 
-    /* ─── HERO ────────────────────────────────────── */
+    /* ─── MOBILE NAV ───────────────────────────── */
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: white; padding: 24px; flex-direction: column;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+    .mobile-close { background: none; border: none; cursor: pointer; font-size: 28px; }
+    .mobile-link { font-size: 18px; font-weight: 600; color: var(--text); padding: 14px 0; border-bottom: 1px solid var(--gray-200); display: block; }
+    .mobile-cta {
+      margin-top: 24px; background: var(--blue); color: white;
+      font-size: 16px; font-weight: 700; padding: 14px; border-radius: 8px;
+      text-align: center; display: block;
+    }
+
+    /* ─── HERO ─────────────────────────────────── */
     .hero {
-      background: url('community.png') center center / cover no-repeat;
-      padding: 96px 24px 80px;
-      text-align: center;
-      position: relative;
+      background: #fff;
+      padding: 56px 40px 0;
       overflow: hidden;
     }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(0, 0, 0, 0.42);
+    .hero-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; gap: 48px; align-items: flex-start;
     }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-      color: white; font-size: 13px; font-weight: 600;
-      padding: 6px 14px; border-radius: 20px; margin-bottom: 28px;
-      backdrop-filter: blur(8px);
-    }
-    .hero-badge svg { width: 14px; height: 14px; }
+    .hero-text { flex: 1.1; padding-bottom: 48px; padding-top: 16px; }
     .hero h1 {
-      font-size: clamp(36px, 6vw, 62px);
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(34px, 5.5vw, 54px);
       font-weight: 800; line-height: 1.1;
-      color: white; max-width: 720px; margin: 0 auto 24px;
+      color: var(--text);
+      margin-bottom: 20px;
     }
-    .hero h1 span { color: #5EEAD4; }
     .hero-sub {
-      font-size: clamp(17px, 2.5vw, 20px); color: rgba(255,255,255,0.88);
-      max-width: 560px; margin: 0 auto 40px; line-height: 1.7;
+      font-size: 15px; color: var(--gray-500);
+      max-width: 480px; margin-bottom: 40px; line-height: 1.7;
     }
+    .hero-sub a { color: var(--teal); }
     .hero-actions {
-      display: flex; align-items: center; justify-content: center;
-      flex-wrap: wrap; gap: 12px; margin-bottom: 56px;
+      display: flex; gap: 40px; flex-wrap: wrap;
     }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; border-radius: 12px;
+    .hero-action { display: flex; gap: 16px; align-items: flex-start; }
+    .hero-action-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-action-icon svg { width: 100%; height: 100%; }
+    .hero-action-body {}
+    .hero-action-body h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px; font-weight: 700; color: var(--text);
+      margin-bottom: 4px;
+    }
+    .hero-action-body a {
+      font-size: 13px; color: var(--teal); font-weight: 500;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+    .hero-action-body a:hover { color: var(--teal-d); }
+    .hero-visual {
+      flex: 1; display: flex; align-items: flex-end; justify-content: center;
+      min-width: 280px;
+    }
+    .hero-mockup {
+      position: relative; width: 100%; max-width: 420px;
+    }
+    /* Desktop mockup */
+    .mockup-desktop {
+      background: #f0f0f0; border-radius: 12px;
+      border: 3px solid #d0d0d0;
+      padding: 12px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    }
+    .mockup-desktop-bar {
+      background: var(--teal); border-radius: 8px 8px 0 0;
+      padding: 6px 12px; font-size: 11px; color: white; font-weight: 600;
+      display: flex; align-items: center; gap: 8px; margin: -12px -12px 0;
+      border-radius: 9px 9px 0 0;
+    }
+    .mockup-desktop-dots { display: flex; gap: 5px; }
+    .mockup-desktop-dots span { width: 8px; height: 8px; border-radius: 50%; }
+    .mockup-desktop-dots span:nth-child(1) { background: #ff5f57; }
+    .mockup-desktop-dots span:nth-child(2) { background: #febc2e; }
+    .mockup-desktop-dots span:nth-child(3) { background: #28c840; }
+    .mockup-screen {
+      background: white; border-radius: 0 0 8px 8px;
+      padding: 16px; margin-top: 8px;
+      min-height: 180px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .screen-header {
+      background: var(--teal); border-radius: 6px;
+      padding: 8px 12px; color: white; font-size: 12px; font-weight: 700;
+    }
+    .screen-need {
+      background: var(--gray-100); border-radius: 6px;
+      padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start;
+    }
+    .screen-need-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 4px; }
+    .screen-need-text { font-size: 11px; color: var(--gray-500); line-height: 1.5; }
+    .screen-need-text strong { color: var(--text); font-weight: 600; }
+    .screen-pin-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .screen-pin { background: var(--orange); border-radius: 4px; padding: 4px 8px; font-size: 10px; color: white; font-weight: 700; }
+    .screen-pin.teal { background: var(--teal); }
+    /* Phone mockup overlay */
+    .mockup-phone {
+      position: absolute; bottom: -16px; right: -20px;
+      width: 100px;
+      background: #1a1a1a; border-radius: 16px;
+      padding: 6px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .phone-screen {
+      background: var(--teal); border-radius: 11px;
+      padding: 8px; min-height: 160px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .phone-row { background: rgba(255,255,255,0.2); border-radius: 4px; height: 8px; }
+    .phone-row.short { width: 60%; }
+    .phone-row.orange { background: var(--orange); height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+    .phone-row.white-card { background: white; border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 3px; }
+    .phone-row.white-card .l { background: var(--gray-200); height: 5px; border-radius: 2px; }
+    .phone-row.white-card .l.s { width: 60%; }
+
+    /* ─── SECTION BASE ──────────────────────────── */
+    .section { padding: 72px 40px; }
+    .section-inner { max-width: 1120px; margin: 0 auto; }
+    .two-col { display: flex; gap: 64px; align-items: center; flex-wrap: wrap; }
+    .two-col-reverse { flex-direction: row-reverse; }
+    .col-text { flex: 1; min-width: 260px; }
+    .col-visual { flex: 1; min-width: 280px; }
+
+    .section h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(26px, 3.5vw, 38px);
+      font-weight: 800; color: var(--text);
+      line-height: 1.2; margin-bottom: 16px;
+    }
+    .section p {
+      font-size: 15px; color: var(--gray-500); line-height: 1.7; max-width: 520px;
+    }
+    .section p a { color: var(--teal); }
+    .text-cta {
+      display: inline-block;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text); margin-top: 24px;
+      border-bottom: 2px solid var(--text);
+      padding-bottom: 1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .text-cta:hover { color: var(--teal); border-color: var(--teal); }
+
+    /* ─── ILLUSTRATION BOXES ───────────────────── */
+    .illus {
+      border-radius: 16px; overflow: hidden;
+      position: relative;
+    }
+    /* Teal circle illustration (Discover + Launch) */
+    .illus-teal {
+      background: #e8f7f8;
+      padding: 32px; min-height: 280px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .illus-circle-teal {
+      width: 200px; height: 200px; border-radius: 50%;
+      background: var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px;
+      box-shadow: 0 12px 40px rgba(0,157,165,0.3);
+    }
+    /* App screenshot illustration (Professionals) */
+    .illus-yellow {
+      background: #fff8e1;
+      padding: 32px; min-height: 280px;
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 16px; position: relative; overflow: hidden;
+    }
+    .illus-yellow-circle {
+      width: 220px; height: 220px; border-radius: 50%;
+      background: var(--yellow);
+      position: absolute; right: -40px; bottom: -40px;
+    }
+    .illus-app-card {
+      background: white; border-radius: 12px;
+      padding: 16px; width: 180px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .illus-app-card .row { background: var(--gray-100); height: 10px; border-radius: 4px; }
+    .illus-app-card .row.s { width: 60%; }
+    .illus-app-card .row.teal { background: var(--teal); height: 32px; border-radius: 6px; }
+    /* How it works illustration */
+    .illus-howto {
+      background: #fff8e1;
+      padding: 32px; min-height: 280px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; position: relative; overflow: hidden;
+    }
+    .illus-howto-circle {
+      width: 200px; height: 200px; border-radius: 50%;
+      background: var(--yellow);
+      position: absolute; right: 20px; bottom: -20px;
+    }
+    .illus-phone-card {
+      background: white; border-radius: 12px;
+      padding: 16px; width: 120px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .illus-phone-card .row { background: var(--gray-100); height: 8px; border-radius: 3px; }
+    .illus-phone-card .row.s { width: 55%; }
+    .illus-phone-card .row.orange { background: var(--orange); height: 28px; border-radius: 5px; }
+    .illus-person {
+      font-size: 56px; position: relative; z-index: 1;
+    }
+
+    /* ─── CREAM SECTION ────────────────────────── */
+    .section-cream { background: var(--cream); }
+
+    /* ─── NEWSLETTER ───────────────────────────── */
+    .section-newsletter {
+      background: var(--teal-bg);
+      padding: 64px 40px;
+    }
+    .newsletter-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; gap: 64px; align-items: center; flex-wrap: wrap;
+    }
+    .newsletter-text { flex: 1; min-width: 260px; }
+    .newsletter-text h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 800; color: white; margin-bottom: 12px;
+    }
+    .newsletter-text p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 400px; line-height: 1.7; }
+    .newsletter-form { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 12px; }
+    .newsletter-form input {
+      background: white; border: none; border-radius: 8px;
+      padding: 14px 16px; font-size: 14px; font-family: 'Inter', sans-serif;
+      color: var(--text); outline: none;
+    }
+    .newsletter-form input::placeholder { color: #aaa; }
+    .newsletter-submit {
       background: var(--orange); color: white;
-      font-size: 16px; font-weight: 600; text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
+      font-size: 14px; font-weight: 700;
+      padding: 14px; border-radius: 8px;
+      border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: background 0.15s;
     }
-    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; border-radius: 12px;
-      background: white; color: var(--gray-900);
-      border: 1.5px solid var(--gray-200);
-      font-size: 16px; font-weight: 600; text-decoration: none;
-      transition: border-color 0.15s, transform 0.1s;
+    .newsletter-submit:hover { background: var(--orange-d); }
+
+    /* ─── FOOTER ───────────────────────────────── */
+    .footer { background: white; }
+    .footer-trusted {
+      border-top: 1px solid var(--gray-200);
+      padding: 48px 40px;
     }
-    .btn-secondary:hover { border-color: var(--orange); transform: translateY(-1px); }
-    .hero-stats {
+    .footer-trusted-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
+    .footer-trusted h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gray-500); margin-bottom: 32px;
+    }
+    .trusted-logos {
+      display: flex; gap: 32px; align-items: center;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .trusted-logo {
+      padding: 10px 24px; border: 1px solid var(--gray-200); border-radius: 8px;
+      font-size: 13px; font-weight: 600; color: var(--gray-500);
+      letter-spacing: 0.04em;
+    }
+    .footer-main {
+      border-top: 1px solid var(--gray-200);
+      padding: 48px 40px;
+    }
+    .footer-main-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; gap: 24px; flex-wrap: wrap; justify-content: space-between;
+    }
+    .footer-brand { max-width: 240px; }
+    .footer-brand-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800; font-size: 17px; color: var(--text);
+      margin-bottom: 12px;
+    }
+    .footer-brand-logo-icon {
+      width: 30px; height: 30px; border-radius: 6px;
+      background: var(--orange);
       display: flex; align-items: center; justify-content: center;
-      gap: 40px; flex-wrap: wrap;
+      color: white; font-size: 15px; font-weight: 800;
     }
-    .hero-stat { text-align: center; }
-    .hero-stat-num { font-size: 28px; font-weight: 800; color: #5EEAD4; }
-    .hero-stat-label { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 2px; }
-    .hero-stat-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.25); }
-
-    /* ─── SECTION SHELL ───────────────────────────── */
-    section { padding: 80px 24px; }
-    .container { max-width: 1080px; margin: 0 auto; }
-    .section-label {
-      font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--orange); margin-bottom: 12px;
+    .footer-brand p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+    .footer-stats { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+    .footer-stat {}
+    .footer-stat-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px; font-weight: 800; color: var(--text);
     }
-    .section-title {
-      font-size: clamp(28px, 4vw, 42px); font-weight: 800;
-      line-height: 1.15; color: var(--gray-900); margin-bottom: 16px;
+    .footer-stat-label { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+    .footer-col { min-width: 140px; }
+    .footer-col-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text); margin-bottom: 14px;
     }
-    .section-sub {
-      font-size: 17px; color: var(--gray-500); max-width: 560px; line-height: 1.7;
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul li a { font-size: 14px; color: var(--gray-500); transition: color 0.15s; }
+    .footer-col ul li a:hover { color: var(--teal); }
+    .footer-bottom {
+      border-top: 1px solid var(--gray-200);
+      padding: 20px 40px;
     }
-
-    /* ─── HOW IT WORKS ────────────────────────────── */
-    .how { background: white; }
-    .how-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 32px; margin-top: 56px;
-    }
-    .role-card {
-      border-radius: 20px; padding: 32px; position: relative; overflow: hidden;
-    }
-    .role-card-connector { background: #F5F0FF; }
-    .role-card-responder { background: var(--teal-light); }
-    .role-card-admin { background: #FFF3E0; }
-
-    .role-icon {
-      width: 52px; height: 52px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px; font-size: 24px;
-    }
-    .role-icon-connector { background: var(--purple); }
-    .role-icon-responder { background: var(--teal); }
-    .role-icon-admin { background: var(--amber); }
-
-    .role-tag {
-      display: inline-block; font-size: 11px; font-weight: 700;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 20px; margin-bottom: 10px;
-    }
-    .role-tag-connector { background: rgba(124,58,237,0.12); color: var(--purple); }
-    .role-tag-responder { background: rgba(26,107,92,0.12); color: var(--teal); }
-    .role-tag-admin { background: rgba(245,158,11,0.1); color: #92400E; }
-
-    .role-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-    .role-card p { font-size: 15px; color: var(--gray-700); line-height: 1.6; margin-bottom: 16px; }
-    .role-examples {
-      display: flex; flex-wrap: wrap; gap: 6px;
-    }
-    .role-example {
-      font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 20px;
-      background: rgba(255,255,255,0.6); color: var(--gray-700);
-    }
-
-    /* ─── FEATURES ────────────────────────────────── */
-    .features { background: var(--gray-50); }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px; margin-top: 56px;
-    }
-    .feature-card {
-      background: white; border-radius: 16px; padding: 28px;
-      border: 1px solid var(--gray-200);
-      transition: box-shadow 0.15s, transform 0.15s;
-    }
-    .feature-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
-    .feature-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      background: var(--orange-light); color: var(--orange);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 16px; font-size: 20px;
-    }
-    .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-    .feature-card p { font-size: 14px; color: var(--gray-500); line-height: 1.6; }
-
-    /* ─── IMPACT ──────────────────────────────────── */
-    .impact {
-      background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
-      color: white;
-    }
-    .impact .section-label { color: rgba(255,255,255,0.6); }
-    .impact .section-title { color: white; }
-    .impact .section-sub { color: rgba(255,255,255,0.75); }
-    .impact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 32px; margin-top: 56px;
-    }
-    .impact-card {
-      text-align: center; padding: 32px 20px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-    }
-    .impact-num { font-size: 44px; font-weight: 800; color: white; }
-    .impact-num span { font-size: 28px; }
-    .impact-label { font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 6px; }
-
-    /* ─── MULTILINGUAL STRIP ──────────────────────── */
-    .lang-strip {
-      background: var(--orange-light); border-top: 1px solid rgba(232,93,38,0.15);
-      border-bottom: 1px solid rgba(232,93,38,0.15);
-      padding: 20px 24px;
-      display: flex; align-items: center; justify-content: center; gap: 16px;
-      flex-wrap: wrap; text-align: center;
-    }
-    .lang-strip-icon { font-size: 24px; }
-    .lang-strip-text { font-size: 15px; color: var(--gray-700); }
-    .lang-strip-text strong { color: var(--orange-dark); }
-    .lang-flags { display: flex; gap: 8px; }
-    .lang-flag {
-      padding: 4px 12px; border-radius: 20px;
-      background: white; border: 1px solid var(--gray-200);
-      font-size: 13px; font-weight: 600; color: var(--gray-700);
-    }
-
-    /* ─── CTA ─────────────────────────────────────── */
-    .cta { background: white; text-align: center; }
-    .cta-card {
-      background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
-      border-radius: 24px; padding: 72px 40px;
-      color: white; position: relative; overflow: hidden;
-    }
-    .cta-card::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 240px; height: 240px;
-      background: rgba(255,255,255,0.07);
-      border-radius: 50%;
-    }
-    .cta-card::after {
-      content: '';
-      position: absolute;
-      bottom: -40px; left: -40px;
-      width: 180px; height: 180px;
-      background: rgba(255,255,255,0.07);
-      border-radius: 50%;
-    }
-    .cta-card h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
-    .cta-card p { font-size: 17px; color: rgba(255,255,255,0.85); max-width: 480px; margin: 0 auto 36px; }
-    .cta-buttons {
-      display: flex; align-items: center; justify-content: center;
+    .footer-bottom-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 12px;
     }
-    .btn-white {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; border-radius: 12px;
-      background: white; color: var(--orange);
-      font-size: 16px; font-weight: 700; text-decoration: none;
-      transition: transform 0.1s;
-    }
-    .btn-white:hover { transform: translateY(-1px); }
-    .btn-outline-white {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; border-radius: 12px;
-      background: transparent; color: white;
-      border: 2px solid rgba(255,255,255,0.5);
-      font-size: 16px; font-weight: 600; text-decoration: none;
-      transition: border-color 0.15s, transform 0.1s;
-    }
-    .btn-outline-white:hover { border-color: white; transform: translateY(-1px); }
-
-    /* ─── FOOTER ──────────────────────────────────── */
-    footer {
-      background: var(--gray-900); color: rgba(255,255,255,0.6);
-      padding: 48px 24px 32px;
-    }
-    .footer-inner {
-      max-width: 1080px; margin: 0 auto;
-      display: flex; align-items: flex-start; justify-content: space-between;
-      flex-wrap: wrap; gap: 32px;
-    }
-    .footer-brand { max-width: 260px; }
-    .footer-logo {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
-    }
-    .footer-logo-icon {
-      width: 32px; height: 32px; border-radius: 8px; overflow: hidden;
-    }
-    .footer-logo-icon img { width: 100%; height: 100%; object-fit: cover; }
-    .footer-logo-text { font-size: 16px; font-weight: 700; color: white; }
-    .footer-brand p { font-size: 14px; line-height: 1.6; }
-    .footer-links h4 { font-size: 13px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
-    .footer-links ul { list-style: none; }
-    .footer-links li + li { margin-top: 8px; }
-    .footer-links a { font-size: 14px; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.15s; }
-    .footer-links a:hover { color: white; }
-    .footer-bottom {
-      max-width: 1080px; margin: 32px auto 0;
-      padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px; font-size: 13px;
-    }
-    .footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; }
-    .footer-bottom a:hover { color: white; }
-
-    /* ─── HERO IMAGE ─────────────────────────────── */
-    .hero-image-wrap {
-      margin-top: 56px;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.12);
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .hero-image-wrap img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* ─── TESTIMONIALS ───────────────────────────── */
-    .testimonials { background: var(--gray-50); }
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px; margin-top: 56px;
-    }
-    .testimonial-card {
-      background: white; border-radius: 20px; padding: 32px;
-      border: 1px solid var(--gray-200);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-    }
-    .testimonial-quote {
-      font-size: 16px; color: var(--gray-700);
-      line-height: 1.8; font-style: italic; margin-bottom: 24px;
-    }
-    .testimonial-author { display: flex; align-items: center; gap: 12px; }
-    .author-avatar {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--orange); color: white;
+    .footer-social { display: flex; gap: 10px; }
+    .footer-social a {
+      width: 34px; height: 34px; border-radius: 7px;
+      background: var(--gray-100);
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 16px; flex-shrink: 0;
+      color: var(--gray-500); transition: background 0.15s, color 0.15s;
     }
-    .author-name { font-size: 15px; font-weight: 700; color: var(--gray-900); }
-    .author-role { font-size: 13px; color: var(--gray-500); }
+    .footer-social a:hover { background: var(--teal); color: white; }
+    .footer-legal { display: flex; gap: 16px; }
+    .footer-legal a { font-size: 12px; color: var(--gray-500); }
+    .footer-legal a:hover { color: var(--teal); }
+    .footer-copy { font-size: 12px; color: #bbb; }
 
-    /* ─── FADE-IN ANIMATIONS ──────────────────────── */
-    .fade-in {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    /* ─── MOBILE NAV DRAWER ───────────────────────── */
-    .mobile-nav-drawer {
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      padding: 12px 16px 16px;
-      background: white;
-      border-bottom: 1px solid var(--gray-200);
-    }
-    .mobile-nav-drawer.open { display: flex; }
-    .mobile-nav-drawer a {
-      padding: 10px 12px; border-radius: 8px;
-      font-size: 15px; font-weight: 500;
-      color: var(--gray-700); text-decoration: none;
-    }
-    .mobile-nav-drawer a:hover { background: var(--gray-100); }
-    .mobile-nav-drawer .mobile-cta {
-      margin-top: 4px;
-      background: var(--orange); color: white;
-      text-align: center; font-weight: 600; border-radius: 8px;
-    }
-    .mobile-nav-drawer .mobile-cta:hover { background: var(--orange-dark); }
-
-    /* ─── RESPONSIVE ──────────────────────────────── */
-    @media (max-width: 640px) {
-      nav { padding: 0 16px; }
-      .nav-links { display: none; }
-      .nav-mobile-menu {
-        display: flex; align-items: center; justify-content: center;
-        width: 36px; height: 36px; border-radius: 8px;
-        background: none; border: 1.5px solid var(--gray-200);
-        cursor: pointer;
-      }
-      .hero { padding: 64px 20px 56px; }
-      .hero-stat-divider { display: none; }
-      section { padding: 56px 20px; }
-      .cta-card { padding: 48px 24px; }
-      .footer-inner { flex-direction: column; }
+    /* ─── RESPONSIVE ────────────────────────────── */
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; }
+      .nav-links, .nav-login { display: none; }
+      .nav-signup { display: none; }
+      .hamburger { display: flex; align-items: center; }
+      .hero { padding: 40px 20px 0; }
+      .hero-inner { flex-direction: column; }
+      .hero-visual { display: none; }
+      .hero-actions { gap: 24px; }
+      .section { padding: 48px 20px; }
+      .two-col, .two-col-reverse { flex-direction: column; }
+      .section-newsletter { padding: 48px 20px; }
+      .newsletter-inner { flex-direction: column; gap: 32px; }
+      .footer-trusted { padding: 32px 20px; }
+      .footer-main { padding: 32px 20px; }
+      .footer-bottom { padding: 16px 20px; }
+      .announce { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">
-    <div class="nav-logo-icon"><img src="logo.png" alt="MigrantPortal logo" /></div>
-    <span class="nav-logo-text">Migrant<span>Portal</span></span>
-  </a>
-  <div class="nav-links">
-    <a href="#how-it-works" class="nav-link">How It Works</a>
-    <a href="#features" class="nav-link">Features</a>
-    <a href="#impact" class="nav-link">Impact</a>
-    <a href="#get-involved" class="nav-cta">Get Involved</a>
-  </div>
-  <button class="nav-mobile-menu" aria-label="Menu">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <rect x="1" y="3" width="16" height="2" rx="1" fill="#374151"/>
-      <rect x="1" y="8" width="16" height="2" rx="1" fill="#374151"/>
-      <rect x="1" y="13" width="16" height="2" rx="1" fill="#374151"/>
-    </svg>
-  </button>
-</nav>
-
-<!-- MOBILE NAV DRAWER -->
-<div class="mobile-nav-drawer" id="mobileDrawer">
-  <a href="#how-it-works">How It Works</a>
-  <a href="#features">Features</a>
-  <a href="#impact">Impact</a>
-  <a href="#get-involved" class="mobile-cta">Get Involved</a>
-</div>
-
-<!-- HERO -->
-<section class="hero">
-  <div style="position:relative;z-index:1;">
-    <div class="hero-badge">
-      <svg viewBox="0 0 14 14" fill="none">
-        <path d="M7 1L8.5 5H13L9.5 7.5L11 12L7 9.5L3 12L4.5 7.5L1 5H5.5L7 1Z" fill="#E85D26"/>
-      </svg>
-      Where Help Meets Hope
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="announce">
+    <div class="announce-logo">
+      <span>MP</span>
+      <span>MigrantPortal</span>
     </div>
-    <h1>Connecting <span>Migrants in Need</span> with a Community That Cares</h1>
-    <p class="hero-sub">MigrantPortal bridges the gap between families facing hardship and the churches, volunteers, and donors ready to help — one need at a time.</p>
-    <div class="hero-actions">
-      <a href="#get-involved" class="btn-primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="white"/>
-        </svg>
-        Download the App
-      </a>
-      <a href="#how-it-works" class="btn-secondary">
-        Learn How It Works
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-          <path d="M9 18l6-6-6-6" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
+    <div class="announce-text">
+      <strong>Android Beta Now Available &nbsp;·&nbsp; Help a migrant family in your community</strong>
+      <span>Limited early access — sign up below</span>
     </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-num">3</div>
-        <div class="hero-stat-label">User Roles</div>
-      </div>
-      <div class="hero-stat-divider"></div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">11</div>
-        <div class="hero-stat-label">Need Categories</div>
-      </div>
-      <div class="hero-stat-divider"></div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">EN/ES</div>
-        <div class="hero-stat-label">Bilingual</div>
-      </div>
-      <div class="hero-stat-divider"></div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">Free</div>
-        <div class="hero-stat-label">Always</div>
-      </div>
+    <a href="mailto:support@migrantportal.net?subject=Download+MigrantPortal+Beta" class="announce-btn">REQUEST BETA</a>
+  </div>
+
+  <!-- NAV -->
+  <nav aria-label="Main navigation">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">M</div>
+      MigrantPortal
+    </a>
+    <div class="nav-links">
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#impact" class="nav-link">Impact</a>
+      <a href="#get-involved" class="nav-link">Get Involved</a>
     </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how" id="how-it-works">
-  <div class="container">
-    <p class="section-label">How It Works</p>
-    <h2 class="section-title">Three roles. One mission.</h2>
-    <p class="section-sub">Every person in the MigrantPortal community plays a specific role in moving a family from crisis to stability.</p>
-    <div class="how-grid">
-
-      <div class="role-card role-card-connector fade-in">
-        <div class="role-icon role-icon-connector">🤝</div>
-        <span class="role-tag role-tag-connector">Connector</span>
-        <h3>Submit Needs</h3>
-        <p>ESL teachers, pastors, and social workers who know migrant families personally. They submit specific needs on behalf of families and track outcomes.</p>
-        <div class="role-examples">
-          <span class="role-example">ESL Teachers</span>
-          <span class="role-example">Pastors</span>
-          <span class="role-example">Social Workers</span>
-          <span class="role-example">Case Managers</span>
-        </div>
-      </div>
-
-      <div class="role-card role-card-responder fade-in">
-        <div class="role-icon role-icon-responder">💚</div>
-        <span class="role-tag role-tag-responder">Responder</span>
-        <h3>Meet the Need</h3>
-        <p>Churches, volunteers, and donors who browse the live needs feed, claim what they can fulfill, and provide real, tangible help to families.</p>
-        <div class="role-examples">
-          <span class="role-example">Churches</span>
-          <span class="role-example">Volunteers</span>
-          <span class="role-example">Donors</span>
-          <span class="role-example">Professionals</span>
-        </div>
-      </div>
-
-      <div class="role-card role-card-admin fade-in">
-        <div class="role-icon role-icon-admin">🛡️</div>
-        <span class="role-tag role-tag-admin">Admin</span>
-        <h3>Verify &amp; Protect</h3>
-        <p>Trusted coordinators who review submitted needs, approve verified requests, manage the platform, and ensure migrant families are protected.</p>
-        <div class="role-examples">
-          <span class="role-example">Coordinators</span>
-          <span class="role-example">Org Leaders</span>
-          <span class="role-example">Network Admins</span>
-        </div>
-      </div>
-
+    <div class="nav-right">
+      <a href="mailto:support@migrantportal.net?subject=Login+Help" class="nav-login">Log In</a>
+      <a href="#get-involved" class="nav-signup">SIGN UP</a>
+      <button class="hamburger" aria-label="Open menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
-  </div>
-</section>
+  </nav>
 
-<!-- LANG STRIP -->
-<div class="lang-strip">
-  <span class="lang-strip-icon">🌍</span>
-  <p class="lang-strip-text"><strong>Fully bilingual app</strong> — serving families in the language they feel most comfortable.</p>
-  <div class="lang-flags">
-    <span class="lang-flag">🇺🇸 English</span>
-    <span class="lang-flag">🇪🇸 Español</span>
-  </div>
-</div>
-
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="container">
-    <p class="section-label">Features</p>
-    <h2 class="section-title">Everything a compassionate network needs</h2>
-    <p class="section-sub">Built from real needs of real families — every feature exists to move people from crisis to community.</p>
-    <div class="features-grid">
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📋</div>
-        <h3>Live Needs Feed</h3>
-        <p>Responders see a real-time feed of verified needs filtered by category, urgency, and location. Claim with one tap.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">👨‍👩‍👧</div>
-        <h3>Family Profiles</h3>
-        <p>Connectors build rich family profiles — origin country, language, adults, children — so responders can serve with context.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">💳</div>
-        <h3>Secure Donations</h3>
-        <p>Responders can donate directly to a specific need through Stripe. 100% of donations are tied to a verified family need.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📅</div>
-        <h3>Volunteer Scheduling</h3>
-        <p>Organizations post volunteer shifts. Responders sign up, track hours, and build a lasting commitment to the community.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📍</div>
-        <h3>Map View</h3>
-        <p>See all active needs plotted on a map. Color-coded by urgency. Tap to view details, claim, or donate from the map.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📊</div>
-        <h3>Impact Dashboard</h3>
-        <p>Public stats showing fulfilled needs, categories served, top cities, and community leaderboard. Proof that it's working.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">💬</div>
-        <h3>In-App Chat</h3>
-        <p>Connectors and responders communicate directly within each need thread — no phone numbers shared, full privacy protected.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🔔</div>
-        <h3>Smart Notifications</h3>
-        <p>Matched responders are notified the moment a relevant need is approved. Connectors are updated at every step of fulfillment.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📚</div>
-        <h3>Resource Directory</h3>
-        <p>Community-contributed directory of local services — legal aid, food banks, ESL classes, housing — searchable and categorized.</p>
-      </div>
-
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="mobile-nav-header">
+      <span class="nav-logo" style="font-family:Montserrat,sans-serif;font-weight:800;">MigrantPortal</span>
+      <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close menu">×</button>
     </div>
+    <a href="#how-it-works" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
+    <a href="#about" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">About</a>
+    <a href="#impact" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Impact</a>
+    <a href="#get-involved" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Get Involved</a>
+    <a href="#get-involved" class="mobile-cta" onclick="document.querySelector('.mobile-nav').classList.remove('open')">SIGN UP</a>
   </div>
-</section>
 
-<!-- IMPACT -->
-<section class="impact" id="impact">
-  <div class="container">
-    <p class="section-label">Impact</p>
-    <h2 class="section-title">Every number is a family helped</h2>
-    <p class="section-sub">We measure success in real outcomes — needs fulfilled, families stabilized, and a community that showed up.</p>
-    <div class="impact-grid">
-      <div class="impact-card">
-        <div class="impact-num">11</div>
-        <div class="impact-label">Need Categories</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-num">24<span>h</span></div>
-        <div class="impact-label">Avg. Response Time</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-num">3</div>
-        <div class="impact-label">Cities at Launch</div>
-      </div>
-      <div class="impact-card">
-        <div class="impact-num">$0</div>
-        <div class="impact-label">Cost to Families</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials" id="testimonials">
-  <div class="container">
-    <p class="section-label">Community Voices</p>
-    <h2 class="section-title">Real stories, real impact</h2>
-    <p class="section-sub">Hear from the connectors and responders who make MigrantPortal possible.</p>
-    <div class="testimonials-grid">
-      <div class="testimonial-card fade-in">
-        <p class="testimonial-quote">"When Maria's family lost their apartment, I submitted a need through MigrantPortal. Within 48 hours, a local church had provided temporary housing and meals. The speed and compassion was overwhelming."</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">SJ</div>
-          <div>
-            <div class="author-name">Sarah Johnson</div>
-            <div class="author-role">ESL Teacher &amp; Connector</div>
+  <!-- HERO -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-inner">
+      <!-- Left: text + 3 actions -->
+      <div class="hero-text">
+        <h1>Help a migrant family now</h1>
+        <p class="hero-sub">
+          Take meaningful action on the platform connecting the largest network of
+          <a href="#get-involved">caring people</a> to meet the needs of migrant families in crisis.
+        </p>
+        <div class="hero-actions">
+          <!-- Meet a need -->
+          <div class="hero-action">
+            <div class="hero-action-icon">
+              <svg viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="24" fill="#e8f7f8"/>
+                <path d="M16 28s0-8 8-8 8 8 8 8" stroke="#009DA5" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="24" cy="18" r="4" fill="#009DA5"/>
+                <path d="M12 34h24" stroke="#009DA5" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="hero-action-body">
+              <h4>Meet a need</h4>
+              <a href="#get-involved">Respond to an urgent need in minutes</a>
+            </div>
+          </div>
+          <!-- Submit a need -->
+          <div class="hero-action">
+            <div class="hero-action-icon">
+              <svg viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="24" fill="#fff3ea"/>
+                <rect x="14" y="14" width="20" height="22" rx="3" fill="white" stroke="#FF6129" stroke-width="2"/>
+                <line x1="18" y1="21" x2="30" y2="21" stroke="#FF6129" stroke-width="2" stroke-linecap="round"/>
+                <line x1="18" y1="26" x2="26" y2="26" stroke="#FF6129" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="30" cy="30" r="5" fill="#FF6129"/>
+                <line x1="30" y1="27" x2="30" y2="33" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <line x1="27" y1="30" x2="33" y2="30" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="hero-action-body">
+              <h4>Submit a need</h4>
+              <a href="#get-involved">Unlock community resources</a>
+            </div>
+          </div>
+          <!-- Join a network -->
+          <div class="hero-action">
+            <div class="hero-action-icon">
+              <svg viewBox="0 0 48 48" fill="none">
+                <circle cx="24" cy="24" r="24" fill="#e8f7f8"/>
+                <circle cx="18" cy="20" r="4" fill="#009DA5"/>
+                <circle cx="30" cy="20" r="4" fill="#009DA5"/>
+                <circle cx="24" cy="30" r="4" fill="#FF6129"/>
+                <line x1="18" y1="24" x2="24" y2="27" stroke="#aaa" stroke-width="1.5"/>
+                <line x1="30" y1="24" x2="24" y2="27" stroke="#aaa" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="hero-action-body">
+              <h4>Launch a network</h4>
+              <a href="mailto:support@migrantportal.net?subject=Partnership+Inquiry">Connect and empower your partners</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="testimonial-card fade-in">
-        <p class="testimonial-quote">"As a pastor, I've seen how MigrantPortal removes the barriers between wanting to help and actually helping. We now have a direct line to families in our community who need exactly what we can offer."</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">DR</div>
-          <div>
-            <div class="author-name">Rev. David Rodriguez</div>
-            <div class="author-role">Grace Community Church</div>
+
+      <!-- Right: app mockup -->
+      <div class="hero-visual">
+        <div class="hero-mockup">
+          <div class="mockup-desktop">
+            <div class="mockup-desktop-bar">
+              <div class="mockup-desktop-dots">
+                <span></span><span></span><span></span>
+              </div>
+              &nbsp;&nbsp; migrantportal.net
+            </div>
+            <div class="mockup-screen">
+              <div class="screen-header">🏠 MigrantPortal — Active Needs</div>
+              <div class="screen-need">
+                <div class="screen-need-dot"></div>
+                <div class="screen-need-text"><strong>Family in Kansas City</strong><br/>Needs: diapers, formula, warm clothing for 2 kids</div>
+              </div>
+              <div class="screen-need">
+                <div class="screen-need-dot" style="background:var(--teal)"></div>
+                <div class="screen-need-text"><strong>Single mother, 3 children</strong><br/>Needs: temporary housing referral, school enrollment</div>
+              </div>
+              <div class="screen-pin-row">
+                <div class="screen-pin">📍 Kansas City</div>
+                <div class="screen-pin teal">📍 Lawrence</div>
+                <div class="screen-pin">📍 Wichita</div>
+              </div>
+            </div>
+          </div>
+          <div class="mockup-phone">
+            <div class="phone-screen">
+              <div class="phone-row"></div>
+              <div class="phone-row short"></div>
+              <div class="phone-row white-card">
+                <div class="l"></div>
+                <div class="l s"></div>
+              </div>
+              <div class="phone-row orange">
+                <span style="font-size:8px;color:white;font-weight:700;">RESPOND</span>
+              </div>
+              <div class="phone-row white-card">
+                <div class="l"></div>
+                <div class="l s"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section class="cta" id="get-involved">
-  <div class="container">
-    <div class="cta-card">
-      <h2>Ready to make a difference?</h2>
-      <p>Whether you know a family in need or want to be the one who helps — MigrantPortal connects you to your community.</p>
-      <div class="cta-buttons">
-        <a href="https://expo.dev/accounts/paulskc44/projects/migrant-portal/builds/fcc3d761-a4a5-4627-bf3b-ae1da5346948" class="btn-white" target="_blank" rel="noopener">
-          📲 Download Beta (Android)
-        </a>
-        <a href="mailto:support@migrantportal.net?subject=MigrantPortal" class="btn-outline-white">
-          ✉️ Contact Us
-        </a>
+  <!-- DISCOVER NEEDS SECTION -->
+  <section class="section" id="how-it-works" aria-labelledby="discover-h">
+    <div class="section-inner">
+      <div class="two-col">
+        <!-- Left: illustration -->
+        <div class="col-visual">
+          <div class="illus illus-teal">
+            <div class="illus-circle-teal">🗺️</div>
+          </div>
+        </div>
+        <!-- Right: text -->
+        <div class="col-text">
+          <h2 id="discover-h">Discover live needs near you</h2>
+          <p>Explore vetted, urgent needs of <a href="#get-involved">migrant children and families</a> across the nation. Every request is verified before it reaches your community.</p>
+          <a href="mailto:support@migrantportal.net?subject=View+Needs+Map" class="text-cta">View Map of Requests</a>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="footer-logo">
-        <div class="footer-logo-icon"><img src="logo.png" alt="MigrantPortal" /></div>
-        <span class="footer-logo-text">MigrantPortal</span>
+  <!-- PROFESSIONALS SECTION -->
+  <section class="section" id="about" aria-labelledby="pros-h" style="background:var(--gray-100);">
+    <div class="section-inner">
+      <div class="two-col two-col-reverse">
+        <!-- Right becomes left on reverse: illustration -->
+        <div class="col-visual">
+          <div class="illus illus-yellow">
+            <div class="illus-yellow-circle"></div>
+            <div class="illus-app-card">
+              <div class="row teal"></div>
+              <div class="row"></div>
+              <div class="row s"></div>
+              <div class="row"></div>
+              <div class="row s"></div>
+            </div>
+            <div style="font-size:56px;position:relative;z-index:1;">👩‍💼</div>
+          </div>
+        </div>
+        <!-- Left text -->
+        <div class="col-text">
+          <h2 id="pros-h">MigrantPortal for professionals</h2>
+          <p>
+            Discover how caseworkers, educators, and more are using our platform to engage
+            <a href="#get-involved">local churches and communities</a> to wrap more support
+            around the migrant children and families they serve.
+          </p>
+          <a href="mailto:support@migrantportal.net?subject=Professional+Access" class="text-cta">Learn More About Submitting Needs</a>
+        </div>
       </div>
-      <p>Connecting migrants in need with churches, volunteers, and donors — one need at a time.</p>
     </div>
-    <div class="footer-links">
-      <h4>App</h4>
-      <ul>
-        <li><a href="#how-it-works">How It Works</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#impact">Impact</a></li>
-        <li><a href="#get-involved">Download</a></li>
-      </ul>
-    </div>
-    <div class="footer-links">
-      <h4>Legal</h4>
-      <ul>
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-      </ul>
-    </div>
-    <div class="footer-links">
-      <h4>Contact</h4>
-      <ul>
-        <li><a href="mailto:support@migrantportal.net">support@migrantportal.net</a></li>
-        <li><a href="#">Partner With Us</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 MigrantPortal. All rights reserved.</span>
-    <span>Built with compassion under <a href="#">Samru LLC</a></span>
-  </div>
-</footer>
+  </section>
 
-<script>
-  // Fade-in on scroll
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  <!-- LAUNCH A NETWORK SECTION -->
+  <section class="section" id="impact" aria-labelledby="network-h">
+    <div class="section-inner">
+      <div class="two-col">
+        <!-- Left: illustration -->
+        <div class="col-visual">
+          <div class="illus illus-teal">
+            <div class="illus-circle-teal">🤝</div>
+          </div>
+        </div>
+        <!-- Right: text -->
+        <div class="col-text">
+          <h2 id="network-h">Launch a network</h2>
+          <p>
+            Use MigrantPortal to connect all of your partners in one place and maximize the
+            impact that you and others are making in the community.
+          </p>
+          <a href="mailto:support@migrantportal.net?subject=Partnership+Inquiry" class="text-cta">Become an Implementing Partner</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  // Mobile nav toggle
-  const menuBtn = document.querySelector('.nav-mobile-menu');
-  const drawer = document.getElementById('mobileDrawer');
-  menuBtn.addEventListener('click', () => drawer.classList.toggle('open'));
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
-</script>
+  <!-- HOW IT WORKS / LEARN SECTION -->
+  <section class="section section-cream" aria-labelledby="how-h">
+    <div class="section-inner">
+      <div class="two-col two-col-reverse">
+        <!-- Illustration -->
+        <div class="col-visual">
+          <div class="illus illus-howto">
+            <div class="illus-howto-circle"></div>
+            <div class="illus-person">📱</div>
+            <div class="illus-phone-card">
+              <div class="row"></div>
+              <div class="row s"></div>
+              <div class="row orange"></div>
+              <div class="row"></div>
+              <div class="row s"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Text -->
+        <div class="col-text">
+          <h2 id="how-h" style="font-style:italic;">
+            Learn how our Care-Sharing technology drives action for migrant families in crisis.
+          </h2>
+          <a href="mailto:support@migrantportal.net?subject=How+It+Works" class="text-cta">How It Works</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER / SIGN UP SECTION -->
+  <section class="section-newsletter" id="get-involved" aria-labelledby="signup-h">
+    <div class="newsletter-inner">
+      <div class="newsletter-text">
+        <h2 id="signup-h">Don't miss out!</h2>
+        <p>
+          Sign up for updates from MigrantPortal — featuring real stories of impact,
+          new opportunities to meet needs, and inspiring ways people like you are seeing
+          and serving migrant families across the country.
+        </p>
+      </div>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); window.location='mailto:support@migrantportal.net?subject=MigrantPortal+Sign+Up';">
+        <input type="text" placeholder="First name" aria-label="First name" />
+        <input type="text" placeholder="Last name" aria-label="Last name" />
+        <input type="email" placeholder="Email" aria-label="Email" required />
+        <button type="submit" class="newsletter-submit">Stay Connected</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Site footer">
+
+    <!-- Trusted By -->
+    <div class="footer-trusted">
+      <div class="footer-trusted-inner">
+        <h3>Supported By:</h3>
+        <div class="trusted-logos">
+          <div class="trusted-logo">Local Churches</div>
+          <div class="trusted-logo">Social Workers</div>
+          <div class="trusted-logo">Community Orgs</div>
+          <div class="trusted-logo">Faith Communities</div>
+          <div class="trusted-logo">Non-profits</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main footer -->
+    <div class="footer-main">
+      <div class="footer-main-inner">
+
+        <!-- Brand + stats -->
+        <div>
+          <div class="footer-brand">
+            <div class="footer-brand-logo">
+              <div class="footer-brand-logo-icon">M</div>
+              MigrantPortal
+            </div>
+            <p>Connecting migrant families with churches, volunteers, and donors — one need at a time.</p>
+          </div>
+          <div class="footer-stats" style="margin-top:24px;">
+            <div class="footer-stat">
+              <div class="footer-stat-num">24h</div>
+              <div class="footer-stat-label">Avg. Response Time</div>
+            </div>
+            <div class="footer-stat">
+              <div class="footer-stat-num">3+</div>
+              <div class="footer-stat-label">Launch Cities</div>
+            </div>
+            <div class="footer-stat">
+              <div class="footer-stat-num">Free</div>
+              <div class="footer-stat-label">For Helpers</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="footer-col">
+          <div class="footer-col-title">About</div>
+          <ul>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#impact">Impact</a></li>
+            <li><a href="#about">Our Solution</a></li>
+            <li><a href="mailto:support@migrantportal.net">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Get Involved</div>
+          <ul>
+            <li><a href="mailto:support@migrantportal.net?subject=Download+MigrantPortal+Beta">Download App</a></li>
+            <li><a href="mailto:support@migrantportal.net?subject=Submit+a+Family+Need">Submit a Need</a></li>
+            <li><a href="mailto:support@migrantportal.net?subject=Meet+a+Need">Meet a Need</a></li>
+            <li><a href="mailto:support@migrantportal.net?subject=View+Needs+Map">View Needs Map</a></li>
+            <li><a href="mailto:support@migrantportal.net?subject=Partnership+Inquiry">Launch a Network</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Resources</div>
+          <ul>
+            <li><a href="/privacy.html">Privacy Policy</a></li>
+            <li><a href="/terms.html">Terms of Service</a></li>
+            <li><a href="mailto:support@migrantportal.net?subject=Help">Help Center</a></li>
+            <li><a href="mailto:support@migrantportal.net?subject=Press+Inquiry">Press</a></li>
+            <li><a href="#">Samru LLC</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <div class="footer-social" aria-label="Social media">
+          <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="Twitter / X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+          </a>
+        </div>
+        <div class="footer-legal">
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+          <a href="mailto:support@migrantportal.net">Contact</a>
+        </div>
+        <p class="footer-copy">MigrantPortal © 2026 · Built with compassion by Samru LLC</p>
+      </div>
+    </div>
+
+  </footer>
+
 </body>
 </html>
