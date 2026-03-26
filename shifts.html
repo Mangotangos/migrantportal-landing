@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volunteer Shifts — MigrantPortal</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:#009DA5; --teal-d:#007c84; --teal-lt:#e6f7f8;
+      --orange:#FF6129; --orange-d:#e05020;
+      --green:#22C55E; --green-lt:#dcfce7;
+      --red:#EF4444; --red-lt:#fee2e2;
+      --text:#0D0D0D; --gray-700:#3d3d3d; --gray-600:#555;
+      --gray-400:#999; --gray-200:#E8E8E8; --gray-100:#F4F4F4; --gray-bg:#F0F2F5;
+    }
+    body { font-family:'Inter',sans-serif; color:var(--text); background:var(--gray-bg); }
+    a { text-decoration:none; color:var(--teal); }
+    button { font-family:'Inter',sans-serif; cursor:pointer; }
+
+    .topbar {
+      background:white; border-bottom:1px solid var(--gray-200);
+      display:flex; align-items:center; gap:12px; padding:0 20px; height:52px;
+      position:sticky; top:0; z-index:100;
+    }
+    .topbar-logo { font-family:'Montserrat',sans-serif; font-size:16px; font-weight:800; color:var(--teal); }
+    .topbar-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
+    .btn-logout { height:30px; padding:0 12px; border:1px solid var(--gray-200); border-radius:6px; font-size:12px; background:white; color:var(--gray-600); }
+    .btn-logout:hover { border-color:var(--red); color:var(--red); }
+
+    .page { max-width:900px; margin:0 auto; padding:28px 20px 80px; }
+    .page-header { margin-bottom:24px; }
+    .page-header h1 { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:800; }
+    .page-header p { font-size:13px; color:var(--gray-600); margin-top:4px; }
+
+    .tabs { display:flex; gap:0; border-bottom:1px solid var(--gray-200); margin-bottom:24px; background:white; border-radius:10px 10px 0 0; }
+    .stab { padding:12px 20px; font-size:13px; font-weight:500; color:var(--gray-600); cursor:pointer; border-bottom:2px solid transparent; }
+    .stab:hover { color:var(--teal); }
+    .stab.active { color:var(--teal); border-bottom-color:var(--teal); font-weight:600; }
+
+    .layout { display:flex; gap:20px; align-items:flex-start; }
+    .shifts-list { flex:1; display:flex; flex-direction:column; gap:12px; }
+    .sidebar-form { width:280px; flex-shrink:0; position:sticky; top:62px; }
+
+    .card { background:white; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.06); padding:20px; }
+    .card-title { font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; margin-bottom:16px; }
+
+    .shift-card {
+      background:white; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.06);
+      padding:18px; display:flex; flex-direction:column; gap:10px;
+    }
+    .shift-header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .shift-title { font-weight:700; font-size:15px; }
+    .shift-meta { font-size:12px; color:var(--gray-600); display:flex; flex-wrap:wrap; gap:8px; }
+    .shift-meta span { display:flex; align-items:center; gap:4px; }
+    .slot-bar { height:6px; background:var(--gray-200); border-radius:3px; overflow:hidden; margin-top:2px; }
+    .slot-fill { height:100%; background:var(--teal); border-radius:3px; transition:width .4s; }
+    .slot-fill.full { background:var(--orange); }
+    .shift-actions { display:flex; gap:8px; }
+    .btn-signup { height:34px; padding:0 16px; background:var(--teal); color:white; border:none; border-radius:7px; font-size:13px; font-weight:600; }
+    .btn-signup:hover { background:var(--teal-d); }
+    .btn-drop { height:34px; padding:0 16px; background:var(--red-lt); color:var(--red); border:1px solid #fca5a5; border-radius:7px; font-size:13px; font-weight:600; }
+    .btn-drop:hover { background:var(--red); color:white; }
+    .btn-cancel { height:34px; padding:0 14px; background:var(--gray-100); color:var(--gray-600); border:1px solid var(--gray-200); border-radius:7px; font-size:13px; font-weight:600; }
+    .btn-cancel:hover { background:var(--red-lt); color:var(--red); }
+
+    .form-row { margin-bottom:14px; }
+    .form-row label { display:block; font-size:12px; font-weight:600; color:var(--gray-600); margin-bottom:5px; }
+    .form-row input, .form-row textarea, .form-row select {
+      width:100%; padding:8px 10px; border:1px solid var(--gray-200); border-radius:7px;
+      font-size:13px; font-family:Inter,sans-serif; background:var(--gray-100);
+    }
+    .form-row input:focus, .form-row textarea:focus { border-color:var(--teal); background:white; outline:none; }
+    .btn-create { width:100%; height:40px; background:var(--orange); color:white; border:none; border-radius:8px; font-size:14px; font-weight:700; }
+    .btn-create:hover { background:var(--orange-d); }
+
+    .empty { padding:40px; text-align:center; color:var(--gray-400); font-size:13px; }
+    #toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1a1a1a; color:white; padding:10px 20px; border-radius:8px; font-size:13px; z-index:999; opacity:0; pointer-events:none; transition:opacity .2s; }
+    #toast.show { opacity:1; }
+    #toast.error { background:var(--red); }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-logo">MigrantPortal</span>
+  <nav style="display:flex;gap:0;margin-left:16px">
+    <a href="requests.html" style="padding:0 14px;height:52px;display:flex;align-items:center;font-size:13px;color:var(--gray-600);">Requests</a>
+    <a href="shifts.html" style="padding:0 14px;height:52px;display:flex;align-items:center;font-size:13px;color:var(--teal);font-weight:600;border-bottom:2px solid var(--teal);">Shifts</a>
+    <a href="impact.html" style="padding:0 14px;height:52px;display:flex;align-items:center;font-size:13px;color:var(--gray-600);">Impact</a>
+  </nav>
+  <div class="topbar-right">
+    <a href="dashboard.html" style="font-size:13px;font-weight:600;color:var(--teal);">Dashboard</a>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="page">
+  <div class="page-header">
+    <h1>Volunteer Shifts</h1>
+    <p>Browse upcoming shifts and sign up to help. Org leaders can create and manage shifts.</p>
+  </div>
+
+  <div class="tabs">
+    <div class="stab active" id="tab-all" onclick="switchTab('all')">All Shifts</div>
+    <div class="stab" id="tab-mine" onclick="switchTab('mine')">My Shifts</div>
+    <div class="stab" id="tab-org" onclick="switchTab('org')">Manage (Org)</div>
+  </div>
+
+  <div class="layout">
+    <div class="shifts-list" id="shifts-list">
+      <div class="empty">Loading shifts…</div>
+    </div>
+
+    <!-- Create shift form — only shown on Manage tab for org owners -->
+    <div class="sidebar-form" id="create-form" style="display:none">
+      <div class="card">
+        <div class="card-title">Create Shift</div>
+        <div class="form-row"><label>Title *</label><input id="f-title" type="text" placeholder="e.g. Food Pantry Run"></div>
+        <div class="form-row"><label>Description</label><textarea id="f-desc" rows="2" placeholder="Optional details…"></textarea></div>
+        <div class="form-row"><label>Date *</label><input id="f-date" type="date"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-row"><label>Start *</label><input id="f-start" type="time"></div>
+          <div class="form-row"><label>End *</label><input id="f-end" type="time"></div>
+        </div>
+        <div class="form-row"><label>Slots *</label><input id="f-slots" type="number" min="1" value="1"></div>
+        <div class="form-row"><label>Location</label><input id="f-loc" type="text" placeholder="Address or area"></div>
+        <button class="btn-create" onclick="createShift()">Create Shift</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="api.js"></script>
+<script src="notif-bell.js"></script>
+<script>
+  requireAuth();
+  const me = getUser();
+
+  function toast(msg, err=false) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.className = 'show' + (err?' error':'');
+    clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 2500);
+  }
+
+  const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function fmtDate(s) {
+    const d = new Date(s + 'T00:00:00');
+    return `${DAYS[d.getDay()]} ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+  }
+
+  function renderShifts(shifts, showCancel=false) {
+    const el = document.getElementById('shifts-list');
+    if (!shifts.length) { el.innerHTML = '<div class="empty">No shifts found.</div>'; return; }
+    el.innerHTML = shifts.map(s => {
+      const pct = s.slots_total > 0 ? Math.round(s.slots_filled / s.slots_total * 100) : 0;
+      const full = s.slots_filled >= s.slots_total;
+      return `
+        <div class="shift-card">
+          <div class="shift-header">
+            <div>
+              <div class="shift-title">${s.title}</div>
+              ${s.description ? `<div style="font-size:12px;color:var(--gray-600);margin-top:3px">${s.description}</div>` : ''}
+            </div>
+            ${s.cancelled ? '<span style="background:var(--red-lt);color:var(--red);font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px">Cancelled</span>' : ''}
+          </div>
+          <div class="shift-meta">
+            <span>📅 ${fmtDate(s.date)}</span>
+            <span>🕐 ${s.start_time} – ${s.end_time}</span>
+            ${s.location ? `<span>📍 ${s.location}</span>` : ''}
+            <span>👥 ${s.slots_filled}/${s.slots_total} slots</span>
+          </div>
+          <div>
+            <div class="slot-bar"><div class="slot-fill ${full?'full':''}" style="width:${pct}%"></div></div>
+          </div>
+          ${!s.cancelled ? `<div class="shift-actions">
+            ${showCancel
+              ? `<button class="btn-cancel" onclick="cancelShift('${s.id}')">Cancel Shift</button>`
+              : s.signed_up
+                ? `<button class="btn-drop" onclick="dropShift('${s.id}')">Drop Shift</button>`
+                : full
+                  ? `<button class="btn-signup" disabled style="opacity:.5;cursor:not-allowed">Full</button>`
+                  : `<button class="btn-signup" onclick="signupShift('${s.id}')">Sign Up</button>`
+            }
+          </div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  let activeTab = 'all';
+  function switchTab(tab) {
+    activeTab = tab;
+    ['all','mine','org'].forEach(t => document.getElementById('tab-'+t).classList.toggle('active', t===tab));
+    document.getElementById('create-form').style.display = tab === 'org' ? '' : 'none';
+    loadTab(tab);
+  }
+
+  async function loadTab(tab) {
+    document.getElementById('shifts-list').innerHTML = '<div class="empty">Loading…</div>';
+    try {
+      const url = tab === 'mine' ? '/shifts/mine' : tab === 'org' ? '/shifts/org' : '/shifts';
+      const shifts = await apiGet(url);
+      renderShifts(shifts, tab === 'org');
+    } catch(e) {
+      document.getElementById('shifts-list').innerHTML = `<div class="empty">${e.message.includes('403') ? 'Only org owners can manage shifts.' : 'Failed to load shifts.'}</div>`;
+    }
+  }
+
+  async function signupShift(id) {
+    try { await apiPost(`/shifts/${id}/signup`, {}); toast('Signed up!'); loadTab(activeTab); }
+    catch(e) { toast(e.message, true); }
+  }
+
+  async function dropShift(id) {
+    if (!confirm('Drop this shift?')) return;
+    try { await apiDelete(`/shifts/${id}/signup`); toast('Dropped.'); loadTab(activeTab); }
+    catch(e) { toast(e.message, true); }
+  }
+
+  async function cancelShift(id) {
+    if (!confirm('Cancel this shift for all volunteers?')) return;
+    try { await apiDelete(`/shifts/${id}`); toast('Shift cancelled.'); loadTab(activeTab); }
+    catch(e) { toast(e.message, true); }
+  }
+
+  async function createShift() {
+    const title = document.getElementById('f-title').value.trim();
+    const date = document.getElementById('f-date').value;
+    const start = document.getElementById('f-start').value;
+    const end = document.getElementById('f-end').value;
+    const slots = parseInt(document.getElementById('f-slots').value) || 1;
+    if (!title || !date || !start || !end) { toast('Fill in all required fields.', true); return; }
+    try {
+      await apiPost('/shifts', {
+        title, date, start_time: start, end_time: end, slots_total: slots,
+        description: document.getElementById('f-desc').value.trim() || undefined,
+        location: document.getElementById('f-loc').value.trim() || undefined,
+      });
+      toast('Shift created!');
+      ['f-title','f-desc','f-date','f-start','f-end','f-loc'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-slots').value = '1';
+      loadTab('org');
+    } catch(e) { toast(e.message, true); }
+  }
+
+  loadTab('all');
+</script>
+</body>
+</html>
