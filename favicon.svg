@@ -1,4 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#0D9488"/>
-  <text x="16" y="22" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="white" text-anchor="middle">MP</text>
+  <rect width="32" height="32" rx="8" fill="#1A6B5C"/>
+  <circle cx="16" cy="14" r="9" fill="#1A6B5C" stroke="white" stroke-width="0.5"/>
+  <path d="M7,15 C8.5,12 11,11 13,12 L14.5,13.5 C15,14 15,15 14.5,15.5 L12,16.5 C10,15.5 8,15 7,15 Z" fill="#E85D26"/>
+  <path d="M25,15 C23.5,12 21,11 19,12 L17.5,13.5 C17,14 17,15 17.5,15.5 L20,16.5 C22,15.5 24,15 25,15 Z" fill="white" opacity="0.9"/>
+  <circle cx="16" cy="14.5" r="1.8" fill="#E85D26" opacity="0.9"/>
+  <circle cx="16" cy="14.5" r="0.9" fill="white"/>
 </svg>
