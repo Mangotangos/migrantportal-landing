@@ -402,23 +402,49 @@
     <p>Every number represents a migrant family that received hope through their local community.</p>
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-num">2,400+</div>
+        <div class="stat-num" id="stat-needs">0</div>
         <div class="stat-label">Needs submitted by connectors</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">87%</div>
-        <div class="stat-label">Of needs met within 30 days</div>
+        <div class="stat-num" id="stat-rate">0%</div>
+        <div class="stat-label">Of needs met</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">310+</div>
+        <div class="stat-num" id="stat-orgs">0</div>
         <div class="stat-label">Partner churches & organizations</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">14</div>
+        <div class="stat-num" id="stat-states">0</div>
         <div class="stat-label">States with active networks</div>
       </div>
     </div>
   </section>
+  <script>
+    (function () {
+      const API_BASE = 'https://migrant-portal-production-3826.up.railway.app';
+      function countUp(el, target, suffix, duration) {
+        const start = performance.now();
+        function step(now) {
+          const t = Math.min((now - start) / duration, 1);
+          const val = Math.floor(t * target);
+          el.textContent = val.toLocaleString() + suffix;
+          if (t < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+      fetch(API_BASE + '/impact')
+        .then(r => r.json())
+        .then(d => {
+          const total = (d.total_active || 0) + (d.total_fulfilled || 0);
+          countUp(document.getElementById('stat-needs'), total, '', 1200);
+          countUp(document.getElementById('stat-orgs'), d.total_orgs || 0, '', 1200);
+          countUp(document.getElementById('stat-states'), d.total_states || 0, '', 1200);
+          const rate = Math.round(d.fulfillment_rate || 0);
+          countUp(document.getElementById('stat-rate'), rate, '%', 1200);
+        })
+        .catch(() => {});
+    })();
+  </script>
 
   <!-- ROLES -->
   <section class="roles">
