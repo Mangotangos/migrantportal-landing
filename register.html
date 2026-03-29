@@ -421,12 +421,19 @@
             <input type="password" id="pw2" placeholder="Re-enter password" oninput="checkStep5()" />
           </div>
         </div>
-        <div class="check-row" style="margin-bottom:24px;">
+        <div class="check-row" style="margin-bottom:12px;">
           <input type="checkbox" id="agree" onchange="checkStep5()" />
           <label for="agree">
             I agree to the MigrantPortal
             <a href="/terms.html" target="_blank">Terms of Service</a> and
             <a href="/privacy.html" target="_blank">Privacy Policy</a>.
+          </label>
+        </div>
+        <div class="check-row" style="margin-bottom:24px;">
+          <input type="checkbox" id="agree-data" onchange="checkStep5()" />
+          <label for="agree-data">
+            I agree to handle all migrant information with strict confidentiality.
+            I will not share, publish, or misuse any personal information submitted through MigrantPortal.
           </label>
         </div>
         <div class="btn-row">
@@ -581,7 +588,9 @@
     function checkStep5() {
       const pw  = document.getElementById('pw').value;
       const pw2 = document.getElementById('pw2').value;
-      const ok  = pw.length >= 8 && pw === pw2 && document.getElementById('agree').checked;
+      const ok  = pw.length >= 8 && pw === pw2
+                  && document.getElementById('agree').checked
+                  && document.getElementById('agree-data').checked;
       setBtn('btn-5', ok);
     }
 
