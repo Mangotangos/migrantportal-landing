@@ -22,8 +22,10 @@
 
     /* TOPBAR */
     .topbar { background: white; border-bottom: 1px solid var(--gray-200); height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
-    .topbar-logo { display: flex; align-items: center; gap: 8px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--text); }
-    .logo-icon { width: 32px; height: 32px; border-radius: 7px; background: var(--orange); display: flex; align-items: center; justify-content: center; color: white; font-size: 15px; font-weight: 800; }
+    .topbar-logo { display: flex; align-items: center; gap: 8px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--navy); letter-spacing:-0.3px; }
+    .topbar-logo span { color: var(--teal); }
+    .logo-icon { width: 32px; height: 32px; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
     .nav-link { font-size: 13px; font-weight: 600; color: var(--gray-600); padding: 6px 10px; border-radius: 6px; }
     .nav-link:hover { background: var(--gray-100); color: var(--teal); }
@@ -153,9 +155,9 @@
 <body>
 
   <div class="topbar">
-    <a href="/" class="topbar-logo">
-      <div class="logo-icon">M</div>
-      MigrantPortal
+    <a href="dashboard.html" class="topbar-logo">
+      <div class="logo-icon"><img src="logo.png" alt="MigrantPortal" /></div>
+      Migrant<span>Portal</span>
     </a>
     <div class="topbar-right">
       <a href="requests.html" class="nav-link">Browse Needs</a>
