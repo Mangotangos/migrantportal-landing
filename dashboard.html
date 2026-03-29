@@ -32,18 +32,41 @@
     button { font-family: 'Inter', sans-serif; }
 
     /* ─── TOP NAV (tabs) ─────────────────────── */
+    /* ── TOPBAR ── */
+    .topbar {
+      background: white; border-bottom: 1px solid var(--gray-200);
+      height: 52px; display: flex; align-items: center; gap: 12px;
+      padding: 0 16px; position: sticky; top: 0; z-index: 110; flex-shrink: 0;
+    }
+    .topbar-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px;
+      color: var(--navy); letter-spacing: -0.3px; text-decoration: none;
+    }
+    .topbar-logo span { color: var(--teal); }
+    .topbar-logo img { width: 30px; height: 30px; border-radius: 7px; object-fit: contain; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; padding-right: 52px; }
+    .btn-signout {
+      background: none; border: 1px solid var(--gray-200); border-radius: 6px;
+      padding: 5px 14px; font-size: 13px; font-weight: 600; color: var(--gray-600);
+      cursor: pointer; font-family: 'Inter', sans-serif; transition: color .15s, border-color .15s;
+    }
+    .btn-signout:hover { color: #dc2626; border-color: #dc2626; }
+
+    /* ── TAB NAV ── */
     .top-nav {
       background: white; border-bottom: 1px solid var(--gray-200);
-      display: flex; justify-content: center;
-      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center;
+      position: sticky; top: 52px; z-index: 100;
+      padding: 0 8px;
     }
     .tab-list { display: flex; gap: 0; }
     .tab {
-      padding: 16px 24px; font-size: 14px; font-weight: 500;
+      padding: 14px 20px; font-size: 13px; font-weight: 500;
       color: var(--gray-600); cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: color 0.15s, border-color 0.15s;
-      text-decoration: none;
+      text-decoration: none; white-space: nowrap;
     }
     .tab:hover { color: var(--teal); }
     .tab.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 600; }
@@ -241,6 +264,17 @@
 </head>
 <body>
 
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <a href="dashboard.html" class="topbar-logo">
+      <img src="logo.png" alt="MigrantPortal" />
+      Migrant<span>Portal</span>
+    </a>
+    <div class="topbar-right">
+      <button class="btn-signout" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
   <!-- TAB NAV -->
   <nav class="top-nav" aria-label="Dashboard sections">
     <div class="tab-list">
@@ -253,7 +287,6 @@
       <a href="#bookmarks-section"  class="tab"        id="tab-bookmarks"  onclick="setTab('bookmarks')">Bookmarks</a>
       <a href="#donations-section"  class="tab"        id="tab-donations"  onclick="setTab('donations')">Donations</a>
     </div>
-    <button onclick="logout()" style="margin-left:auto;margin-right:16px;background:none;border:1px solid var(--gray-200);border-radius:6px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer;" onmouseover="this.style.color='#dc2626';this.style.borderColor='#dc2626'" onmouseout="this.style.color='var(--gray-600)';this.style.borderColor='var(--gray-200)'">Sign Out</button>
   </nav>
 
   <div class="page">
