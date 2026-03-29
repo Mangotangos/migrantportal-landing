@@ -36,13 +36,14 @@
     }
     .topbar-logo {
       display: flex; align-items: center; gap: 8px;
-      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--text);
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--navy); letter-spacing: -0.3px;
     }
+    .topbar-logo span { color: var(--teal); }
     .logo-icon {
-      width: 32px; height: 32px; border-radius: 7px; background: var(--orange);
+      width: 32px; height: 32px; border-radius: 8px; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 15px; font-weight: 800;
     }
+    .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
     .user-chip {
       display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px;
@@ -202,9 +203,9 @@
     <button style="background:none;border:none;cursor:pointer;color:var(--gray-600);">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <a href="/" class="topbar-logo">
-      <div class="logo-icon">M</div>
-      MigrantPortal
+    <a href="dashboard.html" class="topbar-logo">
+      <div class="logo-icon"><img src="logo.png" alt="MigrantPortal" /></div>
+      Migrant<span>Portal</span>
     </a>
     <div class="topbar-right">
       <div class="user-chip">

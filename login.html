@@ -15,8 +15,9 @@
     a { color: var(--teal); text-decoration: none; }
 
     nav { background: white; border-bottom: 1px solid var(--gray-200); height: 64px; display: flex; align-items: center; padding: 0 40px; justify-content: space-between; }
-    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px; color: var(--text); }
-    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--orange); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: 800; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px; color: var(--navy); letter-spacing:-0.3px; }
+    .nav-logo span { color: var(--teal); }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
 
     .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
     .card { background: white; border-radius: 14px; border: 1px solid var(--gray-200); padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
@@ -53,7 +54,7 @@
   <nav>
     <a href="/" class="nav-logo">
       <img src="logo.png" class="nav-logo-icon" alt="MigrantPortal" />
-      MigrantPortal
+      Migrant<span>Portal</span>
     </a>
     <a href="signup.html" style="font-size:14px;font-weight:600;color:var(--teal);">Create account →</a>
   </nav>
