@@ -223,9 +223,10 @@
       <div class="logo-icon">M</div>
       MigrantPortal
     </a>
-    <div class="topbar-search">
-      <input type="text" placeholder="Search requests, families, needs…" />
+    <div class="topbar-search" style="position:relative">
+      <input id="topbar-search-input" type="text" placeholder="Search requests, families, needs…" oninput="debounceTopSearch(this.value)" autocomplete="off" />
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:white;border:1px solid #E8E8E8;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:500;max-height:340px;overflow-y:auto"></div>
     </div>
     <div class="topbar-right">
       <div class="user-chip">
@@ -726,6 +727,41 @@
     function toggleFilter(btn) {
       btn.classList.toggle('active');
     }
+
+    // ── Topbar search (hits backend /search endpoint)
+    const SEARCH_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
+    let _searchTimer;
+    function debounceTopSearch(q) {
+      clearTimeout(_searchTimer);
+      const dd = document.getElementById('search-dropdown');
+      if (!q || q.length < 2) { dd.style.display = 'none'; return; }
+      _searchTimer = setTimeout(() => runTopSearch(q), 400);
+    }
+
+    async function runTopSearch(q) {
+      const dd = document.getElementById('search-dropdown');
+      dd.style.display = '';
+      dd.innerHTML = '<div style="padding:12px 16px;font-size:13px;color:#999">Searching…</div>';
+      try {
+        const r = await apiGet(`/search?q=${encodeURIComponent(q)}&type=needs`);
+        if (!r.total) { dd.innerHTML = '<div style="padding:12px 16px;font-size:13px;color:#999">No results found.</div>'; return; }
+        dd.innerHTML = r.needs.map(n => `
+          <a href="need.html?id=${n.id}" style="display:block;padding:10px 16px;border-bottom:1px solid #f3f4f6;text-decoration:none;color:#0D0D0D" onclick="document.getElementById('search-dropdown').style.display='none'">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:16px">${SEARCH_EMOJI[n.category]||'📦'}</span>
+              <div>
+                <div style="font-size:13px;font-weight:600">${n.title}</div>
+                <div style="font-size:11px;color:#999">#${n.case_number} · ${n.status} · ${[n.city,n.state].filter(Boolean).join(', ')||'—'}</div>
+              </div>
+            </div>
+          </a>`).join('');
+      } catch(e) { dd.innerHTML = '<div style="padding:12px 16px;font-size:13px;color:#dc2626">Search failed.</div>'; }
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.topbar-search')) document.getElementById('search-dropdown').style.display = 'none';
+    });
   </script>
 
   <!-- MOBILE BOTTOM NAV -->
