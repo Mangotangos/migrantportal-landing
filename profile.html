@@ -241,6 +241,20 @@
     <!-- ── PERSONAL DETAILS ── -->
     <div class="tab-panel active" id="panel-personal">
       <div class="profile-body">
+
+        <!-- Availability toggle -->
+        <div class="profile-form-card" style="margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:15px;font-weight:700">Availability</div>
+              <div style="font-size:13px;color:var(--gray-600);margin-top:3px" id="avail-label">
+                You are <strong style="color:var(--teal)">available</strong> to respond to needs.
+              </div>
+            </div>
+            <button class="toggle on" id="avail-toggle" onclick="toggleAvailability()" title="Toggle availability"></button>
+          </div>
+        </div>
+
         <div class="profile-form-card">
           <div class="form-row">
             <div class="form-group">
@@ -548,9 +562,33 @@
     // Try loading fresh data from /auth/me
     apiGet('/auth/me').then(u => {
       prefill(u);
-      // persist fresh data
       localStorage.setItem('mp_user', JSON.stringify(u));
+      // Set availability toggle
+      setAvailUI(u.is_available !== false);
     }).catch(() => {/* use stored */});
+
+    function setAvailUI(isAvail) {
+      const btn = document.getElementById('avail-toggle');
+      const lbl = document.getElementById('avail-label');
+      if (!btn) return;
+      btn.classList.toggle('on', isAvail);
+      lbl.innerHTML = isAvail
+        ? 'You are <strong style="color:var(--teal)">available</strong> to respond to needs.'
+        : 'You are <strong style="color:#9CA3AF">unavailable</strong> — you won\'t appear in need matches.';
+    }
+
+    async function toggleAvailability() {
+      const btn = document.getElementById('avail-toggle');
+      const isNowAvail = !btn.classList.contains('on');
+      setAvailUI(isNowAvail);
+      try {
+        await apiPatch('/auth/me', { is_available: isNowAvail });
+      } catch(e) {
+        // revert on failure
+        setAvailUI(!isNowAvail);
+        alert('Could not save availability. Please try again.');
+      }
+    }
 
     function updateAvatar() {
       const fn = document.getElementById('firstName').value.trim();
