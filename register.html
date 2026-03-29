@@ -395,6 +395,11 @@
               <option>Any / all types</option>
             </select>
           </div>
+          <div class="field" id="field-notes" style="display:none">
+            <label for="reg-notes">Who do you work with? <span style="color:#dc2626">*</span></label>
+            <textarea id="reg-notes" rows="3" placeholder="Describe the organization, agency, or community you serve migrants through. This is reviewed by an admin before your account is activated." oninput="checkStep4()" style="width:100%;padding:10px 14px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s"></textarea>
+            <p style="font-size:11px;color:#6B7280;margin-top:4px">Required for connectors — this platform handles sensitive immigration data.</p>
+          </div>
         </div>
         <div class="btn-row">
           <button class="btn-back" onclick="goTo(3)">Back</button>
@@ -432,9 +437,9 @@
 
       <!-- ── SUCCESS ────────────────────────────── -->
       <div class="step" id="step-success">
-        <div class="success-icon">🎉</div>
-        <h1 class="success-heading">You're in!</h1>
-        <p class="success-text">
+        <div class="success-icon" id="success-icon">🎉</div>
+        <h1 class="success-heading" id="success-heading">Account Created!</h1>
+        <p class="success-text" id="success-text">
           Thanks for joining MigrantPortal. We've sent a confirmation to your email.<br /><br />
           You'll receive notifications when migrant families in your area have urgent needs you can help with.
         </p>
@@ -561,8 +566,14 @@
 
     /* ── Step 4: Interests ───────────────────── */
     function checkStep4() {
+      const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
+      const isConnector = serveChoice === 'church';
+      const notesField = document.getElementById('field-notes');
+      if (notesField) notesField.style.display = isConnector ? '' : 'none';
+      const notes = document.getElementById('reg-notes')?.value.trim() || '';
       const ok = document.getElementById('hear').value &&
-                 document.getElementById('interest').value;
+                 document.getElementById('interest').value &&
+                 (!isConnector || notes.length >= 10);
       setBtn('btn-4', ok);
     }
 
@@ -592,13 +603,22 @@
 
       const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
       const role = serveChoice === 'church' ? 'connector' : 'responder';
+      const notes = document.getElementById('reg-notes')?.value.trim() || '';
 
       try {
-        const data = await apiPost('/auth/register', { name, email, password, role });
+        const payload = { name, email, password, role };
+        if (notes) payload.registration_notes = notes;
+        const data = await apiPost('/auth/register', payload);
         saveSession(data.access_token, data.user);
         goTo(6);
-        const dest = role === 'connector' ? 'org-dashboard.html' : 'dashboard.html';
-        setTimeout(() => window.location.href = dest, 2000);
+        if (data.user?.status === 'pending') {
+          document.getElementById('success-icon').textContent = '⏳';
+          document.getElementById('success-heading').textContent = 'Application Submitted!';
+          document.getElementById('success-text').innerHTML = 'Thanks for joining MigrantPortal.<br /><br />Your account is <strong>pending admin approval</strong>. You\'ll receive a notification once approved (usually 1–2 business days).';
+        } else {
+          const dest = role === 'connector' ? 'org-dashboard.html' : 'dashboard.html';
+          setTimeout(() => window.location.href = dest, 2000);
+        }
       } catch (ex) {
         btn.disabled = false;
         btn.textContent = 'Create Account';

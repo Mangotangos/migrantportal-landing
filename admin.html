@@ -245,9 +245,17 @@
 
   <!-- USERS TAB -->
   <div id="tab-users" style="display:none">
+    <!-- Pending user approvals -->
+    <div class="card" id="pending-users-card" style="border:2px solid #F59E0B;margin-bottom:16px;display:none">
+      <div class="card-header" style="background:#FFFBEB;border-radius:10px 10px 0 0;padding:12px 16px;">
+        <span class="card-title" style="color:#92400E">⏳ Pending Approval <span id="pending-users-count" style="font-size:12px;background:#FDE68A;color:#92400E;padding:2px 8px;border-radius:12px;margin-left:6px;font-weight:700"></span></span>
+        <span style="font-size:12px;color:#92400E">Users waiting for admin review before they can access the platform</span>
+      </div>
+      <div id="pendingUsersContent" style="padding:8px 0"></div>
+    </div>
     <div class="card">
       <div class="card-header">
-        <span class="card-title">Users</span>
+        <span class="card-title">All Users</span>
       </div>
       <div class="toolbar">
         <select id="roleFilter" onchange="loadUsers()">
@@ -291,7 +299,7 @@
     });
     activeTab = name;
     if (name === 'all') loadAllNeeds();
-    if (name === 'users') loadUsers();
+    if (name === 'users') { loadPendingUsers(); loadUsers(); }
     if (name === 'reports') loadReports();
   }
 
@@ -489,6 +497,54 @@
   }
 
   // ── Users
+  async function loadPendingUsers() {
+    try {
+      const data = await apiGet('/admin/users/pending');
+      const users = Array.isArray(data) ? data : [];
+      const card = document.getElementById('pending-users-card');
+      card.style.display = users.length ? '' : 'none';
+      document.getElementById('pending-users-count').textContent = users.length;
+      if (!users.length) return;
+      document.getElementById('pendingUsersContent').innerHTML = users.map(u => `
+        <div id="pu-${u.id}" style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid #FDE68A;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <div style="font-weight:700;font-size:14px">${u.name} <span class="status-pill ${u.role==='connector'?'s-active':'s-pending'}">${u.role}</span></div>
+            <div style="font-size:12px;color:var(--gray-600)">${u.email}${u.org_name ? ' · ' + u.org_name : ''}</div>
+            ${u.registration_notes ? `<div style="margin-top:6px;font-size:13px;color:#374151;background:white;border:1px solid #FDE68A;border-radius:6px;padding:7px 10px"><b>Why joining:</b> ${u.registration_notes}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:8px;flex-shrink:0;margin-top:2px">
+            <button class="btn btn-approve" style="font-size:12px;padding:6px 14px" onclick="approveUser('${u.id}')">✓ Approve</button>
+            <button class="btn btn-reject" style="font-size:12px;padding:6px 14px" onclick="rejectUser('${u.id}')">✗ Reject</button>
+          </div>
+        </div>`).join('');
+    } catch(e) { console.error(e); }
+  }
+
+  async function approveUser(id) {
+    try {
+      await apiPost(`/admin/users/${id}/approve`, {});
+      document.getElementById(`pu-${id}`)?.remove();
+      const remaining = document.querySelectorAll('[id^="pu-"]').length;
+      document.getElementById('pending-users-count').textContent = remaining;
+      if (!remaining) document.getElementById('pending-users-card').style.display = 'none';
+      toast('User approved — they can now sign in.');
+      loadUsers();
+    } catch(e) { toast(e.message, true); }
+  }
+
+  async function rejectUser(id) {
+    const reason = prompt('Reason for rejection (optional):') ?? null;
+    if (reason === null) return; // cancelled
+    try {
+      await apiPost(`/admin/users/${id}/reject`, { reason: reason || '' });
+      document.getElementById(`pu-${id}`)?.remove();
+      const remaining = document.querySelectorAll('[id^="pu-"]').length;
+      document.getElementById('pending-users-count').textContent = remaining;
+      if (!remaining) document.getElementById('pending-users-card').style.display = 'none';
+      toast('User rejected.');
+    } catch(e) { toast(e.message, true); }
+  }
+
   async function loadUsers() {
     const role = document.getElementById('roleFilter').value;
     let url = '/admin/users?page=1';
