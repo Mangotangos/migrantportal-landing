@@ -582,7 +582,7 @@
       const isNowAvail = !btn.classList.contains('on');
       setAvailUI(isNowAvail);
       try {
-        await apiPatch('/auth/me', { is_available: isNowAvail });
+        await apiPatch('/auth/profile', { is_available: isNowAvail });
       } catch(e) {
         // revert on failure
         setAvailUI(!isNowAvail);
