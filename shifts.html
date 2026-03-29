@@ -182,14 +182,16 @@
           </div>
           ${!s.cancelled ? `<div class="shift-actions">
             ${showCancel
-              ? `<button class="btn-cancel" onclick="cancelShift('${s.id}')">Cancel Shift</button>`
+              ? `<button class="btn-cancel" onclick="cancelShift('${s.id}')">Cancel Shift</button>
+                 <button class="btn-signup" style="background:var(--teal-lt);color:var(--teal);border:1px solid var(--teal)" onclick="toggleRoster('${s.id}', this)">👥 Roster</button>`
               : s.signed_up
                 ? `<button class="btn-drop" onclick="dropShift('${s.id}')">Drop Shift</button>`
                 : full
                   ? `<button class="btn-signup" disabled style="opacity:.5;cursor:not-allowed">Full</button>`
                   : `<button class="btn-signup" onclick="signupShift('${s.id}')">Sign Up</button>`
             }
-          </div>` : ''}
+          </div>
+          <div id="roster-${s.id}" style="display:none;margin-top:8px;font-size:12px;color:var(--gray-600);border-top:1px solid var(--gray-200);padding-top:8px">Loading roster…</div>` : ''}
         </div>`;
     }).join('');
   }
@@ -248,6 +250,21 @@
       document.getElementById('f-slots').value = '1';
       loadTab('org');
     } catch(e) { toast(e.message, true); }
+  }
+
+  async function toggleRoster(id, btn) {
+    const el = document.getElementById('roster-' + id);
+    if (!el) return;
+    if (el.style.display !== 'none') { el.style.display = 'none'; return; }
+    el.style.display = '';
+    el.textContent = 'Loading roster…';
+    try {
+      const list = await apiGet(`/shifts/${id}/roster`);
+      if (!list.length) { el.textContent = 'No sign-ups yet.'; return; }
+      el.innerHTML = '<strong>Signed up:</strong> ' + list.map(r =>
+        `${r.name}${r.signed_up_at ? ' <span style="color:var(--gray-400)">('+r.signed_up_at.slice(0,10)+')</span>' : ''}`
+      ).join(' &nbsp;·&nbsp; ');
+    } catch(e) { el.textContent = 'Could not load roster.'; }
   }
 
   loadTab('all');

@@ -325,9 +325,9 @@
               <div class="req-title-row">
                 <div class="req-title">Help a Family Find Stable Housing</div>
                 <div class="req-actions">
-                  <button class="req-action" onclick="this.querySelector('svg').style.fill=this.querySelector('svg').style.fill?'':'#009DA5'">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                    Follow
+                  <button class="req-action" id="bookmark-btn" onclick="toggleBookmark()">
+                    <svg id="bookmark-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                    <span id="bookmark-label">Bookmark</span>
                   </button>
                   <button class="req-action">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3l-7 3.5a3 3 0 1 0 0 5L15 18a3 3 0 1 0 .7-1.4L8.1 13a3.1 3.1 0 0 0 0-2L15.3 7.4A3 3 0 1 0 18 3z"/></svg>
@@ -679,6 +679,32 @@
       } catch(e) { toast(e.message, true); }
     }
 
+    // ── Bookmark toggle
+    let _bookmarked = false;
+    function setBookmarkUI(on) {
+      _bookmarked = on;
+      document.getElementById('bookmark-icon').style.fill = on ? '#009DA5' : 'none';
+      document.getElementById('bookmark-icon').style.stroke = on ? '#009DA5' : 'currentColor';
+      document.getElementById('bookmark-label').textContent = on ? 'Bookmarked' : 'Bookmark';
+    }
+    async function toggleBookmark() {
+      try {
+        if (_bookmarked) {
+          await apiDelete(`/needs/${needId}/bookmark`);
+          setBookmarkUI(false);
+        } else {
+          await apiPost(`/needs/${needId}/bookmark`, {});
+          setBookmarkUI(true);
+        }
+      } catch(e) { toast(e.message, true); }
+    }
+    async function initBookmarkState() {
+      try {
+        const bookmarked = await apiGet('/needs/bookmarked');
+        setBookmarkUI(bookmarked.some(n => n.id === needId));
+      } catch(e) {}
+    }
+
     // ── Load responders (connector/admin only)
     async function loadResponders() {
       const el = document.getElementById('responders-list');
@@ -905,6 +931,7 @@
 
         // Render sidebar
         renderPanel(need, alreadyResponded);
+        initBookmarkState();
 
         // Chat — visible to connector + responders who responded
         const chatAuthorized = currentUser && (
