@@ -254,11 +254,46 @@
     }
     .browse-btn:hover { background: var(--orange-d); }
 
+    /* ─── HAMBURGER (mobile tab nav) ─────────── */
+    .tab-hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      padding: 6px 8px; color: var(--gray-600); margin-left: auto;
+    }
+    .tab-hamburger svg { width: 20px; height: 20px; display: block; }
+    .mobile-tab-drawer {
+      display: none; position: fixed; inset: 0; z-index: 400;
+    }
+    .mobile-tab-drawer.open { display: block; }
+    .mobile-tab-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.3);
+    }
+    .mobile-tab-menu {
+      position: absolute; top: 0; left: 0; right: 0;
+      background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 16px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+    .mobile-tab-close {
+      position: absolute; top: 12px; right: 16px;
+      background: none; border: none; font-size: 22px; cursor: pointer; color: var(--gray-600);
+    }
+    .mobile-tab-item {
+      display: block; width: 100%; padding: 13px 24px;
+      font-size: 15px; font-weight: 500; color: var(--text);
+      background: none; border: none; text-align: left;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: background .1s;
+    }
+    .mobile-tab-item:hover { background: var(--gray-100); }
+    .mobile-tab-item.active { color: var(--teal); font-weight: 600; }
+
     /* ─── RESPONSIVE ─────────────────────────── */
     @media (max-width: 720px) {
       .two-col { flex-direction: column; }
       .col-side { width: 100%; position: static; }
       .req-card { width: 100%; }
+      .tab-list { overflow-x: auto; scrollbar-width: none; }
+      .tab-list::-webkit-scrollbar { display: none; }
+      .tab-hamburger { display: flex; align-items: center; }
     }
   </style>
 </head>
@@ -287,7 +322,26 @@
       <a href="#bookmarks-section"  class="tab"        id="tab-bookmarks"  onclick="setTab('bookmarks')">Bookmarks</a>
       <a href="#donations-section"  class="tab"        id="tab-donations"  onclick="setTab('donations')">Donations</a>
     </div>
+    <button class="tab-hamburger" aria-label="Open menu" onclick="document.getElementById('mobile-tab-drawer').classList.add('open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
   </nav>
+
+  <!-- MOBILE TAB DRAWER -->
+  <div class="mobile-tab-drawer" id="mobile-tab-drawer">
+    <div class="mobile-tab-overlay" onclick="document.getElementById('mobile-tab-drawer').classList.remove('open')"></div>
+    <div class="mobile-tab-menu">
+      <button class="mobile-tab-close" onclick="document.getElementById('mobile-tab-drawer').classList.remove('open')" aria-label="Close">×</button>
+      <button class="mobile-tab-item" onclick="setTab('home');document.getElementById('mobile-tab-drawer').classList.remove('open')">Home</button>
+      <button class="mobile-tab-item" onclick="setTab('checklist');document.getElementById('mobile-tab-drawer').classList.remove('open')">Checklist</button>
+      <button class="mobile-tab-item" onclick="setTab('faqs');document.getElementById('mobile-tab-drawer').classList.remove('open')">FAQs</button>
+      <button class="mobile-tab-item" onclick="setTab('requests');document.getElementById('mobile-tab-drawer').classList.remove('open')">Requests</button>
+      <button class="mobile-tab-item" id="mob-tab-responses" style="display:none" onclick="setTab('responses');document.getElementById('mobile-tab-drawer').classList.remove('open')">My Responses</button>
+      <button class="mobile-tab-item" id="mob-tab-families"  style="display:none" onclick="setTab('families');document.getElementById('mobile-tab-drawer').classList.remove('open')">Families</button>
+      <button class="mobile-tab-item" onclick="setTab('bookmarks');document.getElementById('mobile-tab-drawer').classList.remove('open')">Bookmarks</button>
+      <button class="mobile-tab-item" onclick="setTab('donations');document.getElementById('mobile-tab-drawer').classList.remove('open')">Donations</button>
+    </div>
+  </div>
 
   <div class="page">
 
@@ -683,7 +737,7 @@
             </div>
           </div>`).join('');
       } catch(e) {
-        el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load responses.</div>';
+        el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load responses. <button onclick="loadMyResponses()" style="background:none;border:none;color:var(--teal);font-size:13px;cursor:pointer;text-decoration:underline;font-family:Inter,sans-serif;">Retry</button></div>';
       }
     }
 
@@ -732,10 +786,12 @@
       const role = user?.role;
       if (role === 'responder') {
         document.getElementById('tab-responses').style.display = '';
+        document.getElementById('mob-tab-responses').style.display = '';
         loadRoleStats('responder');
       }
       if (role === 'connector') {
         document.getElementById('tab-families').style.display = '';
+        document.getElementById('mob-tab-families').style.display = '';
         document.getElementById('connector-sidebar').style.display = '';
         loadRoleStats('connector');
       }
@@ -789,7 +845,7 @@
             </div>
             <button onclick="removeBookmark('${n.id}', this)" style="background:var(--gray-100);border:1px solid var(--gray-200);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--gray-600)">Remove</button>
           </div>`).join('');
-      } catch(e) { el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load bookmarks.</div>'; }
+      } catch(e) { el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load bookmarks. <button onclick="loadBookmarks()" style="background:none;border:none;color:var(--teal);font-size:13px;cursor:pointer;text-decoration:underline;font-family:Inter,sans-serif;">Retry</button></div>'; }
     }
 
     async function removeBookmark(needId, btn) {
