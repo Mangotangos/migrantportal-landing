@@ -112,9 +112,21 @@
           password: document.getElementById('password').value
         });
         saveSession(data.access_token, data.user);
-        window.location.href = 'dashboard.html';
+        const role = data.user?.role;
+        window.location.href = role === 'admin' ? 'admin.html' : role === 'connector' ? 'org-dashboard.html' : 'dashboard.html';
       } catch (ex) {
-        err.textContent = ex.message;
+        const msg = ex.message || '';
+        if (msg.startsWith('PENDING:')) {
+          err.style.background = '#FFFBEB'; err.style.borderColor = '#FDE68A'; err.style.color = '#92400E';
+          err.textContent = '⏳ Your account is awaiting admin approval. You\'ll be notified once approved (1–2 business days).';
+        } else if (msg.startsWith('REJECTED:')) {
+          const reason = msg.replace('REJECTED:', '').trim();
+          err.textContent = '❌ Your account was not approved.' + (reason ? ' Reason: ' + reason : ' Please contact support.');
+        } else if (msg.startsWith('SUSPENDED:')) {
+          err.textContent = '🚫 Your account has been suspended. Please contact support.';
+        } else {
+          err.textContent = msg || 'Sign in failed. Please try again.';
+        }
         err.style.display = 'block';
         btn.disabled = false;
         btn.innerHTML = 'Sign In';
