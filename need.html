@@ -930,7 +930,17 @@
         }
 
         // Render sidebar
-        renderPanel(need, alreadyResponded);
+        try {
+          renderPanel(need, alreadyResponded);
+        } catch(panelErr) {
+          const p = document.getElementById('panel-content');
+          if (p) p.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests.html">open needs</a>.</div>';
+        }
+        // Safety: clear any lingering "Loading…" if renderPanel didn't set content
+        const p = document.getElementById('panel-content');
+        if (p && p.textContent.trim() === 'Loading…') {
+          p.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests.html">open needs</a>.</div>';
+        }
         initBookmarkState();
 
         // Chat — visible to connector + responders who responded
