@@ -513,8 +513,8 @@
     /* ── Volunteer CTA ── */
     .vol-cards { display: flex; gap: 24px; margin-top: 40px; max-width: 720px; margin-left: auto; margin-right: auto; }
     .vol-card { flex: 1; border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column; gap: 12px; }
-    .vol-card.card-teal { background: var(--teal); color: #fff; }
-    .vol-card.card-orange { background: var(--orange); color: #fff; }
+    .vol-card.card-teal { background: #0D7A8A; color: #fff; }
+    .vol-card.card-orange { background: #b83d10; color: #fff; }
     .vol-card h3 { font-family: 'Montserrat',sans-serif; font-size: 22px; font-weight: 800; margin: 0; }
     .vol-card p { font-size: 15px; opacity: .9; margin: 0; line-height: 1.5; }
     .vol-btn { display: inline-block; margin-top: 8px; background: rgba(255,255,255,.25); color: #fff; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 999px; border: 2px solid rgba(255,255,255,.5); text-decoration: none; transition: background .15s; width: fit-content; }
@@ -554,6 +554,7 @@
       MigrantPortal
     </a>
     <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
       <a href="/how-migrantportal-works.html" class="nav-link">How It Works</a>
       <a href="#about" class="nav-link">About</a>
       <a href="#impact" class="nav-link">Impact</a>
@@ -573,6 +574,7 @@
       <span class="nav-logo" style="font-family:Montserrat,sans-serif;font-weight:800;">MigrantPortal</span>
       <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close menu">×</button>
     </div>
+    <a href="/" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
     <a href="/how-migrantportal-works.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
     <a href="#about" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">About</a>
     <a href="#impact" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Impact</a>
