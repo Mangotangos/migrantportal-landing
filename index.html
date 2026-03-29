@@ -192,7 +192,7 @@
       50%       { box-shadow: 0 0 0 5px rgba(255,100,40,0); }
     }
     .hero-mockup {
-      position: relative; width: 100%; max-width: 420px;
+      position: relative; width: 100%; max-width: 480px;
       animation: heroFadeIn 0.8s ease-out both;
     }
     /* Desktop mockup */
@@ -256,6 +256,9 @@
     .phone-row.white-card { background: white; border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 3px; }
     .phone-row.white-card .l { background: var(--gray-200); height: 5px; border-radius: 2px; }
     .phone-row.white-card .l.s { width: 60%; }
+
+    #mockup-screen { transition: opacity 0.4s ease; }
+    #mockup-screen.fading { opacity: 0; }
 
     /* ─── SECTION BASE ──────────────────────────── */
     .section { padding: 72px 40px; }
@@ -651,17 +654,17 @@
               </div>
               &nbsp;&nbsp; migrantportal.com
             </div>
-            <div class="mockup-screen">
+            <div class="mockup-screen" id="mockup-screen">
               <div class="screen-header">🏠 MigrantPortal — Active Needs</div>
-              <div class="screen-need">
+              <div class="screen-need" id="need-1">
                 <div class="screen-need-dot"></div>
                 <div class="screen-need-text"><strong>Family in Kansas City</strong><br/>Needs: diapers, formula, warm clothing for 2 kids</div>
               </div>
-              <div class="screen-need">
+              <div class="screen-need" id="need-2">
                 <div class="screen-need-dot" style="background:var(--teal)"></div>
                 <div class="screen-need-text"><strong>Single mother, 3 children</strong><br/>Needs: temporary housing referral, school enrollment</div>
               </div>
-              <div class="screen-pin-row">
+              <div class="screen-pin-row" id="pin-row">
                 <div class="screen-pin">📍 Kansas City</div>
                 <div class="screen-pin teal">📍 Lawrence</div>
                 <div class="screen-pin">📍 Wichita</div>
@@ -1035,6 +1038,56 @@
           });
         });
     })();
+  </script>
+
+  <!-- Live needs rotator -->
+  <script>
+  (function() {
+    const API = 'https://migrant-portal-production-3826.up.railway.app/needs?page=1';
+    const INTERVAL = 4000;
+    const dotColors = ['var(--orange)', 'var(--teal)', '#8b5cf6', '#10b981', '#f59e0b'];
+
+    function renderNeeds(items, offset) {
+      const screen = document.getElementById('mockup-screen');
+      const n1 = document.getElementById('need-1');
+      const n2 = document.getElementById('need-2');
+      const pins = document.getElementById('pin-row');
+      if (!screen || !n1 || !n2 || !pins) return;
+
+      const a = items[offset % items.length];
+      const b = items[(offset + 1) % items.length];
+
+      screen.classList.add('fading');
+      setTimeout(function() {
+        n1.innerHTML = '<div class="screen-need-dot" style="background:' + dotColors[offset % dotColors.length] + '"></div>'
+          + '<div class="screen-need-text"><strong>' + a.title + '</strong><br/>' + (a.description || '').slice(0, 60) + (a.description && a.description.length > 60 ? '…' : '') + '</div>';
+
+        n2.innerHTML = '<div class="screen-need-dot" style="background:' + dotColors[(offset + 1) % dotColors.length] + '"></div>'
+          + '<div class="screen-need-text"><strong>' + b.title + '</strong><br/>' + (b.description || '').slice(0, 60) + (b.description && b.description.length > 60 ? '…' : '') + '</div>';
+
+        var cities = [a.city, b.city].filter(Boolean);
+        pins.innerHTML = cities.map(function(c, i) {
+          return '<div class="screen-pin' + (i % 2 === 1 ? ' teal' : '') + '">📍 ' + c + '</div>';
+        }).join('');
+
+        screen.classList.remove('fading');
+      }, 400);
+    }
+
+    fetch(API)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var items = (data.items || []).filter(function(n) { return n.title && n.city; });
+        if (items.length < 2) return;
+        var idx = 0;
+        renderNeeds(items, idx);
+        setInterval(function() {
+          idx = (idx + 2) % items.length;
+          renderNeeds(items, idx);
+        }, INTERVAL);
+      })
+      .catch(function() { /* silently fall back to static content */ });
+  })();
   </script>
 
 </body>
