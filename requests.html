@@ -39,14 +39,29 @@
     }
     .topbar-logo {
       display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px;
-      color: var(--text);
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px;
+      color: var(--navy); letter-spacing: -0.3px;
     }
+    .topbar-logo span { color: var(--teal); }
     .logo-icon {
-      width: 30px; height: 30px; border-radius: 7px; background: var(--orange);
+      width: 32px; height: 32px; border-radius: 8px; overflow: hidden; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 14px; font-weight: 800; flex-shrink: 0;
     }
+    .logo-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* ── PAGE NAV TABS ── */
+    .page-nav {
+      background: white; border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; gap: 0;
+      padding: 0 16px; flex-shrink: 0; z-index: 195;
+    }
+    .page-nav a {
+      padding: 13px 18px; font-size: 13px; font-weight: 500;
+      color: var(--gray-600); border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s; white-space: nowrap;
+    }
+    .page-nav a:hover { color: var(--teal); }
+    .page-nav a.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 600; }
     .topbar-search {
       flex: 1; position: relative; max-width: 520px;
     }
@@ -219,9 +234,9 @@
     <button style="background:none;border:none;cursor:pointer;color:var(--gray-600);padding:4px;">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <a href="/" class="topbar-logo">
-      <div class="logo-icon">M</div>
-      MigrantPortal
+    <a href="dashboard.html" class="topbar-logo">
+      <div class="logo-icon"><img src="logo.png" alt="MigrantPortal" /></div>
+      Migrant<span>Portal</span>
     </a>
     <div class="topbar-search" style="position:relative">
       <input id="topbar-search-input" type="text" placeholder="Search requests, families, needs…" oninput="debounceTopSearch(this.value)" autocomplete="off" />
@@ -238,6 +253,15 @@
       </div>
     </div>
   </div>
+
+  <!-- PAGE NAV -->
+  <nav class="page-nav">
+    <a href="dashboard.html">Home</a>
+    <a href="requests.html" class="active">Requests</a>
+    <a href="submit-need.html">Submit Need</a>
+    <a href="community.html">Community</a>
+    <a href="profile.html">Profile</a>
+  </nav>
 
   <!-- FILTER BAR -->
   <div class="filterbar">
