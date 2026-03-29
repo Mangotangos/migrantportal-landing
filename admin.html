@@ -195,6 +195,7 @@
   <div class="tab" onclick="switchTab('all')">All Needs</div>
   <div class="tab" onclick="switchTab('users')">Users</div>
   <div class="tab" onclick="switchTab('reports')">Reports</div>
+  <div class="tab" onclick="switchTab('flagged')">⚑ Flagged <span class="badge zero" id="flaggedBadge">0</span></div>
 </div>
 
 <div class="page">
@@ -269,6 +270,17 @@
     </div>
   </div>
 
+  <!-- FLAGGED TAB -->
+  <div id="tab-flagged" style="display:none">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">⚑ Flagged Needs</span>
+        <span style="font-size:12px;color:var(--gray-400)">Auto-flagged or 2+ community reports</span>
+      </div>
+      <div id="flaggedContent"><div class="loading">Loading…</div></div>
+    </div>
+  </div>
+
   <!-- REPORTS TAB -->
   <div id="tab-reports" style="display:none">
     <div class="reports-grid" id="reportsGrid">
@@ -292,15 +304,16 @@
   let activeTab = 'pending';
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach((t, i) => {
-      t.classList.toggle('active', ['pending','all','users','reports'][i] === name);
+      t.classList.toggle('active', ['pending','all','users','reports','flagged'][i] === name);
     });
-    ['pending','all','users','reports'].forEach(t => {
+    ['pending','all','users','reports','flagged'].forEach(t => {
       document.getElementById('tab-' + t).style.display = t === name ? '' : 'none';
     });
     activeTab = name;
     if (name === 'all') loadAllNeeds();
     if (name === 'users') { loadPendingUsers(); loadUsers(); }
     if (name === 'reports') loadReports();
+    if (name === 'flagged') loadFlagged();
   }
 
   // ── Toast
@@ -657,6 +670,52 @@
     } catch(e) {
       document.getElementById('reportsGrid').innerHTML = '<div class="empty">Failed to load reports.</div>';
     }
+  }
+
+  // ── Flagged needs
+  async function loadFlagged() {
+    document.getElementById('flaggedContent').innerHTML = '<div class="loading">Loading…</div>';
+    try {
+      const items = await apiGet('/admin/needs/flagged');
+      const badge = document.getElementById('flaggedBadge');
+      badge.textContent = items.length;
+      badge.className = 'badge' + (items.length ? '' : ' zero');
+      if (!items.length) {
+        document.getElementById('flaggedContent').innerHTML = '<div class="empty" style="padding:24px;text-align:center;color:var(--gray-400)">No flagged needs. ✅</div>';
+        return;
+      }
+      document.getElementById('flaggedContent').innerHTML = `
+        <table class="users-table">
+          <thead><tr>
+            <th>Case #</th><th>Title</th><th>Status</th>
+            <th>Auto-Flag Reason</th><th>Reports</th><th>Actions</th>
+          </tr></thead>
+          <tbody>
+            ${items.map(n => `
+              <tr>
+                <td><strong>#${n.case_number}</strong></td>
+                <td>${n.title}</td>
+                <td><span class="pill pill-${n.status}">${n.status}</span></td>
+                <td style="font-size:12px;color:var(--gray-600)">${n.auto_flag_reason || '—'}</td>
+                <td style="text-align:center;font-weight:700">${n.community_flag_count}</td>
+                <td style="display:flex;gap:6px;flex-wrap:wrap">
+                  <button class="btn btn-sm" style="background:var(--green);color:white" onclick="clearFlags('${n.id}')">Clear Flags</button>
+                  <button class="btn btn-sm" style="background:#dc2626;color:white" onclick="rejectNeedConfirm('${n.id}','${n.title.replace(/'/g,"\\'")}')">Reject</button>
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+    } catch(e) {
+      document.getElementById('flaggedContent').innerHTML = '<div class="empty">Failed to load flagged needs.</div>';
+    }
+  }
+
+  async function clearFlags(needId) {
+    try {
+      await apiPost(`/admin/needs/${needId}/clear-flags`, {});
+      toast('Flags cleared.');
+      loadFlagged();
+    } catch(e) { toast(e.message, true); }
   }
 
   // ── Init
