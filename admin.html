@@ -196,6 +196,7 @@
   <div class="tab" onclick="switchTab('users')">Users</div>
   <div class="tab" onclick="switchTab('reports')">Reports</div>
   <div class="tab" onclick="switchTab('flagged')">⚑ Flagged <span class="badge zero" id="flaggedBadge">0</span></div>
+  <div class="tab" onclick="switchTab('announcements')">📢 Announcements</div>
 </div>
 
 <div class="page">
@@ -287,6 +288,44 @@
       <div class="loading">Loading reports…</div>
     </div>
   </div>
+
+  <!-- ANNOUNCEMENTS TAB -->
+  <div id="tab-announcements" style="display:none">
+    <div style="display:flex;gap:20px;align-items:flex-start">
+      <!-- Create form -->
+      <div class="card" style="width:300px;flex-shrink:0;padding:20px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px">New Announcement</div>
+        <div style="margin-bottom:10px">
+          <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Title *</label>
+          <input id="ann-title" type="text" placeholder="Brief title…" style="width:100%;padding:8px 10px;border:1px solid #E8E8E8;border-radius:7px;font-size:13px;font-family:Inter,sans-serif" />
+        </div>
+        <div style="margin-bottom:10px">
+          <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Body *</label>
+          <textarea id="ann-body" rows="3" placeholder="Message…" style="width:100%;padding:8px 10px;border:1px solid #E8E8E8;border-radius:7px;font-size:13px;font-family:Inter,sans-serif;resize:vertical"></textarea>
+        </div>
+        <div style="margin-bottom:10px">
+          <label style="font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px">Audience</label>
+          <select id="ann-role" style="width:100%;padding:8px 10px;border:1px solid #E8E8E8;border-radius:7px;font-size:13px;font-family:Inter,sans-serif">
+            <option value="">Everyone</option>
+            <option value="responder">Responders only</option>
+            <option value="connector">Connectors only</option>
+          </select>
+        </div>
+        <div style="margin-bottom:14px;display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="ann-urgent" style="width:14px;height:14px" />
+          <label for="ann-urgent" style="font-size:13px;color:#555;cursor:pointer">Mark as urgent</label>
+        </div>
+        <button onclick="createAnnouncement()" style="width:100%;height:38px;background:var(--orange);color:white;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer">Post Announcement</button>
+      </div>
+      <!-- List -->
+      <div style="flex:1">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div style="padding:16px 20px;border-bottom:1px solid #E8E8E8;font-weight:700;font-size:14px">Active Announcements</div>
+          <div id="ann-list" style="padding:16px 20px"><div class="loading">Loading…</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -303,10 +342,11 @@
   // ── Tab switching
   let activeTab = 'pending';
   function switchTab(name) {
+    const TABS = ['pending','all','users','reports','flagged','announcements'];
     document.querySelectorAll('.tab').forEach((t, i) => {
-      t.classList.toggle('active', ['pending','all','users','reports','flagged'][i] === name);
+      t.classList.toggle('active', TABS[i] === name);
     });
-    ['pending','all','users','reports','flagged'].forEach(t => {
+    TABS.forEach(t => {
       document.getElementById('tab-' + t).style.display = t === name ? '' : 'none';
     });
     activeTab = name;
@@ -314,6 +354,7 @@
     if (name === 'users') { loadPendingUsers(); loadUsers(); }
     if (name === 'reports') loadReports();
     if (name === 'flagged') loadFlagged();
+    if (name === 'announcements') loadAnnouncements();
   }
 
   // ── Toast
@@ -715,6 +756,49 @@
       await apiPost(`/admin/needs/${needId}/clear-flags`, {});
       toast('Flags cleared.');
       loadFlagged();
+    } catch(e) { toast(e.message, true); }
+  }
+
+  // ── Announcements
+  async function loadAnnouncements() {
+    const el = document.getElementById('ann-list');
+    try {
+      const items = await apiGet('/announcements');
+      if (!items.length) { el.innerHTML = '<div style="color:#999;font-size:13px">No announcements yet.</div>'; return; }
+      el.innerHTML = items.map(a => `
+        <div style="padding:12px 0;border-bottom:1px solid #E8E8E8">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            ${a.urgent ? '<span style="background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px">URGENT</span>' : ''}
+            <span style="font-weight:700;font-size:13px">${a.title}</span>
+            <span style="margin-left:auto;font-size:11px;color:#999">${a.target_role ? a.target_role + 's only' : 'Everyone'}</span>
+            ${a.active ? `<button onclick="deactivateAnn('${a.id}')" style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:5px;font-size:11px;font-weight:600;padding:2px 8px;cursor:pointer">Deactivate</button>` : '<span style="font-size:11px;color:#999">Inactive</span>'}
+          </div>
+          <div style="font-size:12px;color:#555">${a.body}</div>
+        </div>`).join('');
+    } catch(e) { el.innerHTML = '<div style="color:#999;font-size:13px">Failed to load.</div>'; }
+  }
+
+  async function createAnnouncement() {
+    const title = document.getElementById('ann-title').value.trim();
+    const body = document.getElementById('ann-body').value.trim();
+    if (!title || !body) { toast('Title and body are required.', true); return; }
+    const target_role = document.getElementById('ann-role').value || null;
+    const urgent = document.getElementById('ann-urgent').checked;
+    try {
+      await apiPost('/announcements', { title, body, target_role, urgent });
+      toast('Announcement posted!');
+      ['ann-title','ann-body'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('ann-role').value = '';
+      document.getElementById('ann-urgent').checked = false;
+      loadAnnouncements();
+    } catch(e) { toast(e.message, true); }
+  }
+
+  async function deactivateAnn(id) {
+    try {
+      await apiPatch(`/announcements/${id}/deactivate`, {});
+      toast('Deactivated.');
+      loadAnnouncements();
     } catch(e) { toast(e.message, true); }
   }
 
