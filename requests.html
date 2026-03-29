@@ -109,6 +109,21 @@
     }
     .filter-btn:hover { border-color: var(--teal); color: var(--teal); }
     .filter-btn.active { border-color: var(--teal); color: var(--teal); background: #e6f7f8; }
+    .filter-panel {
+      display: none; background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 14px 16px; gap: 16px; flex-wrap: wrap; align-items: flex-end;
+    }
+    .filter-panel.open { display: flex; }
+    .filter-group { display: flex; flex-direction: column; gap: 4px; min-width: 140px; }
+    .filter-group label { font-size: 11px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: .05em; }
+    .filter-group select {
+      height: 32px; border: 1px solid var(--gray-200); border-radius: 6px;
+      padding: 0 10px; font-size: 13px; font-family: 'Inter', sans-serif;
+      color: var(--text); background: white; cursor: pointer; outline: none;
+    }
+    .filter-group select:focus { border-color: var(--teal); }
+    .filter-clear { height: 32px; padding: 0 14px; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 13px; font-weight: 500; background: white; color: var(--gray-600); cursor: pointer; white-space: nowrap; }
+    .filter-clear:hover { border-color: #dc2626; color: #dc2626; }
     .mapview-btn {
       margin-left: auto; height: 34px; padding: 0 14px;
       border: 1px solid var(--gray-200); border-radius: 6px;
@@ -259,7 +274,7 @@
     <a href="dashboard.html">Home</a>
     <a href="requests.html" class="active">Requests</a>
     <a href="submit-need.html">Submit Need</a>
-    <a href="community.html">Community</a>
+    <a href="dashboard.html">Dashboard</a>
     <a href="profile.html">Profile</a>
   </nav>
 
@@ -278,6 +293,47 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       Map View ▾
     </button>
+  </div>
+
+  <!-- FILTER PANEL -->
+  <div class="filter-panel" id="filter-panel">
+    <div class="filter-group">
+      <label>Category</label>
+      <select id="filt-category" onchange="applyFilters()">
+        <option value="">All Categories</option>
+        <option value="housing">Housing</option>
+        <option value="food">Food</option>
+        <option value="clothing">Clothing</option>
+        <option value="furniture">Furniture</option>
+        <option value="transportation">Transportation</option>
+        <option value="employment">Employment</option>
+        <option value="legal">Legal</option>
+        <option value="medical">Medical</option>
+        <option value="education">Education</option>
+        <option value="translation">Translation</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Urgency</label>
+      <select id="filt-urgency" onchange="applyFilters()">
+        <option value="">All Urgency</option>
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Status</label>
+      <select id="filt-status" onchange="applyFilters()">
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="in_progress">In Progress</option>
+        <option value="pending">Pending</option>
+      </select>
+    </div>
+    <button class="filter-clear" onclick="clearFilters()">✕ Clear Filters</button>
   </div>
 
   <!-- WORKSPACE -->
@@ -747,9 +803,35 @@
       document.getElementById('countLabel').textContent = vis;
     }
 
-    // ── Toggle filter button active state
+    // ── Toggle filter panel
     function toggleFilter(btn) {
-      btn.classList.toggle('active');
+      const panel = document.getElementById('filter-panel');
+      const isOpen = panel.classList.contains('open');
+      panel.classList.toggle('open', !isOpen);
+      document.getElementById('filterBtn').classList.toggle('active', !isOpen);
+      document.getElementById('quickBtn').classList.toggle('active', !isOpen);
+    }
+
+    function applyFilters() {
+      const cat = document.getElementById('filt-category').value.toLowerCase();
+      const urg = document.getElementById('filt-urgency').value.toLowerCase();
+      const sta = document.getElementById('filt-status').value.toLowerCase();
+      const cards = document.querySelectorAll('.req-card:not(.static-card)');
+      let vis = 0;
+      cards.forEach(c => {
+        const text = c.textContent.toLowerCase();
+        const show = (!cat || text.includes(cat)) && (!urg || text.includes(urg)) && (!sta || text.includes(sta));
+        c.style.display = show ? '' : 'none';
+        if (show) vis++;
+      });
+      document.getElementById('countLabel').textContent = vis;
+    }
+
+    function clearFilters() {
+      document.getElementById('filt-category').value = '';
+      document.getElementById('filt-urgency').value = '';
+      document.getElementById('filt-status').value = '';
+      applyFilters();
     }
 
     // ── Topbar search (hits backend /search endpoint)
