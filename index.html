@@ -1060,10 +1060,11 @@
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(d){
           if (!d) return;
-          if (d.total_needs)     animateCount(document.getElementById('stat-needs'),      d.total_needs);
-          if (d.total_responses) animateCount(document.getElementById('stat-responses'),  d.total_responses);
-          if (d.families_served) animateCount(document.getElementById('stat-families'),   d.families_served);
-          if (d.active_orgs)     animateCount(document.getElementById('stat-orgs'),       d.active_orgs);
+          var totalNeeds = (d.total_active || 0) + (d.total_fulfilled || 0);
+          if (totalNeeds)              animateCount(document.getElementById('stat-needs'),      totalNeeds);
+          if (d.total_responders)      animateCount(document.getElementById('stat-responses'),  d.total_responders);
+          if (d.total_families_helped) animateCount(document.getElementById('stat-families'),   d.total_families_helped);
+          if (d.total_orgs)            animateCount(document.getElementById('stat-orgs'),       d.total_orgs);
         })
         .catch(function(){
           ['stat-needs','stat-responses','stat-families','stat-orgs'].forEach(function(id){
