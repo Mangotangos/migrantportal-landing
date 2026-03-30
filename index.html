@@ -501,6 +501,14 @@
     }
   </style>
   <style>
+    /* ── Feature Strip ── */
+    .feature-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; margin-top: 8px; text-align: left; }
+    .feature-card { background: var(--gray-100); border-radius: 16px; padding: 32px 28px; display: flex; flex-direction: column; gap: 12px; }
+    .feature-icon { font-size: 36px; line-height: 1; }
+    .feature-card h3 { font-family: 'Montserrat',sans-serif; font-size: 18px; font-weight: 700; color: var(--text); margin: 0; }
+    .feature-card p { font-size: 14px; color: var(--gray-500); line-height: 1.6; margin: 0; flex: 1; }
+    @media(max-width:768px){ .feature-strip { grid-template-columns: 1fr; } }
+
     /* ── Live Impact Stats ── */
     .live-stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 40px; }
     .live-stat-card { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 16px; padding: 28px 20px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,.05); }
@@ -704,76 +712,28 @@
     </div>
   </section>
 
-  <!-- DISCOVER NEEDS SECTION -->
-  <section class="section" id="how-it-works" aria-labelledby="discover-h">
-    <div class="section-inner">
-      <div class="two-col">
-        <!-- Left: illustration -->
-        <div class="col-visual">
-          <div class="illus illus-teal">
-            <div class="illus-circle-teal">🗺️</div>
-          </div>
-        </div>
-        <!-- Right: text -->
-        <div class="col-text">
-          <h2 id="discover-h">Discover live needs near you</h2>
-          <p>Explore vetted, urgent needs of <a href="/requests.html">migrant children and families</a> across the nation. Every request is verified before it reaches your community.</p>
+  <!-- FEATURE STRIP -->
+  <section class="section section-white" id="how-it-works" aria-label="Features">
+    <span id="about" style="display:none;"></span>
+    <div class="section-inner" style="text-align:center;">
+      <div class="feature-strip">
+        <div class="feature-card">
+          <div class="feature-icon">🗺️</div>
+          <h3>Discover live needs</h3>
+          <p>Explore vetted, urgent needs of migrant families across the nation — verified before they reach your community.</p>
           <a href="/requests.html" class="text-cta">View Map of Requests</a>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROFESSIONALS SECTION -->
-  <section class="section" id="about" aria-labelledby="pros-h" style="background:var(--gray-100);">
-    <div class="section-inner">
-      <div class="two-col two-col-reverse">
-        <!-- Right becomes left on reverse: illustration -->
-        <div class="col-visual">
-          <div class="illus illus-yellow">
-            <div class="illus-yellow-circle"></div>
-            <div class="illus-app-card">
-              <div class="row teal"></div>
-              <div class="row"></div>
-              <div class="row s"></div>
-              <div class="row"></div>
-              <div class="row s"></div>
-            </div>
-            <div style="font-size:56px;position:relative;z-index:1;">👩‍💼</div>
-          </div>
+        <div class="feature-card">
+          <div class="feature-icon">👩‍💼</div>
+          <h3>For professionals</h3>
+          <p>Caseworkers, educators, and clinics use MigrantPortal to engage faith communities and wrap support around families they serve.</p>
+          <a href="/submit-need.html" class="text-cta">Submit a Need</a>
         </div>
-        <!-- Left text -->
-        <div class="col-text">
-          <h2 id="pros-h">MigrantPortal for professionals</h2>
-          <p>
-            Discover how caseworkers, educators, and more are using our platform to engage
-            <a href="/submit-need.html">local faith communities and communities</a> to wrap more support
-            around the migrant children and families they serve.
-          </p>
-          <a href="/submit-need.html" class="text-cta">Learn More About Submitting Needs</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LAUNCH A NETWORK SECTION -->
-  <section class="section" id="impact" aria-labelledby="network-h">
-    <div class="section-inner">
-      <div class="two-col">
-        <!-- Left: illustration -->
-        <div class="col-visual">
-          <div class="illus illus-teal">
-            <div class="illus-circle-teal">🤝</div>
-          </div>
-        </div>
-        <!-- Right: text -->
-        <div class="col-text">
-          <h2 id="network-h">Launch a network</h2>
-          <p>
-            Use MigrantPortal to connect all of your partners in one place and maximize the
-            impact that you and others are making in the community.
-          </p>
-          <a href="/signup.html" class="text-cta">Become an Implementing Partner</a>
+        <div class="feature-card">
+          <div class="feature-icon">🤝</div>
+          <h3>Launch a network</h3>
+          <p>Connect all your partners in one place and maximize the impact you and others are making in the community.</p>
+          <a href="/signup.html" class="text-cta">Become a Partner</a>
         </div>
       </div>
     </div>
