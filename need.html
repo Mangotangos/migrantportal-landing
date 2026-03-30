@@ -39,6 +39,11 @@
     }
     .amt-btn.selected { border-color: var(--orange); background: #fff5f0; color: var(--orange); }
     .amt-btn:hover { border-color: var(--orange); }
+    .funds-btn {
+      flex: 1; min-width: 48px; height: 32px; border: 1.5px solid var(--gray-200);
+      border-radius: 6px; font-size: 12px; font-weight: 600; background: white; cursor: pointer;
+    }
+    .funds-btn:hover { border-color: var(--teal); color: var(--teal); }
     .chat-msg { display: flex; flex-direction: column; gap: 1px; }
     .chat-bubble {
       max-width: 85%; padding: 8px 11px; border-radius: 10px;
@@ -347,8 +352,8 @@
                 <strong>State:</strong> Kansas &nbsp;·&nbsp;
                 <strong>Zip:</strong> 66101 &nbsp;·&nbsp;
                 <strong>County:</strong> Wyandotte<br />
-                <strong>Submitted By:</strong> <a href="#">New Hope Community Church</a> &nbsp;·&nbsp;
-                <strong>Lead Church:</strong> <a href="#">New Hope Community Church</a>
+                <strong>Submitted By:</strong> <a href="#">New Hope Community Faith Community</a> &nbsp;·&nbsp;
+                <strong>Lead Faith Community:</strong> <a href="#">New Hope Community Faith Community</a>
               </div>
             </div>
           </div>
@@ -371,6 +376,8 @@
             Any help with housing referrals, school enrollment support, or donated essentials (bedding, hygiene items,
             clothing for kids) is deeply appreciated. Thank you for walking alongside this family.
           </p>
+          <div id="photos-section" style="margin-top:14px"></div>
+          <div id="shifts-section" style="margin-top:14px"></div>
         </div>
 
         <!-- NEEDS -->
@@ -435,19 +442,19 @@
           <p class="network-desc">You can send a message by selecting a response team from the list below, or by clicking on an icon within the map.</p>
           <div class="network-layout">
             <div class="network-list">
-              <div class="network-group-title">Church Response Teams (2)</div>
+              <div class="network-group-title">Faith Community Response Teams (2)</div>
               <div class="network-item">
                 <div class="network-pin">📍</div>
                 <div>
-                  <div class="network-name">New Hope Community Church</div>
-                  <div class="network-meta">New Hope · 2 mi · 66101 · Lead Church</div>
+                  <div class="network-name">New Hope Community Faith Community</div>
+                  <div class="network-meta">New Hope · 2 mi · 66101 · Lead Faith Community</div>
                 </div>
               </div>
               <div class="network-item">
                 <div class="network-pin">📍</div>
                 <div>
-                  <div class="network-name">Church Entered Needs</div>
-                  <div class="network-meta">New Hope · 2 mi · 66101 · Lead Church</div>
+                  <div class="network-name">Faith Community Entered Needs</div>
+                  <div class="network-meta">New Hope · 2 mi · 66101 · Lead Faith Community</div>
                 </div>
               </div>
             </div>
@@ -504,7 +511,18 @@
         </div>
         <div class="card" id="donate-card" style="margin-top:14px;display:none">
           <div style="font-weight:700;font-size:14px;margin-bottom:4px">Support This Family</div>
-          <div id="donate-total" style="font-size:12px;color:var(--gray-600);margin-bottom:12px"></div>
+          <div id="donate-total" style="font-size:12px;color:var(--gray-600);margin-bottom:6px"></div>
+          <!-- Donation progress bar -->
+          <div id="donate-progress-wrap" style="display:none;margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--gray-400);margin-bottom:4px">
+              <span id="donate-progress-label"></span>
+              <span id="donate-progress-pct"></span>
+            </div>
+            <div style="height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden">
+              <div id="donate-progress-bar" style="height:100%;background:var(--teal);border-radius:3px;width:0%;transition:width .6s"></div>
+            </div>
+            <div id="donate-disbursed-label" style="font-size:11px;color:#15803d;margin-top:4px;display:none"></div>
+          </div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
             <button class="amt-btn" onclick="selectAmt(this,500)">$5</button>
             <button class="amt-btn" onclick="selectAmt(this,1000)">$10</button>
@@ -513,7 +531,46 @@
             <button class="amt-btn" onclick="selectAmt(this,10000)">$100</button>
           </div>
           <button id="donate-btn" onclick="startDonation()" style="width:100%;background:var(--orange);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer">Donate</button>
-          <div style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:center">Secure payment via Stripe</div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:center">🔒 Secure · Funds held until verified delivery</div>
+        </div>
+
+        <!-- DONOR IMPACT CARD (visible only to logged-in donors who gave to this need) -->
+        <div class="card" id="donor-impact-card" style="margin-top:14px;display:none;border:2px solid #FCD34D40">
+          <div style="font-weight:700;font-size:14px;margin-bottom:2px">💛 Your Impact</div>
+          <div id="donor-impact-body" style="font-size:12px;color:var(--gray-600);margin-top:8px"></div>
+        </div>
+
+        <!-- CONNECTOR FUNDS PANEL (visible only to the connector of this need) -->
+        <div class="card" id="connector-funds-card" style="margin-top:14px;display:none;border:2px solid #009DA520">
+          <div style="font-weight:700;font-size:14px;margin-bottom:2px">💰 Donated Funds</div>
+          <div id="funds-balance" style="font-size:12px;color:var(--gray-600);margin-bottom:12px">Loading balance…</div>
+          <div id="funds-available-box" style="display:none;background:#F0FDF4;border:1px solid #86EFAC;border-radius:8px;padding:12px;margin-bottom:12px">
+            <div style="font-size:11px;font-weight:700;color:#15803D;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Available to Request</div>
+            <div id="funds-available-amt" style="font-size:24px;font-weight:800;color:#15803D"></div>
+          </div>
+          <!-- Request form -->
+          <div id="funds-request-form" style="display:none">
+            <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:6px">How much do you need?</div>
+            <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+              <button class="funds-btn" onclick="selectFundsAmt(this,2500)">$25</button>
+              <button class="funds-btn" onclick="selectFundsAmt(this,5000)">$50</button>
+              <button class="funds-btn" onclick="selectFundsAmt(this,7500)">$75</button>
+              <button class="funds-btn" onclick="selectFundsAmt(this,10000)">$100</button>
+            </div>
+            <input id="funds-custom-amt" type="number" placeholder="Or enter amount (USD)"
+              style="width:100%;height:36px;border:1px solid var(--gray-200);border-radius:7px;padding:0 10px;font-size:13px;font-family:Inter,sans-serif;margin-bottom:8px;box-sizing:border-box">
+            <textarea id="funds-note" placeholder="What will this money be used for? (e.g. 'Buy bedding and hygiene items at Walmart')"
+              style="width:100%;min-height:72px;border:1px solid var(--gray-200);border-radius:7px;padding:8px 10px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;box-sizing:border-box;margin-bottom:8px"></textarea>
+            <button onclick="submitFundsRequest()" style="width:100%;background:var(--teal);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer">
+              Request Disbursement →
+            </button>
+            <button onclick="document.getElementById('funds-request-form').style.display='none'" style="width:100%;margin-top:6px;background:none;border:none;font-size:12px;color:var(--gray-400);cursor:pointer">Cancel</button>
+          </div>
+          <!-- Past disbursements list -->
+          <div id="funds-history" style="margin-top:10px"></div>
+          <button id="funds-request-btn" onclick="document.getElementById('funds-request-form').style.display='';document.getElementById('funds-request-btn').style.display='none'" style="width:100%;background:var(--teal);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer;margin-top:8px;display:none">
+            + Request Funds for Family
+          </button>
         </div>
       </div>
 
@@ -597,21 +654,46 @@
               <div style="font-weight:700;font-size:14px;color:var(--green)">You're Helping!</div>
               <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Thank you for offering your support.</div>
             </div>
+            <div style="border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:10px">⏱ Log Volunteer Hours</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+                <input id="hours-input" type="number" min="0.5" max="24" step="0.5" placeholder="Hours (e.g. 2.5)"
+                  style="flex:1;padding:8px 10px;border:1px solid var(--gray-200);border-radius:7px;font-size:13px;font-family:inherit" />
+              </div>
+              <input id="hours-note" type="text" placeholder="Note (optional)"
+                style="width:100%;padding:8px 10px;border:1px solid var(--gray-200);border-radius:7px;font-size:13px;font-family:inherit;margin-bottom:8px;box-sizing:border-box" />
+              <button onclick="logHoursForNeed()"
+                style="width:100%;height:36px;background:var(--teal);color:white;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer">
+                Save Hours
+              </button>
+              <div id="hours-total" style="margin-top:8px;font-size:11px;color:var(--gray-400);text-align:center"></div>
+            </div>
             <button onclick="withdrawResponse()" style="width:100%;height:38px;border:1px solid #fca5a5;background:#fee2e2;color:#dc2626;font-size:13px;font-weight:600;border-radius:7px;cursor:pointer;">Withdraw My Response</button>`;
         } else {
           const openItems = need.items.filter(i => i.amount_received < i.amount_needed);
+          const HELP_TYPES = [
+            { id: 'donate',    icon: '💰', label: 'Donate Money',   sub: 'Send funds directly via secure payment' },
+            { id: 'goods',     icon: '📦', label: 'Buy / Ship Item', sub: 'Contribute a specific item they need' },
+            { id: 'service',   icon: '⚖️', label: 'Offer a Service', sub: 'Legal, medical, translation, etc.' },
+            { id: 'volunteer', icon: '⏰', label: 'Volunteer Time',  sub: 'Show up and help in person' },
+          ];
           panel.innerHTML = `
-            <div style="font-weight:700;font-size:14px;margin-bottom:12px">🤝 Offer to Help</div>
-            <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px">Select what you can contribute:</div>
-            <div id="item-checks" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-              ${openItems.length ? openItems.map(i => `
-                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px;border:1px solid var(--gray-200);border-radius:7px">
-                  <input type="checkbox" value="${i.id}" style="accent-color:var(--teal);width:15px;height:15px">
-                  <span>${i.label} <span style="color:var(--gray-400)">(${i.amount_received}/${i.amount_needed} ${i.unit})</span></span>
-                </label>`).join('') : '<div style="color:var(--gray-400);font-size:12px">All items are covered!</div>'}
+            <div style="font-weight:700;font-size:14px;margin-bottom:4px">🤝 How do you want to help?</div>
+            <div style="font-size:12px;color:var(--gray-600);margin-bottom:12px">Choose the type of support you can offer:</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+              ${HELP_TYPES.map(t => `
+                <button onclick="selectHelpType('${t.id}')" id="ht-${t.id}"
+                  style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border:2px solid var(--gray-200);border-radius:10px;background:white;cursor:pointer;transition:all .15s;text-align:center">
+                  <span style="font-size:22px">${t.icon}</span>
+                  <span style="font-size:12px;font-weight:700;color:var(--text)">${t.label}</span>
+                  <span style="font-size:10px;color:var(--gray-600);line-height:1.3">${t.sub}</span>
+                </button>`).join('')}
             </div>
-            <textarea id="respond-msg" placeholder="Optional message to connector…" style="width:100%;height:70px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
-            <button onclick="submitResponse()" style="width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Yes, I Can Help!</button>`;
+            <div id="help-subpanel"></div>`;
+
+          window._helpNeedOpenItems = openItems;
+          window._helpNeedId = needId;
+          window._currentNeedDonateUrl = \`donate.html?need_id=\${needId}&need_title=\${encodeURIComponent(need.title)}\`;
         }
         return;
       }
@@ -668,12 +750,63 @@
       }).join('');
     }
 
+    // ── Help type picker
+    let selectedHelpType = 'goods';
+    function selectHelpType(type) {
+      selectedHelpType = type;
+      // Highlight selected card
+      ['donate','goods','service','volunteer'].forEach(t => {
+        const btn = document.getElementById(`ht-${t}`);
+        if (!btn) return;
+        if (t === type) { btn.style.borderColor = 'var(--teal)'; btn.style.background = 'var(--teal-lt)'; }
+        else { btn.style.borderColor = 'var(--gray-200)'; btn.style.background = 'white'; }
+      });
+      const sub = document.getElementById('help-subpanel');
+      if (!sub) return;
+      const openItems = window._helpNeedOpenItems || [];
+
+      if (type === 'donate') {
+        sub.innerHTML = `
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;color:#15803d">
+            💳 You'll be taken to our secure donation page where you can choose an amount. Funds go into escrow and the connector can request disbursement.
+          </div>
+          <a href="${window._currentNeedDonateUrl || '#'}"
+            style="display:block;width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;text-align:center;text-decoration:none;">
+            Donate Now →
+          </a>`;
+      } else if (type === 'goods') {
+        sub.innerHTML = `
+          <div style="font-size:12px;color:var(--gray-600);margin-bottom:8px">Select items you can provide:</div>
+          <div id="item-checks" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+            ${openItems.length ? openItems.map(i => `
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px;border:1px solid var(--gray-200);border-radius:7px">
+                <input type="checkbox" value="${i.id}" style="accent-color:var(--teal);width:15px;height:15px">
+                <span>${i.label} <span style="color:var(--gray-400)">(${i.amount_received}/${i.amount_needed} ${i.unit})</span></span>
+              </label>`).join('') : '<div style="color:var(--gray-400);font-size:12px">All items are covered — consider donating instead!</div>'}
+          </div>
+          <textarea id="respond-msg" placeholder="Optional message to connector…" style="width:100%;height:60px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
+          <button onclick="submitResponse()" style="width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Yes, I Can Help!</button>`;
+      } else if (type === 'service') {
+        sub.innerHTML = `
+          <div style="font-size:12px;color:var(--gray-600);margin-bottom:8px">Describe the service you can offer:</div>
+          <textarea id="respond-msg" placeholder="e.g. I can provide free legal consultation, translation in Spanish, or medical advice…" style="width:100%;height:90px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
+          <button onclick="submitResponse()" style="width:100%;background:var(--teal);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Offer My Service</button>`;
+      } else if (type === 'volunteer') {
+        sub.innerHTML = `
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;color:#1d4ed8">
+            ⏰ Volunteer shifts are coordinated through the app. Submit your offer and the connector will reach out with details.
+          </div>
+          <textarea id="respond-msg" placeholder="When are you available? Any skills to mention?" style="width:100%;height:70px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
+          <button onclick="submitResponse()" style="width:100%;background:#7c3aed;color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Sign Up to Volunteer</button>`;
+      }
+    }
+
     // ── Submit response
     async function submitResponse() {
       const checkedIds = [...document.querySelectorAll('#item-checks input:checked')].map(c => c.value);
       const msg = document.getElementById('respond-msg')?.value.trim() || '';
       try {
-        await apiPost(`/needs/${needId}/respond`, { item_ids: checkedIds, message: msg });
+        await apiPost(`/needs/${needId}/respond`, { item_ids: checkedIds, message: msg, help_type: selectedHelpType });
         toast('Response submitted! The connector will be notified.');
         renderPanel(currentNeed, true);
       } catch(e) { toast(e.message, true); }
@@ -715,15 +848,246 @@
           el.innerHTML = '<div style="font-size:12px;color:var(--gray-400)">No responses yet.</div>';
           return;
         }
-        el.innerHTML = list.map(r => `
-          <div style="padding:8px 0;border-bottom:1px solid var(--gray-200)">
-            <div style="font-weight:600;font-size:13px">${r.name}</div>
-            <div style="font-size:11px;color:var(--gray-600)">${[r.responder_type, r.org_name, [r.city,r.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}</div>
+        const HELP_LABEL = { donate: '💰 Donated', goods: '📦 Goods', service: '⚖️ Service', volunteer: '⏰ Volunteer' };
+        const STATUS_COLOR = { committed: '#92400E', delivered: '#1D4ED8', confirmed: '#15803D' };
+        const STATUS_BG    = { committed: '#FEF3C7', delivered: '#DBEAFE', confirmed: '#DCFCE7' };
+
+        // Fetch existing ratings (connector/admin only, non-fatal)
+        let existingRatings = {};
+        const canRate = user && (user.role === 'connector' || user.role === 'admin');
+        if (canRate) {
+          try {
+            const ratingsData = await apiGet(`/ratings/need/${needId}`);
+            ratingsData.forEach(r => { existingRatings[r.responder_id] = r; });
+          } catch(e) { /* non-fatal */ }
+        }
+
+        // Service offers grouped at top
+        const serviceOffers = list.filter(r => r.help_type === 'service');
+        const serviceSection = serviceOffers.length ? `
+          <div style="margin-bottom:12px">
+            <div style="font-size:11px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">⚖️ Service Offers (${serviceOffers.length})</div>
+            ${serviceOffers.map(r => `
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;margin-bottom:6px">
+                <div style="flex:1">
+                  <div style="font-weight:700;font-size:13px">${r.name}</div>
+                  <div style="font-size:11px;color:#6B7280">${[r.responder_type, r.org_name, [r.city,r.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}</div>
+                  ${r.message ? `<div style="font-size:12px;color:#374151;margin-top:2px;font-style:italic">"${r.message}"</div>` : ''}
+                </div>
+                <button onclick="requestProvider('${r.id}')"
+                  style="flex-shrink:0;background:#7C3AED;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;border:none;border-radius:8px;cursor:pointer">
+                  📩 Request
+                </button>
+              </div>`).join('')}
+          </div>
+          ${list.filter(r => r.help_type !== 'service').length ? '<div style="font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">All Responders</div>' : ''}
+        ` : '';
+
+        el.innerHTML = serviceSection + (list.filter(r => r.help_type !== 'service').map(r => `
+          <div style="padding:10px 0;border-bottom:1px solid var(--gray-200)">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-weight:700;font-size:13px">${r.name}</div>
+                <div style="font-size:11px;color:var(--gray-600)">${[r.responder_type, r.org_name, [r.city,r.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}</div>
+              </div>
+              ${r.help_type ? `<span style="font-size:10px;font-weight:700;padding:2px 8px;background:#EFF6FF;color:#1D4ED8;border-radius:10px">${HELP_LABEL[r.help_type]||r.help_type}</span>` : ''}
+            </div>
             ${r.message ? `<div style="font-size:12px;color:var(--gray-700);margin-top:3px;font-style:italic">"${r.message}"</div>` : ''}
-          </div>`).join('');
+            ${r.items && r.items.length ? `
+              <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
+                ${r.items.map(ri => `
+                  <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:#F9FAFB;border-radius:7px">
+                    <span style="flex:1;font-size:12px;font-weight:600">${ri.label}</span>
+                    ${ri.tracking_info ? `<span style="font-size:10px;color:var(--gray-400)">📦 ${ri.tracking_info}</span>` : ''}
+                    <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:${STATUS_BG[ri.delivery_status]||'#F3F4F6'};color:${STATUS_COLOR[ri.delivery_status]||'#555'}">${ri.delivery_status}</span>
+                    ${ri.delivery_status === 'delivered' ? `<button onclick="confirmItemReceipt('${ri.response_item_id}')" style="font-size:10px;font-weight:700;padding:3px 9px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer">✓ Confirm</button>` : ''}
+                  </div>`).join('')}
+              </div>` : ''}
+            ${canRate ? (() => {
+              const rated = existingRatings[r.id];
+              const currentStars = rated ? rated.stars : 0;
+              return `
+              <div style="margin-top:10px;padding-top:10px;border-top:1px solid #F3F4F6">
+                <div style="font-size:11px;font-weight:700;color:var(--gray-600);margin-bottom:5px">${rated ? '⭐ Your rating' : 'Rate this helper'}</div>
+                <div style="display:flex;gap:2px;margin-bottom:6px">
+                  ${[1,2,3,4,5].map(n => `<button onclick="setRatingStar('${r.id}',${n})" id="star-${r.id}-${n}" style="background:none;border:none;cursor:pointer;font-size:22px;padding:0;line-height:1">${currentStars >= n ? '⭐' : '☆'}</button>`).join('')}
+                </div>
+                <textarea id="note-${r.id}" placeholder="Optional note about this helper…" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;resize:none;height:48px;font-family:inherit">${rated?.note || ''}</textarea>
+                <button onclick="submitRating('${r.id}')" style="margin-top:6px;background:var(--teal);color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">${rated ? 'Update Rating' : 'Save Rating'}</button>
+              </div>`;
+            })() : ''}
+          </div>`).join(''));
       } catch(e) {
         el.innerHTML = '<div style="font-size:12px;color:var(--gray-400)">Could not load responders.</div>';
       }
+    }
+
+    async function requestProvider(responderId) {
+      try {
+        await apiPost(`/needs/${needId}/request-provider/${responderId}`, {});
+        toast('Provider notified! They will reach out via Chat.');
+      } catch(e) { toast(e.message || 'Could not send request', true); }
+    }
+
+    async function confirmItemReceipt(responseItemId) {
+      try {
+        await apiPost(`/needs/${needId}/response-items/${responseItemId}/confirm`, {});
+        toast('Receipt confirmed! Responder has been notified.');
+        loadResponders();
+      } catch(e) { toast(e.message || 'Error confirming receipt', true); }
+    }
+
+    // ── Need Photos
+    async function loadPhotos(need) {
+      const el = document.getElementById('photos-section');
+      if (!el || !currentUser) return;
+      try {
+        const photos = await apiGet(`/needs/${needId}/photos`);
+        const isOwner = currentUser.role === 'connector' && need.connector_id === currentUser.id;
+        const canUpload = isOwner || currentUser.role === 'admin';
+
+        const strip = photos.length ? `
+          <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:${canUpload?'10px':'0'}">
+            ${photos.map(p => `
+              <div style="position:relative;flex-shrink:0">
+                <img src="${p.url}" style="width:110px;height:82px;object-fit:cover;border-radius:8px;cursor:pointer"
+                     onclick="window.open('${p.url}','_blank')" />
+                ${canUpload ? `<button onclick="deletePhoto('${p.id}')" title="Remove"
+                  style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>` : ''}
+              </div>`).join('')}
+          </div>` : '';
+
+        const uploadBtn = canUpload && photos.length < 5 ? `
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:700;color:var(--teal);border:1.5px dashed var(--teal);padding:6px 14px;border-radius:8px">
+            📷 Add Photo
+            <input type="file" accept="image/*" style="display:none" onchange="uploadPhoto(this)" />
+          </label>
+          <span id="photo-uploading" style="display:none;font-size:12px;color:var(--gray-400);margin-left:8px">Uploading…</span>` : '';
+
+        el.innerHTML = strip + uploadBtn;
+      } catch(e) { /* non-fatal */ }
+    }
+
+    async function uploadPhoto(input) {
+      const file = input.files?.[0];
+      if (!file) return;
+      const token = localStorage.getItem('mp_token');
+      if (!token) return;
+      document.getElementById('photo-uploading').style.display = 'inline';
+      try {
+        const form = new FormData();
+        form.append('file', file);
+        const res = await fetch(`${API}/needs/${needId}/photos`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: form,
+        });
+        if (!res.ok) throw new Error('Upload failed');
+        toast('Photo added!');
+        loadPhotos(currentNeed);
+      } catch(e) {
+        toast(e.message || 'Upload failed', true);
+      } finally {
+        document.getElementById('photo-uploading').style.display = 'none';
+        input.value = '';
+      }
+    }
+
+    async function deletePhoto(photoId) {
+      if (!confirm('Remove this photo?')) return;
+      const token = localStorage.getItem('mp_token');
+      try {
+        const res = await fetch(`${API}/needs/${needId}/photos/${photoId}`, {
+          method: 'DELETE',
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        if (!res.ok && res.status !== 204) throw new Error('Delete failed');
+        toast('Photo removed.');
+        loadPhotos(currentNeed);
+      } catch(e) { toast('Could not remove photo', true); }
+    }
+
+    // ── Volunteer Shifts
+    async function loadShifts() {
+      const el = document.getElementById('shifts-section');
+      if (!el || !needId || !currentUser) return;
+      try {
+        const shifts = await apiGet(`/shifts?need_id=${needId}`);
+        if (!shifts.length) { el.innerHTML = ''; return; }
+        const isResponder = currentUser.role === 'responder';
+        el.innerHTML = `
+          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+            📅 Volunteer Shifts
+          </div>
+          ${shifts.map(s => {
+            const full = s.slots_filled >= s.slots_total;
+            const slotColor = full ? '#DC2626' : '#10B981';
+            const slotBg = full ? '#FEE2E2' : '#D1FAE5';
+            return `
+              <div style="border:1px solid var(--gray-200);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13px;font-weight:700;margin-bottom:2px">${s.title}</div>
+                  <div style="font-size:11px;color:var(--gray-600);margin-bottom:4px">${s.date} · ${s.start_time}–${s.end_time}${s.location ? ' · 📍 ' + s.location : ''}</div>
+                  <span style="font-size:11px;font-weight:700;color:${slotColor};background:${slotBg};padding:2px 8px;border-radius:10px">
+                    ${s.slots_filled}/${s.slots_total} slots filled
+                  </span>
+                  ${s.signed_up ? '<span style="font-size:11px;font-weight:700;color:#1D4ED8;background:#DBEAFE;padding:2px 8px;border-radius:10px;margin-left:6px">✓ Signed up</span>' : ''}
+                </div>
+                ${isResponder ? `<button onclick="claimShift('${s.id}',${s.signed_up})"
+                  style="padding:6px 14px;border:none;border-radius:7px;font-size:12px;font-weight:700;color:white;background:${s.signed_up ? '#EF4444' : full ? '#9CA3AF' : 'var(--teal)'};cursor:${full && !s.signed_up ? 'not-allowed' : 'pointer'}"
+                  ${full && !s.signed_up ? 'disabled' : ''}>${s.signed_up ? 'Drop' : full ? 'Full' : 'Join'}</button>` : ''}
+              </div>`;
+          }).join('')}`;
+      } catch(e) { /* silently ignore if no shifts */ }
+    }
+
+    async function claimShift(shiftId, isSignedUp) {
+      try {
+        if (isSignedUp) {
+          await fetch(`${API}/shifts/${shiftId}/signup`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + localStorage.getItem('mp_token') } });
+        } else {
+          await fetch(`${API}/shifts/${shiftId}/signup`, { method: 'POST', headers: { Authorization: 'Bearer ' + localStorage.getItem('mp_token') } });
+        }
+        toast(isSignedUp ? 'Dropped from shift.' : 'Joined shift!');
+        loadShifts();
+      } catch(e) { toast('Could not update shift.', true); }
+    }
+
+    // ── Ratings
+    const _pendingStars = {};
+
+    function setRatingStar(responderId, n) {
+      _pendingStars[responderId] = n;
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`star-${responderId}-${i}`);
+        if (btn) btn.textContent = i <= n ? '⭐' : '☆';
+      }
+    }
+
+    async function submitRating(responderId) {
+      const stars = _pendingStars[responderId];
+      if (!stars) { toast('Please select a star rating first.', true); return; }
+      const note = document.getElementById(`note-${responderId}`)?.value?.trim() || undefined;
+      try {
+        await apiPost('/ratings', { need_id: needId, responder_id: responderId, stars, note });
+        toast('Rating saved!');
+        loadResponders();
+      } catch(e) { toast(e.message || 'Could not save rating', true); }
+    }
+
+    // ── Log volunteer hours
+    async function logHoursForNeed() {
+      const hours = parseFloat(document.getElementById('hours-input').value);
+      const note = document.getElementById('hours-note').value.trim();
+      if (!hours || hours <= 0) { toast('Enter a valid number of hours.', true); return; }
+      try {
+        await apiPost('/hours', { hours, need_id: needId, note: note || null });
+        document.getElementById('hours-input').value = '';
+        document.getElementById('hours-note').value = '';
+        toast('Hours logged!');
+        const summary = await apiGet('/hours/mine/summary');
+        document.getElementById('hours-total').textContent = `Your total: ${summary.total_hours} hrs across ${summary.entry_count} entries`;
+      } catch(e) { toast(e.message, true); }
     }
 
     // ── Withdraw response
@@ -847,10 +1211,127 @@
     async function loadDonationTotal() {
       if (!needId) return;
       try {
-        const d = await apiGet(`/donations/need/${needId}/total`);
+        // Use balance endpoint for full picture: donated, disbursed, available
+        const b = await apiGet(`/disbursements/need/${needId}/balance`);
         const el = document.getElementById('donate-total');
-        if (el) el.textContent = d.total_usd > 0 ? `$${d.total_usd.toFixed(2)} donated so far` : 'Be the first to donate!';
-      } catch(e) {}
+        if (el) {
+          el.textContent = b.total_donated_usd > 0
+            ? `$${b.total_donated_usd.toFixed(2)} donated`
+            : 'Be the first to donate!';
+        }
+        // Progress bar (donated vs. a goal if we can infer it)
+        if (b.total_donated_usd > 0) {
+          const wrap = document.getElementById('donate-progress-wrap');
+          if (wrap) wrap.style.display = '';
+          const label = document.getElementById('donate-progress-label');
+          if (label) label.textContent = `$${b.total_donated_usd.toFixed(2)} raised`;
+          const disbLabel = document.getElementById('donate-disbursed-label');
+          if (disbLabel && b.total_disbursed_usd > 0) {
+            disbLabel.style.display = '';
+            disbLabel.textContent = `✅ $${b.total_disbursed_usd.toFixed(2)} already delivered to family`;
+          }
+          // progress: disbursed / donated (shows how much of collected money has reached family)
+          const pct = b.total_donated_usd > 0 ? Math.min(100, Math.round(b.total_disbursed_usd / b.total_donated_usd * 100)) : 0;
+          const bar = document.getElementById('donate-progress-bar');
+          if (bar) setTimeout(() => bar.style.width = pct + '%', 100);
+          const pctEl = document.getElementById('donate-progress-pct');
+          if (pctEl) pctEl.textContent = pct + '% delivered';
+        }
+      } catch(e) {
+        // fall back to simple total
+        try {
+          const d = await apiGet(`/donations/need/${needId}/total`);
+          const el = document.getElementById('donate-total');
+          if (el) el.textContent = d.total_usd > 0 ? `$${d.total_usd.toFixed(2)} donated so far` : 'Be the first to donate!';
+        } catch {}
+      }
+    }
+
+    // ── Connector funds panel
+    let selectedFundsCents = 0;
+    function selectFundsAmt(btn, cents) {
+      document.querySelectorAll('.funds-btn').forEach(b => b.style.background = '');
+      btn.style.background = 'var(--teal)';
+      btn.style.color = 'white';
+      selectedFundsCents = cents;
+      document.getElementById('funds-custom-amt').value = '';
+    }
+
+    async function loadConnectorFundsPanel(need) {
+      if (!currentUser || currentUser.id !== need.connector_id) return;
+      const card = document.getElementById('connector-funds-card');
+      if (card) card.style.display = '';
+      try {
+        const b = await apiGet(`/disbursements/need/${needId}/balance`);
+        const balEl = document.getElementById('funds-balance');
+        if (balEl) balEl.textContent = `$${b.total_donated_usd.toFixed(2)} donated · $${b.available_usd.toFixed(2)} available`;
+        const availBox = document.getElementById('funds-available-box');
+        const availAmt = document.getElementById('funds-available-amt');
+        const reqBtn = document.getElementById('funds-request-btn');
+        if (b.available_usd > 0) {
+          if (availBox) availBox.style.display = '';
+          if (availAmt) availAmt.textContent = `$${b.available_usd.toFixed(2)}`;
+          if (reqBtn) reqBtn.style.display = '';
+        }
+        // Load disbursement history
+        const hist = await apiGet(`/disbursements/need/${needId}`);
+        const histEl = document.getElementById('funds-history');
+        if (histEl && hist.length) {
+          const STATUS_ICON = { requested:'⏳', sent:'📬', confirmed:'✅', rejected:'❌' };
+          histEl.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Disbursement History</div>` +
+            hist.map(d => `
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:12px">
+                <div>
+                  <span style="margin-right:4px">${STATUS_ICON[d.status]||'•'}</span>
+                  <span style="font-weight:600">$${(d.amount_cents/100).toFixed(2)}</span>
+                  <span style="color:var(--gray-400);margin-left:4px">${d.method.replace('_',' ')}</span>
+                  ${d.note ? `<div style="color:var(--gray-600);margin-top:2px;margin-left:18px">${d.note}</div>` : ''}
+                  ${d.gift_card_code ? `<div style="background:#F0FDF4;border:1px dashed #16A34A;border-radius:5px;padding:4px 8px;margin-top:4px;font-weight:700;letter-spacing:.05em;margin-left:18px">🎁 ${d.gift_card_code}</div>` : ''}
+                  ${d.receipt_url
+                    ? `<a href="https://migrant-portal-production-3826.up.railway.app${d.receipt_url}" target="_blank" style="display:inline-block;margin-left:18px;margin-top:4px;color:var(--teal);font-weight:600">📄 View Receipt</a>`
+                    : d.status === 'sent' ? `<div style="margin-left:18px;margin-top:4px"><label style="cursor:pointer;color:var(--teal);font-weight:600">📎 Upload Receipt<input type="file" accept="image/*" style="display:none" onchange="uploadReceipt('${d.id}',this)"></label></div>` : ''}
+                </div>
+                <span style="color:var(--gray-400);white-space:nowrap">${new Date(d.requested_at).toLocaleDateString()}</span>
+              </div>`).join('');
+        }
+      } catch(e) {
+        const el = document.getElementById('funds-balance');
+        if (el) el.textContent = 'Could not load balance.';
+      }
+    }
+
+    async function submitFundsRequest() {
+      const customAmt = parseFloat(document.getElementById('funds-custom-amt').value);
+      const cents = customAmt > 0 ? Math.round(customAmt * 100) : selectedFundsCents;
+      if (!cents || cents < 100) { toast('Enter an amount of at least $1.00', true); return; }
+      const note = document.getElementById('funds-note').value.trim();
+      if (!note) { toast('Please describe what the funds will be used for', true); return; }
+      try {
+        await apiPost('/disbursements', { need_id: needId, amount_cents: cents, method: 'gift_card', note });
+        toast('Disbursement request submitted! Admin will review within 24 hrs.');
+        document.getElementById('funds-request-form').style.display = 'none';
+        loadConnectorFundsPanel(currentNeed);
+        loadDonationTotal();
+      } catch(e) { toast(e.message, true); }
+    }
+
+    async function uploadReceipt(disbId, input) {
+      const file = input.files[0];
+      if (!file) return;
+      const form = new FormData();
+      form.append('file', file);
+      try {
+        const token = localStorage.getItem('mp_token');
+        const r = await fetch(`https://migrant-portal-production-3826.up.railway.app/disbursements/${disbId}/receipt`, {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token },
+          body: form,
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.detail || 'Upload failed');
+        toast('Receipt uploaded! Donors will be notified. ✅');
+        loadConnectorFundsPanel(currentNeed);
+      } catch(e) { toast(e.message, true); }
     }
 
     async function startDonation() {
@@ -915,6 +1396,8 @@
 
         // Render items
         renderItems(need);
+        loadPhotos(need);
+        loadShifts();
 
         // Hide "Yes I Can Help" header button — sidebar handles it now
         const helpBtn = document.querySelector('.btn-help');
@@ -942,6 +1425,9 @@
           p.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests.html">open needs</a>.</div>';
         }
         initBookmarkState();
+        // Load connector funds panel and refresh donation progress bar
+        loadConnectorFundsPanel(need);
+        loadDonationTotal();
 
         // Chat — visible to connector + responders who responded
         const chatAuthorized = currentUser && (
@@ -964,7 +1450,43 @@
       }
     }
 
+    // ── Donor impact card
+    async function loadDonorImpact() {
+      if (!currentUser || !needId) return;
+      try {
+        const impacts = await apiGet('/disbursements/my-impact');
+        const mine = impacts.filter(i => i.need_id === needId);
+        if (!mine.length) return;
+        const card = document.getElementById('donor-impact-card');
+        const body = document.getElementById('donor-impact-body');
+        const totalGiven = mine.reduce((s, i) => s + i.amount_cents, 0);
+        const DISB_LABELS = {
+          requested: { label: 'Under Review', color: '#92400E', bg: '#FEF3C7' },
+          sent:      { label: 'Funds Sent to Family', color: '#1D4ED8', bg: '#DBEAFE' },
+          confirmed: { label: 'Delivered ✓', color: '#15803D', bg: '#DCFCE7' },
+          rejected:  { label: 'Request Not Approved', color: '#DC2626', bg: '#FEE2E2' },
+        };
+        const latestStatus = mine[mine.length - 1]?.disbursement_status;
+        const s = latestStatus ? DISB_LABELS[latestStatus] : null;
+        const receiptUrl = mine.find(i => i.receipt_url)?.receipt_url;
+        body.innerHTML = `
+          <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px">
+            <span style="font-size:24px;font-weight:800;color:var(--orange)">$${(totalGiven/100).toFixed(2)}</span>
+            <span style="font-size:12px;color:var(--gray-600)">donated by you</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:${receiptUrl?'10px':'0'}">
+            <span style="font-size:11px;font-weight:600;color:var(--gray-600)">Fund status:</span>
+            ${s
+              ? `<span style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:10px;background:${s.bg};color:${s.color}">${s.label}</span>`
+              : `<span style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:10px;background:#F3F4F6;color:#555">In Escrow</span>`}
+          </div>
+          ${receiptUrl ? `<a href="${receiptUrl}" target="_blank" style="display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--green)">📄 View Delivery Receipt →</a>` : ''}`;
+        card.style.display = '';
+      } catch(e) { /* silent — not every user donated */ }
+    }
+
     loadNeed();
+    loadDonorImpact();
   </script>
 
   <!-- MOBILE BOTTOM NAV -->
