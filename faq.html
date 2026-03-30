@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #007c84;
+      --teal-lt: #e6f7f8;
+      --orange:  #FF6129;
+      --navy:    #172936;
+      --cream:   #FAF7F0;
+      --text:    #0D0D0D;
+      --gray-600:#555;
+      --gray-400:#999;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.7; }
+    a { text-decoration: none; color: var(--teal); }
+    button { font-family: 'Inter', sans-serif; cursor: pointer; }
+
+    /* NAV */
+    .announce {
+      background: #0D7A8A; color: white; text-align: center;
+      padding: 10px 20px; font-size: 13px;
+    }
+    .announce a { color: #ffe08a; font-weight: 600; }
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px;
+      color: var(--text);
+    }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { font-size: 14px; color: var(--gray-600); font-weight: 500; }
+    .nav-links a:hover, .nav-links a.active { color: var(--teal); }
+    .nav-cta {
+      background: #0973A7; color: white; padding: 9px 20px;
+      border-radius: 6px; font-size: 14px; font-weight: 600; transition: background .15s;
+    }
+    .nav-cta:hover { background: #075d8a; color: white; }
+
+    /* HERO */
+    .hero {
+      background: var(--cream); padding: 80px 40px 72px; text-align: center;
+    }
+    .hero-label {
+      font-size: 12px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif; font-size: 46px; font-weight: 800;
+      color: var(--navy); line-height: 1.15; margin-bottom: 18px;
+    }
+    .hero h1 em { color: var(--teal); font-style: normal; }
+    .hero p { font-size: 18px; color: var(--gray-600); max-width: 560px; margin: 0 auto; }
+
+    /* FAQ SECTION */
+    .faq-section {
+      max-width: 760px; margin: 0 auto; padding: 72px 24px 96px;
+    }
+    .faq-category {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal);
+      margin: 48px 0 20px;
+    }
+    .faq-category:first-child { margin-top: 0; }
+
+    details {
+      border-bottom: 1px solid var(--gray-200);
+    }
+    details:first-of-type { border-top: 1px solid var(--gray-200); }
+    summary {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 4px; font-size: 16px; font-weight: 600;
+      color: var(--navy); cursor: pointer; list-style: none; gap: 16px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary .arrow {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: var(--gray-100); display: flex; align-items: center;
+      justify-content: center; transition: background .15s, transform .2s;
+      font-size: 13px; color: var(--teal);
+    }
+    details[open] summary .arrow {
+      background: var(--teal-lt); transform: rotate(180deg);
+    }
+    details[open] summary { color: var(--teal); }
+    .faq-answer {
+      padding: 0 4px 20px; font-size: 15px; color: var(--gray-600); line-height: 1.75;
+    }
+    .faq-answer a { color: var(--teal); font-weight: 500; }
+
+    /* CTA BAND */
+    .cta-band {
+      background: var(--navy); padding: 72px 40px; text-align: center;
+    }
+    .cta-band h2 {
+      font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800;
+      color: white; margin-bottom: 12px;
+    }
+    .cta-band p { color: #a8c0cc; font-size: 16px; margin-bottom: 28px; }
+    .btn-white {
+      background: white; color: var(--navy); padding: 13px 28px;
+      border-radius: 8px; font-size: 15px; font-weight: 700;
+      display: inline-block; transition: opacity .15s;
+    }
+    .btn-white:hover { opacity: .9; color: var(--navy); }
+    .btn-outline-white {
+      border: 2px solid rgba(255,255,255,.4); color: white; padding: 11px 28px;
+      border-radius: 8px; font-size: 15px; font-weight: 600;
+      display: inline-block; margin-left: 12px; transition: border-color .15s;
+    }
+    .btn-outline-white:hover { border-color: white; color: white; }
+
+    /* FOOTER */
+    footer {
+      background: var(--gray-100); border-top: 1px solid var(--gray-200);
+      padding: 28px 40px; display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 12px;
+      font-size: 13px; color: var(--gray-400);
+    }
+    footer a { color: var(--gray-600); margin-left: 20px; }
+    footer a:hover { color: var(--teal); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 56px 24px 48px; }
+      .hero h1 { font-size: 32px; }
+      footer { flex-direction: column; align-items: flex-start; }
+      footer a { margin-left: 0; margin-right: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announce">
+    Migrant families in your community need help right now. &nbsp;<a href="requests.html">See open requests →</a>
+  </div>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="logo.png" class="nav-logo-icon" alt="MigrantPortal" />
+      MigrantPortal
+    </a>
+    <div class="nav-links">
+      <a href="how-migrantportal-works.html">How It Works</a>
+      <a href="requests.html">Open Requests</a>
+      <a href="faq.html" class="active">FAQ</a>
+      <a href="mailto:support@migrantportal.com?subject=General+Inquiry">Contact</a>
+    </div>
+    <a href="signup.html" class="nav-cta">Sign Up</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-label">Help Center</p>
+    <h1>Frequently Asked <em>Questions</em></h1>
+    <p>Everything you need to know about using MigrantPortal to help migrant families.</p>
+  </section>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+
+    <p class="faq-category">Getting Started</p>
+
+    <details>
+      <summary>What is MigrantPortal? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        MigrantPortal connects immigrant and refugee families in need with volunteers, faith communities, and organizations who want to help. Connectors submit needs on behalf of families; responders like you fulfill those needs.
+      </div>
+    </details>
+
+    <details>
+      <summary>Who can use MigrantPortal? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Anyone can sign up. <strong>Connectors</strong> are trusted professionals (caseworkers, teachers, social workers) who submit needs on behalf of families. <strong>Responders</strong> are volunteers, churches, or individuals who help fulfill those needs. All accounts are reviewed before activation.
+      </div>
+    </details>
+
+    <details>
+      <summary>Is the app free to download? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Yes — MigrantPortal is completely free for all users. Download it on the <a href="https://play.google.com/store/apps/details?id=com.migrantportal" target="_blank" rel="noopener">Google Play Store</a>.
+      </div>
+    </details>
+
+    <p class="faq-category">Responding to Needs</p>
+
+    <details>
+      <summary>How do I respond to a need? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Browse open needs in the Feed or Map tab. Tap any need to view details, then tap "Respond to this Need." You can offer items, services, funds, or volunteer time. The family's connector will be notified.
+      </div>
+    </details>
+
+    <details>
+      <summary>What happens after I respond? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        The connector who submitted the need will review your response and coordinate with you directly via the in-app chat. You'll receive a notification when they accept. Once fulfilled, the need is marked complete.
+      </div>
+    </details>
+
+    <details>
+      <summary>What types of needs can I help with? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Needs span housing, food, clothing, furniture, transportation, employment, legal aid, medical, education, and translation services. Filter by category in the Feed to find what matches your skills or resources.
+      </div>
+    </details>
+
+    <details>
+      <summary>What does "Partially Met" mean? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        A partially met need has received some help but still requires more. For example, a family needed $300 and received $150 — the need stays open for additional responders to cover the remaining amount.
+      </div>
+    </details>
+
+    <p class="faq-category">Donations & Funding</p>
+
+    <details>
+      <summary>When I fund a request, where does the money go? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Monetary donations are coordinated through the submitting organization or connector. MigrantPortal does not process payments directly. The connector will provide instructions for how to transfer funds safely.
+      </div>
+    </details>
+
+    <p class="faq-category">Volunteering & Shifts</p>
+
+    <details>
+      <summary>How do volunteer shifts work? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Organizations post volunteer shifts for ongoing events (food distributions, ESL classes, etc.). You can sign up via the Schedule tab in the app. Your hours are logged automatically once a shift is marked complete.
+      </div>
+    </details>
+
+    <details>
+      <summary>What am I responsible for when I respond? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        You commit to following through on what you offered — whether that's delivering items, providing a service, or donating funds. If your situation changes, please communicate promptly through the chat so the family isn't left without help.
+      </div>
+    </details>
+
+    <p class="faq-category">Privacy & Safety</p>
+
+    <details>
+      <summary>How is my personal information used? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Your name and organization are shared with the need's connector when you respond, so they can coordinate the handoff. Your contact details are never shared publicly. Review our full <a href="privacy.html">Privacy Policy</a>.
+      </div>
+    </details>
+
+    <details>
+      <summary>Is family data kept confidential? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Yes. MigrantPortal does not display family names, addresses, or contact information publicly. Only the connector and accepted responders can see coordination details. Connectors must agree to a data confidentiality policy at sign-up.
+      </div>
+    </details>
+
+    <p class="faq-category">Support</p>
+
+    <details>
+      <summary>I have more questions — who do I contact? <span class="arrow">▾</span></summary>
+      <div class="faq-answer">
+        Reach out to your local organization coordinator, or tap the chat icon on any need to message the submitting connector. For platform issues, email <a href="mailto:support@migrantportal.com">support@migrantportal.com</a>.
+      </div>
+    </details>
+
+  </div>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <h2>Ready to make a difference?</h2>
+    <p>Join the network of volunteers and organizations helping migrant families today.</p>
+    <a href="signup.html" class="btn-white">Create Free Account</a>
+    <a href="how-migrantportal-works.html" class="btn-outline-white">See How It Works</a>
+  </section>
+
+  <footer>
+    <span>MigrantPortal © 2026</span>
+    <span>
+      <a href="how-migrantportal-works.html">How It Works</a>
+      <a href="faq.html">FAQ</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="mailto:support@migrantportal.com">Contact</a>
+    </span>
+  </footer>
+
+</body>
+</html>
