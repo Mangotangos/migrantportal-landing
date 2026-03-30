@@ -393,9 +393,9 @@
     .newsletter-submit:hover { background: var(--orange-d); }
 
     /* ─── FOOTER ───────────────────────────────── */
-    .footer { background: white; }
+    .footer { background: #0D1B2A; }
     .footer-trusted {
-      border-top: 1px solid var(--gray-200);
+      border-top: 1px solid rgba(255,255,255,0.08);
       padding: 48px 40px;
     }
     .footer-trusted-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
@@ -403,19 +403,20 @@
       font-family: 'Montserrat', sans-serif;
       font-size: 11px; font-weight: 700;
       letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--gray-500); margin-bottom: 32px;
+      color: rgba(255,255,255,0.45); margin-bottom: 32px;
     }
     .trusted-logos {
       display: flex; gap: 32px; align-items: center;
       justify-content: center; flex-wrap: wrap;
     }
     .trusted-logo {
-      padding: 10px 24px; border: 1px solid var(--gray-200); border-radius: 8px;
-      font-size: 13px; font-weight: 600; color: var(--gray-500);
+      padding: 10px 24px; border: 1px solid rgba(0,157,165,0.4);
+      border-radius: 8px; background: rgba(0,157,165,0.08);
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75);
       letter-spacing: 0.04em;
     }
     .footer-main {
-      border-top: 1px solid var(--gray-200);
+      border-top: 1px solid rgba(255,255,255,0.08);
       padding: 48px 40px;
     }
     .footer-main-inner {
@@ -426,33 +427,33 @@
     .footer-brand-logo {
       display: flex; align-items: center; gap: 10px;
       font-family: 'Montserrat', sans-serif;
-      font-weight: 800; font-size: 17px; color: var(--text);
+      font-weight: 800; font-size: 17px; color: #fff;
       margin-bottom: 12px;
     }
     .footer-brand-logo-icon {
       width: 30px; height: 30px; border-radius: 6px;
       object-fit: contain;
     }
-    .footer-brand p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
     .footer-stats { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
     .footer-stat {}
     .footer-stat-num {
       font-family: 'Montserrat', sans-serif;
-      font-size: 28px; font-weight: 800; color: var(--text);
+      font-size: 28px; font-weight: 800; color: #fff;
     }
-    .footer-stat-label { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+    .footer-stat-label { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; }
     .footer-col { min-width: 140px; }
     .footer-col-title {
       font-family: 'Montserrat', sans-serif;
       font-size: 12px; font-weight: 700;
       letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--text); margin-bottom: 14px;
+      color: #fff; margin-bottom: 14px;
     }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-    .footer-col ul li a { font-size: 14px; color: var(--gray-500); transition: color 0.15s; }
-    .footer-col ul li a:hover { color: var(--teal); }
+    .footer-col ul li a { font-size: 14px; color: rgba(255,255,255,0.55); transition: color 0.15s; }
+    .footer-col ul li a:hover { color: #fff; }
     .footer-bottom {
-      border-top: 1px solid var(--gray-200);
+      border-top: 1px solid rgba(255,255,255,0.08);
       padding: 20px 40px;
     }
     .footer-bottom-inner {
@@ -463,15 +464,15 @@
     .footer-social { display: flex; gap: 10px; }
     .footer-social a {
       width: 34px; height: 34px; border-radius: 7px;
-      background: var(--gray-100);
+      background: rgba(255,255,255,0.08);
       display: flex; align-items: center; justify-content: center;
-      color: var(--gray-500); transition: background 0.15s, color 0.15s;
+      color: rgba(255,255,255,0.55); transition: background 0.15s, color 0.15s;
     }
     .footer-social a:hover { background: var(--teal); color: white; }
     .footer-legal { display: flex; gap: 16px; }
-    .footer-legal a { font-size: 12px; color: var(--gray-500); }
-    .footer-legal a:hover { color: var(--teal); }
-    .footer-copy { font-size: 12px; color: #bbb; }
+    .footer-legal a { font-size: 12px; color: rgba(255,255,255,0.45); }
+    .footer-legal a:hover { color: #fff; }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
 
     /* ─── RESPONSIVE ────────────────────────────── */
     @media (max-width: 800px) {
