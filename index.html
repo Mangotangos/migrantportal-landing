@@ -176,8 +176,8 @@
     }
     .hero-action-body a:hover { color: var(--teal-d); }
     .hero-visual {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      min-width: 280px;
+      flex: 1; display: flex; align-items: flex-end; justify-content: center;
+      min-width: 280px; align-self: flex-end;
     }
     /* ─── HERO MOCKUP ANIMATIONS ───────────────── */
     @keyframes heroFadeIn {
@@ -200,6 +200,7 @@
     .hero-mockup {
       position: relative; width: 100%; max-width: 580px;
       animation: heroFadeIn 0.8s ease-out both;
+      padding-bottom: 24px;
     }
     /* Desktop mockup */
     .mockup-desktop {
@@ -850,9 +851,9 @@
       <div class="vol-cards">
         <div class="vol-card card-orange">
           <div style="font-size:48px;margin-bottom:12px;">🌐</div>
-          <h3>Connector</h3>
+          <h3>Navigator</h3>
           <p>Know a migrant family in need? Submit their needs directly and connect them with responders in your community.</p>
-          <a href="https://migrantportal.com/app" class="vol-btn">Join as Connector</a>
+          <a href="https://migrantportal.com/app" class="vol-btn">Join as Navigator</a>
         </div>
         <div class="vol-card card-teal">
           <div style="font-size:48px;margin-bottom:12px;">🙌</div>
