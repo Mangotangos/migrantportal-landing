@@ -235,6 +235,8 @@
     }
     .btn-home:hover { background: var(--teal-d); }
 
+    .str-seg { flex: 1; height: 5px; border-radius: 999px; background: var(--gray-200); transition: background 0.2s; }
+
     @media (max-width: 600px) {
       nav { padding: 0 20px; }
       .wizard { padding: 28px 24px 32px; }
@@ -458,7 +460,16 @@
         <div class="fields">
           <div class="field">
             <label for="pw">Password</label>
-            <input type="password" id="pw" placeholder="At least 8 characters" oninput="checkStep5()" />
+            <input type="password" id="pw" placeholder="At least 8 characters" oninput="checkStep5(); updateStrength(this.value)" />
+            <div style="margin-top:8px;">
+              <div style="display:flex;gap:4px;margin-bottom:4px;">
+                <div class="str-seg" id="str-1"></div>
+                <div class="str-seg" id="str-2"></div>
+                <div class="str-seg" id="str-3"></div>
+                <div class="str-seg" id="str-4"></div>
+              </div>
+              <span id="str-label" style="font-size:12px;color:var(--gray-400)"></span>
+            </div>
           </div>
           <div class="field">
             <label for="pw2">Confirm password</label>
@@ -665,6 +676,22 @@
     }
 
     /* ── Step 5: Password ────────────────────── */
+    function updateStrength(pw) {
+      let score = 0;
+      if (pw.length >= 8)  score++;
+      if (pw.length >= 12) score++;
+      if (/[0-9]/.test(pw) || /[^a-zA-Z0-9]/.test(pw)) score++;
+      if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+      const colors = ['', '#ef4444', '#f97316', '#eab308', '#22c55e'];
+      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById('str-' + i).style.background = i <= score ? colors[score] : 'var(--gray-200)';
+      }
+      const lbl = document.getElementById('str-label');
+      lbl.textContent = pw.length ? labels[score] : '';
+      lbl.style.color = colors[score] || 'var(--gray-400)';
+    }
+
     function checkStep5() {
       const pw  = document.getElementById('pw').value;
       const pw2 = document.getElementById('pw2').value;
