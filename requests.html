@@ -764,7 +764,7 @@
       markers.length = 0;
 
       // Build query params from current filter state
-      const params = new URLSearchParams({ sort: activeSort });
+      const params = new URLSearchParams({ sort: activeSort, status: 'active' });
       if (activeCategory) params.set('category', activeCategory);
       if (activeSearch.trim()) params.set('search', activeSearch.trim());
       const cat = document.getElementById('filt-category')?.value;

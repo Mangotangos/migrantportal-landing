@@ -426,7 +426,7 @@
         <div class="card" id="chat-card" style="display:none">
           <div class="section-heading" style="margin-bottom:12px">
             Team Chat
-            <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:6px">Connector + responders only</span>
+            <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:6px">Navigator + responders only</span>
           </div>
           <div id="chat-messages" style="display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto;margin-bottom:12px;padding-right:4px"></div>
           <div style="display:flex;gap:8px">
@@ -541,8 +541,8 @@
           <div id="donor-impact-body" style="font-size:12px;color:var(--gray-600);margin-top:8px"></div>
         </div>
 
-        <!-- CONNECTOR FUNDS PANEL (visible only to the connector of this need) -->
-        <div class="card" id="connector-funds-card" style="margin-top:14px;display:none;border:2px solid #009DA520">
+        <!-- NAVIGATOR FUNDS PANEL (visible only to the navigator of this need) -->
+        <div class="card" id="navigator-funds-card" style="margin-top:14px;display:none;border:2px solid #009DA520">
           <div style="font-weight:700;font-size:14px;margin-bottom:2px">💰 Donated Funds</div>
           <div id="funds-balance" style="font-size:12px;color:var(--gray-600);margin-bottom:12px">Loading balance…</div>
           <div id="funds-available-box" style="display:none;background:#F0FDF4;border:1px solid #86EFAC;border-radius:8px;padding:12px;margin-bottom:12px">
@@ -622,8 +622,8 @@
     function renderPanel(need, alreadyResponded) {
       const panel = document.getElementById('panel-content');
       const role = currentUser?.role;
-      const isConnector = role === 'connector' || role === 'admin';
-      const isOwner = isConnector && (need.connector_org || role === 'admin');
+      const isNavigator = role === 'navigator' || role === 'admin';
+      const isOwner = isNavigator && (need.navigator_org || role === 'admin');
 
       if (!currentUser) {
         panel.innerHTML = `
@@ -699,10 +699,10 @@
         return;
       }
 
-      // Connector / admin: fulfill panel
-      if (isConnector) {
+      // Navigator / admin: fulfill panel
+      if (isNavigator) {
         panel.innerHTML = `
-          <div style="font-weight:700;font-size:14px;margin-bottom:10px">Connector Actions</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:10px">Navigator Actions</div>
           <div style="font-size:12px;color:var(--gray-600);margin-bottom:10px">Response count: <strong>${need.response_count || 0}</strong></div>
 
           <div style="font-weight:600;font-size:13px;margin-bottom:8px">Who Responded</div>
@@ -769,7 +769,7 @@
       if (type === 'donate') {
         sub.innerHTML = `
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;color:#15803d">
-            💳 You'll be taken to our secure donation page where you can choose an amount. Funds go into escrow and the connector can request disbursement.
+            💳 You'll be taken to our secure donation page where you can choose an amount. Funds go into escrow and the navigator can request disbursement.
           </div>
           <a href="${window._currentNeedDonateUrl || '#'}"
             style="display:block;width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;text-align:center;text-decoration:none;">
@@ -785,7 +785,7 @@
                 <span>${i.label} <span style="color:var(--gray-400)">(${i.amount_received}/${i.amount_needed} ${i.unit})</span></span>
               </label>`).join('') : '<div style="color:var(--gray-400);font-size:12px">All items are covered — consider donating instead!</div>'}
           </div>
-          <textarea id="respond-msg" placeholder="Optional message to connector…" style="width:100%;height:60px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
+          <textarea id="respond-msg" placeholder="Optional message to navigator…" style="width:100%;height:60px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
           <button onclick="submitResponse()" style="width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Yes, I Can Help!</button>`;
       } else if (type === 'service') {
         sub.innerHTML = `
@@ -795,7 +795,7 @@
       } else if (type === 'volunteer') {
         sub.innerHTML = `
           <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;color:#1d4ed8">
-            ⏰ Volunteer shifts are coordinated through the app. Submit your offer and the connector will reach out with details.
+            ⏰ Volunteer shifts are coordinated through the app. Submit your offer and the navigator will reach out with details.
           </div>
           <textarea id="respond-msg" placeholder="When are you available? Any skills to mention?" style="width:100%;height:70px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
           <button onclick="submitResponse()" style="width:100%;background:#7c3aed;color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Sign Up to Volunteer</button>`;
@@ -808,7 +808,7 @@
       const msg = document.getElementById('respond-msg')?.value.trim() || '';
       try {
         await apiPost(`/needs/${needId}/respond`, { item_ids: checkedIds, message: msg, help_type: selectedHelpType });
-        toast('Response submitted! The connector will be notified.');
+        toast('Response submitted! The navigator will be notified.');
         renderPanel(currentNeed, true);
       } catch(e) { toast(e.message, true); }
     }
@@ -839,7 +839,7 @@
       } catch(e) {}
     }
 
-    // ── Load responders (connector/admin only)
+    // ── Load responders (navigator/admin only)
     async function loadResponders() {
       const el = document.getElementById('responders-list');
       if (!el) return;
@@ -853,9 +853,9 @@
         const STATUS_COLOR = { committed: '#92400E', delivered: '#1D4ED8', confirmed: '#15803D' };
         const STATUS_BG    = { committed: '#FEF3C7', delivered: '#DBEAFE', confirmed: '#DCFCE7' };
 
-        // Fetch existing ratings (connector/admin only, non-fatal)
+        // Fetch existing ratings (navigator/admin only, non-fatal)
         let existingRatings = {};
-        const canRate = user && (user.role === 'connector' || user.role === 'admin');
+        const canRate = user && (user.role === 'navigator' || user.role === 'admin');
         if (canRate) {
           try {
             const ratingsData = await apiGet(`/ratings/need/${needId}`);
@@ -944,7 +944,7 @@
       if (!el || !currentUser) return;
       try {
         const photos = await apiGet(`/needs/${needId}/photos`);
-        const isOwner = currentUser.role === 'connector' && need.connector_id === currentUser.id;
+        const isOwner = currentUser.role === 'navigator' && need.navigator_id === currentUser.id;
         const canUpload = isOwner || currentUser.role === 'admin';
 
         const strip = photos.length ? `
@@ -1101,7 +1101,7 @@
       } catch(e) { toast(e.message, true); }
     }
 
-    // ── Edit need (connector only)
+    // ── Edit need (navigator only)
     function showEditModal() {
       if (!currentNeed) return;
       document.getElementById('edit-title').value = currentNeed.title || '';
@@ -1248,7 +1248,7 @@
       }
     }
 
-    // ── Connector funds panel
+    // ── Navigator funds panel
     let selectedFundsCents = 0;
     function selectFundsAmt(btn, cents) {
       document.querySelectorAll('.funds-btn').forEach(b => b.style.background = '');
@@ -1258,9 +1258,9 @@
       document.getElementById('funds-custom-amt').value = '';
     }
 
-    async function loadConnectorFundsPanel(need) {
-      if (!currentUser || currentUser.id !== need.connector_id) return;
-      const card = document.getElementById('connector-funds-card');
+    async function loadNavigatorFundsPanel(need) {
+      if (!currentUser || currentUser.id !== need.navigator_id) return;
+      const card = document.getElementById('navigator-funds-card');
       if (card) card.style.display = '';
       try {
         const b = await apiGet(`/disbursements/need/${needId}/balance`);
@@ -1311,7 +1311,7 @@
         await apiPost('/disbursements', { need_id: needId, amount_cents: cents, method: 'gift_card', note });
         toast('Disbursement request submitted! Admin will review within 24 hrs.');
         document.getElementById('funds-request-form').style.display = 'none';
-        loadConnectorFundsPanel(currentNeed);
+        loadNavigatorFundsPanel(currentNeed);
         loadDonationTotal();
       } catch(e) { toast(e.message, true); }
     }
@@ -1331,7 +1331,7 @@
         const data = await r.json();
         if (!r.ok) throw new Error(data.detail || 'Upload failed');
         toast('Receipt uploaded! Donors will be notified. ✅');
-        loadConnectorFundsPanel(currentNeed);
+        loadNavigatorFundsPanel(currentNeed);
       } catch(e) { toast(e.message, true); }
     }
 
@@ -1350,7 +1350,12 @@
 
     // ── Load need
     async function loadNeed() {
-      if (!needId) return; // keep static demo
+      if (!needId) {
+        // No ?id= param — clear sidebar Loading… placeholder
+        const p = document.getElementById('panel-content');
+        if (p) p.innerHTML = '<div style="color:var(--gray-400);font-size:13px;text-align:center;padding:20px 0">No need selected. <a href="requests.html">Browse open needs →</a></div>';
+        return; // keep static demo
+      }
 
       try {
         const need = await apiGet('/needs/' + needId);
@@ -1426,20 +1431,20 @@
           p.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests.html">open needs</a>.</div>';
         }
         initBookmarkState();
-        // Load connector funds panel and refresh donation progress bar
-        loadConnectorFundsPanel(need);
+        // Load navigator funds panel and refresh donation progress bar
+        loadNavigatorFundsPanel(need);
         loadDonationTotal();
 
-        // Chat — visible to connector + responders who responded
+        // Chat — visible to navigator + responders who responded
         const chatAuthorized = currentUser && (
           currentUser.role === 'admin' ||
-          currentUser.role === 'connector' ||
+          currentUser.role === 'navigator' ||
           alreadyResponded
         );
         initChat(chatAuthorized);
 
-        // Donations sidebar card (active needs only, non-connector)
-        if (need.status === 'active' && currentUser?.role !== 'connector' && currentUser?.role !== 'admin') {
+        // Donations sidebar card (active needs only, non-navigator)
+        if (need.status === 'active' && currentUser?.role !== 'navigator' && currentUser?.role !== 'admin') {
           document.getElementById('donate-card').style.display = '';
           document.querySelector('.amt-btn[onclick*="2500"]')?.classList.add('selected');
           loadDonationTotal();

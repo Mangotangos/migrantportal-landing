@@ -92,6 +92,17 @@
     // Redirect if already logged in
     if (localStorage.getItem('mp_token')) window.location.href = 'dashboard.html';
 
+    // BUG-014: Prevent auto-submit when browser fills saved credentials
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          // Only allow submission triggered by explicit user action (click/keyboard)
+          if (!e.isTrusted) { e.preventDefault(); }
+        });
+      }
+    });
+
     function togglePw() {
       const inp = document.getElementById('password');
       const btn = inp.nextElementSibling;
