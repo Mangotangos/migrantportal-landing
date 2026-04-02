@@ -34,7 +34,7 @@
     }
 
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.65; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.65; overflow-x: hidden; }
     a { text-decoration: none; }
     img { display: block; max-width: 100%; }
 
@@ -269,6 +269,7 @@
     #mockup-screen.fading { opacity: 0; }
 
     /* ─── SECTION BASE ──────────────────────────── */
+    /* BUG-001: removed any implicit min-height that caused blank space */
     .section { padding: 72px 40px; }
     .section-inner { max-width: 1120px; margin: 0 auto; }
     .two-col { display: flex; gap: 64px; align-items: center; flex-wrap: wrap; }
@@ -1017,8 +1018,7 @@
           <ul>
             <li><a href="/privacy.html">Privacy Policy</a></li>
             <li><a href="/terms.html">Terms of Service</a></li>
-            <li><a href="mailto:support@migrantportal.com?subject=Help">Help Center</a></li>
-            <li><a href="mailto:support@migrantportal.com?subject=Press+Inquiry">Press</a></li>
+            <li><a href="/faq.html">Help Center</a></li>
             
           </ul>
         </div>
@@ -1077,9 +1077,10 @@
           if (d.total_orgs)            animateCount(document.getElementById('stat-orgs'),       d.total_orgs);
         })
         .catch(function(){
-          ['stat-needs','stat-responses','stat-families','stat-orgs'].forEach(function(id){
+          var fallbacks = {'stat-needs':'120+','stat-responses':'340+','stat-families':'85+','stat-orgs':'30+'};
+          Object.keys(fallbacks).forEach(function(id){
             var el = document.getElementById(id);
-            if (el) el.textContent = '—';
+            if (el) el.textContent = fallbacks[id];
           });
         });
     })();

@@ -347,7 +347,7 @@
   </div>
 
   <!-- ANNOUNCEMENT BANNER -->
-  <div id="ann-banner" style="display:none;padding:0 20px;margin-top:12px;display:flex;flex-direction:column;gap:8px"></div>
+  <div id="ann-banner" style="display:none;padding:0 20px;margin-top:12px;flex-direction:column;gap:8px"></div>
 
   <div class="page">
 
@@ -374,7 +374,7 @@
     </div>
 
     <!-- TWO-COL -->
-    <div class="two-col">
+    <div id="main-two-col" class="two-col">
 
       <!-- ── MAIN COL ──────────────────────── -->
       <div class="col-main">
@@ -810,6 +810,9 @@
         const el = document.getElementById('tab-' + id);
         if (el) el.classList.toggle('active', id === t);
       });
+      // BUG-002: hide/show main two-col so hidden sections don't consume scroll height
+      const mainCol = document.getElementById('main-two-col');
+      if (mainCol) mainCol.style.display = EXTRA_SECTIONS.includes(t) ? 'none' : 'flex';
       EXTRA_SECTIONS.forEach(s => {
         const el = document.getElementById(s + '-section');
         if (el) el.style.display = s === t ? '' : 'none';

@@ -135,12 +135,12 @@
       background: var(--teal-lt); padding: 4px 12px; border-radius: 20px;
     }
 
-    .step-connector {
+    .step-navigator {
       position: absolute; left: 110px; top: 180px;
       width: 2px; height: 64px; background: var(--gray-200);
     }
-    .step:nth-child(even) .step-connector { left: auto; right: 110px; }
-    .step:last-child .step-connector { display: none; }
+    .step:nth-child(even) .step-navigator { left: auto; right: 110px; }
+    .step:last-child .step-navigator { display: none; }
 
     .step-content { padding-top: 8px; }
     .step-tag {
@@ -269,7 +269,7 @@
       .hero h1 { font-size: 32px; }
       .step, .step:nth-child(even) { grid-template-columns: 1fr; }
       .step:nth-child(even) .step-illus, .step:nth-child(even) .step-content { order: unset; }
-      .step-connector { display: none; }
+      .step-navigator { display: none; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .roles-grid { grid-template-columns: 1fr; }
       nav .nav-links { display: none; }
@@ -290,7 +290,7 @@
     <div class="nav-links">
       <a href="how-migrantportal-works.html" class="active">How It Works</a>
       <a href="requests.html">Open Requests</a>
-      <a href="mailto:support@migrantportal.com?subject=Partner+Inquiry">For Organizations</a>
+      <a href="mailto:support@migrantportal.com?subject=Partner+Inquiry">Partner With Us</a>
       <a href="faq.html">FAQ</a>
       <a href="mailto:support@migrantportal.com?subject=General+Inquiry">Contact</a>
     </div>
@@ -305,10 +305,7 @@
     <div class="hero-btns">
       <a href="signup.html" class="btn-primary">Join the Network</a>
       <a href="mailto:support@migrantportal.com?subject=How+It+Works+Video+Request" class="btn-video">
-        <div class="play-circle">
-          <svg width="10" height="12" viewBox="0 0 10 12" fill="white"><path d="M0 0l10 6L0 12V0z"/></svg>
-        </div>
-        Watch How It Works
+        Request a Demo
       </a>
     </div>
   </section>
@@ -319,7 +316,7 @@
 
     <!-- Step 1 -->
     <div class="step">
-      <div class="step-connector"></div>
+      <div class="step-navigator"></div>
       <div class="step-illus">
         <div class="illus-box c1">👨‍👩‍👧</div>
         <span class="step-num">Step 1</span>
@@ -329,7 +326,7 @@
         <h2><em>A migrant family in need</em> is identified by a trusted professional</h2>
         <p class="step-teaser">Caseworkers, teachers, and social workers serve on the front lines — and they see needs up close.</p>
         <div class="step-body" id="body1">
-          Every community has professionals working in schools, child welfare, healthcare, and community centers who encounter migrant families daily. These connectors have first-hand knowledge of the critical and urgent needs that stand between a family and stability — from school enrollment to housing to basic necessities. MigrantPortal gives them a trusted channel to act on what they see.
+          Every community has professionals working in schools, child welfare, healthcare, and community centers who encounter migrant families daily. These navigators have first-hand knowledge of the critical and urgent needs that stand between a family and stability — from school enrollment to housing to basic necessities. MigrantPortal gives them a trusted channel to act on what they see.
         </div>
         <button class="read-more" id="btn1" onclick="toggleStep(1)">
           Read more <span class="arrow">▾</span>
@@ -339,17 +336,17 @@
 
     <!-- Step 2 -->
     <div class="step">
-      <div class="step-connector"></div>
+      <div class="step-navigator"></div>
       <div class="step-illus">
         <div class="illus-box c2">📋</div>
         <span class="step-num">Step 2</span>
       </div>
       <div class="step-content">
         <div class="step-tag"><span>2</span> Submitting Needs</div>
-        <h2><em>The connector</em> vets and submits the family's need</h2>
+        <h2><em>The navigator</em> vets and submits the family's need</h2>
         <p class="step-teaser">Before a need is published, it goes through a thorough verification process.</p>
         <div class="step-body" id="body2">
-          Connectors — caseworkers, social workers, teachers, and agency staff — submit needs directly into MigrantPortal on behalf of the families they serve. Each request is reviewed to ensure it is accurate, legitimate, and genuinely important to the family's wellbeing. This layer of trust protects families and ensures responders can give with confidence. Family privacy is protected throughout.
+          Navigators — caseworkers, social workers, teachers, and agency staff — submit needs directly into MigrantPortal on behalf of the families they serve. Each request is reviewed to ensure it is accurate, legitimate, and genuinely important to the family's wellbeing. This layer of trust protects families and ensures responders can give with confidence. Family privacy is protected throughout.
         </div>
         <button class="read-more" id="btn2" onclick="toggleStep(2)">
           Read more <span class="arrow">▾</span>
@@ -359,7 +356,7 @@
 
     <!-- Step 3 -->
     <div class="step">
-      <div class="step-connector"></div>
+      <div class="step-navigator"></div>
       <div class="step-illus">
         <div class="illus-box c3">📣</div>
         <span class="step-num">Step 3</span>
@@ -388,7 +385,7 @@
         <h2>Faith Communities and community partners ensure <em>the family is helped</em></h2>
         <p class="step-teaser">Real people show up. Real needs get met. Families experience genuine community care.</p>
         <div class="step-body" id="body4">
-          When a faith community or volunteer commits to a need, MigrantPortal coordinates the delivery of support directly to the family — tracked through the platform so connectors know the need is closed. Every met need is a real story of a family receiving dignity, safety, and hope. The connector closes the request, and the cycle of care continues for the next family in need.
+          When a faith community or volunteer commits to a need, MigrantPortal coordinates the delivery of support directly to the family — tracked through the platform so navigators know the need is closed. Every met need is a real story of a family receiving dignity, safety, and hope. The navigator closes the request, and the cycle of care continues for the next family in need.
         </div>
         <button class="read-more" id="btn4" onclick="toggleStep(4)">
           Read more <span class="arrow">▾</span>
@@ -407,7 +404,7 @@
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-num" id="stat-needs">0</div>
-        <div class="stat-label">Needs submitted by connectors</div>
+        <div class="stat-label">Needs submitted by navigators</div>
       </div>
       <div class="stat-card">
         <div class="stat-num" id="stat-rate">0%</div>
@@ -458,9 +455,9 @@
 
       <div class="role-card">
         <div class="role-icon" style="background:#fff3e6;">🏫</div>
-        <h3>Connectors</h3>
+        <h3>Navigators</h3>
         <p>Caseworkers, teachers, and social workers who submit verified needs on behalf of migrant families they serve.</p>
-        <a href="signup.html" class="role-link">Join as a Connector →</a>
+        <a href="signup.html" class="role-link">Join as a Navigator →</a>
       </div>
 
       <div class="role-card">
