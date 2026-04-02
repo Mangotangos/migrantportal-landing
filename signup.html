@@ -113,44 +113,45 @@
       max-width: 640px;
     }
 
-    /* ─── ROLE ROWS ─────────────────────────────── */
-    .role-list { border-top: 1px solid var(--gray-200); }
-    .role-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 28px 0;
-      border-bottom: 1px solid var(--gray-200);
-      cursor: pointer;
-      transition: background 0.15s;
-      text-decoration: none;
-      color: var(--text);
+    /* ─── ROLE CARDS ─────────────────────────────── */
+    .role-cards {
+      display: flex; gap: 24px; flex-wrap: wrap;
     }
-    .role-item:hover { background: var(--gray-100); margin: 0 -24px; padding-left: 24px; padding-right: 24px; }
-    .role-text {
-      font-size: clamp(15px, 2.2vw, 19px);
-      font-weight: 500;
-      line-height: 1.4;
-      flex: 1;
+    .role-card {
+      flex: 1; min-width: 260px;
+      border-radius: 16px;
+      padding: 40px 32px 36px;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
-    .role-text strong {
+    .role-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
+    .role-card.navigator { background: #fdf0ec; }
+    .role-card.responder { background: #e6f5f6; }
+    .role-card-icon { font-size: 48px; margin-bottom: 20px; }
+    .role-card h2 {
       font-family: 'Montserrat', sans-serif;
-      font-weight: 800;
-      color: var(--text);
+      font-size: 22px; font-weight: 800; margin-bottom: 12px;
     }
-    .role-arrow {
-      flex-shrink: 0;
-      margin-left: 24px;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: var(--gray-100);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--gray-500);
-      transition: background 0.15s, color 0.15s;
+    .role-card.navigator h2 { color: #b83d10; }
+    .role-card.responder h2 { color: #0D7A8A; }
+    .role-card p {
+      font-size: 14px; color: #555; line-height: 1.65;
+      margin-bottom: 28px; flex: 1;
     }
-    .role-item:hover .role-arrow {
-      background: var(--teal);
-      color: white;
+    .role-card-btn {
+      display: inline-block;
+      padding: 12px 28px; border-radius: 999px;
+      font-size: 14px; font-weight: 700;
+      color: white; text-decoration: none;
+      transition: opacity 0.15s;
     }
-    .role-arrow svg { width: 18px; height: 18px; }
+    .role-card-btn:hover { opacity: 0.88; }
+    .role-card.navigator .role-card-btn { background: #b83d10; }
+    .role-card.responder .role-card-btn { background: #0D7A8A; }
+    @media (max-width: 560px) {
+      .role-cards { flex-direction: column; }
+    }
 
     /* ─── FOOTER ────────────────────────────────── */
     .footer { background: white; }
@@ -281,50 +282,23 @@
 
   <!-- MAIN CONTENT -->
   <main>
-    <h1>Ready to get started? Tell us how you'd like to join.</h1>
+    <h1>Ready to get started?</h1>
+    <p style="font-size:16px;color:#555;margin-top:-32px;margin-bottom:40px;">Choose the role that fits how you want to help.</p>
 
-    <div class="role-list" role="list">
+    <div class="role-cards">
 
-      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Individual+Helper" class="role-item" role="listitem">
-        <span class="role-text">AS AN <strong>INDIVIDUAL</strong> TO MEET NEEDS</span>
-        <span class="role-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </span>
+      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Navigator" class="role-card navigator">
+        <div class="role-card-icon">🌐</div>
+        <h2>Navigator</h2>
+        <p>Know a migrant family in need? Submit their needs directly and connect them with responders in your community.</p>
+        <span class="role-card-btn">Join as Navigator</span>
       </a>
 
-      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Church" class="role-item" role="listitem">
-        <span class="role-text">AS A <strong>CHURCH</strong> TO MEET NEEDS</span>
-        <span class="role-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </span>
-      </a>
-
-      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Community+Organization" class="role-item" role="listitem">
-        <span class="role-text">AS A <strong>COMMUNITY ORGANIZATION</strong> TO MEET NEEDS</span>
-        <span class="role-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </span>
-      </a>
-
-      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Caseworker" class="role-item" role="listitem">
-        <span class="role-text">AS A <strong>CASEWORKER</strong> WHOSE AGENCY HAS ALREADY ENROLLED</span>
-        <span class="role-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </span>
-      </a>
-
-      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Requesting+Agency" class="role-item" role="listitem">
-        <span class="role-text">AS A <strong>REQUESTING AGENCY</strong> TO SUBMIT NEEDS</span>
-        <span class="role-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </span>
-      </a>
-
-      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Implementing+Partner" class="role-item" role="listitem">
-        <span class="role-text">AS AN <strong>IMPLEMENTING PARTNER</strong> TO LAUNCH A NETWORK</span>
-        <span class="role-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </span>
+      <a href="mailto:support@migrantportal.com?subject=Sign+Up+as+Responder" class="role-card responder">
+        <div class="role-card-icon">🙌</div>
+        <h2>Responder</h2>
+        <p>Are you a faith community, volunteer, or organization? Browse real needs and respond with your time, resources, or skills.</p>
+        <span class="role-card-btn">Join as Responder</span>
       </a>
 
     </div>
@@ -336,7 +310,7 @@
       <div class="footer-trusted-inner">
         <h3>Supported By:</h3>
         <div class="trusted-logos">
-          <div class="trusted-logo">Local Churches</div>
+          <div class="trusted-logo">Local Faith Communities</div>
           <div class="trusted-logo">Social Workers</div>
           <div class="trusted-logo">Community Orgs</div>
           <div class="trusted-logo">Faith Communities</div>
@@ -351,7 +325,7 @@
             <img src="logo.png" class="footer-brand-logo-icon" alt="MigrantPortal" />
             MigrantPortal
           </div>
-          <p>Connecting migrant families with churches, volunteers, and donors — one need at a time.</p>
+          <p>Connecting migrant families with faith communities, volunteers, and donors — one need at a time.</p>
         </div>
         <div class="footer-col">
           <div class="footer-col-title">About</div>
