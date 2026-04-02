@@ -1,4 +1,4 @@
-const API = 'https://migrant-portal-production-3826.up.railway.app';
+const API = 'https://migrant-portal-production.up.railway.app';
 
 async function apiPost(path, body) {
   const token = localStorage.getItem('mp_token');
