@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Submitted — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --teal: #0D7A8A; --text: #111827; --muted: #6b7280; --border: #e5e7eb; }
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { background: white; border-bottom: 1px solid var(--border); height: 56px; display: flex; align-items: center; padding: 0 32px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 30px; height: 30px; object-fit: contain; }
+    .nav-logo span { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--text); }
+
+    .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px 24px; }
+    .card {
+      background: white; border-radius: 16px; padding: 48px 40px;
+      width: 100%; max-width: 480px; text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    .icon { font-size: 64px; margin-bottom: 24px; }
+    h1 { font-family: 'Montserrat', sans-serif; font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 12px; }
+    .name { color: var(--teal); }
+    p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+
+    .steps {
+      background: #f0f9fa; border-radius: 12px; padding: 20px 24px;
+      margin: 24px 0; text-align: left;
+    }
+    .steps h3 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .step-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; font-size: 14px; color: var(--muted); line-height: 1.5; }
+    .step-row:last-child { margin-bottom: 0; }
+    .step-num { background: var(--teal); color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+    .btn { display: block; background: var(--teal); color: white; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px; border-radius: 999px; transition: opacity 0.15s; margin-top: 8px; }
+    .btn:hover { opacity: 0.88; }
+    .logout-link { display: block; margin-top: 16px; font-size: 13px; color: var(--muted); cursor: pointer; }
+    .logout-link:hover { color: var(--teal); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="logo.png" alt="MigrantPortal" />
+      <span>MigrantPortal</span>
+    </a>
+  </nav>
+
+  <div class="page">
+    <div class="card">
+      <div class="icon">⏳</div>
+      <h1>Application Submitted, <span class="name" id="user-name">Friend</span>!</h1>
+      <p>Your account is <strong>pending admin review</strong>. We verify all users to protect the migrant families we serve.</p>
+
+      <div class="steps">
+        <h3>What happens next</h3>
+        <div class="step-row">
+          <div class="step-num">1</div>
+          <div>Our team reviews your application (usually 1–2 business days)</div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">2</div>
+          <div>You'll receive an email at <strong id="user-email">your email</strong> once approved</div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">3</div>
+          <div>Sign in to access your dashboard and start serving</div>
+        </div>
+      </div>
+
+      <p style="font-size:13px">Questions? Email us at <a href="mailto:support@migrantportal.com" style="color:var(--teal)">support@migrantportal.com</a></p>
+
+      <a href="/" class="btn">Back to Homepage</a>
+      <span class="logout-link" onclick="logout()">Sign out</span>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    const user = getUser();
+    if (user) {
+      if (user.name) document.getElementById('user-name').textContent = user.name.split(' ')[0];
+      if (user.email) document.getElementById('user-email').textContent = user.email;
+      if (user.status === 'approved') {
+        window.location.href = user.role === 'navigator' ? '/navigator.html' : '/dashboard.html';
+      }
+    }
+  </script>
+</body>
+</html>

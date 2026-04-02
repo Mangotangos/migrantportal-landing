@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #0D7A8A;
+      --orange: #E85D26;
+      --text: #111827;
+      --muted: #6b7280;
+    }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      display: flex; flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 32px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo img { width: 32px; height: 32px; object-fit: contain; }
+    .logo-text { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); }
+    .sign-in-link { font-size: 14px; font-weight: 600; color: var(--teal); text-decoration: none; }
+    .sign-in-link:hover { text-decoration: underline; }
+
+    /* ── Slides ── */
+    .slides-wrap { overflow: hidden; flex: 1; }
+    .slides-track {
+      display: flex;
+      transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+      height: 100%;
+    }
+    .slide {
+      min-width: 100vw;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 40px 0;
+      text-align: center;
+    }
+    .slide-icon {
+      width: 140px; height: 140px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px; margin-bottom: 36px;
+    }
+    .slide:nth-child(1) .slide-icon { background: rgba(13,122,138,.10); }
+    .slide:nth-child(2) .slide-icon { background: rgba(232,93,38,.10); }
+    .slide:nth-child(3) .slide-icon { background: rgba(13,122,138,.10); }
+    .slide h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 800; color: var(--text);
+      line-height: 1.2; margin-bottom: 16px;
+    }
+    .slide p {
+      font-size: clamp(15px, 2vw, 17px);
+      color: var(--muted); line-height: 1.7;
+      max-width: 480px;
+    }
+
+    /* ── Dots ── */
+    .dots {
+      display: flex; justify-content: center; gap: 8px;
+      padding: 28px 0 16px;
+    }
+    .dot {
+      height: 8px; border-radius: 4px;
+      background: #d1d5db;
+      transition: width 0.3s, background 0.3s;
+      width: 8px;
+    }
+    .dot.active { width: 24px; background: var(--teal); }
+
+    /* ── Footer ── */
+    .bottom { padding: 0 32px 40px; display: flex; flex-direction: column; gap: 14px; }
+    .btn-primary {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--teal); color: white;
+      border: none; border-radius: 999px;
+      padding: 16px; font-size: 16px; font-weight: 700;
+      cursor: pointer; width: 100%; max-width: 480px;
+      margin: 0 auto; transition: opacity 0.15s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .skip-link {
+      text-align: center; font-size: 14px; color: var(--muted);
+      text-decoration: none; display: block;
+    }
+    .skip-link:hover { color: var(--teal); }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="/" class="logo">
+      <img src="logo.png" alt="MigrantPortal logo" />
+      <span class="logo-text">MigrantPortal</span>
+    </a>
+    <a href="/login.html" class="sign-in-link">Sign In</a>
+  </div>
+
+  <div class="slides-wrap">
+    <div class="slides-track" id="track">
+
+      <div class="slide">
+        <div class="slide-icon">🤝</div>
+        <h1>Where Help<br>Meets Hope.</h1>
+        <p>MigrantPortal bridges the gap between migrants in need and caring communities ready to serve.</p>
+      </div>
+
+      <div class="slide">
+        <div class="slide-icon">🏠</div>
+        <h1>Real Needs,<br>Real People</h1>
+        <p>From furniture to legal help, job coaching to school enrollment — every need is a real family.</p>
+      </div>
+
+      <div class="slide">
+        <div class="slide-icon">❤️</div>
+        <h1>Love Your<br>Neighbor</h1>
+        <p>Faith communities, volunteers, and donors come together to make a lasting difference in people's lives.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="dots">
+    <div class="dot active" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+  </div>
+
+  <div class="bottom">
+    <button class="btn-primary" id="next-btn" onclick="next()">Next →</button>
+    <a href="/login.html" class="skip-link">Already have an account? Sign in</a>
+  </div>
+
+  <script>
+    let current = 0;
+    const total = 3;
+    const track = document.getElementById('track');
+    const btn = document.getElementById('next-btn');
+
+    function update() {
+      track.style.transform = `translateX(-${current * 100}vw)`;
+      for (let i = 0; i < total; i++) {
+        document.getElementById('d' + i).className = 'dot' + (i === current ? ' active' : '');
+      }
+      btn.textContent = current < total - 1 ? 'Next →' : 'Get Started →';
+    }
+
+    function next() {
+      if (current < total - 1) {
+        current++;
+        update();
+      } else {
+        window.location.href = '/signup.html';
+      }
+    }
+  </script>
+</body>
+</html>
