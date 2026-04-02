@@ -895,7 +895,41 @@
         </p>
       </div>
       <div class="newsletter-form">
-        <script async src="https://eomail5.com/form/2e646492-2bee-11f1-bc0c-4794b1b22e22.js" data-form="2e646492-2bee-11f1-bc0c-4794b1b22e22"></script>
+        <form id="eo-subscribe-form" onsubmit="eoSubscribe(event)">
+          <input type="email" id="eo-email" placeholder="Email address" required />
+          <button type="submit" class="newsletter-submit" id="eo-btn">Subscribe</button>
+          <p id="eo-msg" style="font-size:13px;margin-top:4px;display:none;"></p>
+        </form>
+        <script>
+          async function eoSubscribe(e) {
+            e.preventDefault();
+            const email = document.getElementById('eo-email').value;
+            const btn = document.getElementById('eo-btn');
+            const msg = document.getElementById('eo-msg');
+            btn.disabled = true; btn.textContent = 'Subscribing…';
+            try {
+              const res = await fetch('https://emailoctopus.com/lists/2e646492-2bee-11f1-bc0c-4794b1b22e22/members/embedded/1.3/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ 'field_0': email, 'successRedirectUrl': '' })
+              });
+              msg.style.display = 'block';
+              if (res.ok || res.redirected) {
+                msg.style.color = '#90e0c8';
+                msg.textContent = 'Thanks for subscribing!';
+                document.getElementById('eo-email').value = '';
+              } else {
+                msg.style.color = '#f9a8a8';
+                msg.textContent = 'Something went wrong. Please try again.';
+                btn.disabled = false; btn.textContent = 'Subscribe';
+              }
+            } catch {
+              msg.style.display = 'block'; msg.style.color = '#f9a8a8';
+              msg.textContent = 'Network error. Please try again.';
+              btn.disabled = false; btn.textContent = 'Subscribe';
+            }
+          }
+        </script>
       </div>
     </div>
   </section>
