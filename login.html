@@ -15,8 +15,8 @@
     a { color: var(--teal); text-decoration: none; }
 
     nav { background: white; border-bottom: 1px solid var(--gray-200); height: 64px; display: flex; align-items: center; padding: 0 40px; justify-content: space-between; }
-    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px; color: var(--navy); letter-spacing:-0.3px; }
-    .nav-logo span { color: var(--teal); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px; color: #1a2e44; letter-spacing:-0.3px; text-decoration: none; }
+    .nav-logo span { color: #0D7A8A; }
     .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
 
     .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
@@ -114,7 +114,7 @@
         });
         saveSession(data.access_token, data.user);
         const role = data.user?.role;
-        window.location.href = role === 'admin' ? 'admin.html' : role === 'connector' ? 'org-dashboard.html' : 'dashboard.html';
+        window.location.href = role === 'admin' ? 'admin.html' : role === 'navigator' ? 'navigator.html' : 'dashboard.html';
       } catch (ex) {
         const msg = ex.message || '';
         if (msg.startsWith('PENDING:')) {

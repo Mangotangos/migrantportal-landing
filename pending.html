@@ -12,9 +12,10 @@
     body { font-family: 'Inter', sans-serif; background: #f9fafb; min-height: 100vh; display: flex; flex-direction: column; }
 
     nav { background: white; border-bottom: 1px solid var(--border); height: 56px; display: flex; align-items: center; padding: 0 32px; }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.3px; }
     .nav-logo img { width: 30px; height: 30px; object-fit: contain; }
-    .nav-logo span { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--text); }
+    .nav-logo .mp-m { color: #1a2e44; }
+    .nav-logo .mp-p { color: #0D7A8A; }
 
     .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px 24px; }
     .card {
@@ -47,7 +48,7 @@
   <nav>
     <a href="/" class="nav-logo">
       <img src="logo.png" alt="MigrantPortal" />
-      <span>MigrantPortal</span>
+      <span class="mp-m">Migrant</span><span class="mp-p">Portal</span>
     </a>
   </nav>
 

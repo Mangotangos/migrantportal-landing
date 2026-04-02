@@ -29,7 +29,9 @@
     }
     .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .logo img { width: 32px; height: 32px; object-fit: contain; }
-    .logo-text { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); }
+    .logo-text { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
+    .logo-text .mp-m { color: #1a2e44; }
+    .logo-text .mp-p { color: #0D7A8A; }
     .sign-in-link { font-size: 14px; font-weight: 600; color: var(--teal); text-decoration: none; }
     .sign-in-link:hover { text-decoration: underline; }
 
@@ -104,7 +106,7 @@
   <div class="top-bar">
     <a href="/" class="logo">
       <img src="logo.png" alt="MigrantPortal logo" />
-      <span class="logo-text">MigrantPortal</span>
+      <span class="logo-text"><span class="mp-m">Migrant</span><span class="mp-p">Portal</span></span>
     </a>
     <a href="/login.html" class="sign-in-link">Sign In</a>
   </div>
