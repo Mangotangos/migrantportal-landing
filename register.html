@@ -276,7 +276,7 @@
       <div class="step visible" id="step-1">
         <h1 class="step-heading">How would you like to serve?</h1>
         <p class="step-sub">Your choice shapes how you impact families in your community.</p>
-        <p class="step-note">If you are connected with a church, we encourage you to choose <strong>Serve with my church</strong>.</p>
+        <p class="step-note">If you are connected with a faith community, we encourage you to choose <strong>Serve with my faith community</strong>.</p>
         <div class="cards" id="cards-1">
           <div class="card" data-val="own" onclick="selectCard('cards-1', this, 'btn-1')">
             <div class="card-icon">🧑‍💻</div>
@@ -288,8 +288,8 @@
           <div class="card" data-val="church" onclick="selectCard('cards-1', this, 'btn-1')">
             <div class="card-icon">⛪</div>
             <div class="card-body">
-              <div class="card-title">Serve with my church</div>
-              <div class="card-desc">Serve as part of your church's ministry and step into deeper care opportunities.</div>
+              <div class="card-title">Serve with my faith community</div>
+              <div class="card-desc">Serve as part of your faith community's ministry and step into deeper care opportunities.</div>
             </div>
           </div>
         </div>
@@ -374,7 +374,7 @@
             <label for="hear">How did you hear about MigrantPortal?</label>
             <select id="hear" onchange="checkStep4()">
               <option value="">Select one...</option>
-              <option>From a church or faith community</option>
+              <option>From a faith community or faith community</option>
               <option>From a caseworker or social worker</option>
               <option>Friend or family member</option>
               <option>Social media</option>
@@ -398,7 +398,7 @@
           <div class="field" id="field-notes" style="display:none">
             <label for="reg-notes">Who do you work with? <span style="color:#dc2626">*</span></label>
             <textarea id="reg-notes" rows="3" placeholder="Describe the organization, agency, or community you serve migrants through. This is reviewed by an admin before your account is activated." oninput="checkStep4()" style="width:100%;padding:10px 14px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s"></textarea>
-            <p style="font-size:11px;color:#6B7280;margin-top:4px">Required for connectors — this platform handles sensitive immigration data.</p>
+            <p style="font-size:11px;color:#6B7280;margin-top:4px">Required for navigators — this platform handles sensitive immigration data.</p>
           </div>
         </div>
         <div class="btn-row">
@@ -458,9 +458,27 @@
 
   <script src="api.js"></script>
   <script>
+    // Read role from URL — skip step 1 if provided
+    const _urlRole = new URLSearchParams(window.location.search).get('role');
+    const _roleMap = { navigator: 'navigator', responder: 'responder', organization: 'responder' };
+    const _preselectedRole = _urlRole ? (_roleMap[_urlRole] || null) : null;
+
     const TOTAL = 5;
     let currentStep = 1;
     const selectedLocations = new Set();
+
+    // Auto-skip step 1 if role came from signup page
+    if (_preselectedRole) {
+      // Simulate card selection for the correct role
+      const cardVal = _preselectedRole === 'navigator' ? 'church' : 'own';
+      const matchingCard = document.querySelector(`#cards-1 .card[data-val="${cardVal}"]`);
+      if (matchingCard) {
+        matchingCard.classList.add('selected');
+        document.getElementById('btn-1').disabled = false;
+        document.getElementById('btn-1').classList.add('ready');
+      }
+      goTo(2);
+    }
 
     /* ── Navigation ─────────────────────────── */
     function goTo(n) {
@@ -574,13 +592,13 @@
     /* ── Step 4: Interests ───────────────────── */
     function checkStep4() {
       const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
-      const isConnector = serveChoice === 'church';
+      const isNavigator = serveChoice === 'church';
       const notesField = document.getElementById('field-notes');
-      if (notesField) notesField.style.display = isConnector ? '' : 'none';
+      if (notesField) notesField.style.display = isNavigator ? '' : 'none';
       const notes = document.getElementById('reg-notes')?.value.trim() || '';
       const ok = document.getElementById('hear').value &&
                  document.getElementById('interest').value &&
-                 (!isConnector || notes.length >= 10);
+                 (!isNavigator || notes.length >= 10);
       setBtn('btn-4', ok);
     }
 
@@ -611,7 +629,7 @@
       btn.textContent = 'Creating account…';
 
       const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
-      const role = serveChoice === 'church' ? 'connector' : 'responder';
+      const role = serveChoice === 'church' ? 'navigator' : 'responder';
       const notes = document.getElementById('reg-notes')?.value.trim() || '';
 
       try {
@@ -625,7 +643,7 @@
           document.getElementById('success-heading').textContent = 'Application Submitted!';
           document.getElementById('success-text').innerHTML = 'Thanks for joining MigrantPortal.<br /><br />Your account is <strong>pending admin approval</strong>. You\'ll receive a notification once approved (usually 1–2 business days).';
         } else {
-          const dest = role === 'connector' ? 'org-dashboard.html' : 'dashboard.html';
+          const dest = role === 'navigator' ? 'org-dashboard.html' : 'dashboard.html';
           setTimeout(() => window.location.href = dest, 2000);
         }
       } catch (ex) {
