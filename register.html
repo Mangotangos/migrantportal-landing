@@ -397,10 +397,22 @@
             <label for="phone">Phone number</label>
             <input type="tel" id="phone" placeholder="(555) 000-0000" oninput="checkStep3()" />
           </div>
+          <div class="field">
+            <label for="hear">How did you hear about MigrantPortal?</label>
+            <select id="hear" onchange="checkStep3()">
+              <option value="">Select one...</option>
+              <option>From a faith community or church</option>
+              <option>From a caseworker or social worker</option>
+              <option>Friend or family member</option>
+              <option>Social media</option>
+              <option>Internet search</option>
+              <option>Other</option>
+            </select>
+          </div>
         </div>
         <div class="btn-row">
           <button class="btn-back" onclick="goTo(2)">Back</button>
-          <button class="btn-next" id="btn-3" disabled onclick="goTo(4)">Next</button>
+          <button class="btn-next" id="btn-3" disabled onclick="goTo(5)">Next</button>
         </div>
       </div>
 
@@ -469,7 +481,7 @@
           </label>
         </div>
         <div class="btn-row">
-          <button class="btn-back" onclick="goTo(4)">Back</button>
+          <button class="btn-back" onclick="goTo(3)">Back</button>
           <button class="btn-next" id="btn-5" disabled onclick="submitForm()">Create Account</button>
         </div>
       </div>
@@ -635,7 +647,8 @@
     function checkStep3() {
       const ok = document.getElementById('fname').value.trim() &&
                  document.getElementById('lname').value.trim() &&
-                 document.getElementById('email').value.includes('@');
+                 document.getElementById('email').value.includes('@') &&
+                 document.getElementById('hear').value;
       setBtn('btn-3', ok);
     }
 
