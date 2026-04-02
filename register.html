@@ -519,6 +519,7 @@
       if (_preselectedRole === 'responder' || _urlRole === 'organization') {
         document.getElementById('step-1').classList.remove('visible');
         document.getElementById('step-rt').classList.add('visible');
+        currentStep = 'rt';
         updateProgress(1);
       } else {
         goTo(2);
