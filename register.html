@@ -421,17 +421,10 @@
               <option>Other</option>
             </select>
           </div>
-          <div class="field">
+          <div class="field" style="display:none">
             <label for="interest">What type of needs would you like to help with?</label>
-            <select id="interest" onchange="checkStep4()">
-              <option value="">Select one...</option>
-              <option>Food &amp; essentials</option>
-              <option>Clothing &amp; supplies</option>
-              <option>Housing &amp; shelter referrals</option>
-              <option>Transportation</option>
-              <option>Education &amp; school enrollment</option>
-              <option>Language &amp; translation help</option>
-              <option>Any / all types</option>
+            <select id="interest">
+              <option value="any">Any / all types</option>
             </select>
           </div>
           <div class="field" id="field-notes" style="display:none">
@@ -654,7 +647,6 @@
       if (notesField) notesField.style.display = isNavigator ? '' : 'none';
       const notes = document.getElementById('reg-notes')?.value.trim() || '';
       const ok = document.getElementById('hear').value &&
-                 document.getElementById('interest').value &&
                  (!isNavigator || notes.length >= 10);
       setBtn('btn-4', ok);
     }
