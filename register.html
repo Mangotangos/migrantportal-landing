@@ -298,6 +298,45 @@
         </div>
       </div>
 
+      <!-- ── STEP RT: How will you help? (responders only) ── -->
+      <div class="step" id="step-rt">
+        <h1 class="step-heading">How will you help?</h1>
+        <p class="step-sub" style="text-align:left;margin-bottom:20px;">Select your primary way of contributing to migrant families.</p>
+        <div class="cards" id="cards-rt">
+          <div class="card" data-val="volunteer" onclick="selectCard('cards-rt', this, 'btn-rt')">
+            <div class="card-icon">❤️</div>
+            <div class="card-body">
+              <div class="card-title">Volunteer</div>
+              <div class="card-desc">Give time and hands-on help to families in your community.</div>
+            </div>
+          </div>
+          <div class="card" data-val="donor" onclick="selectCard('cards-rt', this, 'btn-rt')">
+            <div class="card-icon">🎁</div>
+            <div class="card-body">
+              <div class="card-title">Donor</div>
+              <div class="card-desc">Contribute money, goods, or resources to meet specific needs.</div>
+            </div>
+          </div>
+          <div class="card" data-val="professional" onclick="selectCard('cards-rt', this, 'btn-rt')">
+            <div class="card-icon">💼</div>
+            <div class="card-body">
+              <div class="card-title">Professional</div>
+              <div class="card-desc">Offer legal, medical, or other skilled services.</div>
+            </div>
+          </div>
+          <div class="card" data-val="church" onclick="selectCard('cards-rt', this, 'btn-rt')">
+            <div class="card-icon">⛪</div>
+            <div class="card-body">
+              <div class="card-title">Faith Community / Org</div>
+              <div class="card-desc">Mobilize your faith community or organization to respond together.</div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-next" id="btn-rt" disabled onclick="goTo(2)">Next</button>
+        </div>
+      </div>
+
       <!-- ── STEP 2: Where to meet requests ────── -->
       <div class="step" id="step-2">
         <h1 class="step-heading">Where would you like to meet requests?</h1>
@@ -469,7 +508,6 @@
 
     // Auto-skip step 1 if role came from signup page
     if (_preselectedRole) {
-      // Simulate card selection for the correct role
       const cardVal = _preselectedRole === 'navigator' ? 'church' : 'own';
       const matchingCard = document.querySelector(`#cards-1 .card[data-val="${cardVal}"]`);
       if (matchingCard) {
@@ -477,12 +515,30 @@
         document.getElementById('btn-1').disabled = false;
         document.getElementById('btn-1').classList.add('ready');
       }
-      goTo(2);
+      // Responders pick their type first; navigators go straight to location
+      if (_preselectedRole === 'responder') {
+        document.getElementById('step-1').classList.remove('visible');
+        document.getElementById('step-rt').classList.add('visible');
+        updateProgress(2);
+      } else {
+        goTo(2);
+      }
     }
 
     /* ── Navigation ─────────────────────────── */
+    let responderType = '';
+
     function goTo(n) {
-      document.getElementById('step-' + currentStep).classList.remove('visible');
+      // Hide current step (handle step-rt specially)
+      const curEl = document.getElementById(currentStep === 'rt' ? 'step-rt' : 'step-' + currentStep);
+      if (curEl) curEl.classList.remove('visible');
+
+      // If coming from step-rt, capture responder type selection
+      if (currentStep === 'rt') {
+        const sel = document.querySelector('#cards-rt .card.selected');
+        if (sel) responderType = sel.dataset.val;
+      }
+
       currentStep = n;
       const isSuccess = n > TOTAL;
       if (isSuccess) {
@@ -635,6 +691,7 @@
       try {
         const payload = { name, email, password, role };
         if (notes) payload.registration_notes = notes;
+        if (responderType && role === 'responder') payload.responder_type = responderType;
         const data = await apiPost('/auth/register', payload);
         saveSession(data.access_token, data.user);
         goTo(6);
