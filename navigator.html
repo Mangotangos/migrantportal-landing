@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navigator Dashboard — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #007c84;
+      --teal-lt: #e6f7f8;
+      --orange:  #FF6129;
+      --blue:    #0973A7;
+      --purple:  #7C3AED;
+      --green:   #16A34A;
+      --green-lt:#dcfce7;
+      --yellow:  #D97706;
+      --yellow-lt:#fef3c7;
+      --red:     #DC2626;
+      --navigator: #0973A7;
+      --text:    #0D0D0D;
+      --gray-700:#3d3d3d;
+      --gray-600:#555;
+      --gray-400:#999;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+      --gray-bg: #F0F2F5;
+    }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--gray-bg); }
+    a { text-decoration: none; color: var(--teal); }
+    button { font-family: 'Inter', sans-serif; cursor: pointer; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: white; border-bottom: 1px solid var(--gray-200);
+      height: 52px; display: flex; align-items: center; gap: 12px;
+      padding: 0 16px; position: sticky; top: 0; z-index: 110;
+    }
+    .topbar-logo { display: flex; align-items: center; gap: 8px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--text); letter-spacing: -0.3px; }
+    .topbar-logo span { color: var(--teal); }
+    .topbar-logo img { width: 30px; height: 30px; border-radius: 7px; object-fit: contain; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .role-badge { background: var(--navigator); color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.3px; }
+    .btn-signout { background: none; border: 1px solid var(--gray-200); border-radius: 6px; padding: 5px 14px; font-size: 13px; font-weight: 600; color: var(--gray-600); transition: color .15s, border-color .15s; }
+    .btn-signout:hover { color: var(--red); border-color: var(--red); }
+
+    /* ── TAB NAV ── */
+    .top-nav { background: white; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; position: sticky; top: 52px; z-index: 100; padding: 0 8px; }
+    .tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--gray-600); cursor: pointer; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; text-decoration: none; white-space: nowrap; }
+    .tab:hover { color: var(--navigator); }
+    .tab.active { color: var(--navigator); border-bottom-color: var(--navigator); font-weight: 600; }
+    .tab-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; border-radius: 9px; background: var(--red); color: white; font-size: 10px; font-weight: 700; padding: 0 4px; margin-left: 5px; }
+
+    /* ── PAGE ── */
+    .page { max-width: 960px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    /* ── USER HEADER ── */
+    .user-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--navigator); color: white; font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .user-name { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; }
+    .user-sub { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+    .btn-submit { margin-left: auto; background: var(--navigator); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 700; transition: background .15s; }
+    .btn-submit:hover { background: #075e86; }
+
+    /* ── STATS GRID ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: white; border-radius: 12px; padding: 18px 14px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.06); position: relative; }
+    .stat-card.urgent { border: 2px solid var(--yellow); }
+    .stat-num { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; }
+    .stat-label { font-size: 11px; color: var(--gray-600); margin-top: 4px; line-height: 1.3; }
+    .urgent-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+
+    /* ── ALERT CARDS ── */
+    .alert-card { border-radius: 12px; padding: 16px 18px; margin-bottom: 18px; }
+    .alert-card.expiry { background: #fefce8; border: 1.5px solid #fde047; }
+    .alert-card.followup { background: #eff6ff; border: 1.5px solid #93c5fd; }
+    .alert-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .alert-header-icon { font-size: 16px; }
+    .alert-header-title { font-weight: 700; font-size: 14px; }
+    .alert-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid rgba(0,0,0,.06); }
+    .alert-row-info { flex: 1; min-width: 0; }
+    .alert-row-title { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .alert-row-sub { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
+    .btn-renew { background: var(--yellow); color: white; border: none; border-radius: 6px; padding: 5px 14px; font-size: 12px; font-weight: 700; flex-shrink: 0; transition: background .15s; }
+    .btn-renew:hover { background: #b45309; }
+    .btn-snooze { background: none; border: 1.5px solid var(--blue); color: var(--blue); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .btn-done { background: var(--green); color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .followup-note { font-size: 11px; color: var(--navigator); font-style: italic; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ── QUICK ACTIONS ── */
+    .quick-actions { display: flex; gap: 12px; margin-bottom: 24px; }
+    .quick-action { flex: 1; background: white; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.06); cursor: pointer; border: 2px solid transparent; text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+    .quick-action:hover { border-color: var(--navigator); box-shadow: 0 4px 12px rgba(9,115,167,.15); }
+    .qa-icon { width: 46px; height: 46px; border-radius: 23px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .qa-label { font-size: 12px; font-weight: 700; color: var(--gray-700); text-align: center; }
+
+    /* ── SECTION ── */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; }
+    .see-all { font-size: 13px; color: var(--navigator); font-weight: 600; }
+
+    /* ── NEED CARDS ── */
+    .need-card { background: white; border-radius: 12px; margin-bottom: 10px; display: flex; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06); cursor: pointer; transition: box-shadow .15s; text-decoration: none; color: inherit; }
+    .need-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+    .need-urgency-bar { width: 4px; flex-shrink: 0; }
+    .need-body { flex: 1; padding: 14px; }
+    .need-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .need-title { font-weight: 700; font-size: 14px; flex: 1; }
+    .need-status { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; letter-spacing: 0.4px; flex-shrink: 0; }
+    .need-desc { font-size: 12px; color: var(--gray-600); margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .need-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--gray-400); flex-wrap: wrap; }
+    .need-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--gray-400); flex-shrink: 0; }
+    .need-actions { display: flex; align-items: center; gap: 8px; padding: 0 14px 12px; flex-wrap: wrap; }
+    .btn-sm { border: none; border-radius: 6px; padding: 5px 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: opacity .15s; }
+    .btn-sm:hover { opacity: .85; }
+    .btn-view { background: var(--teal-lt); color: var(--teal-d); }
+    .btn-edit { background: var(--gray-100); color: var(--gray-700); }
+    .btn-fulfill { background: var(--green-lt); color: var(--green); }
+
+    .response-pill { display: inline-flex; align-items: center; gap: 4px; background: var(--gray-100); border-radius: 10px; padding: 3px 8px; font-size: 11px; color: var(--gray-700); font-weight: 600; }
+
+    /* ── EMPTY / LOADING ── */
+    .empty { text-align: center; padding: 40px; color: var(--gray-400); font-size: 13px; background: white; border-radius: 12px; }
+    .loading { text-align: center; padding: 60px; color: var(--gray-400); font-size: 13px; }
+
+    /* ── MODAL ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; }
+    .modal h3 { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 16px; }
+    .modal label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--gray-700); }
+    .modal textarea, .modal input { width: 100%; border: 1.5px solid var(--gray-200); border-radius: 8px; padding: 10px 12px; font-size: 13px; font-family: 'Inter', sans-serif; resize: vertical; outline: none; }
+    .modal textarea:focus, .modal input:focus { border-color: var(--navigator); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-cancel { flex: 1; background: var(--gray-100); border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 700; color: var(--gray-600); }
+    .btn-save { flex: 2; background: var(--navigator); border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 700; color: white; }
+    .btn-save:hover { background: #075e86; }
+
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .quick-actions { flex-wrap: wrap; }
+      .quick-action { min-width: calc(50% - 6px); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="topbar-logo"><img src="logo.png" alt="" />MigrantPortal</a>
+  <div class="topbar-right">
+    <span class="role-badge">NAVIGATOR</span>
+    <span id="user-name-top" style="font-size:13px;color:var(--gray-600)"></span>
+    <button class="btn-signout" onclick="signOut()">Sign Out</button>
+  </div>
+</div>
+
+<nav class="top-nav">
+  <a class="tab active" href="navigator.html">Overview</a>
+  <a class="tab" href="submit-need.html">Submit Need</a>
+  <a class="tab" href="requests.html?mine=1">My Submissions</a>
+  <a class="tab" href="impact.html">Impact</a>
+</nav>
+
+<div class="page">
+  <div class="user-header">
+    <div class="avatar" id="avatar-initials">?</div>
+    <div>
+      <div class="user-name" id="user-full-name">Loading…</div>
+      <div class="user-sub" id="user-org"></div>
+    </div>
+    <a class="btn-submit" href="submit-need.html">+ Submit Need</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card"><div class="stat-num" style="color:var(--navigator)" id="s-families">—</div><div class="stat-label">Families</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--teal)" id="s-active">—</div><div class="stat-label">Active Needs</div></div>
+    <div class="stat-card urgent" id="sc-pending"><div class="urgent-dot"></div><div class="stat-num" style="color:var(--yellow)" id="s-pending">—</div><div class="stat-label">Pending Review</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--green)" id="s-fulfilled">—</div><div class="stat-label">Fulfilled</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--orange)" id="s-responses">—</div><div class="stat-label">Responses Received</div></div>
+  </div>
+
+  <div id="page-loading" class="loading">Loading your dashboard…</div>
+  <div id="page-content" style="display:none">
+
+    <!-- Expiring Soon -->
+    <div id="expiry-section" style="display:none">
+      <div class="alert-card expiry">
+        <div class="alert-header">
+          <span class="alert-header-icon">⚠️</span>
+          <span class="alert-header-title" style="color:var(--yellow)" id="expiry-title">Expiring Soon</span>
+          <span style="font-size:12px;color:var(--gray-400);margin-left:auto">Needs auto-close in &lt;15 days — renew to keep them active</span>
+        </div>
+        <div id="expiry-list"></div>
+      </div>
+    </div>
+
+    <!-- Follow-ups Due -->
+    <div id="followup-section" style="display:none">
+      <div class="alert-card followup" style="margin-top:0">
+        <div class="alert-header">
+          <span class="alert-header-icon">🔔</span>
+          <span class="alert-header-title" style="color:var(--navigator)" id="followup-title">Follow-ups Due</span>
+        </div>
+        <div id="followup-list"></div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a class="quick-action" href="submit-need.html">
+        <div class="qa-icon" style="background:#e0f0ff">➕</div>
+        <div class="qa-label">Submit Need</div>
+      </a>
+      <a class="quick-action" href="requests.html?mine=1">
+        <div class="qa-icon" style="background:#e6f7f8">📋</div>
+        <div class="qa-label">My Submissions</div>
+      </a>
+      <a class="quick-action" href="impact.html">
+        <div class="qa-icon" style="background:#dcfce7">📊</div>
+        <div class="qa-label">View Impact</div>
+      </a>
+      <a class="quick-action" href="requests.html">
+        <div class="qa-icon" style="background:#fef3c7">🔍</div>
+        <div class="qa-label">Browse All Needs</div>
+      </a>
+    </div>
+
+    <!-- Recent Submissions -->
+    <div class="section-header">
+      <div class="section-title">Recent Submissions</div>
+      <a class="see-all" href="requests.html?mine=1">See all →</a>
+    </div>
+    <div id="needs-list">
+      <div class="empty">No submissions yet. <a href="submit-need.html">Submit your first need →</a></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Follow-up modal -->
+<div class="modal-overlay" id="followup-modal">
+  <div class="modal">
+    <h3>Schedule Follow-up</h3>
+    <input type="hidden" id="fu-need-id" />
+    <div style="margin-bottom:14px">
+      <label>Note (optional)</label>
+      <textarea id="fu-note" rows="3" placeholder="What do you need to follow up on?"></textarea>
+    </div>
+    <div>
+      <label>Due Date</label>
+      <input type="date" id="fu-date" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeFollowupModal()">Cancel</button>
+      <button class="btn-save" onclick="saveFollowup()">Save Follow-up</button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="notif-bell.js"></script>
+<script>
+  // ── Auth guard ──────────────────────────────────────────
+  const user = getUser();
+  if (!user) { window.location.href = 'login.html'; }
+  if (user && user.role !== 'navigator') { window.location.href = 'dashboard.html'; }
+
+  function signOut() { localStorage.removeItem('mp_user'); localStorage.removeItem('mp_token'); window.location.href = 'login.html'; }
+
+  // ── Populate header ─────────────────────────────────────
+  const initials = (user?.name || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('avatar-initials').textContent = initials;
+  document.getElementById('user-full-name').textContent = 'Hello, ' + (user?.name?.split(' ')[0] || 'there') + ' 👋';
+  document.getElementById('user-name-top').textContent = user?.name || '';
+  if (user?.org_name) document.getElementById('user-org').textContent = user.org_name;
+
+  const URGENCY_COLORS = { urgent:'#DC2626', high:'#EA580C', medium:'#D97706', low:'#16A34A' };
+  const STATUS_COLORS  = { active:'#009DA5', pending:'#D97706', fulfilled:'#16A34A', closed:'#999', approved:'#7C3AED' };
+  const CAT_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
+
+  let _stats = null;
+
+  // ── Load stats ──────────────────────────────────────────
+  async function loadDashboard() {
+    try {
+      const d = await apiGet('/needs/navigator/stats');
+      _stats = d;
+
+      // Stats
+      document.getElementById('s-families').textContent  = d.families_count;
+      document.getElementById('s-active').textContent    = d.active_count;
+      document.getElementById('s-pending').textContent   = d.pending_count;
+      document.getElementById('s-fulfilled').textContent = d.fulfilled_count;
+      document.getElementById('s-responses').textContent = d.total_responses;
+      if (!d.pending_count) document.getElementById('sc-pending').classList.remove('urgent');
+
+      // Expiring soon
+      if (d.expiring_soon && d.expiring_soon.length > 0) {
+        document.getElementById('expiry-section').style.display = '';
+        document.getElementById('expiry-title').textContent = `⚠️ ${d.expiring_soon.length} Need${d.expiring_soon.length !== 1 ? 's' : ''} Expiring Soon`;
+        document.getElementById('expiry-list').innerHTML = d.expiring_soon.map(n => `
+          <div class="alert-row" id="expiry-row-${n.id}">
+            <div class="alert-row-info">
+              <div class="alert-row-title">${n.title}</div>
+              <div class="alert-row-sub">#${n.case_number} · ${n.days_left ?? '?'} days left · ${n.city}, ${n.state}</div>
+            </div>
+            <a href="need.html?id=${n.id}" class="btn-sm btn-view">View</a>
+            <button class="btn-renew" onclick="handleRenew('${n.id}', this)">Renew</button>
+          </div>`).join('');
+      }
+
+      // Follow-ups due
+      if (d.followups_due && d.followups_due.length > 0) {
+        document.getElementById('followup-section').style.display = '';
+        document.getElementById('followup-title').textContent = `🔔 ${d.followups_due.length} Follow-up${d.followups_due.length !== 1 ? 's' : ''} Due`;
+        document.getElementById('followup-list').innerHTML = d.followups_due.map(n => `
+          <div class="alert-row" id="fu-row-${n.id}">
+            <div class="alert-row-info">
+              <div class="alert-row-title">${n.title}</div>
+              ${n.follow_up_note ? `<div class="followup-note">"${n.follow_up_note}"</div>` : ''}
+            </div>
+            <button class="btn-snooze" onclick="handleSnooze('${n.id}', '${(n.follow_up_note||'').replace(/'/g,"\\'")}', this)">+7d</button>
+            <button class="btn-done" onclick="handleFollowupDone('${n.id}', this)">✓ Done</button>
+          </div>`).join('');
+      }
+
+      // Recent needs
+      renderNeeds(d.recent_needs);
+
+      document.getElementById('page-loading').style.display = 'none';
+      document.getElementById('page-content').style.display = '';
+    } catch(e) {
+      document.getElementById('page-loading').textContent = 'Failed to load dashboard. Please refresh.';
+    }
+  }
+
+  function renderNeeds(needs) {
+    if (!needs || !needs.length) {
+      document.getElementById('needs-list').innerHTML =
+        '<div class="empty">No submissions yet. <a href="submit-need.html">Submit your first need →</a></div>';
+      return;
+    }
+    document.getElementById('needs-list').innerHTML = needs.map(n => {
+      const uc = URGENCY_COLORS[n.urgency] || '#999';
+      const sc = STATUS_COLORS[n.status] || '#999';
+      return `
+        <div class="need-card">
+          <div class="need-urgency-bar" style="background:${uc}"></div>
+          <div style="flex:1">
+            <div class="need-body">
+              <div class="need-top">
+                <div class="need-title">${CAT_EMOJI[n.category]||'📦'} ${n.title}</div>
+                <span class="need-status" style="background:${sc}22;color:${sc}">${n.status.toUpperCase()}</span>
+              </div>
+              <div class="need-desc">${n.description}</div>
+              <div class="need-meta">
+                <span>📍 ${n.city}, ${n.state}</span>
+                <span class="need-meta-dot"></span>
+                <span>💬 ${n.response_count ?? 0} responses</span>
+                <span class="need-meta-dot"></span>
+                <span>#${n.case_number}</span>
+                ${n.days_left != null ? `<span class="need-meta-dot"></span><span style="color:${n.days_left < 7 ? 'var(--red)' : 'var(--gray-400)'}">⏱ ${n.days_left}d left</span>` : ''}
+              </div>
+            </div>
+            <div class="need-actions">
+              <a href="need.html?id=${n.id}" class="btn-sm btn-view">View</a>
+              ${n.response_count > 0 ? `<span class="response-pill">👥 ${n.response_count} response${n.response_count!==1?'s':''}</span>` : ''}
+              ${n.status === 'active' && n.days_left != null && n.days_left < 15 ? `<button class="btn-sm" style="background:#fef3c7;color:var(--yellow)" onclick="handleRenewCard('${n.id}', this)">🔄 Renew</button>` : ''}
+              ${n.status === 'active' ? `<button class="btn-sm btn-fulfill" onclick="openFollowupModal('${n.id}')">🔔 Set Follow-up</button>` : ''}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── Actions ─────────────────────────────────────────────
+  async function handleRenew(needId, btn) {
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      await apiPost(`/needs/${needId}/renew`, {});
+      const row = document.getElementById(`expiry-row-${needId}`);
+      if (row) row.remove();
+      // Update days_left display if visible in main list
+      loadDashboard();
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Renew';
+      alert('Failed to renew. Please try again.');
+    }
+  }
+
+  async function handleRenewCard(needId, btn) {
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      await apiPost(`/needs/${needId}/renew`, {});
+      loadDashboard();
+    } catch {
+      btn.disabled = false;
+      btn.textContent = '🔄 Renew';
+    }
+  }
+
+  async function handleSnooze(needId, currentNote, btn) {
+    btn.disabled = true;
+    try {
+      const due = new Date();
+      due.setDate(due.getDate() + 7);
+      await apiPost(`/needs/${needId}/followup`, { note: currentNote || 'Follow-up rescheduled', due_at: due.toISOString().slice(0, 10) });
+      const row = document.getElementById(`fu-row-${needId}`);
+      if (row) row.remove();
+    } catch {
+      btn.disabled = false;
+    }
+  }
+
+  async function handleFollowupDone(needId, btn) {
+    btn.disabled = true;
+    try {
+      await apiDelete(`/needs/${needId}/followup`);
+      const row = document.getElementById(`fu-row-${needId}`);
+      if (row) row.remove();
+    } catch {
+      btn.disabled = false;
+    }
+  }
+
+  // ── Follow-up modal ─────────────────────────────────────
+  function openFollowupModal(needId) {
+    document.getElementById('fu-need-id').value = needId;
+    document.getElementById('fu-note').value = '';
+    const d = new Date(); d.setDate(d.getDate() + 7);
+    document.getElementById('fu-date').value = d.toISOString().slice(0, 10);
+    document.getElementById('followup-modal').classList.add('open');
+  }
+
+  function closeFollowupModal() {
+    document.getElementById('followup-modal').classList.remove('open');
+  }
+
+  async function saveFollowup() {
+    const needId = document.getElementById('fu-need-id').value;
+    const note   = document.getElementById('fu-note').value.trim() || 'Follow-up scheduled';
+    const due_at = document.getElementById('fu-date').value;
+    if (!due_at) { alert('Please pick a due date.'); return; }
+    try {
+      await apiPost(`/needs/${needId}/followup`, { note, due_at });
+      closeFollowupModal();
+    } catch {
+      alert('Failed to save follow-up.');
+    }
+  }
+
+  // ── Close modal on overlay click ─────────────────────────
+  document.getElementById('followup-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeFollowupModal();
+  });
+
+  // ── Init ────────────────────────────────────────────────
+  loadDashboard();
+</script>
+</body>
+</html>

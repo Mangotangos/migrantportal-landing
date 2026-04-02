@@ -194,7 +194,7 @@
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
     .card-desc { font-size: 12px; color: var(--gray-600); margin-bottom: 8px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .card-loc { font-size: 11px; color: var(--gray-600); margin-bottom: 2px; }
-    .card-church { font-size: 11px; color: var(--gray-500); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+    .card-faith community { font-size: 11px; color: var(--gray-500); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
 
     .card-amount {
       display: flex; align-items: center; gap: 6px; margin-bottom: 5px;
@@ -234,6 +234,17 @@
     .popup-title { font-weight: 700; margin: 2px 0; }
     .popup-loc { font-size: 12px; color: var(--gray-600); }
 
+    /* ── CATEGORY CHIPS ── */
+    .cat-chips { display:flex; gap:6px; overflow-x:auto; padding:8px 16px; background:white; border-bottom:1px solid var(--gray-200); flex-shrink:0; scrollbar-width:none; }
+    .cat-chips::-webkit-scrollbar { display:none; }
+    .cat-chip { flex-shrink:0; font-size:12px; font-weight:600; padding:5px 12px; border-radius:20px; border:1.5px solid var(--gray-200); background:white; color:var(--gray-600); cursor:pointer; white-space:nowrap; }
+    .cat-chip.active { background:var(--teal); color:white; border-color:var(--teal); }
+    .cat-chip:hover:not(.active) { border-color:var(--teal); color:var(--teal); }
+
+    /* ── SORT OPTS ── */
+    .sort-opt { background:none; border:1px solid var(--gray-200); font-size:11px; font-weight:600; padding:3px 10px; border-radius:10px; color:var(--gray-600); cursor:pointer; }
+    .sort-opt.active { background:var(--teal); color:white; border-color:var(--teal); }
+
     /* Custom map marker */
     .map-pin {
       background: var(--teal); color: white; font-size: 11px; font-weight: 700;
@@ -252,7 +263,7 @@
     </button>
     <a href="dashboard.html" class="topbar-logo">
       <div class="logo-icon"><img src="logo.png" alt="MigrantPortal" /></div>
-      Migrant<span>Portal</span>
+      MigrantPortal
     </a>
     <div class="topbar-search" style="position:relative">
       <input id="topbar-search-input" type="text" placeholder="Search requests, families, needs…" oninput="debounceTopSearch(this.value)" autocomplete="off" />
@@ -337,6 +348,21 @@
     <button class="filter-clear" onclick="clearFilters()">✕ Clear Filters</button>
   </div>
 
+  <!-- CATEGORY CHIPS -->
+  <div class="cat-chips">
+    <button class="cat-chip active" data-cat="" onclick="setCategoryChip('')">All</button>
+    <button class="cat-chip" data-cat="housing" onclick="setCategoryChip('housing')">🏠 Housing</button>
+    <button class="cat-chip" data-cat="food" onclick="setCategoryChip('food')">🍽️ Food</button>
+    <button class="cat-chip" data-cat="employment" onclick="setCategoryChip('employment')">💼 Jobs</button>
+    <button class="cat-chip" data-cat="legal" onclick="setCategoryChip('legal')">⚖️ Legal</button>
+    <button class="cat-chip" data-cat="medical" onclick="setCategoryChip('medical')">🏥 Medical</button>
+    <button class="cat-chip" data-cat="education" onclick="setCategoryChip('education')">📚 Education</button>
+    <button class="cat-chip" data-cat="transportation" onclick="setCategoryChip('transportation')">🚗 Transport</button>
+    <button class="cat-chip" data-cat="translation" onclick="setCategoryChip('translation')">🌐 Language</button>
+    <button class="cat-chip" data-cat="clothing" onclick="setCategoryChip('clothing')">👗 Clothing</button>
+    <button class="cat-chip" data-cat="other" onclick="setCategoryChip('other')">📦 Other</button>
+  </div>
+
   <!-- WORKSPACE -->
   <div class="workspace">
 
@@ -345,7 +371,8 @@
       <div class="panel-header">
         <span class="panel-title">Open Requests (<span id="countLabel">5</span>)</span>
         <div class="panel-header-right">
-          <button class="sort-btn">Sort By: Newest ▾</button>
+          <button class="sort-opt active" data-sort="urgency" onclick="setSort('urgency')">🔴 Urgent</button>
+          <button class="sort-opt" data-sort="recent" onclick="setSort('recent')">🕐 Recent</button>
           <button class="close-panel" onclick="window.location.href='dashboard.html'">×</button>
         </div>
       </div>
@@ -374,7 +401,7 @@
             <div class="card-loc">Kansas City, Kansas • 66101</div>
             <div class="card-church">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Grace Community Church
+              Grace Community Faith Community
             </div>
             <div class="card-amount">
               <span class="amount-badge zero">
@@ -425,7 +452,7 @@
             <div class="card-loc">Wichita, Kansas • 67201</div>
             <div class="card-church">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Westside Family Church
+              Westside Family Faith Community
             </div>
             <div class="card-amount">
               <span class="amount-badge">
@@ -476,7 +503,7 @@
             <div class="card-loc">Kansas City, Kansas • 66063</div>
             <div class="card-church">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Prince of Peace Catholic Church
+              Prince of Peace Catholic Faith Community
             </div>
             <div class="card-amount">
               <span class="amount-badge">
@@ -527,7 +554,7 @@
             <div class="card-loc">Wyandotte County, Kansas • 66102</div>
             <div class="card-church">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Nueva Vida Church
+              Nueva Vida Faith Community
             </div>
             <div class="card-amount">
               <span class="amount-badge">
@@ -578,7 +605,7 @@
             <div class="card-loc">Sedgwick County, Kansas • 67203</div>
             <div class="card-church">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Harvest Church
+              Harvest Faith Community
             </div>
             <div class="card-amount">
               <span class="amount-badge">
@@ -721,12 +748,32 @@
       markers.push(m);
     }
 
+    let activeCategory = '';
+    let activeSort = 'urgency';
+    let activeSearch = '';
+    let loadDebounce = null;
+
     async function loadNeeds() {
       // Hide static fallback cards
       document.querySelectorAll('.static-card').forEach(c => c.style.display = 'none');
+      document.getElementById('cardsLoading').style.display = 'block';
+
+      // Clear existing dynamic cards and map markers
+      document.querySelectorAll('.req-card:not(.static-card)').forEach(c => c.remove());
+      markers.forEach(m => m && map.removeLayer(m));
+      markers.length = 0;
+
+      // Build query params from current filter state
+      const params = new URLSearchParams({ sort: activeSort });
+      if (activeCategory) params.set('category', activeCategory);
+      if (activeSearch.trim()) params.set('search', activeSearch.trim());
+      const cat = document.getElementById('filt-category')?.value;
+      const urg = document.getElementById('filt-urgency')?.value;
+      if (cat) params.set('category', cat);
+      if (urg) params.set('urgency', urg);
 
       try {
-        const data = await apiGet('/needs?limit=50');
+        const data = await apiGet('/needs?' + params.toString());
         const needs = Array.isArray(data) ? data : (data.items || data.needs || []);
         allNeeds = needs;
 
@@ -791,19 +838,14 @@
       setTimeout(() => { window.location.href = href; }, 300);
     }
 
-    // ── Filter cards by search
+    // ── Search — debounced server reload
     function filterCards(q) {
-      const term = q.toLowerCase();
-      const cards = document.querySelectorAll('.req-card');
-      let vis = 0;
-      cards.forEach(c => {
-        const text = c.textContent.toLowerCase();
-        const show = text.includes(term);
-        c.style.display = show ? '' : 'none';
-        if (show) vis++;
-      });
-      document.getElementById('countLabel').textContent = vis;
+      activeSearch = q;
+      clearTimeout(loadDebounce);
+      loadDebounce = setTimeout(loadNeeds, 350);
     }
+
+    function debounceTopSearch(q) { filterCards(q); }
 
     // ── Toggle filter panel
     function toggleFilter(btn) {
@@ -814,19 +856,35 @@
       document.getElementById('quickBtn').classList.toggle('active', !isOpen);
     }
 
-    function applyFilters() {
-      const cat = document.getElementById('filt-category').value.toLowerCase();
-      const urg = document.getElementById('filt-urgency').value.toLowerCase();
-      const sta = document.getElementById('filt-status').value.toLowerCase();
-      const cards = document.querySelectorAll('.req-card:not(.static-card)');
-      let vis = 0;
-      cards.forEach(c => {
-        const text = c.textContent.toLowerCase();
-        const show = (!cat || text.includes(cat)) && (!urg || text.includes(urg)) && (!sta || text.includes(sta));
-        c.style.display = show ? '' : 'none';
-        if (show) vis++;
+    // ── Filters → server reload
+    function applyFilters() { loadNeeds(); }
+
+    function clearFilters() {
+      document.getElementById('filt-category').value = '';
+      document.getElementById('filt-urgency').value = '';
+      document.getElementById('filt-status').value = '';
+      activeCategory = '';
+      activeSearch = '';
+      document.getElementById('topbar-search-input').value = '';
+      setCategoryChip('');
+      loadNeeds();
+    }
+
+    // ── Category chips
+    function setCategoryChip(val) {
+      activeCategory = val;
+      document.querySelectorAll('.cat-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.cat === val);
       });
-      document.getElementById('countLabel').textContent = vis;
+      document.getElementById('filt-category').value = val;
+      loadNeeds();
+    }
+
+    // ── Sort toggle
+    function setSort(val) {
+      activeSort = val;
+      document.querySelectorAll('.sort-opt').forEach(b => b.classList.toggle('active', b.dataset.sort === val));
+      loadNeeds();
     }
 
     function clearFilters() {

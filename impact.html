@@ -42,7 +42,8 @@
     .hero p { font-size:15px; opacity:.88; max-width:480px; margin:0 auto; line-height:1.6; }
 
     /* ── STATS ROW ── */
-    .stats-row { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; max-width:1000px; margin:-32px auto 0; padding:0 20px; position:relative; z-index:1; }
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; max-width:1000px; margin:-32px auto 0; padding:0 20px; position:relative; z-index:1; }
+    .stats-row-2 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; max-width:1000px; margin:14px auto 0; padding:0 20px; }
     .stat-card { background:white; border-radius:12px; padding:20px 16px; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,.1); }
     .stat-num { font-family:'Montserrat',sans-serif; font-size:30px; font-weight:800; color:var(--teal); }
     .stat-label { font-size:12px; color:var(--gray-600); margin-top:4px; }
@@ -101,7 +102,7 @@
     .cta-btn:hover { opacity:.92; }
 
     @media(max-width:640px) {
-      .stats-row { grid-template-columns:repeat(2,1fr); }
+      .stats-row, .stats-row-2 { grid-template-columns:repeat(2,1fr); }
       .grid-2 { grid-template-columns:1fr; }
     }
   </style>
@@ -109,7 +110,7 @@
 <body>
 
 <div class="topbar">
-  <a href="dashboard.html" class="topbar-logo" style="text-decoration:none"><img src="logo.png" alt="" />Migrant<span>Portal</span></a>
+  <a href="dashboard.html" class="topbar-logo" style="text-decoration:none"><img src="logo.png" alt="" />MigrantPortal</a>
   <nav style="display:flex;gap:0;margin-left:16px">
     <a href="dashboard.html" style="padding:0 14px;height:52px;display:flex;align-items:center;font-size:13px;color:var(--gray-600);">Home</a>
     <a href="requests.html" style="padding:0 14px;height:52px;display:flex;align-items:center;font-size:13px;color:var(--gray-600);">Requests</a>
@@ -132,8 +133,13 @@
   <div class="stat-card"><div class="stat-num" id="s-fulfilled">—</div><div class="stat-label">Needs Fulfilled</div></div>
   <div class="stat-card"><div class="stat-num" id="s-families">—</div><div class="stat-label">Families Helped</div></div>
   <div class="stat-card"><div class="stat-num" id="s-active">—</div><div class="stat-label">Active Needs</div></div>
-  <div class="stat-card"><div class="stat-num" id="s-responders">—</div><div class="stat-label">Responders</div></div>
   <div class="stat-card"><div class="stat-num" id="s-rate">—</div><div class="stat-label">Fulfillment Rate</div><div class="stat-sub">of submitted needs</div></div>
+</div>
+<div class="stats-row-2">
+  <div class="stat-card"><div class="stat-num" style="color:#16A34A" id="s-funds">—</div><div class="stat-label">💰 Funds Disbursed</div><div class="stat-sub">confirmed receipts</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:#E85D26" id="s-items">—</div><div class="stat-label">📦 Items Delivered</div><div class="stat-sub">goods delivered & confirmed</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:#7C3AED" id="s-services">—</div><div class="stat-label">🔧 Services Offered</div><div class="stat-sub">service responders</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-responders">—</div><div class="stat-label">🤝 Responders</div><div class="stat-sub">active helpers</div></div>
 </div>
 
 <div class="page">
@@ -197,6 +203,10 @@
       document.getElementById('s-active').textContent = d.total_active;
       document.getElementById('s-responders').textContent = d.total_responders;
       document.getElementById('s-rate').textContent = d.fulfillment_rate + '%';
+      const fundsUsd = (d.total_funds_disbursed_cents || 0) / 100;
+      document.getElementById('s-funds').textContent = '$' + fundsUsd.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('s-items').textContent = d.total_items_delivered || 0;
+      document.getElementById('s-services').textContent = d.total_service_offers || 0;
 
       // Recent wins
       const wins = document.getElementById('wins-grid');
