@@ -515,8 +515,8 @@
         document.getElementById('btn-1').disabled = false;
         document.getElementById('btn-1').classList.add('ready');
       }
-      // Responders pick their type first; navigators go straight to location
-      if (_preselectedRole === 'responder') {
+      // Responders + Orgs pick their type first; navigators go straight to location
+      if (_preselectedRole === 'responder' || _urlRole === 'organization') {
         document.getElementById('step-1').classList.remove('visible');
         document.getElementById('step-rt').classList.add('visible');
         updateProgress(2);
