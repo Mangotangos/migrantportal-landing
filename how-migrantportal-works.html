@@ -273,7 +273,20 @@
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .roles-grid { grid-template-columns: 1fr; }
       nav .nav-links { display: none; }
+      nav .nav-cta { display: none; }
+      .hamburger { display: flex; align-items: center; }
     }
+    .hamburger { display: none; cursor: pointer; background: none; border: none; padding: 8px; }
+    .hamburger svg { width: 22px; height: 22px; }
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: white; padding: 24px; flex-direction: column;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+    .mobile-close { background: none; border: none; cursor: pointer; font-size: 28px; }
+    .mobile-link { font-size: 18px; font-weight: 600; color: #1a2e44; padding: 14px 0; border-bottom: 1px solid #e5e7eb; display: block; text-decoration: none; }
+    .mobile-cta { margin-top: 24px; background: #0D7A8A; color: white; font-size: 16px; font-weight: 700; padding: 14px; border-radius: 8px; text-align: center; display: block; text-decoration: none; }
   </style>
 </head>
 <body>
@@ -293,8 +306,25 @@
       <a href="requests.html">Browse Requests</a>
       <a href="faq.html">FAQ</a>
     </div>
-    <a href="login.html" class="nav-cta">Sign In</a>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="login.html" class="nav-cta">Sign In</a>
+      <button class="hamburger" aria-label="Open menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
   </nav>
+
+  <div class="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="mobile-nav-header">
+      <span style="font-family:Montserrat,sans-serif;font-weight:800;font-size:18px;"><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
+      <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close menu">×</button>
+    </div>
+    <a href="/" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
+    <a href="/how-migrantportal-works.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
+    <a href="/requests.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Browse Requests</a>
+    <a href="/faq.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">FAQ</a>
+    <a href="/login.html" class="mobile-cta" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Sign In</a>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
