@@ -534,7 +534,7 @@
     .partner-cta a { color: var(--teal); font-weight: 600; font-size: 15px; }
 
     /* ── Volunteer CTA ── */
-    .vol-cards { display: flex; gap: 24px; margin-top: 40px; max-width: 720px; margin-left: auto; margin-right: auto; }
+    .vol-cards { display: flex; gap: 24px; margin-top: 40px; max-width: 1080px; margin-left: auto; margin-right: auto; }
     .vol-card { flex: 1; border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column; gap: 12px; }
     .vol-card.card-teal { background: #e6f5f6; color: #0D7A8A; border: 1.5px solid #b2dde1; }
     .vol-card.card-orange { background: #fdf0ec; color: #b83d10; border: 1.5px solid #f5c4b0; }
@@ -544,6 +544,9 @@
     .vol-card.card-teal .vol-btn:hover { background: #085d66; }
     .vol-card.card-orange .vol-btn { display: inline-block; margin-top: 8px; background: #b83d10; color: #fff; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 999px; text-decoration: none; transition: background .15s; width: fit-content; border: none; }
     .vol-card.card-orange .vol-btn:hover { background: #8b2e0c; }
+    .vol-card.card-navy { background: #eef2fb; color: #1e3a8a; border: 1.5px solid #c7d2f0; }
+    .vol-card.card-navy .vol-btn { display: inline-block; margin-top: 8px; background: #1e3a8a; color: #fff; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 999px; text-decoration: none; transition: background .15s; width: fit-content; }
+    .vol-card.card-navy .vol-btn:hover { background: #162d6e; }
 
     /* ── App Badges ── */
     .app-badges { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 32px; justify-content: center; }
@@ -853,13 +856,19 @@
           <div style="font-size:48px;margin-bottom:12px;">🌐</div>
           <h3>Navigator</h3>
           <p>Know a migrant family in need? Submit their needs directly and connect them with responders in your community.</p>
-          <a href="https://migrantportal.com/app" class="vol-btn">Join as Navigator</a>
+          <a href="/register.html?role=navigator" class="vol-btn">Join as Navigator</a>
         </div>
         <div class="vol-card card-teal">
           <div style="font-size:48px;margin-bottom:12px;">🙌</div>
           <h3>Responder</h3>
           <p>Are you a faith community, volunteer, or organization? Browse real needs and respond with your time, resources, or skills.</p>
-          <a href="https://migrantportal.com/app" class="vol-btn">Join as Responder</a>
+          <a href="/register.html?role=responder" class="vol-btn">Join as Responder</a>
+        </div>
+        <div class="vol-card card-navy">
+          <div style="font-size:48px;margin-bottom:12px;">🏛️</div>
+          <h3>Organization</h3>
+          <p>Are you a nonprofit, church, or agency? Sign up to both submit needs on behalf of families and respond to needs in your community.</p>
+          <a href="/register.html?role=organization" class="vol-btn">Join as Organization</a>
         </div>
       </div>
     </div>
