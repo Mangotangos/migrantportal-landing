@@ -54,8 +54,9 @@
       --gray-100: #F4F4F4;
     }
 
-    html { scroll-behavior: smooth; overflow-x: hidden; }
-    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.65; overflow-x: hidden; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: clip; max-width: 100vw; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.65; overflow-x: clip; width: 100%; }
     a { text-decoration: none; }
     img { display: block; max-width: 100%; }
 
@@ -102,7 +103,7 @@
       display: flex; align-items: center; gap: 10px;
       font-family: 'Montserrat', sans-serif;
       font-weight: 800; font-size: 19px; color: #1a2e44; letter-spacing: -0.3px; text-decoration: none;
-      min-height: 44px;
+      min-height: 44px; min-width: 44px;
     }
     .nav-logo .mp-p { color: #0D7A8A; }
     .nav-logo-icon {
@@ -196,6 +197,7 @@
     .hero-action-body a {
       font-size: 13px; color: var(--teal-bg); font-weight: 500;
       text-decoration: underline; text-underline-offset: 2px;
+      display: inline-block; padding: 14px 8px; margin: -14px -8px;
     }
     .hero-action-body a:hover { color: var(--teal-d); }
     .hero-visual {
