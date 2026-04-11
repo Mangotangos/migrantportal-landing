@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup Cards Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; background: #f4f6f8; margin: 0; padding: 48px 24px; }
+  h1 { font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 800; color: #111; margin-bottom: 8px; }
+  .subtitle { font-size: 16px; color: #555; margin-bottom: 40px; }
+  .role-cards { display: flex; gap: 24px; flex-wrap: wrap; max-width: 960px; }
+  .role-card {
+    flex: 1; min-width: 240px;
+    border-radius: 16px; padding: 40px 28px 36px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .role-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
+  .role-card.navigator { background: #fdf0ec; }
+  .role-card.responder { background: #e6f5f6; }
+  .role-card.org-navy   { background: #eef2fb; }
+  .role-card.org-green  { background: #e8f5ee; }
+  .role-card.org-gold   { background: #fdf8ec; }
+  .role-card.org-slate  { background: #f0f2f5; }
+  .role-card-icon { font-size: 48px; margin-bottom: 20px; }
+  .role-card h2 { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 12px; margin-top: 0; }
+  .role-card.navigator h2 { color: #b83d10; }
+  .role-card.responder h2 { color: #0D7A8A; }
+  .role-card.org-navy  h2 { color: #1e3a8a; }
+  .role-card.org-green h2 { color: #1a6b3c; }
+  .role-card.org-gold  h2 { color: #92400e; }
+  .role-card.org-slate h2 { color: #334155; }
+  .role-card p { font-size: 14px; color: #555; line-height: 1.65; margin-bottom: 28px; flex: 1; margin-top: 0; }
+  .role-card-btn {
+    display: inline-block; padding: 12px 28px; border-radius: 999px;
+    font-size: 14px; font-weight: 700; color: white; text-decoration: none;
+  }
+  .role-card.navigator .role-card-btn { background: #b83d10; }
+  .role-card.responder .role-card-btn { background: #0D7A8A; }
+  .role-card.org-navy  .role-card-btn { background: #1e3a8a; }
+  .role-card.org-green .role-card-btn { background: #1a6b3c; }
+  .role-card.org-gold  .role-card-btn { background: #92400e; }
+  .role-card.org-slate .role-card-btn { background: #334155; }
+</style>
+</head>
+<body>
+  <h1>Ready to get started?</h1>
+  <p class="subtitle">Choose the role that fits how you want to help.</p>
+  <div class="role-cards">
+
+    <div class="role-card navigator">
+      <div class="role-card-icon">🌐</div>
+      <h2>Navigator</h2>
+      <p>Know a migrant family in need? Submit their needs directly and connect them with responders in your community.</p>
+      <span class="role-card-btn">Join as Navigator</span>
+    </div>
+
+    <div class="role-card responder">
+      <div class="role-card-icon">🙌</div>
+      <h2>Responder</h2>
+      <p>Are you a faith community, volunteer, or organization? Browse real needs and respond with your time, resources, or skills.</p>
+      <span class="role-card-btn">Join as Responder</span>
+    </div>
+
+    <div class="role-card org-navy">
+      <div class="role-card-icon">🏛️</div>
+      <h2>Navy Blue</h2>
+      <p>Professional, trustworthy, corporate feel. Works well with teal.</p>
+      <span class="role-card-btn">Join as Organization</span>
+    </div>
+  </div>
+
+  <br><p style="font-size:13px;color:#888;font-family:Inter">3 other options:</p>
+  <div class="role-cards" style="max-width:960px">
+
+    <div class="role-card org-green">
+      <div class="role-card-icon">🏛️</div>
+      <h2>Forest Green</h2>
+      <p>Growth, community, mission-driven. Warm and earthy.</p>
+      <span class="role-card-btn">Join as Organization</span>
+    </div>
+
+    <div class="role-card org-gold">
+      <div class="role-card-icon">🏛️</div>
+      <h2>Amber / Gold</h2>
+      <p>Warm, welcoming, stands out from teal + salmon.</p>
+      <span class="role-card-btn">Join as Organization</span>
+    </div>
+
+    <div class="role-card org-slate">
+      <div class="role-card-icon">🏛️</div>
+      <h2>Slate Gray</h2>
+      <p>Neutral, institutional, very professional. Safe choice.</p>
+      <span class="role-card-btn">Join as Organization</span>
+    </div>
+
+  </div>
+</body>
+</html>
