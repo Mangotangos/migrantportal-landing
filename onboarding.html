@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome — MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -100,6 +101,16 @@
     }
     .skip-link:hover { color: var(--teal); }
   </style>
+<script>
+  (function() {
+    window.addEventListener('error', function(e) {
+      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      console.error('[MP Promise]', e.reason);
+    });
+  })();
+</script>
 </head>
 <body>
 
