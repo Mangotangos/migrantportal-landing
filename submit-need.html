@@ -187,12 +187,12 @@
         <div class="card-title"><span class="step-badge">1</span> Need Details</div>
         <div class="form-grid">
           <div class="form-group full">
-            <label>Need Title <span class="req">*</span></label>
-            <input type="text" id="title" placeholder="e.g. Family of 4 needs winter clothing" maxlength="120" />
+            <label for="title">Need Title <span class="req">*</span></label>
+            <input type="text" id="title" name="title" required autocomplete="off" placeholder="e.g. Family of 4 needs winter clothing" maxlength="120" />
           </div>
           <div class="form-group">
-            <label>Category <span class="req">*</span></label>
-            <select id="category">
+            <label for="category">Category <span class="req">*</span></label>
+            <select id="category" name="category" required>
               <option value="">Select category…</option>
               <option value="housing">Housing</option>
               <option value="food">Food</option>
@@ -208,20 +208,20 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Location — City <span class="req">*</span></label>
-            <input type="text" id="city" placeholder="e.g. Kansas City" />
+            <label for="city">Location — City <span class="req">*</span></label>
+            <input type="text" id="city" name="city" required autocomplete="address-level2" placeholder="e.g. Kansas City" />
           </div>
           <div class="form-group">
-            <label>State <span class="req">*</span></label>
-            <input type="text" id="state" placeholder="e.g. MO" maxlength="2" />
+            <label for="state">State <span class="req">*</span></label>
+            <input type="text" id="state" name="state" required autocomplete="address-level1" placeholder="e.g. MO" maxlength="2" />
           </div>
           <div class="form-group">
-            <label>ZIP Code <span class="req">*</span></label>
-            <input type="text" id="zip" placeholder="e.g. 64108" maxlength="10" />
+            <label for="zip">ZIP Code <span class="req">*</span></label>
+            <input type="text" id="zip" name="zip" required autocomplete="postal-code" placeholder="e.g. 64108" maxlength="10" />
           </div>
           <div class="form-group full">
-            <label>Description <span class="req">*</span></label>
-            <textarea id="description" placeholder="Describe the situation and what is needed. Be specific to help responders understand the need."></textarea>
+            <label for="description">Description <span class="req">*</span></label>
+            <textarea id="description" name="description" required placeholder="Describe the situation and what is needed. Be specific to help responders understand the need."></textarea>
           </div>
         </div>
       </div>

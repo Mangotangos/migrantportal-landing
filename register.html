@@ -272,6 +272,7 @@
     </a>
   </nav>
 
+  <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Create your MigrantPortal account</h1>
   <div class="wizard-wrap">
     <div class="wizard">
 
@@ -291,7 +292,7 @@
 
       <!-- ── STEP 1: How to serve ───────────────── -->
       <div class="step visible" id="step-1">
-        <h1 class="step-heading">How would you like to serve?</h1>
+        <h2 class="step-heading">How would you like to serve?</h2>
         <p class="step-sub">Your choice shapes how you impact families in your community.</p>
         <p class="step-note">If you are connected with a faith community, we encourage you to choose <strong>Serve with my faith community</strong>.</p>
         <div class="cards" id="cards-1">
@@ -317,7 +318,7 @@
 
       <!-- ── STEP RT: How will you help? (responders only) ── -->
       <div class="step" id="step-rt">
-        <h1 class="step-heading">How will you help?</h1>
+        <h2 class="step-heading">How will you help?</h2>
         <p class="step-sub" style="text-align:left;margin-bottom:20px;">Select your primary way of contributing to migrant families.</p>
         <div class="cards" id="cards-rt">
           <div class="card" data-val="volunteer" onclick="selectCard('cards-rt', this, 'btn-rt')">
@@ -356,7 +357,7 @@
 
       <!-- ── STEP 2: Where to meet requests ────── -->
       <div class="step" id="step-2">
-        <h1 class="step-heading">Where would you like to meet requests?</h1>
+        <h2 class="step-heading">Where would you like to meet requests?</h2>
         <p class="step-sub" style="text-align:left; margin-bottom:20px;">Select at least one county, city, or zip code you'd like to receive request notifications for.</p>
 
         <div class="loc-label">Search locations</div>
@@ -393,30 +394,30 @@
 
       <!-- ── STEP 3: About you ──────────────────── -->
       <div class="step" id="step-3">
-        <h1 class="step-heading">Tell us about yourself</h1>
+        <h2 class="step-heading">Tell us about yourself</h2>
         <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">We'll use this to set up your account and match you with needs in your area.</p>
         <div class="fields">
           <div class="field-row">
             <div class="field">
               <label for="fname">First name</label>
-              <input type="text" id="fname" placeholder="Jane" oninput="checkStep3()" />
+              <input type="text" id="fname" name="given-name" autocomplete="given-name" placeholder="Jane" oninput="checkStep3()" />
             </div>
             <div class="field">
               <label for="lname">Last name</label>
-              <input type="text" id="lname" placeholder="Doe" oninput="checkStep3()" />
+              <input type="text" id="lname" name="family-name" autocomplete="family-name" placeholder="Doe" oninput="checkStep3()" />
             </div>
           </div>
           <div class="field">
             <label for="email">Email address</label>
-            <input type="email" id="email" placeholder="jane@example.com" oninput="checkStep3()" />
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com" oninput="checkStep3()" />
           </div>
           <div class="field">
             <label for="phone">Phone number</label>
-            <input type="tel" id="phone" placeholder="(555) 000-0000" oninput="checkStep3()" />
+            <input type="tel" id="phone" name="tel" autocomplete="tel" placeholder="(555) 000-0000" oninput="checkStep3()" />
           </div>
           <div class="field">
             <label for="hear">How did you hear about MigrantPortal?</label>
-            <select id="hear" onchange="checkStep3()">
+            <select id="hear" name="hear" onchange="checkStep3()">
               <option value="">Select one...</option>
               <option>From a faith community or church</option>
               <option>From a caseworker or social worker</option>
@@ -435,12 +436,12 @@
 
       <!-- ── STEP 4: Interests ───────────────────── -->
       <div class="step" id="step-4">
-        <h1 class="step-heading">A little more about you</h1>
+        <h2 class="step-heading">A little more about you</h2>
         <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">This helps us connect you with the right needs and partners.</p>
         <div class="fields">
           <div class="field">
-            <label for="hear">How did you hear about MigrantPortal?</label>
-            <select id="hear" onchange="checkStep4()">
+            <label for="hear2">How did you hear about MigrantPortal?</label>
+            <select id="hear2" name="hear2" onchange="checkStep4()">
               <option value="">Select one...</option>
               <option>From a faith community or faith community</option>
               <option>From a caseworker or social worker</option>
@@ -470,12 +471,12 @@
 
       <!-- ── STEP 5: Create account ─────────────── -->
       <div class="step" id="step-5">
-        <h1 class="step-heading">Create your account</h1>
+        <h2 class="step-heading">Create your account</h2>
         <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">Set a password to complete your registration.</p>
         <div class="fields">
           <div class="field">
             <label for="pw">Password</label>
-            <input type="password" id="pw" placeholder="At least 8 characters" oninput="checkStep5(); updateStrength(this.value)" />
+            <input type="password" id="pw" name="new-password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" oninput="checkStep5(); updateStrength(this.value)" />
             <div style="margin-top:8px;">
               <div style="display:flex;gap:4px;margin-bottom:4px;">
                 <div class="str-seg" id="str-1"></div>
@@ -488,7 +489,7 @@
           </div>
           <div class="field">
             <label for="pw2">Confirm password</label>
-            <input type="password" id="pw2" placeholder="Re-enter password" oninput="checkStep5()" />
+            <input type="password" id="pw2" name="new-password-confirm" autocomplete="new-password" minlength="8" placeholder="Re-enter password" oninput="checkStep5()" />
           </div>
         </div>
         <div class="check-row" style="margin-bottom:12px;">
@@ -515,7 +516,7 @@
       <!-- ── SUCCESS ────────────────────────────── -->
       <div class="step" id="step-success">
         <div class="success-icon" id="success-icon">🎉</div>
-        <h1 class="success-heading" id="success-heading">Account Created!</h1>
+        <h2 class="success-heading" id="success-heading">Account Created!</h2>
         <p class="success-text" id="success-text">
           Thanks for joining MigrantPortal. We've sent a confirmation to your email.<br /><br />
           You'll receive notifications when migrant families in your area have urgent needs you can help with.
