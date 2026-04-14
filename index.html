@@ -71,33 +71,6 @@
     img { display: block; max-width: 100%; }
 
     /* ─── ANNOUNCEMENT BAR ─────────────────────── */
-    .announce {
-      background: var(--teal-bg);
-      color: white;
-      display: flex; align-items: center; justify-content: center;
-      gap: 16px;
-      padding: 10px 24px;
-      font-size: 13px; font-weight: 500;
-      flex-wrap: wrap;
-    }
-    .announce-logo {
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(0,0,0,0.25); border-radius: 6px;
-      padding: 4px 10px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
-    }
-    .announce-text { display: flex; flex-direction: column; align-items: center; }
-    .announce-text strong { font-weight: 700; }
-    .announce-text span { font-size: 11px; opacity: 0.8; }
-    .announce-btn {
-      background: var(--orange); color: white;
-      font-size: 11px; font-weight: 800;
-      padding: 8px 14px; border-radius: 6px;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      transition: background 0.15s;
-    }
-    .announce-btn:hover { background: var(--orange-d); }
 
     /* ─── NAV ──────────────────────────────────── */
     nav {
@@ -534,7 +507,7 @@
       .footer-trusted { padding: 32px 20px; }
       .footer-main { padding: 32px 20px; }
       .footer-bottom { padding: 16px 20px; }
-      .announce { display: none; }
+
       .live-stats-grid { grid-template-columns: repeat(2, 1fr); }
       .app-badges { flex-direction: column; align-items: center; }
       .partner-grid { grid-template-columns: repeat(2, 1fr); }
@@ -608,18 +581,6 @@
 </head>
 <body>
 
-  <!-- ANNOUNCEMENT BAR -->
-  <div class="announce">
-    <div class="announce-logo">
-      <span>MP</span>
-      <span>MigrantPortal</span>
-    </div>
-    <div class="announce-text">
-      <strong>Android Beta Now Available &nbsp;·&nbsp; Help a migrant family in your community</strong>
-      <span>Limited early access — sign up below</span>
-    </div>
-    <a href="/signup.html" class="announce-btn">REQUEST BETA</a>
-  </div>
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
