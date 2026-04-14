@@ -789,13 +789,13 @@
       const svgHeart = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
       const svgUser = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
       const svgShare = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
-      return `<div class="req-card" onclick="window.location.href='need.html?id=${n.id}'">
+      return `<a class="req-card" href="need.html?id=${n.id}" style="text-decoration:none;color:inherit;display:block;">
         <div class="req-card-top">${emoji}<div class="req-id">#${n.case_number}</div><div class="req-dot"></div></div>
         <div class="req-card-body">
           <div class="req-actions">
-            <button class="req-action-btn" aria-label="Save">${svgHeart}</button>
-            <button class="req-action-btn" aria-label="Profile">${svgUser}</button>
-            <button class="req-action-btn" aria-label="Share">${svgShare}</button>
+            <button class="req-action-btn" aria-label="Save" onclick="event.stopPropagation();event.preventDefault();">${svgHeart}</button>
+            <button class="req-action-btn" aria-label="Profile" onclick="event.stopPropagation();event.preventDefault();">${svgUser}</button>
+            <button class="req-action-btn" aria-label="Share" onclick="event.stopPropagation();event.preventDefault();">${svgShare}</button>
             <span class="req-age">${ageLabel(n.created_at)}</span>
           </div>
           <div class="req-title">${n.title || ''}</div>
@@ -806,7 +806,7 @@
           <div class="req-people">${kids > 0 ? `👶 ${kids} Child${kids !== 1 ? 'ren' : ''} &nbsp; ` : ''}👤 ${adults} Adult${adults !== 1 ? 's' : ''}</div>
           ${needsLine ? `<div class="req-needs">${needsLine}</div>` : ''}
         </div>
-      </div>`;
+      </a>`;
     }
     async function loadRequests() {
       const container = document.getElementById('req-cards-container');
@@ -857,7 +857,7 @@
         const el = document.getElementById('tab-' + id);
         if (el) el.classList.toggle('active', id === t);
       });
-      // BUG-002: hide/show main two-col so hidden sections don't consume scroll height
+      // hide/show main two-col so hidden sections don't consume scroll height
       const mainCol = document.getElementById('main-two-col');
       if (mainCol) mainCol.style.display = EXTRA_SECTIONS.includes(t) ? 'none' : 'flex';
       EXTRA_SECTIONS.forEach(s => {
@@ -1208,11 +1208,40 @@
     const section1Items = ['item-1-1','item-1-2','item-1-3'];
     const section2Items = ['item-2-1','item-2-2','item-2-3','item-2-4'];
 
+    function _checklistKey() {
+      const user = getUser();
+      return 'mp_checklist_' + (user && (user.id || user.email) ? (user.id || user.email) : 'default');
+    }
+
+    function saveChecklist() {
+      const allItems = [...section1Items, ...section2Items];
+      const state = allItems.reduce((acc, id) => {
+        acc[id] = document.getElementById(id).classList.contains('done');
+        return acc;
+      }, {});
+      localStorage.setItem(_checklistKey(), JSON.stringify(state));
+    }
+
+    function restoreChecklist() {
+      try {
+        const state = JSON.parse(localStorage.getItem(_checklistKey()) || '{}');
+        Object.entries(state).forEach(([id, done]) => {
+          if (!done) return;
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.querySelector('.item-check').classList.add('checked');
+          el.classList.add('done');
+        });
+      } catch {}
+      updateProgress();
+    }
+
     function toggleItem(id) {
       const el = document.getElementById(id);
       const check = el.querySelector('.item-check');
       const isDone = check.classList.toggle('checked');
       el.classList.toggle('done', isDone);
+      saveChecklist();
       updateProgress();
     }
 
@@ -1226,6 +1255,8 @@
       document.getElementById('prog-fill').style.width = pct + '%';
       document.getElementById('prog-label').textContent = pct + '% You got this!';
     }
+
+    restoreChecklist();
   </script>
 
   <!-- MOBILE BOTTOM NAV -->
