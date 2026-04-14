@@ -576,7 +576,7 @@
         <div class="requests-header">
           <div class="requests-title">My Responses</div>
         </div>
-        <div id="responses-list"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div id="responses-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
@@ -590,7 +590,7 @@
             <button onclick="showAddFamilyModal()" style="background:var(--teal);color:white;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">+ Add Family</button>
           </div>
         </div>
-        <div id="families-list"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div id="families-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
@@ -598,7 +598,7 @@
     <div id="bookmarks-section" style="display:none;margin-top:28px">
       <div class="card">
         <div class="requests-header"><div class="requests-title">Bookmarked Needs</div></div>
-        <div id="bookmarks-list"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div id="bookmarks-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
@@ -606,7 +606,7 @@
     <div id="donations-section" style="display:none;margin-top:28px">
       <div class="card">
         <div class="requests-header"><div class="requests-title">My Donations</div></div>
-        <div id="donations-list"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div id="donations-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
@@ -627,7 +627,7 @@
           </select>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="res-cats"></div>
-        <div id="resources-list"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div id="resources-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
@@ -1114,6 +1114,23 @@
         loadRoleStats('navigator');
       }
     })();
+    /* Hash nav restore on load */
+    (function initHashNav() {
+      var hashToTab = {
+        'home-section': 'home',
+        'checklist-section': 'checklist',
+        'faqs-section': 'faqs',
+        'requests-section': 'requests',
+        'responses-section': 'responses',
+        'families-section': 'families',
+        'bookmarks-section': 'bookmarks',
+        'donations-section': 'donations',
+        'resources-section': 'resources',
+      };
+      var tab = hashToTab[location.hash.replace('#', '')];
+      if (tab) setTab(tab);
+    })();
+
 
     /* ── Role stats ──────────────────────────── */
     function statCard(label, value, color) {
