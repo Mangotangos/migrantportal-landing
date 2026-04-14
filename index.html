@@ -618,7 +618,7 @@
       <strong>Android Beta Now Available &nbsp;·&nbsp; Help a migrant family in your community</strong>
       <span>Limited early access — sign up below</span>
     </div>
-    <a href="mailto:support@migrantportal.com?subject=Download+MigrantPortal+Beta" class="announce-btn">REQUEST BETA</a>
+    <a href="/signup.html" class="announce-btn">REQUEST BETA</a>
   </div>
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -890,7 +890,7 @@
           <p>Post available beds, coordinate arrivals, and connect guests to wraparound services.</p>
         </div>
       </div>
-      <a href="mailto:support@migrantportal.com?subject=Partnership+Inquiry" class="btn btn-secondary" style="margin-top:36px;">Become a Partner</a>
+      <a href="/signup.html" class="btn btn-secondary" style="margin-top:36px;">Become a Partner</a>
     </div>
   </section>
 
@@ -932,7 +932,7 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.37.21.8.22 1.19.04l12.34-6.96-2.7-2.7-10.83 9.62zM.5 1.57C.19 1.96 0 2.5 0 3.18v17.65c0 .67.19 1.21.51 1.6L.6 22.5l9.89-9.89v-.23L.6 2.49.5 1.57zM20.04 10.3l-2.62-1.48-3.01 3.01 3.01 3.01 2.63-1.49c.75-.42.75-1.62-.01-2.05zM4.37.2 16.71 7.16l-2.7 2.7L3.18.24C3.57.06 4 .07 4.37.2z"/></svg>
           <div class="badge-text"><small>Get it on</small><strong>Google Play</strong></div>
         </a>
-        <a href="mailto:support@migrantportal.com?subject=iOS+App+Notification" class="badge-btn badge-apple">
+        <a href="#get-involved" onclick="setTimeout(function(){document.getElementById('eo-email').focus();},300);return true;" class="badge-btn badge-apple">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
           <div class="badge-text"><small>Notify me for iOS</small><strong>App</strong></div>
         </a>
@@ -953,13 +953,16 @@
       </div>
       <div class="newsletter-form">
         <form id="eo-subscribe-form" onsubmit="eoSubscribe(event)">
+          <label for="eo-email" class="sr-only">Email address</label>
           <input type="email" id="eo-email" placeholder="Email address" required />
+          <input type="text" name="hp_name" tabindex="-1" aria-hidden="true" style="display:none" />
           <button type="submit" class="newsletter-submit" id="eo-btn">Subscribe</button>
           <p id="eo-msg" style="font-size:13px;margin-top:4px;display:none;"></p>
         </form>
         <script>
           async function eoSubscribe(e) {
             e.preventDefault();
+            if (e.target.querySelector('[name="hp_name"]').value) return;
             const email = document.getElementById('eo-email').value;
             const btn = document.getElementById('eo-btn');
             const msg = document.getElementById('eo-msg');
@@ -1104,7 +1107,7 @@
 
   <script>
     (function(){
-      const API = 'https://migrant-portal-production-3826.up.railway.app/impact';
+      const API = 'https://migrant-portal-production.up.railway.app/impact';
       function animateCount(el, target) {
         if (!el || isNaN(target)) return;
         var start = 0, duration = 1200, step = Math.ceil(target / 60);
@@ -1137,7 +1140,7 @@
   <!-- Live needs rotator -->
   <script>
   (function() {
-    const API = 'https://migrant-portal-production-3826.up.railway.app/needs?page=1';
+    const API = 'https://migrant-portal-production.up.railway.app/needs?page=1';
     const INTERVAL = 4000;
     const dotColors = ['var(--orange)', 'var(--teal)', '#8b5cf6', '#10b981', '#f59e0b'];
 
