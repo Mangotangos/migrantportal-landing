@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Press Kit — MigrantPortal</title>
+  <meta name="description" content="MigrantPortal press resources — founder bio, mission, key facts, approved quotes, and logo assets for media use." />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #0D7A8A;
+      --teal-lt: #e6f7f8;
+      --navy:    #172936;
+      --cream:   #FAF7F0;
+      --text:    #0D0D0D;
+      --gray-600:#555;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+    }
+    html { scroll-behavior: smooth; overflow-x: clip; max-width: 100vw; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.7; overflow-x: clip; }
+    a { text-decoration: none; color: var(--teal); }
+
+    /* NAV */
+    .announce { background: var(--teal-d); color: white; text-align: center; padding: 10px 20px; font-size: 13px; }
+    .announce a { color: #ffe08a; font-weight: 600; }
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px;
+    }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { font-size: 14px; color: var(--gray-600); font-weight: 500; }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-cta { background: #0973A7; color: white; padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+    .nav-cta:hover { background: #075d8a; color: white; }
+    @media (max-width: 700px) { nav { padding: 0 20px; } .nav-links { display: none; } }
+
+    /* HERO */
+    .hero { background: var(--navy); color: white; padding: 64px 40px; text-align: center; }
+    .hero-label { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); margin-bottom: 14px; }
+    .hero h1 { font-family: 'Montserrat', sans-serif; font-size: 42px; font-weight: 800; margin-bottom: 16px; }
+    .hero p { font-size: 17px; color: rgba(255,255,255,0.7); max-width: 540px; margin: 0 auto; }
+
+    /* LAYOUT */
+    .page { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+    .section { padding: 64px 0; border-bottom: 1px solid var(--gray-200); }
+    .section:last-child { border-bottom: none; }
+    .label { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+    h2 { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 20px; }
+    h3 { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    p { color: var(--gray-600); font-size: 15px; margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* FACTS TABLE */
+    .facts-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .facts-table tr { border-bottom: 1px solid var(--gray-200); }
+    .facts-table tr:last-child { border-bottom: none; }
+    .facts-table td { padding: 12px 0; font-size: 15px; vertical-align: top; }
+    .facts-table td:first-child { color: var(--navy); font-weight: 600; width: 200px; padding-right: 20px; }
+    .facts-table td:last-child { color: var(--gray-600); }
+
+    /* QUOTES */
+    .quote-block {
+      background: var(--teal-lt); border-left: 4px solid var(--teal);
+      border-radius: 0 10px 10px 0; padding: 20px 24px; margin-bottom: 20px;
+    }
+    .quote-block p { font-size: 16px; font-style: italic; color: var(--navy); font-weight: 500; margin-bottom: 8px; }
+    .quote-block .attribution { font-size: 13px; color: var(--teal-d); font-style: normal; font-weight: 600; margin: 0; }
+
+    /* LOGO ASSETS */
+    .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+    .logo-card {
+      border: 1px solid var(--gray-200); border-radius: 12px; padding: 24px;
+      text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .logo-card.dark-bg { background: var(--navy); }
+    .logo-card img { height: 48px; object-fit: contain; }
+    .logo-card .logo-wordmark {
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 18px;
+    }
+    .logo-card p { font-size: 12px; color: var(--gray-600); margin: 0; }
+    .logo-card.dark-bg p { color: rgba(255,255,255,0.6); }
+    .download-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--teal);
+      border: 1.5px solid var(--teal); border-radius: 6px;
+      padding: 6px 14px; transition: background .15s;
+    }
+    .download-link:hover { background: var(--teal-lt); }
+    @media (max-width: 650px) { .logo-grid { grid-template-columns: 1fr; } }
+
+    /* CONTACT CARD */
+    .contact-card {
+      background: var(--cream); border-radius: 14px; padding: 32px;
+      display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start;
+      margin-top: 8px;
+    }
+    .contact-detail { flex: 1; min-width: 200px; }
+    .contact-detail .name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 18px; color: var(--navy); margin-bottom: 4px; }
+    .contact-detail .role { font-size: 13px; color: var(--teal-d); font-weight: 600; margin-bottom: 12px; }
+    .contact-detail a { display: block; font-size: 14px; color: var(--teal); margin-bottom: 4px; }
+
+    /* BRAND COLORS */
+    .color-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
+    .color-swatch { border-radius: 10px; overflow: hidden; border: 1px solid var(--gray-200); min-width: 140px; flex: 1; }
+    .swatch-block { height: 64px; }
+    .swatch-info { padding: 10px 14px; }
+    .swatch-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+    .swatch-hex { font-size: 12px; color: var(--gray-600); font-family: monospace; }
+
+    /* FOOTER */
+    footer { background: #F4F6F8; padding: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-links a { font-size: 13px; color: var(--gray-600); }
+    .footer-links a:hover { color: var(--teal); }
+    .footer-copy { font-size: 12px; color: var(--gray-600); width: 100%; text-align: center; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="announce">
+  MigrantPortal Foundation — 501(c)(3) in formation &mdash; <a href="mailto:hello@migrantportal.com">Contact us</a>
+</div>
+
+<nav aria-label="Main navigation">
+  <a href="/" class="nav-logo" aria-label="MigrantPortal home">
+    <img src="logo.png" alt="" class="nav-logo-icon" />
+    <span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/how-migrantportal-works.html">How It Works</a>
+    <a href="/our-story.html">Our Story</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="/press-kit.html" style="color:var(--teal)">Press</a>
+    <a href="/login.html" class="nav-cta">Sign In</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-label">Media Resources</p>
+  <h1>Press Kit</h1>
+  <p>Everything you need to tell the MigrantPortal story — facts, founder bio, approved quotes, and brand assets.</p>
+</section>
+
+<div class="page">
+
+  <!-- MISSION -->
+  <div class="section">
+    <p class="label">Mission Statement</p>
+    <h2>Official Mission</h2>
+    <p style="font-size:17px; color:var(--navy); font-weight:500; line-height:1.6;">
+      To dignify the migrant experience by connecting families in need with communities ready to respond — where help meets hope.
+    </p>
+    <p style="margin-top:16px;">
+      MigrantPortal is a free platform and nonprofit initiative that bridges the gap between migrant families in crisis and the volunteers, churches, and organizations in their communities who are ready to help. Founded in Kansas City, MigrantPortal serves communities across the United States with a simple belief: the distance between a family in need and a neighbor ready to help should never be too far.
+    </p>
+  </div>
+
+  <!-- KEY FACTS -->
+  <div class="section">
+    <p class="label">Key Facts</p>
+    <h2>At a Glance</h2>
+    <table class="facts-table">
+      <tr><td>Founded</td><td>2024</td></tr>
+      <tr><td>Headquarters</td><td>Kansas City, Missouri</td></tr>
+      <tr><td>Legal Status</td><td>501(c)(3) nonprofit in formation</td></tr>
+      <tr><td>Platform</td><td>Web + iOS/Android mobile app (free)</td></tr>
+      <tr><td>Cities Served</td><td>Kansas City, Houston, Chicago, Phoenix, Los Angeles</td></tr>
+      <tr><td>Families Helped</td><td>120+ and growing</td></tr>
+      <tr><td>Community Responders</td><td>340+ active volunteers</td></tr>
+      <tr><td>Partner Organizations</td><td>30+ churches and nonprofits</td></tr>
+      <tr><td>Needs Fulfilled</td><td>85+ documented cases</td></tr>
+      <tr><td>Languages Supported</td><td>English, Spanish (expanding)</td></tr>
+      <tr><td>Cost to Users</td><td>100% free for migrants, responders, and organizations</td></tr>
+      <tr><td>Website</td><td><a href="https://migrantportal.com">migrantportal.com</a></td></tr>
+    </table>
+  </div>
+
+  <!-- FOUNDER BIO -->
+  <div class="section">
+    <p class="label">Founder</p>
+    <h2>Nirmal Samuel</h2>
+    <p>
+      Nirmal Samuel is the founder of MigrantPortal and a technology professional based in Kansas City, Missouri. With a deep personal understanding of what it means to navigate life as an immigrant — and a lifelong faith commitment to the dignity of every person — Nirmal built MigrantPortal to close the gap between migrant families in crisis and communities ready to respond.
+    </p>
+    <p>
+      MigrantPortal began as a simple question: <em>why is it so hard for someone who wants to help to find someone who needs help?</em> That question became a platform, and a platform became a movement.
+    </p>
+    <p>
+      Nirmal leads MigrantPortal Foundation's technology, partnerships, and growth — driven by the conviction that technology, when built with compassion, can restore dignity to the vulnerable and activate the generosity of communities.
+    </p>
+    <p style="color: var(--teal-d); font-weight: 600;">
+      Media inquiries: <a href="mailto:hello@migrantportal.com">hello@migrantportal.com</a>
+    </p>
+  </div>
+
+  <!-- APPROVED QUOTES -->
+  <div class="section">
+    <p class="label">Approved for Publication</p>
+    <h2>Quotes from Our Founder</h2>
+
+    <div class="quote-block">
+      <p>"The distance between a family in crisis and a community ready to help shouldn't be a phone call that never gets answered. MigrantPortal makes sure that call goes through."</p>
+      <p class="attribution">— Nirmal Samuel, Founder, MigrantPortal</p>
+    </div>
+
+    <div class="quote-block">
+      <p>"Every need submitted on our platform is a real family, a real story. When a neighbor responds — that's not just help. That's belonging."</p>
+      <p class="attribution">— Nirmal Samuel, Founder, MigrantPortal</p>
+    </div>
+
+    <div class="quote-block">
+      <p>"We built MigrantPortal because we believe every community already has what migrant families need. What was missing was the bridge. We built the bridge."</p>
+      <p class="attribution">— Nirmal Samuel, Founder, MigrantPortal</p>
+    </div>
+
+    <div class="quote-block">
+      <p>"This isn't about charity. It's about dignity. When a church responds to a family's need within 24 hours, both of them are changed."</p>
+      <p class="attribution">— Nirmal Samuel, Founder, MigrantPortal</p>
+    </div>
+  </div>
+
+  <!-- BRAND ASSETS -->
+  <div class="section">
+    <p class="label">Brand Assets</p>
+    <h2>Logo & Visual Identity</h2>
+    <p>Please use only the approved logo files below. Do not alter colors, proportions, or typography.</p>
+
+    <div class="logo-grid">
+      <div class="logo-card">
+        <img src="logo.png" alt="MigrantPortal logo" />
+        <div class="logo-wordmark">
+          <span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span>
+        </div>
+        <p>Standard (light backgrounds)</p>
+        <a href="logo.png" download class="download-link">Download PNG</a>
+      </div>
+      <div class="logo-card">
+        <img src="logo.webp" alt="MigrantPortal logo WebP" />
+        <div class="logo-wordmark">
+          <span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span>
+        </div>
+        <p>WebP format</p>
+        <a href="logo.webp" download class="download-link">Download WebP</a>
+      </div>
+      <div class="logo-card dark-bg">
+        <img src="logo.png" alt="MigrantPortal logo dark" style="filter: brightness(10);" />
+        <div class="logo-wordmark" style="color:white;">MigrantPortal</div>
+        <p>For dark backgrounds</p>
+        <a href="logo.svg" download class="download-link" style="border-color:rgba(255,255,255,0.4); color:rgba(255,255,255,0.8);">Download SVG</a>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 40px; margin-bottom: 16px;">Brand Colors</h3>
+    <div class="color-row">
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#009DA5;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Teal</div>
+          <div class="swatch-hex">#009DA5</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#172936;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Navy</div>
+          <div class="swatch-hex">#172936</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#0D7A8A;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Deep Teal</div>
+          <div class="swatch-hex">#0D7A8A</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#FF6129;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Orange</div>
+          <div class="swatch-hex">#FF6129</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#FAF7F0; border-bottom: 1px solid #E8E8E8;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Cream</div>
+          <div class="swatch-hex">#FAF7F0</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:20px; font-size:13px;">
+      <strong>Typography:</strong> Montserrat 800 for headings · Inter 400/500/600 for body text
+    </p>
+  </div>
+
+  <!-- MEDIA CONTACT -->
+  <div class="section">
+    <p class="label">Get in Touch</p>
+    <h2>Media Contact</h2>
+    <div class="contact-card">
+      <div class="contact-detail">
+        <div class="name">Nirmal Samuel</div>
+        <div class="role">Founder &amp; Executive Director, MigrantPortal Foundation</div>
+        <a href="mailto:hello@migrantportal.com">hello@migrantportal.com</a>
+        <a href="https://migrantportal.com">migrantportal.com</a>
+      </div>
+      <div class="contact-detail" style="color: var(--gray-600); font-size:14px;">
+        <p>We respond to all media inquiries within 24 hours.</p>
+        <p>For partnership inquiries, speaking requests, or to arrange an interview with our founder, please reach out via email.</p>
+        <p>High-resolution photos, additional statistics, and impact stories are available upon request.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer>
+  <div class="footer-brand">
+    <span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
+  </div>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="/our-story.html">Our Story</a>
+    <a href="/how-migrantportal-works.html">How It Works</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+  </nav>
+  <p class="footer-copy">&copy; 2026 MigrantPortal Foundation. All rights reserved.</p>
+</footer>
+
+<script>
+  window.onerror = function(msg, src, line) { console.error('[MigrantPortal]', msg, src + ':' + line); };
+  window.addEventListener('unhandledrejection', function(e) { console.error('[MigrantPortal]', e.reason); });
+</script>
+</body>
+</html>

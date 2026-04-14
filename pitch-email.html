@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Church & Nonprofit Outreach Email Templates — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #0D7A8A;
+      --teal-lt: #e6f7f8;
+      --navy:    #172936;
+      --cream:   #FAF7F0;
+      --text:    #0D0D0D;
+      --gray-600:#555;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+    }
+    html { overflow-x: clip; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.7; }
+    a { color: var(--teal); }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px; text-decoration: none; }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { font-size: 14px; color: var(--gray-600); font-weight: 500; text-decoration: none; }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-cta { background: #0973A7; color: white !important; padding: 9px 20px; border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; }
+    @media (max-width: 700px) { nav { padding: 0 20px; } .nav-links { display: none; } }
+
+    /* PAGE */
+    .page-hero { background: var(--cream); padding: 56px 40px; border-bottom: 1px solid var(--gray-200); }
+    .page-hero .label { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+    .page-hero h1 { font-family: 'Montserrat', sans-serif; font-size: 36px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+    .page-hero p { font-size: 16px; color: var(--gray-600); max-width: 600px; }
+
+    .page { max-width: 860px; margin: 0 auto; padding: 0 40px 80px; }
+
+    .instructions {
+      background: var(--teal-lt); border: 1.5px solid #b2dde1; border-radius: 12px;
+      padding: 24px 28px; margin: 40px 0 0;
+    }
+    .instructions h3 { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: var(--teal-d); margin-bottom: 10px; }
+    .instructions ul { padding-left: 18px; }
+    .instructions li { font-size: 14px; color: var(--gray-600); margin-bottom: 6px; }
+    .instructions li:last-child { margin-bottom: 0; }
+
+    /* EMAIL CARDS */
+    .email-sequence { margin-top: 40px; display: flex; flex-direction: column; gap: 36px; }
+
+    .email-card { border: 1px solid var(--gray-200); border-radius: 16px; overflow: hidden; }
+    .email-header {
+      padding: 20px 28px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .email-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 17px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .email-meta { flex: 1; }
+    .email-meta .email-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+    .email-meta h2 { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800; color: var(--navy); }
+    .email-meta .timing { font-size: 13px; color: var(--gray-600); margin-top: 4px; }
+
+    .email-body { padding: 0 28px 28px; }
+    .email-field { margin-bottom: 20px; }
+    .email-field-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gray-600); margin-bottom: 6px;
+    }
+    .email-subject {
+      background: var(--gray-100); border-radius: 8px; padding: 12px 16px;
+      font-size: 15px; font-weight: 600; color: var(--navy);
+    }
+    .email-text {
+      background: white; border: 1px solid var(--gray-200); border-radius: 8px;
+      padding: 20px; font-size: 14px; color: #333; line-height: 1.8;
+      white-space: pre-wrap; font-family: 'Inter', sans-serif;
+    }
+    .email-tip {
+      background: #fff8e1; border-left: 3px solid #f59e0b; border-radius: 0 8px 8px 0;
+      padding: 12px 16px; font-size: 13px; color: #78350f; margin-top: 16px;
+    }
+    .email-tip strong { display: block; margin-bottom: 4px; }
+
+    .copy-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--teal); color: white; border: none;
+      padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+      cursor: pointer; margin-top: 12px; font-family: 'Inter', sans-serif;
+      transition: background .15s;
+    }
+    .copy-btn:hover { background: var(--teal-d); }
+    .copy-btn.copied { background: #16a34a; }
+
+    /* SEQUENCE OVERVIEW */
+    .sequence-bar {
+      display: flex; gap: 0; margin: 40px 0 0;
+      border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden;
+    }
+    .seq-step { flex: 1; padding: 16px 20px; text-align: center; border-right: 1px solid var(--gray-200); }
+    .seq-step:last-child { border-right: none; }
+    .seq-step .seq-day { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--teal-d); margin-bottom: 4px; }
+    .seq-step .seq-goal { font-size: 13px; color: var(--navy); font-weight: 600; }
+    .seq-step .seq-sub { font-size: 12px; color: var(--gray-600); }
+    @media (max-width: 650px) { .sequence-bar { flex-direction: column; } .seq-step { border-right: none; border-bottom: 1px solid var(--gray-200); } }
+
+    footer { background: #F4F6F8; padding: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 0; }
+    .footer-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-links a { font-size: 13px; color: var(--gray-600); text-decoration: none; }
+    .footer-copy { font-size: 12px; color: var(--gray-600); width: 100%; text-align: center; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+<nav aria-label="Main navigation">
+  <a href="/" class="nav-logo" aria-label="MigrantPortal home">
+    <img src="logo.png" alt="" class="nav-logo-icon" />
+    <span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/how-migrantportal-works.html">How It Works</a>
+    <a href="/our-story.html">Our Story</a>
+    <a href="/press-kit.html">Press</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="/login.html" class="nav-cta">Sign In</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <p class="label">Outreach Templates</p>
+  <h1>Church &amp; Nonprofit Pitch Emails</h1>
+  <p>A 3-email sequence to invite churches and nonprofit organizations to join MigrantPortal as implementing partners. Personalize the <strong>[bracketed fields]</strong> before sending.</p>
+</div>
+
+<div class="page">
+
+  <div class="instructions">
+    <h3>How to Use This Sequence</h3>
+    <ul>
+      <li>Send Email 1 cold — no prior relationship needed. Lead with the story.</li>
+      <li>Wait 5–7 days. If no reply, send Email 2 — add social proof and a concrete ask.</li>
+      <li>Wait 5 days. If still no reply, send Email 3 — short, direct close. This is your last touch.</li>
+      <li>Personalize each email: use the pastor/director's name, the church name, and their city.</li>
+      <li>Best send times: Tuesday–Thursday, 8–10am or 1–3pm local time.</li>
+    </ul>
+  </div>
+
+  <div class="sequence-bar">
+    <div class="seq-step">
+      <div class="seq-day">Day 1</div>
+      <div class="seq-goal">The Story</div>
+      <div class="seq-sub">Emotional open, mission, soft ask</div>
+    </div>
+    <div class="seq-step">
+      <div class="seq-day">Day 6–8</div>
+      <div class="seq-goal">Social Proof</div>
+      <div class="seq-sub">Impact stats, what partners do, clear CTA</div>
+    </div>
+    <div class="seq-step">
+      <div class="seq-day">Day 12–14</div>
+      <div class="seq-goal">The Close</div>
+      <div class="seq-sub">Short, direct, one question</div>
+    </div>
+  </div>
+
+  <div class="email-sequence">
+
+    <!-- EMAIL 1 -->
+    <div class="email-card">
+      <div class="email-header" style="background: var(--teal-lt);">
+        <div class="email-num" style="background: var(--teal); color: white;">1</div>
+        <div class="email-meta">
+          <div class="email-label" style="color: var(--teal-d);">Email 1 of 3</div>
+          <h2>The Story</h2>
+          <div class="timing">Send on Day 1 &mdash; cold outreach, no prior contact needed</div>
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-field">
+          <div class="email-field-label">Subject Line</div>
+          <div class="email-subject">A family arrived in [City] with nothing. A church responded in 3 hours.</div>
+        </div>
+        <div class="email-field">
+          <div class="email-field-label">Email Body</div>
+          <div class="email-text" id="email1-body">Hi [Pastor/Director Name],
+
+I wanted to share something that happened on our platform last month.
+
+A mother and her two kids arrived in [City] — no food, no contacts, no idea where to turn. She found MigrantPortal and submitted a need. Three hours later, a local church showed up with groceries, a warm coat for her daughter, and a phone number to call if she needed anything else.
+
+That's MigrantPortal in a sentence: we connect migrant families in crisis with churches and nonprofits who are ready to help — right in their own city.
+
+We're building our partner network in [City] and I'd love to see [Church/Org Name] be part of it.
+
+Becoming a partner is free and takes about 15 minutes to set up. Your team gets a simple dashboard to see needs in your area, respond to what you can, and track the impact your community is making.
+
+Would it be okay if I sent you a short overview? Or if you'd like to explore right now, you can see real needs in your area at migrantportal.com.
+
+Where help meets hope — I hope [Church/Org Name] will be part of that.
+
+Nirmal Samuel
+Founder, MigrantPortal Foundation
+hello@migrantportal.com
+migrantportal.com</div>
+        </div>
+        <button class="copy-btn" onclick="copyEmail('email1-body', this)">Copy Email</button>
+        <div class="email-tip">
+          <strong>Personalization tip</strong>
+          Replace [City] with the city where this church is located. Replace [Church/Org Name] with their actual name. If you know of a real need in their city from the platform, mention it (without identifying details) for maximum relevance.
+        </div>
+      </div>
+    </div>
+
+    <!-- EMAIL 2 -->
+    <div class="email-card">
+      <div class="email-header" style="background: #fff8e1;">
+        <div class="email-num" style="background: #f59e0b; color: white;">2</div>
+        <div class="email-meta">
+          <div class="email-label" style="color: #92400e;">Email 2 of 3</div>
+          <h2>The Impact</h2>
+          <div class="timing">Send on Day 6–8 if no reply to Email 1</div>
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-field">
+          <div class="email-field-label">Subject Line</div>
+          <div class="email-subject">120 families helped. 30 churches. Here's what partners actually do.</div>
+        </div>
+        <div class="email-field">
+          <div class="email-field-label">Email Body</div>
+          <div class="email-text" id="email2-body">Hi [Pastor/Director Name],
+
+Following up on my last note about MigrantPortal.
+
+I thought it might help to share what partner churches actually do on our platform — it's less work than you might think.
+
+Here's what's happening across our network right now:
+• 120+ migrant families have received help
+• 340+ community volunteers are actively responding to needs
+• 30+ churches and nonprofits are coordinating response
+• Needs range from food and clothing to translation, legal referrals, and temporary housing
+
+As a partner organization, your team gets:
+→ A free dashboard showing needs in [City] you can respond to
+→ Ability to post your own volunteer opportunities
+→ Monthly impact reports showing what your community accomplished
+→ Connection to a growing network of like-minded organizations
+
+Most of our partner churches spend 1–2 hours per week reviewing and responding to needs. No new staff. No new programs. Just a new way to activate the compassion your congregation already has.
+
+Would a 20-minute call work this week or next? I'd love to show you how it works.
+
+Nirmal Samuel
+Founder, MigrantPortal Foundation
+hello@migrantportal.com
+migrantportal.com</div>
+        </div>
+        <button class="copy-btn" onclick="copyEmail('email2-body', this)">Copy Email</button>
+        <div class="email-tip">
+          <strong>Personalization tip</strong>
+          If you have a specific stat for their city (e.g., "We have 12 open needs in Kansas City right now"), add it after the bullet list. It dramatically increases response rates.
+        </div>
+      </div>
+    </div>
+
+    <!-- EMAIL 3 -->
+    <div class="email-card">
+      <div class="email-header" style="background: #f0f4ff;">
+        <div class="email-num" style="background: var(--navy); color: white;">3</div>
+        <div class="email-meta">
+          <div class="email-label" style="color: var(--navy);">Email 3 of 3</div>
+          <h2>The Close</h2>
+          <div class="timing">Send on Day 12–14 — final follow-up, keep it short</div>
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="email-field">
+          <div class="email-field-label">Subject Line</div>
+          <div class="email-subject">Last note — is MigrantPortal a fit for [Church/Org Name]?</div>
+        </div>
+        <div class="email-field">
+          <div class="email-field-label">Email Body</div>
+          <div class="email-text" id="email3-body">Hi [Pastor/Director Name],
+
+I don't want to keep showing up in your inbox if this isn't a fit — so I'll make this my last note.
+
+MigrantPortal connects migrant families in [City] with churches and nonprofits ready to help. It's free, it takes 15 minutes to set up, and your team keeps full control of what you respond to.
+
+One question: is serving migrant families something [Church/Org Name] is currently doing or exploring?
+
+If yes — I'd love to connect. If not, no worries at all.
+
+Either way, you can see how it works at migrantportal.com/how-migrantportal-works.html.
+
+Thank you for your time.
+
+Nirmal Samuel
+Founder, MigrantPortal Foundation
+hello@migrantportal.com</div>
+        </div>
+        <button class="copy-btn" onclick="copyEmail('email3-body', this)">Copy Email</button>
+        <div class="email-tip">
+          <strong>Why this works</strong>
+          The "last note" framing removes pressure and triggers a guilt-response in the recipient. The single yes/no question is easy to answer. Short emails on the final touch consistently outperform longer ones.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /email-sequence -->
+
+</div><!-- /page -->
+
+<footer>
+  <div class="footer-brand">
+    <span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
+  </div>
+  <nav class="footer-links" aria-label="Footer navigation">
+    <a href="/our-story.html">Our Story</a>
+    <a href="/press-kit.html">Press Kit</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+  </nav>
+  <p class="footer-copy">&copy; 2026 MigrantPortal Foundation. All rights reserved.</p>
+</footer>
+
+<script>
+  function copyEmail(id, btn) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(function() {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = orig;
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+  window.onerror = function(msg, src, line) { console.error('[MigrantPortal]', msg, src + ':' + line); };
+</script>
+</body>
+</html>
