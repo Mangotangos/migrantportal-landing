@@ -1365,10 +1365,9 @@
     // ── Load need
     async function loadNeed() {
       if (!needId) {
-        // No ?id= param — clear sidebar Loading… placeholder
-        const p = document.getElementById('panel-content');
-        if (p) p.innerHTML = '<div style="color:var(--gray-400);font-size:13px;text-align:center;padding:20px 0">No need selected. <a href="requests.html">Browse open needs →</a></div>';
-        return; // keep static demo
+        // No ?id= param — redirect to requests list; never show the demo record
+        window.location.replace('requests.html');
+        return;
       }
 
       try {

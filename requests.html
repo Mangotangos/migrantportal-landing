@@ -280,7 +280,7 @@
       MigrantPortal
     </a>
     <div class="topbar-search" style="position:relative">
-      <input id="topbar-search-input" type="text" placeholder="Search requests, families, needs…" oninput="debounceTopSearch(this.value)" autocomplete="off" />
+      <input id="topbar-search-input" type="text" aria-label="Search requests" placeholder="Search requests, families, needs…" oninput="debounceTopSearch(this.value)" autocomplete="off" />
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:white;border:1px solid #E8E8E8;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:500;max-height:340px;overflow-y:auto"></div>
     </div>
@@ -304,9 +304,11 @@
     <a href="profile.html">Profile</a>
   </nav>
 
+  <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Open Requests</h1>
   <!-- FILTER BAR -->
   <div class="filterbar">
-    <input class="search-req" type="text" placeholder="Search by Request Number, Story Details, Needs…" oninput="filterCards(this.value)" />
+    <label for="req-search" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Search requests</label>
+    <input id="req-search" class="search-req" type="text" placeholder="Search by Request Number, Story Details, Needs…" oninput="filterCards(this.value)" />
     <button class="filter-btn" id="filterBtn" onclick="toggleFilter(this)">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
       Filters
@@ -324,7 +326,7 @@
   <!-- FILTER PANEL -->
   <div class="filter-panel" id="filter-panel">
     <div class="filter-group">
-      <label>Category</label>
+      <label for="filt-category">Category</label>
       <select id="filt-category" onchange="applyFilters()">
         <option value="">All Categories</option>
         <option value="housing">Housing</option>
@@ -341,7 +343,7 @@
       </select>
     </div>
     <div class="filter-group">
-      <label>Urgency</label>
+      <label for="filt-urgency">Urgency</label>
       <select id="filt-urgency" onchange="applyFilters()">
         <option value="">All Urgency</option>
         <option value="critical">Critical</option>
@@ -351,7 +353,7 @@
       </select>
     </div>
     <div class="filter-group">
-      <label>Status</label>
+      <label for="filt-status">Status</label>
       <select id="filt-status" onchange="applyFilters()">
         <option value="">All Status</option>
         <option value="active">Active</option>
