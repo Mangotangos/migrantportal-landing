@@ -600,6 +600,7 @@
       <a href="how-migrantportal-works.html" class="nav-link">How It Works</a>
       <a href="requests.html" class="nav-link">Browse Requests</a>
       <a href="faq.html" class="nav-link">FAQ</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </div>
     <div class="nav-right">
       <a href="login.html" class="nav-signup">Sign In</a>
@@ -619,6 +620,7 @@
     <a href="/how-migrantportal-works.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
     <a href="/requests.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Browse Requests</a>
     <a href="/faq.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">FAQ</a>
+    <a href="/contact.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
     <a href="/login.html" class="mobile-cta" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Sign In</a>
   </div>
 
@@ -1010,7 +1012,7 @@
             <li><a href="/how-migrantportal-works.html">How It Works</a></li>
             <li><a href="#impact">Impact</a></li>
             <li><a href="#about">Our Solution</a></li>
-            <li><a href="mailto:support@migrantportal.com">Contact Us</a><div style="font-size:11px;color:var(--gray-500);margin-top:2px">Response within 24 hours</div></li>
+            <li><a href="/contact.html">Contact Us</a><div style="font-size:11px;color:var(--gray-500);margin-top:2px">Response within 24 hours</div></li>
           </ul>
         </div>
 
@@ -1058,7 +1060,7 @@
         <div class="footer-legal">
           <a href="/privacy.html">Privacy</a>
           <a href="/terms.html">Terms</a>
-          <a href="mailto:support@migrantportal.com">Contact</a>
+          <a href="/contact.html">Contact</a>
         </div>
         <p class="footer-copy">MigrantPortal © 2026 · Built with compassion</p>
       </div>
@@ -1083,16 +1085,15 @@
         .then(function(d){
           if (!d) return;
           var totalNeeds = (d.total_active || 0) + (d.total_fulfilled || 0);
-          if (totalNeeds)              animateCount(document.getElementById('stat-needs'),      totalNeeds);
-          if (d.total_responders)      animateCount(document.getElementById('stat-responses'),  d.total_responders);
-          if (d.total_families_helped) animateCount(document.getElementById('stat-families'),   d.total_families_helped);
-          if (d.total_orgs)            animateCount(document.getElementById('stat-orgs'),       d.total_orgs);
+          animateCount(document.getElementById('stat-needs'),      totalNeeds);
+          animateCount(document.getElementById('stat-responses'),  d.total_responders      || 0);
+          animateCount(document.getElementById('stat-families'),   d.total_families_helped || 0);
+          animateCount(document.getElementById('stat-orgs'),       d.total_orgs            || 0);
         })
         .catch(function(){
-          var fallbacks = {'stat-needs':'120+','stat-responses':'340+','stat-families':'85+','stat-orgs':'30+'};
-          Object.keys(fallbacks).forEach(function(id){
+          ['stat-needs','stat-responses','stat-families','stat-orgs'].forEach(function(id){
             var el = document.getElementById(id);
-            if (el) el.textContent = fallbacks[id];
+            if (el) el.textContent = '0';
           });
         });
     })();
