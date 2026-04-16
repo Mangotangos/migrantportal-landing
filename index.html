@@ -803,19 +803,19 @@
       <p style="color:#6B6B6B;margin-bottom:32px;">Updated live from our network</p>
       <div class="live-stats-grid">
         <div class="live-stat-card">
-          <div class="live-stat-num" id="stat-needs">—</div>
+          <div class="live-stat-num" id="stat-needs">0</div>
           <div class="live-stat-label">Needs Submitted</div>
         </div>
         <div class="live-stat-card">
-          <div class="live-stat-num" id="stat-responses">—</div>
+          <div class="live-stat-num" id="stat-responses">0</div>
           <div class="live-stat-label">Responses Given</div>
         </div>
         <div class="live-stat-card">
-          <div class="live-stat-num" id="stat-families">—</div>
+          <div class="live-stat-num" id="stat-families">0</div>
           <div class="live-stat-label">Families Served</div>
         </div>
         <div class="live-stat-card">
-          <div class="live-stat-num" id="stat-orgs">—</div>
+          <div class="live-stat-num" id="stat-orgs">0</div>
           <div class="live-stat-label">Partner Orgs</div>
         </div>
       </div>
@@ -1080,6 +1080,9 @@
           el.textContent = start.toLocaleString();
         }, duration / 60);
       }
+      // Stats hardcoded to 0 until real data accumulates
+      // Re-enable fetch below once numbers are meaningful
+      /*
       fetch(API)
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(d){
@@ -1096,6 +1099,7 @@
             if (el) el.textContent = '0';
           });
         });
+      */
     })();
   </script>
 
