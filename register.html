@@ -746,13 +746,15 @@
         if (notes) payload.registration_notes = notes;
         if (responderType && role === 'responder') payload.responder_type = responderType;
         const data = await apiPost('/auth/register', payload);
-        saveSession(data.access_token, data.user);
         goTo(6);
         if (data.user?.status === 'pending') {
+          // Do NOT save session — pending users must wait for admin approval
           document.getElementById('success-icon').textContent = '⏳';
           document.getElementById('success-heading').textContent = 'Application Submitted!';
           document.getElementById('success-text').innerHTML = 'Thanks for joining MigrantPortal.<br /><br />Your account is <strong>pending admin approval</strong>. You\'ll receive a notification once approved (usually 1–2 business days).';
+          setTimeout(() => window.location.href = '/pending.html', 2000);
         } else {
+          saveSession(data.access_token, data.user);
           const dest = role === 'navigator' ? 'org-dashboard.html' : 'dashboard.html';
           setTimeout(() => window.location.href = dest, 2000);
         }

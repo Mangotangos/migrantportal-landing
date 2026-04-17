@@ -101,5 +101,16 @@ function requireAuth() {
     window.location.replace('/login.html');
     return null;
   }
-  return getUser();
+  const user = getUser();
+  if (user?.status === 'pending') {
+    window.location.replace('/pending.html');
+    return null;
+  }
+  if (user?.status === 'rejected') {
+    localStorage.removeItem('mp_user');
+    localStorage.removeItem('mp_token');
+    window.location.replace('/login.html');
+    return null;
+  }
+  return user;
 }
