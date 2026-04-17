@@ -746,7 +746,11 @@
 <script src="api.js"></script>
 <script>
   const user = requireAuth();
-  if (!user || user.role !== 'admin') { alert('Admin access only.'); window.location.href = 'login.html'; }
+  if (!user || user.role !== 'admin') {
+    if (user) alert('Admin access only.');
+    window.location.replace('login.html');
+    throw new Error('Unauthorized');
+  }
   document.getElementById('adminName').textContent = user?.name || '';
 
   /* ═══════════════════════════════════════════
@@ -756,7 +760,10 @@
   const ALL_TABS = ['pending','all','users','reports','flagged','announcements','orgs','resources','disbursements','audit'];
 
   function switchTab(name) {
-    document.querySelectorAll('.nav-item').forEach((el, i) => el.classList.toggle('active', ALL_TABS[i] === name));
+    document.querySelectorAll('.nav-item').forEach(el => {
+      const m = (el.getAttribute('onclick') || '').match(/switchTab\('(\w+)'\)/);
+      el.classList.toggle('active', !!m && m[1] === name);
+    });
     ALL_TABS.forEach(t => { document.getElementById('tab-' + t).style.display = t === name ? '' : 'none'; });
     activeTab = name;
     if (name === 'all')           loadAllNeeds();

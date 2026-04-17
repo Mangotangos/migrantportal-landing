@@ -1085,9 +1085,6 @@
           el.textContent = start.toLocaleString();
         }, duration / 60);
       }
-      // Stats hardcoded to 0 until real data accumulates
-      // Re-enable fetch below once numbers are meaningful
-      /*
       fetch(API)
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(d){
@@ -1104,7 +1101,6 @@
             if (el) el.textContent = '0';
           });
         });
-      */
     })();
   </script>
 
