@@ -1058,6 +1058,42 @@
     document.getElementById('modalOverlay').classList.remove('open');
   }
 
+  function openAllNeedModal(id) {
+    const n = allNeedsCache.find(x => x.id === id);
+    if (!n) return;
+    const days = staleDays(n.created_at);
+    const isPending = n.status === 'pending';
+    document.getElementById('modalContent').innerHTML = `
+      <div style="margin-bottom:20px">
+        <div style="font-size:18px;font-weight:800;letter-spacing:-0.4px;margin-bottom:6px">${n.title}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span class="pc-case">#${n.case_number}</span>
+          <span class="status-pill ${STATUS_CLASS[n.status]||''}">${n.status}</span>
+          <span class="status-pill s-pending"><span class="urgency-dot ${URGENCY_COLOR[n.urgency]}"></span>${n.urgency}</span>
+          <span style="font-size:12px;color:var(--text-2)">${CAT_EMOJI[n.category]||'📦'} ${n.category}</span>
+          ${days >= 3 ? staleBadge(n.created_at) : ''}
+          ${triageBadge(n)}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+        <div class="modal-field"><div class="modal-field-label">Location</div><div class="modal-field-val">${n.city}, ${n.state} ${n.zip||''}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Navigator Org</div><div class="modal-field-val">${n.navigator_org||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Family Size</div><div class="modal-field-val">${n.family_adults} adult${n.family_adults!==1?'s':''}, ${n.family_children} child${n.family_children!==1?'ren':''}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Submitted</div><div class="modal-field-val">${n.created_at ? new Date(n.created_at).toLocaleDateString() : '—'}</div></div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-label">Full Description</div>
+        <div class="modal-field-val" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13px;line-height:1.7">${n.description||'—'}</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:20px">
+        ${isPending ? `<button class="btn btn-approve" onclick="approveSingle('${n.id}');closeModal()">✓ Approve</button><button class="btn btn-reject" onclick="showReject('${n.id}');closeModal()">✗ Reject</button>` : ''}
+        <a href="need.html?id=${n.id}" class="btn" style="margin-left:auto;text-decoration:none">View Full Page →</a>
+        <button class="btn btn-delete" onclick="document.getElementById('modalOverlay').classList.remove('open')">Close</button>
+      </div>
+    `;
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
   /* ═══════════════════════════════════════════
      ALL NEEDS + PAGINATION + EXPORT
   ═══════════════════════════════════════════ */
@@ -1096,7 +1132,7 @@
             ${data.items.map(n => `
               <tr>
                 <td><a href="need.html?id=${n.id}" style="color:var(--text-3);font-family:monospace;font-size:12px">#${n.case_number}</a></td>
-                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600">${n.title}</td>
+                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;cursor:pointer;color:var(--teal)" onclick="openAllNeedModal('${n.id}')">${n.title}</td>
                 <td style="color:var(--text-2)">${CAT_EMOJI[n.category]||''} ${n.category}</td>
                 <td><span class="urgency-dot ${URGENCY_COLOR[n.urgency]}"></span><span style="color:var(--text-2)">${n.urgency}</span></td>
                 <td>${triageBadge(n)}</td>
