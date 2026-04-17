@@ -1630,7 +1630,7 @@
                       </div>
                     </div>`:''}
                   ${d.status==='sent'?`<span style="font-size:11px;color:var(--text-3)">Awaiting receipt</span>`:''}
-                  ${d.status==='confirmed'&&d.receipt_url?`<a href="https://migrant-portal-production-3826.up.railway.app${d.receipt_url}" target="_blank" style="font-size:12px;font-weight:600;color:var(--teal)">📄 View Receipt</a>`:''}
+                  ${d.status==='confirmed'&&d.receipt_url?`<a href="${API}${d.receipt_url}" target="_blank" style="font-size:12px;font-weight:600;color:var(--teal)">📄 View Receipt</a>`:''}
                 </td>
               </tr>`).join('')}
           </tbody>
