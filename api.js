@@ -5,6 +5,7 @@ let _isLogoutInProgress = false;
 function _handle401() {
   if (_isLogoutInProgress) return;
   localStorage.removeItem('mp_user');
+  localStorage.removeItem('mp_token');
   window.location.replace('/login.html');
 }
 
@@ -24,7 +25,7 @@ async function _fetchWithRetry(path, options) {
 async function apiPost(path, body) {
   const r = await _fetchWithRetry(path, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: _authHeaders({ 'Content-Type': 'application/json' }),
     credentials: 'include',
     body: JSON.stringify(body),
   });
@@ -44,7 +45,7 @@ function _extractDetail(detail) {
 async function apiPatch(path, body) {
   const r = await _fetchWithRetry(path, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: _authHeaders({ 'Content-Type': 'application/json' }),
     credentials: 'include',
     body: JSON.stringify(body),
   });
@@ -55,7 +56,7 @@ async function apiPatch(path, body) {
 }
 
 async function apiGet(path) {
-  const r = await _fetchWithRetry(path, { credentials: 'include' });
+  const r = await _fetchWithRetry(path, { headers: _authHeaders(), credentials: 'include' });
   const data = await r.json();
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
   if (!r.ok) throw new Error(_extractDetail(data.detail));
@@ -63,16 +64,24 @@ async function apiGet(path) {
 }
 
 async function apiDelete(path) {
-  const r = await _fetchWithRetry(path, { method: 'DELETE', credentials: 'include' });
+  const r = await _fetchWithRetry(path, { method: 'DELETE', headers: _authHeaders(), credentials: 'include' });
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
   if (!r.ok) { const data = await r.json().catch(() => ({})); throw new Error(data.detail || 'Request failed'); }
   return r.status === 204 ? null : r.json();
 }
 
-// token param kept for mobile-app callers that still pass it; ignored on web (cookie is used)
-function saveSession(_tokenOrUser, user) {
-  const u = user !== undefined ? user : _tokenOrUser;
-  localStorage.setItem('mp_user', JSON.stringify(u));
+function saveSession(tokenOrUser, user) {
+  if (user !== undefined) {
+    localStorage.setItem('mp_token', tokenOrUser);
+    localStorage.setItem('mp_user', JSON.stringify(user));
+  } else {
+    localStorage.setItem('mp_user', JSON.stringify(tokenOrUser));
+  }
+}
+
+function _authHeaders(extra = {}) {
+  const token = localStorage.getItem('mp_token');
+  return token ? { Authorization: `Bearer ${token}`, ...extra } : { ...extra };
 }
 
 function getUser() {
@@ -82,7 +91,8 @@ function getUser() {
 async function logout() {
   _isLogoutInProgress = true;
   localStorage.removeItem('mp_user');
-  try { await fetch(API + '/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+  localStorage.removeItem('mp_token');
+  try { await fetch(API + '/auth/logout', { method: 'POST', headers: _authHeaders(), credentials: 'include' }); } catch {}
   window.location.replace('/login.html');
 }
 
