@@ -413,6 +413,69 @@
     .lb-bar-wrap { width:90px;flex-shrink:0; }
 
     @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation:none !important;transition:none !important; } }
+
+    /* ── REJECTION MODAL ── */
+    .rej-overlay {
+      display:none;position:fixed;inset:0;z-index:9000;
+      background:rgba(10,18,30,0.55);backdrop-filter:blur(4px);
+      align-items:center;justify-content:center;
+    }
+    .rej-overlay.open { display:flex; }
+    .rej-modal {
+      background:var(--surface);border:1px solid var(--border-2);border-radius:18px;
+      width:100%;max-width:480px;margin:16px;
+      box-shadow:0 24px 60px rgba(0,0,0,0.22);
+      animation:rej-in .18s cubic-bezier(.2,.8,.3,1);
+    }
+    @keyframes rej-in { from{opacity:0;transform:scale(.95) translateY(8px)} to{opacity:1;transform:none} }
+    .rej-header {
+      padding:24px 24px 0;border-bottom:1px solid var(--border);padding-bottom:16px;
+      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+    }
+    .rej-icon {
+      width:40px;height:40px;border-radius:10px;background:var(--red-bg);
+      display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+    }
+    .rej-title { font-size:16px;font-weight:800;letter-spacing:-.4px;margin-bottom:3px; }
+    .rej-subtitle { font-size:12px;color:var(--text-3);line-height:1.5; }
+    .rej-close {
+      width:28px;height:28px;border-radius:7px;border:1px solid var(--border-2);
+      background:transparent;color:var(--text-3);font-size:15px;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      cursor:pointer;transition:all .15s;
+    }
+    .rej-close:hover { background:var(--red-bg);color:var(--red);border-color:rgba(248,81,73,.2); }
+    .rej-body { padding:20px 24px; }
+    .rej-presets-label { font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px; }
+    .rej-presets { display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px; }
+    .rej-chip {
+      padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;
+      border:1px solid var(--border-2);background:var(--surface-2);color:var(--text-2);
+      transition:all .15s;user-select:none;
+    }
+    .rej-chip:hover { border-color:var(--red);color:var(--red);background:var(--red-bg); }
+    .rej-chip.selected { border-color:var(--red);color:var(--red);background:var(--red-bg);font-weight:600; }
+    .rej-textarea-label { font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px; }
+    .rej-textarea {
+      width:100%;min-height:72px;padding:10px 12px;border-radius:10px;resize:vertical;
+      border:1px solid var(--border-2);background:var(--bg);color:var(--text);font-size:13px;
+      font-family:inherit;outline:none;transition:border-color .15s;line-height:1.5;
+    }
+    .rej-textarea:focus { border-color:var(--red); }
+    .rej-textarea::placeholder { color:var(--text-3); }
+    .rej-footer { padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:10px; }
+    .rej-skip { font-size:12px;color:var(--text-3);cursor:pointer;margin-right:auto;transition:color .15s; }
+    .rej-skip:hover { color:var(--text-2); }
+    .btn-rej-cancel {
+      height:36px;padding:0 18px;border-radius:8px;font-size:13px;font-weight:600;
+      background:transparent;color:var(--text-2);border:1px solid var(--border-2);transition:all .15s;
+    }
+    .btn-rej-cancel:hover { border-color:var(--border-2);background:var(--surface-2); }
+    .btn-rej-confirm {
+      height:36px;padding:0 20px;border-radius:8px;font-size:13px;font-weight:700;
+      background:var(--red);color:white;border:none;transition:all .15s;
+    }
+    .btn-rej-confirm:hover { background:#d93f3a; }
   </style>
 </head>
 <body>
@@ -955,11 +1018,6 @@
             <button class="btn btn-delete" onclick="deleteNeed('${n.id}','${n.title.replace(/'/g,"\\'")}')">Delete</button>
             <span style="font-size:11px;color:var(--text-3);margin-left:4px;cursor:pointer" onclick="openNeedModal(${i})">View details →</span>
           </div>
-          <input class="reject-input" id="rej-${n.id}" placeholder="Reason for rejection (optional)" />
-          <div id="rej-confirm-${n.id}" style="display:none;margin-top:8px">
-            <button class="btn btn-reject" onclick="confirmReject('${n.id}')">Confirm Reject</button>
-            <button class="btn btn-delete" onclick="hideReject('${n.id}')" style="margin-left:4px">Cancel</button>
-          </div>
         </div>
       </div>
     `).join('');
@@ -982,17 +1040,9 @@
     } catch(e) { toast(e.message, true); }
   }
 
-  function showReject(id) {
-    document.getElementById('rej-' + id).style.display = 'block';
-    document.getElementById('rej-confirm-' + id).style.display = 'flex';
-    document.getElementById('rej-' + id).focus();
-  }
-  function hideReject(id) {
-    document.getElementById('rej-' + id).style.display = 'none';
-    document.getElementById('rej-confirm-' + id).style.display = 'none';
-  }
-  async function confirmReject(id) {
-    const reason = document.getElementById('rej-' + id).value.trim();
+  async function showReject(id) {
+    const reason = await showRejectModal({ title: 'Reject Need', subtitle: 'Select a reason or write a custom one. The navigator will be notified.', presets: NEED_REJECT_PRESETS });
+    if (reason === null) return;
     try {
       await apiPatch(`/admin/needs/${id}/reject`, { reason });
       toast('Need rejected.');
@@ -1017,7 +1067,7 @@
   async function bulkReject() {
     const ids = [...selectedIds];
     if (!ids.length) return;
-    const reason = prompt(`Reason for rejecting ${ids.length} need(s) (optional):`);
+    const reason = await showRejectModal({ title: `Reject ${ids.length} Need${ids.length!==1?'s':''}`, subtitle: `Choose a reason to apply to all ${ids.length} selected need${ids.length!==1?'s':''}.`, presets: NEED_REJECT_PRESETS });
     if (reason === null) return;
     let done = 0;
     for (const id of ids) {
@@ -1239,7 +1289,7 @@
   }
 
   async function rejectUser(id) {
-    const reason = prompt('Reason for rejection (optional):') ?? null;
+    const reason = await showRejectModal({ title: 'Reject User', subtitle: 'Select a reason or write a custom one. The user will be notified.', presets: USER_REJECT_PRESETS });
     if (reason === null) return;
     try {
       await apiPost(`/admin/users/${id}/reject`, { reason: reason || '' });
@@ -1647,7 +1697,7 @@
   }
 
   async function rejectDisbursement(id) {
-    const reason = prompt('Reason for rejection:');
+    const reason = await showRejectModal({ title: 'Reject Disbursement', subtitle: 'Select a reason or write a custom one. The navigator will be notified.', presets: DISB_REJECT_PRESETS });
     if (reason === null) return;
     try { await apiPost(`/admin/disbursements/${id}/reject`, { admin_note: reason }); toast('Disbursement rejected.'); loadDisbursements(); }
     catch(e) { toast(e.message, true); }
@@ -1889,5 +1939,102 @@
   loadStats();
   loadPending();
 </script>
+
+  <!-- ── REJECTION MODAL ── -->
+  <div class="rej-overlay" id="rejOverlay" onclick="if(event.target===this)_rejCancel()">
+    <div class="rej-modal" role="dialog" aria-modal="true" aria-labelledby="rejTitle">
+      <div class="rej-header">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="rej-icon">✕</div>
+          <div>
+            <div class="rej-title" id="rejTitle">Reject</div>
+            <div class="rej-subtitle" id="rejSubtitle">Select a reason or write a custom one below.</div>
+          </div>
+        </div>
+        <button class="rej-close" onclick="_rejCancel()" aria-label="Close">✕</button>
+      </div>
+      <div class="rej-body">
+        <div class="rej-presets-label">Quick reasons</div>
+        <div class="rej-presets" id="rejPresets"></div>
+        <div class="rej-textarea-label">Custom reason <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
+        <textarea class="rej-textarea" id="rejTextarea" placeholder="Type a reason or leave blank…" rows="3"></textarea>
+      </div>
+      <div class="rej-footer">
+        <span class="rej-skip" onclick="_rejConfirm(true)">Skip reason &amp; reject</span>
+        <button class="btn-rej-cancel" onclick="_rejCancel()">Cancel</button>
+        <button class="btn-rej-confirm" onclick="_rejConfirm(false)">Confirm Rejection</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* ── Rejection Modal Engine ── */
+  let _rejResolve = null;
+
+  const USER_REJECT_PRESETS = [
+    'Incomplete profile information',
+    'Organization not verified',
+    'Duplicate account',
+    'Unable to confirm identity',
+    'Does not meet eligibility requirements',
+  ];
+  const NEED_REJECT_PRESETS = [
+    'Insufficient documentation',
+    'Outside service area',
+    'Need already fulfilled',
+    'Duplicate submission',
+    'Does not meet program criteria',
+  ];
+  const DISB_REJECT_PRESETS = [
+    'Insufficient documentation',
+    'Amount exceeds approved limit',
+    'Need already fulfilled',
+    'Duplicate request',
+    'Ineligible expense category',
+  ];
+
+  function showRejectModal({ title = 'Reject', subtitle = 'Select a reason or write a custom one.', presets = NEED_REJECT_PRESETS } = {}) {
+    document.getElementById('rejTitle').textContent = title;
+    document.getElementById('rejSubtitle').textContent = subtitle;
+    document.getElementById('rejTextarea').value = '';
+    const presetsEl = document.getElementById('rejPresets');
+    presetsEl.innerHTML = presets.map(p =>
+      `<span class="rej-chip" onclick="_rejChipClick(this,'${p.replace(/'/g,"\\'")}')">${p}</span>`
+    ).join('');
+    document.getElementById('rejOverlay').classList.add('open');
+    document.getElementById('rejTextarea').focus();
+    return new Promise(res => { _rejResolve = res; });
+  }
+
+  function _rejChipClick(el, text) {
+    const wasSelected = el.classList.contains('selected');
+    document.querySelectorAll('.rej-chip').forEach(c => c.classList.remove('selected'));
+    if (!wasSelected) {
+      el.classList.add('selected');
+      document.getElementById('rejTextarea').value = text;
+    } else {
+      document.getElementById('rejTextarea').value = '';
+    }
+  }
+
+  function _rejConfirm(skipReason) {
+    const reason = skipReason ? '' : (document.getElementById('rejTextarea').value.trim());
+    _rejClose();
+    if (_rejResolve) { _rejResolve(reason); _rejResolve = null; }
+  }
+
+  function _rejCancel() {
+    _rejClose();
+    if (_rejResolve) { _rejResolve(null); _rejResolve = null; }
+  }
+
+  function _rejClose() {
+    document.getElementById('rejOverlay').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('rejOverlay').classList.contains('open')) _rejCancel();
+  });
+  </script>
 </body>
 </html>
