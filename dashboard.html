@@ -8,346 +8,347 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --teal:    #009DA5;
-      --teal-d:  #007c84;
-      --teal-lt: #e6f7f8;
-      --orange:  #FF6129;
-      --orange-d:#e05020;
-      --blue:    #0973A7;
-      --text:    #0D0D0D;
-      --text-sub:#6B6B6B;
-      --gray-700:#3d3d3d;
-      --gray-600:#555;
-      --gray-400:#999;
-      --gray-200:#E8E8E8;
-      --gray-100:#F4F4F4;
-      --gray-bg: #F0F2F5;
-      --green:   #22C55E;
-      --surface: #FFFFFF;
-      --border:  #E8E8E8;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+      --primary:    #007A82;
+      --primary-d:  #005f66;
+      --primary-lt: #E0F4F5;
+      --accent:     #F59E0B;
+      --coral:      #FF6129;
+      --coral-d:    #e04d18;
+      --green:      #22C55E;
+      --bg:         #F5F3EE;
+      --surface:    #FFFFFF;
+      --text:       #1A1614;
+      --text-sub:   #6E6560;
+      --border:     #E5E0D8;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:  0 4px 14px rgba(0,0,0,0.10);
+      --radius:     12px;
+      --font-head:  'Fraunces', Georgia, serif;
+      --font-body:  'DM Sans', system-ui, sans-serif;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --text:    #F0EDE8;
-        --text-sub:#9EA89A;
-        --gray-700:#c0bab4;
-        --gray-600:#a0a09a;
-        --gray-400:#6B7280;
-        --gray-200:#2a2a2a;
-        --gray-100:#1e2020;
-        --gray-bg: #0F1212;
-        --surface: #19231F;
-        --border:  rgba(255,255,255,0.10);
-        --teal-lt: rgba(0,157,165,0.12);
-        --shadow-sm: 0 2px 8px rgba(0,0,0,0.35);
-        --shadow-md: 0 4px 16px rgba(0,0,0,0.45);
+        --bg: #0F1110; --surface: #1A1F1E; --text: #F0EDE8; --text-sub: #9A9590;
+        --border: rgba(255,255,255,0.09); --primary-lt: rgba(0,122,130,0.15);
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 14px rgba(0,0,0,0.5);
       }
       body { color-scheme: dark; }
+      .hero { background: linear-gradient(135deg, #003d42 0%, #004f56 100%) !important; }
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--gray-bg); line-height: 1.6; }
-    a { text-decoration: none; color: var(--teal); }
-    button { font-family: 'Inter', sans-serif; }
+    body { font-family: var(--font-body); color: var(--text); background: var(--bg); line-height: 1.6; }
+    a { text-decoration: none; color: var(--primary); }
+    button { font-family: var(--font-body); }
 
-    /* ─── TOP NAV (tabs) ─────────────────────── */
-    /* ── TOPBAR ── */
+    /* TOPBAR */
     .topbar {
       background: var(--surface); border-bottom: 1px solid var(--border);
-      height: 52px; display: flex; align-items: center; gap: 12px;
-      padding: 0 16px; position: sticky; top: 0; z-index: 110; flex-shrink: 0;
+      height: 56px; display: flex; align-items: center; gap: 12px;
+      padding: 0 20px; position: sticky; top: 0; z-index: 110;
     }
     .topbar-logo {
       display: flex; align-items: center; gap: 8px;
-      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px;
-      color: var(--navy); letter-spacing: -0.3px; text-decoration: none;
+      font-family: var(--font-head); font-weight: 800; font-size: 17px;
+      color: var(--text); letter-spacing: -0.3px; text-decoration: none;
     }
-    .topbar-logo span { color: var(--teal); }
-    .topbar-logo img { width: 30px; height: 30px; border-radius: 7px; object-fit: contain; }
-    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; padding-right: 52px; }
+    .topbar-logo img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+    .topbar-logo .lp { color: var(--primary); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
     .btn-signout {
-      background: none; border: 1px solid var(--gray-200); border-radius: 6px;
-      padding: 5px 14px; font-size: 13px; font-weight: 600; color: var(--gray-600);
-      cursor: pointer; font-family: 'Inter', sans-serif; transition: color .15s, border-color .15s;
+      background: none; border: 1px solid var(--border); border-radius: 8px;
+      padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--text-sub);
+      cursor: pointer; transition: color .15s, border-color .15s;
     }
     .btn-signout:hover { color: #dc2626; border-color: #dc2626; }
 
-    /* ── TAB NAV ── */
+    /* TAB NAV */
     .top-nav {
       background: var(--surface); border-bottom: 1px solid var(--border);
       display: flex; align-items: center;
-      position: sticky; top: 52px; z-index: 100;
-      padding: 0 8px;
+      position: sticky; top: 56px; z-index: 100; padding: 0 20px;
     }
-    .tab-list { display: flex; gap: 0; }
+    .tab-list { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .tab-list::-webkit-scrollbar { display: none; }
     .tab {
-      padding: 10px 16px; font-size: 13px; font-weight: 500;
-      color: var(--gray-600); cursor: pointer;
-      border-bottom: 2px solid transparent;
-      border-radius: 8px 8px 0 0;
-      margin: 4px 2px 0;
-      transition: color 0.15s, background 0.15s, border-color 0.15s;
-      text-decoration: none; white-space: nowrap;
+      display: flex; align-items: center; gap: 5px;
+      padding: 12px 14px; font-size: 13px; font-weight: 600; color: var(--text-sub);
+      cursor: pointer; border-bottom: 2px solid transparent;
+      white-space: nowrap; text-decoration: none; transition: color .15s, border-color .15s;
     }
-    .tab:hover { color: var(--teal); background: var(--teal-lt); }
-    .tab.active {
-      color: var(--teal); border-bottom-color: var(--teal); font-weight: 700;
-      background: var(--teal-lt);
+    .tab:hover { color: var(--primary); }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      padding: 6px; color: var(--text-sub); margin-left: auto;
     }
+    .tab-hamburger svg { width: 20px; height: 20px; display: block; }
 
-    /* ─── PAGE ───────────────────────────────── */
-    .page { max-width: 920px; margin: 0 auto; padding: 32px 20px 80px; }
-
-    /* ─── USER HEADER ────────────────────────── */
-    .user-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
-    .avatar {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--gray-200); border: 2px solid var(--teal);
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #005A60 0%, #007A82 55%, #009DA5 100%);
+      padding: 28px 20px; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -50px; right: -80px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: rgba(255,255,255,0.06); pointer-events: none;
+    }
+    .hero::after {
+      content: ''; position: absolute; bottom: -60px; left: 25%;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(255,255,255,0.04); pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 960px; margin: 0 auto;
+      display: flex; align-items: flex-start; gap: 18px;
+      position: relative; z-index: 1; flex-wrap: wrap;
+    }
+    .hero-avatar-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0;
+    }
+    .hero-avatar {
+      width: 58px; height: 58px; border-radius: 50%;
+      background: rgba(255,255,255,0.18); border: 2px solid rgba(255,255,255,0.45);
       display: flex; align-items: center; justify-content: center;
-      font-size: 15px; font-weight: 700; color: var(--gray-700);
-      flex-shrink: 0;
+      font-size: 20px; font-weight: 800; color: white; cursor: pointer;
+      text-decoration: none; transition: border-color .2s;
     }
-    .user-header h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 20px; font-weight: 800; color: var(--text);
+    .hero-avatar:hover { border-color: white; }
+    .hero-body { flex: 1; min-width: 0; }
+    .hero-greeting {
+      font-family: var(--font-head); font-size: 28px; font-weight: 800;
+      color: white; line-height: 1.15; margin-bottom: 4px;
     }
-    .user-header p { font-size: 13px; color: var(--gray-600); }
+    .hero-sub { font-size: 13px; color: rgba(255,255,255,0.72); }
+    .hero-sub a { color: rgba(255,255,255,0.9); font-weight: 600; text-decoration: underline; }
+    .hero-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .hero-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700;
+      cursor: pointer; border: none; font-family: var(--font-body);
+      text-decoration: none; transition: transform .15s, box-shadow .15s;
+    }
+    .hero-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .hb-white  { background: white; color: var(--primary); }
+    .hb-ghost  { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); }
+    .hb-orange { background: var(--coral); color: white; }
 
-    /* ─── TWO-COL LAYOUT ─────────────────────── */
+    /* ANN WRAPPER */
+    .ann-wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    /* PAGE */
+    .page { max-width: 960px; margin: 0 auto; padding: 24px 20px 80px; }
+
+    /* TWO-COL */
     .two-col { display: flex; gap: 20px; align-items: flex-start; }
-    .col-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
-    .col-side { width: 280px; flex-shrink: 0; position: sticky; top: 56px; }
+    .col-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+    .col-side  { width: 300px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
 
-    /* ─── CARD ───────────────────────────────── */
+    /* SECTION HEADER */
+    .sec-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .sec-hd h2 { font-family: var(--font-head); font-size: 20px; font-weight: 800; color: var(--text); }
+    .sec-hd a { font-size: 13px; font-weight: 600; color: var(--primary); }
+
+    /* REQUEST ROWS */
+    .req-list { display: flex; flex-direction: column; gap: 10px; }
+    .req-row {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow-sm);
+      display: flex; overflow: hidden; text-decoration: none; color: inherit;
+      transition: box-shadow .2s, transform .15s;
+    }
+    .req-row:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .req-accent { width: 4px; flex-shrink: 0; background: var(--primary); }
+    .req-accent.critical { background: #EF4444; }
+    .req-accent.high     { background: #F97316; }
+    .req-accent.medium   { background: var(--accent); }
+    .req-accent.low      { background: var(--green); }
+    .req-icon {
+      width: 70px; flex-shrink: 0; background: var(--primary-lt);
+      display: flex; align-items: center; justify-content: center; font-size: 28px;
+    }
+    .req-body { flex: 1; min-width: 0; padding: 13px 14px; display: flex; flex-direction: column; gap: 4px; }
+    .req-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .req-meta-id  { font-size: 11px; color: var(--text-sub); font-weight: 600; }
+    .req-meta-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .req-meta-age { font-size: 11px; color: var(--text-sub); }
+    .req-urgency-badge {
+      font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px;
+    }
+    .req-title { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .req-desc  { font-size: 13px; color: var(--text-sub); line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .req-footer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 2px; }
+    .req-loc    { font-size: 12px; color: var(--text-sub); }
+    .req-amt    { font-size: 13px; font-weight: 700; color: var(--text); }
+    .req-amt span { color: var(--green); }
+    .req-prog   { flex: 1; height: 5px; background: var(--border); border-radius: 99px;
+      overflow: hidden; min-width: 50px; max-width: 100px; }
+    .req-prog-fill { height: 100%; background: var(--primary); border-radius: 99px; }
+    .req-people { font-size: 12px; color: var(--text-sub); }
+    .req-cta {
+      flex-shrink: 0; padding: 13px 14px;
+      display: flex; flex-direction: column; align-items: flex-end;
+      justify-content: center; gap: 8px;
+    }
+    .btn-respond {
+      background: var(--coral); color: white; border: none; border-radius: 8px;
+      font-size: 12px; font-weight: 700; padding: 8px 14px; cursor: pointer;
+      white-space: nowrap; font-family: var(--font-body); transition: background .15s;
+    }
+    .btn-respond:hover { background: var(--coral-d); }
+    .req-icons { display: flex; gap: 4px; }
+    .req-icon-btn {
+      background: none; border: none; cursor: pointer; color: var(--text-sub);
+      padding: 4px; border-radius: 6px; transition: color .15s, background .15s;
+    }
+    .req-icon-btn:hover { color: var(--primary); background: var(--primary-lt); }
+    .req-icon-btn svg { width: 14px; height: 14px; display: block; }
+
+    .browse-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--coral); color: white; font-size: 14px; font-weight: 700;
+      padding: 13px 24px; border-radius: 10px; border: none; cursor: pointer;
+      text-decoration: none; transition: background .15s, transform .15s;
+      margin-top: 12px; width: 100%;
+    }
+    .browse-btn:hover { background: var(--coral-d); transform: translateY(-1px); }
+
+    /* CARD */
     .card {
-      background: var(--surface); border-radius: 14px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      padding: 24px;
-      transition: box-shadow 0.2s;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 18px;
     }
-    .card:hover { box-shadow: var(--shadow-md); }
-    .card-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 16px; font-weight: 800; color: var(--text);
-      margin-bottom: 4px;
-    }
-    .card-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 16px; }
-    .card-sub a { color: var(--teal); }
 
-    /* ─── PROGRESS BAR ───────────────────────── */
-    .progress-label { font-size: 12px; font-weight: 700; color: var(--orange); margin-bottom: 6px; }
-    .prog-bar {
-      height: 8px; background: var(--gray-200); border-radius: 999px;
-      margin-bottom: 20px; overflow: hidden;
+    /* CHECKLIST (sidebar compact) */
+    .cl-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .cl-hd-text { flex: 1; min-width: 0; }
+    .cl-hd-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .cl-hd-sub   { font-size: 12px; color: var(--text-sub); }
+    .cl-toggle {
+      background: none; border: none; cursor: pointer; color: var(--text-sub);
+      padding: 2px; transition: transform .2s;
     }
-    .prog-fill { height: 100%; background: var(--teal); border-radius: 999px; transition: width 0.4s; }
-
-    /* ─── CHECKLIST SECTION ──────────────────── */
-    .checklist-section { margin-bottom: 16px; }
-    .checklist-section-header {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 12px;
+    .cl-toggle.open { transform: rotate(180deg); }
+    .cl-toggle svg { width: 16px; height: 16px; display: block; }
+    .cl-prog-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 4px; }
+    .cl-prog-fill { height: 100%; background: var(--primary); border-radius: 99px; transition: width .4s; }
+    .cl-prog-lbl { font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .cl-body {}
+    .cl-sec { margin-bottom: 10px; }
+    .cl-sec-name {
+      font-size: 10px; font-weight: 700; color: var(--text-sub);
+      text-transform: uppercase; letter-spacing: .6px; margin-bottom: 4px;
     }
-    .section-icon { font-size: 18px; }
-    .section-meta {}
-    .section-name {
-      font-size: 14px; font-weight: 700; color: var(--teal);
-    }
-    .section-count { font-size: 12px; color: var(--gray-400); }
-    .checklist-items { display: flex; flex-direction: column; gap: 2px; }
+    .cl-items { display: flex; flex-direction: column; gap: 1px; }
     .checklist-item {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px; border-radius: 8px;
-      background: var(--gray-bg); transition: background 0.15s;
+      padding: 7px 8px; border-radius: 7px; background: var(--bg); transition: background .15s;
     }
-    .checklist-item:hover { background: var(--teal-lt); }
+    .checklist-item:hover { background: var(--primary-lt); }
     .checklist-item.done { opacity: 0.5; }
     .checklist-item.done .item-text { text-decoration: line-through; }
-    .item-left { display: flex; align-items: center; gap: 10px; }
+    .item-left { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; }
     .item-check {
-      width: 18px; height: 18px; border-radius: 50%;
-      border: 2px solid var(--gray-300, #ccc);
+      width: 16px; height: 16px; border-radius: 50%; border: 2px solid #ccc;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+      flex-shrink: 0; cursor: pointer; transition: border-color .15s, background .15s;
     }
-    .item-check.checked { background: var(--teal); border-color: var(--teal); }
-    .item-check.checked::after { content: '✓'; font-size: 10px; color: white; font-weight: 700; }
-    .item-text { font-size: 14px; color: var(--text); }
-    .item-text a { color: var(--teal); }
-    .item-badge {
-      font-size: 11px; font-weight: 700; color: var(--orange);
-      background: #fff3ee; border-radius: 4px; padding: 2px 7px; margin-left: 8px;
-    }
+    .item-check.checked { background: var(--primary); border-color: var(--primary); }
+    .item-check.checked::after { content: '✓'; font-size: 8px; color: white; font-weight: 700; }
+    .item-text { font-size: 12px; color: var(--text); line-height: 1.4; }
+    .item-text a { color: var(--primary); }
+    .item-badge { font-size: 10px; font-weight: 700; color: var(--coral); background: #fff3ee; border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
     .item-arrow {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: none; border: none; cursor: pointer;
-      color: var(--teal); display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: background 0.15s;
+      background: none; border: none; cursor: pointer; color: var(--primary);
+      display: flex; align-items: center; padding: 2px; border-radius: 4px;
+      flex-shrink: 0; transition: background .15s;
     }
-    .item-arrow:hover { background: var(--teal-lt); }
-    .item-arrow svg { width: 20px; height: 20px; }
-    .checklist-dismiss {
-      font-size: 12px; color: var(--gray-400); margin-top: 12px;
-      display: flex; align-items: center; gap: 6px;
-    }
+    .item-arrow:hover { background: var(--primary-lt); }
+    .item-arrow svg { width: 12px; height: 12px; }
+    .cl-dismiss { font-size: 11px; color: var(--text-sub); margin-top: 8px; }
 
-    /* ─── FAQ SIDEBAR ────────────────────────── */
-    .faq-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 15px; font-weight: 800; color: var(--text);
-      margin-bottom: 16px;
-    }
-    .faq-item { border-bottom: 1px solid var(--gray-200); }
+    /* FAQ */
+    .faq-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
     .faq-q {
       width: 100%; background: none; border: none; cursor: pointer;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 0; text-align: left; gap: 12px;
+      padding: 10px 0; text-align: left; gap: 8px; font-family: var(--font-body);
     }
-    .faq-q span { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; }
-    .faq-chevron { flex-shrink: 0; color: var(--gray-400); transition: transform 0.2s; }
-    .faq-chevron svg { width: 18px; height: 18px; display: block; }
+    .faq-q span { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4; }
+    .faq-chevron { flex-shrink: 0; color: var(--text-sub); transition: transform .2s; }
+    .faq-chevron svg { width: 14px; height: 14px; display: block; }
     .faq-item.open .faq-chevron { transform: rotate(180deg); }
-    .faq-a {
-      display: none; font-size: 13px; color: var(--gray-700);
-      line-height: 1.65; padding-bottom: 14px;
-    }
+    .faq-a { display: none; font-size: 12px; color: var(--text-sub); line-height: 1.6; padding-bottom: 10px; }
     .faq-item.open .faq-a { display: block; }
-    .faq-footer { font-size: 12px; color: var(--gray-400); margin-top: 16px; }
-    .faq-footer a { color: var(--teal); }
+    .faq-footer { font-size: 12px; color: var(--text-sub); margin-top: 10px; }
+    .faq-footer a { color: var(--primary); }
 
-    /* ─── REQUESTS SECTION ───────────────────── */
-    .requests-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 16px;
+    /* NAVIGATOR TOOLS */
+    .nav-tools-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .btn-submit-need {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; height: 40px; background: var(--coral); color: white;
+      border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none;
+      transition: background .15s;
     }
-    .requests-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 18px; font-weight: 800; color: var(--text);
-    }
-    .req-cards { display: flex; gap: 16px; flex-wrap: wrap; }
-    .req-card {
-      background: var(--surface); border-radius: 12px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      width: 220px; overflow: hidden; flex-shrink: 0;
-      display: flex; flex-direction: column;
-      transition: box-shadow 0.2s, transform 0.15s; cursor: pointer;
-    }
-    .req-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .req-card-top {
-      position: relative; height: 120px;
-      background: var(--gray-100);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 52px;
-    }
-    .req-id {
-      position: absolute; top: 8px; left: 10px;
-      font-size: 11px; font-weight: 700; color: var(--gray-600);
-    }
-    .req-dot {
-      position: absolute; top: 10px; right: 10px;
-      width: 10px; height: 10px; border-radius: 50%; background: var(--green);
-    }
-    .req-card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
-    .req-actions { display: flex; gap: 8px; align-items: center; }
-    .req-action-btn {
-      background: none; border: none; cursor: pointer;
-      color: var(--gray-400); padding: 2px; transition: color 0.15s;
-    }
-    .req-action-btn:hover { color: var(--teal); }
-    .req-action-btn svg { width: 15px; height: 15px; display: block; }
-    .req-age { font-size: 11px; color: var(--gray-400); margin-left: auto; }
-    .req-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.35; }
-    .req-desc { font-size: 12px; color: var(--gray-600); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .req-location { font-size: 11px; color: var(--gray-500); }
-    .req-location a { color: var(--teal); }
-    .req-amount {
-      font-size: 13px; font-weight: 700; color: var(--text);
-      margin-top: 4px;
-    }
-    .req-amount span { color: var(--green); }
-    .req-prog { height: 6px; background: var(--gray-200); border-radius: 999px; overflow: hidden; margin: 4px 0; }
-    .req-prog-fill { height: 100%; background: var(--teal); border-radius: 999px; }
-    .req-people { font-size: 11px; color: var(--gray-500); }
-    .req-needs { font-size: 11px; color: var(--gray-600); margin-top: 4px; }
-    .req-needs strong { color: var(--text); }
+    .btn-submit-need:hover { background: var(--coral-d); }
 
-    .browse-btn {
-      background: var(--orange); color: white;
-      font-size: 13px; font-weight: 700; padding: 11px 24px;
-      border-radius: 8px; border: none; cursor: pointer;
-      transition: background 0.15s; display: block;
-      text-align: center; margin-top: 20px;
-    }
-    .browse-btn:hover { background: var(--orange-d); }
+    /* FULL SECTIONS */
+    .full-sec .card { padding: 24px; }
+    .full-sec-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .full-sec-hd h2 { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--text); }
 
-    /* ─── HAMBURGER (mobile tab nav) ─────────── */
-    .tab-hamburger {
-      display: none; background: none; border: none; cursor: pointer;
-      padding: 6px 8px; color: var(--gray-600); margin-left: auto;
-    }
-    .tab-hamburger svg { width: 20px; height: 20px; display: block; }
-    .mobile-tab-drawer {
-      display: none; position: fixed; inset: 0; z-index: 400;
-    }
+    /* MOBILE DRAWER */
+    .mobile-tab-drawer { display: none; position: fixed; inset: 0; z-index: 400; }
     .mobile-tab-drawer.open { display: block; }
-    .mobile-tab-overlay {
-      position: absolute; inset: 0; background: rgba(0,0,0,0.3);
-    }
+    .mobile-tab-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
     .mobile-tab-menu {
       position: absolute; top: 0; left: 0; right: 0;
-      background: white; border-bottom: 1px solid var(--gray-200);
-      padding: 16px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 16px 0; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
-    .mobile-tab-close {
-      position: absolute; top: 12px; right: 16px;
-      background: none; border: none; font-size: 22px; cursor: pointer; color: var(--gray-600);
-    }
+    .mobile-tab-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-sub); }
     .mobile-tab-item {
-      display: block; width: 100%; padding: 13px 24px;
-      font-size: 15px; font-weight: 500; color: var(--text);
-      background: none; border: none; text-align: left;
-      cursor: pointer; font-family: 'Inter', sans-serif;
-      transition: background .1s;
+      display: block; width: 100%; padding: 13px 24px; font-size: 15px; font-weight: 500;
+      color: var(--text); background: none; border: none; text-align: left;
+      cursor: pointer; font-family: var(--font-body); transition: background .1s;
     }
-    .mobile-tab-item:hover { background: var(--gray-100); }
-    .mobile-tab-item.active { color: var(--teal); font-weight: 600; }
+    .mobile-tab-item:hover { background: var(--bg); }
+    .mobile-tab-item.active { color: var(--primary); font-weight: 600; }
 
-    /* ─── RESPONSIVE ─────────────────────────── */
+    /* RESPONSIVE */
     @media (max-width: 720px) {
+      .hero-greeting { font-size: 22px; }
+      .hero-btn { padding: 8px 13px; font-size: 12px; }
       .two-col { flex-direction: column; }
-      .col-side { width: 100%; position: static; }
-      .req-card { width: 100%; }
-      .tab-list { overflow-x: auto; scrollbar-width: none; }
-      .tab-list::-webkit-scrollbar { display: none; }
-      .tab-hamburger { display: flex; align-items: center; }
+      .col-side { width: 100%; }
+      .tab-list { display: none; }
+      .tab-hamburger { display: flex; align-items: center; margin-left: auto; }
+      .req-cta { display: none; }
+      .req-icon { width: 54px; font-size: 22px; }
     }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+  <script>
+    (function() {
+      window.addEventListener('error', function(e) { console.error('[MP]', e.message, e.filename+':'+e.lineno+':'+e.colno); });
+      window.addEventListener('unhandledrejection', function(e) { console.error('[MP Promise]', e.reason); });
+    })();
+  </script>
 </head>
-<body>
+<body style="visibility:hidden">
 
   <!-- TOPBAR -->
   <div class="topbar">
     <a href="dashboard.html" class="topbar-logo">
       <img src="logo.png" alt="MigrantPortal" />
-      MigrantPortal
+      Migrant<span class="lp">Portal</span>
     </a>
     <div class="topbar-right">
       <button class="btn-signout" onclick="logout()">Sign Out</button>
@@ -357,375 +358,339 @@
   <!-- TAB NAV -->
   <nav class="top-nav" aria-label="Dashboard sections">
     <div class="tab-list">
-      <a href="#home-section"       class="tab active" id="tab-home"       onclick="setTab('home')">Home</a>
-      <a href="#checklist-section"  class="tab"        id="tab-checklist"  onclick="setTab('checklist')">Checklist</a>
-      <a href="#faqs-section"       class="tab"        id="tab-faqs"       onclick="setTab('faqs')">FAQs</a>
-      <a href="#requests-section"   class="tab"        id="tab-requests"   onclick="setTab('requests')">Requests</a>
-      <a href="#responses-section"  class="tab"        id="tab-responses"  onclick="setTab('responses')" style="display:none">My Responses</a>
-      <a href="#families-section"   class="tab"        id="tab-families"   onclick="setTab('families')"  style="display:none">Families</a>
-      <a href="#bookmarks-section"  class="tab"        id="tab-bookmarks"  onclick="setTab('bookmarks')">Bookmarks</a>
-      <a href="#donations-section"  class="tab"        id="tab-donations"  onclick="setTab('donations')">Donations</a>
-      <a href="#resources-section" class="tab"        id="tab-resources"  onclick="setTab('resources')">Resources</a>
+      <a href="#home-section"      class="tab active" id="tab-home"      onclick="setTab('home')">🏠 Home</a>
+      <a href="#checklist-section" class="tab"        id="tab-checklist" onclick="setTab('checklist')">✅ Checklist</a>
+      <a href="#faqs-section"      class="tab"        id="tab-faqs"      onclick="setTab('faqs')">❓ FAQs</a>
+      <a href="#requests-section"  class="tab"        id="tab-requests"  onclick="setTab('requests')">🤝 Requests</a>
+      <a href="#responses-section" class="tab"        id="tab-responses" onclick="setTab('responses')" style="display:none">📋 My Responses</a>
+      <a href="#families-section"  class="tab"        id="tab-families"  onclick="setTab('families')" style="display:none">👨‍👩‍👧 Families</a>
+      <a href="#bookmarks-section" class="tab"        id="tab-bookmarks" onclick="setTab('bookmarks')">🔖 Bookmarks</a>
+      <a href="#donations-section" class="tab"        id="tab-donations" onclick="setTab('donations')">💝 Donations</a>
+      <a href="#resources-section" class="tab"        id="tab-resources" onclick="setTab('resources')">📚 Resources</a>
     </div>
     <button class="tab-hamburger" aria-label="Open menu" onclick="document.getElementById('mobile-tab-drawer').classList.add('open')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
   </nav>
 
-  <!-- MOBILE TAB DRAWER -->
+  <!-- MOBILE DRAWER -->
   <div class="mobile-tab-drawer" id="mobile-tab-drawer">
     <div class="mobile-tab-overlay" onclick="document.getElementById('mobile-tab-drawer').classList.remove('open')"></div>
     <div class="mobile-tab-menu">
       <button class="mobile-tab-close" onclick="document.getElementById('mobile-tab-drawer').classList.remove('open')" aria-label="Close">×</button>
-      <button class="mobile-tab-item" onclick="setTab('home');document.getElementById('mobile-tab-drawer').classList.remove('open')">Home</button>
-      <button class="mobile-tab-item" onclick="setTab('checklist');document.getElementById('mobile-tab-drawer').classList.remove('open')">Checklist</button>
-      <button class="mobile-tab-item" onclick="setTab('faqs');document.getElementById('mobile-tab-drawer').classList.remove('open')">FAQs</button>
-      <button class="mobile-tab-item" onclick="setTab('requests');document.getElementById('mobile-tab-drawer').classList.remove('open')">Requests</button>
-      <button class="mobile-tab-item" id="mob-tab-responses" style="display:none" onclick="setTab('responses');document.getElementById('mobile-tab-drawer').classList.remove('open')">My Responses</button>
-      <button class="mobile-tab-item" id="mob-tab-families"  style="display:none" onclick="setTab('families');document.getElementById('mobile-tab-drawer').classList.remove('open')">Families</button>
-      <button class="mobile-tab-item" onclick="setTab('bookmarks');document.getElementById('mobile-tab-drawer').classList.remove('open')">Bookmarks</button>
-      <button class="mobile-tab-item" onclick="setTab('donations');document.getElementById('mobile-tab-drawer').classList.remove('open')">Donations</button>
-      <button class="mobile-tab-item" onclick="setTab('resources');document.getElementById('mobile-tab-drawer').classList.remove('open')">Resources</button>
+      <button class="mobile-tab-item" onclick="setTab('home');document.getElementById('mobile-tab-drawer').classList.remove('open')">🏠 Home</button>
+      <button class="mobile-tab-item" onclick="setTab('checklist');document.getElementById('mobile-tab-drawer').classList.remove('open')">✅ Checklist</button>
+      <button class="mobile-tab-item" onclick="setTab('faqs');document.getElementById('mobile-tab-drawer').classList.remove('open')">❓ FAQs</button>
+      <button class="mobile-tab-item" onclick="setTab('requests');document.getElementById('mobile-tab-drawer').classList.remove('open')">🤝 Requests</button>
+      <button class="mobile-tab-item" id="mob-tab-responses" style="display:none" onclick="setTab('responses');document.getElementById('mobile-tab-drawer').classList.remove('open')">📋 My Responses</button>
+      <button class="mobile-tab-item" id="mob-tab-families"  style="display:none" onclick="setTab('families');document.getElementById('mobile-tab-drawer').classList.remove('open')">👨‍👩‍👧 Families</button>
+      <button class="mobile-tab-item" onclick="setTab('bookmarks');document.getElementById('mobile-tab-drawer').classList.remove('open')">🔖 Bookmarks</button>
+      <button class="mobile-tab-item" onclick="setTab('donations');document.getElementById('mobile-tab-drawer').classList.remove('open')">💝 Donations</button>
+      <button class="mobile-tab-item" onclick="setTab('resources');document.getElementById('mobile-tab-drawer').classList.remove('open')">📚 Resources</button>
     </div>
   </div>
 
-  <!-- ANNOUNCEMENT BANNER -->
-  <div id="ann-banner" style="display:none;padding:0 20px;margin-top:12px;flex-direction:column;gap:8px"></div>
+  <!-- HERO BAND -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-avatar-wrap">
+        <a href="profile.html" id="avatar-link" class="hero-avatar" title="Edit Profile">
+          <span id="user-avatar">?</span>
+        </a>
+      </div>
+      <div class="hero-body">
+        <div class="hero-greeting" id="user-greeting">Hi there!</div>
+        <div class="hero-sub">
+          Where Help Meets Hope &nbsp;·&nbsp; <a href="profile.html" id="profile-link">Edit Profile →</a>
+        </div>
+        <div class="hero-actions">
+          <a href="requests.html" class="hero-btn hb-white">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            Browse Needs
+          </a>
+          <a href="#responses-section" onclick="setTab('responses')" class="hero-btn hb-ghost">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            My Responses
+          </a>
+          <a href="submit-need.html" class="hero-btn hb-orange">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Submit Need
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANNOUNCEMENTS -->
+  <div class="ann-wrap">
+    <div id="ann-banner"  style="display:none;padding-top:10px;flex-direction:column;gap:8px"></div>
+    <div id="ann-banners" style="padding-top:4px"></div>
+  </div>
 
   <div class="page">
-
-    <!-- HOME SECTION anchor -->
     <div id="home-section"></div>
 
-    <!-- ANNOUNCEMENTS BANNER -->
-    <div id="ann-banners" style="margin-bottom:16px"></div>
-
-    <!-- USER HEADER -->
-    <div class="user-header">
-      <a href="profile.html" id="avatar-link" style="text-decoration:none;">
-        <div class="avatar" id="user-avatar" title="Edit Profile" style="cursor:pointer;">?</div>
-      </a>
-      <div>
-        <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Dashboard</h1>
-        <h2 id="user-greeting">Hi there!</h2>
-        <p>Welcome to your Dashboard! &nbsp;<a href="profile.html" id="profile-link" style="font-size:13px;color:var(--teal);font-weight:600;">Edit Profile →</a></p>
-      </div>
+    <!-- ROLE STATS -->
+    <div id="role-stats" style="display:none;margin-bottom:20px">
+      <div id="role-stats-inner" style="display:flex;gap:10px;flex-wrap:wrap"></div>
     </div>
 
-    <!-- ROLE STATS ROW (hidden until role loaded) -->
-    <div id="role-stats" style="display:none;margin-bottom:24px">
-      <div id="role-stats-inner" style="display:flex;gap:12px;flex-wrap:wrap"></div>
-    </div>
-
-    <!-- TWO-COL -->
+    <!-- MAIN TWO-COL -->
     <div id="main-two-col" class="two-col">
 
-      <!-- ── MAIN COL ──────────────────────── -->
+      <!-- LEFT: REQUESTS -->
       <div class="col-main">
-
-        <!-- CHECKLIST CARD -->
-        <div class="card" id="checklist-section">
-          <div class="card-title">Onboarding checklist</div>
-          <div class="card-sub">Walk through the basics and <a href="/how-migrantportal-works.html">see just how easy it is</a> to make an impact.</div>
-
-          <div class="progress-label" id="prog-label">0% You got this!</div>
-          <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-
-          <!-- Section 1: Get started -->
-          <div class="checklist-section">
-            <div class="checklist-section-header">
-              <span class="section-icon">☀️</span>
-              <div class="section-meta">
-                <div class="section-name">Get started</div>
-                <div class="section-count" id="count-1">0 of 3 Complete</div>
-              </div>
-            </div>
-            <div class="checklist-items" id="section-1">
-              <div class="checklist-item" id="item-1-1">
-                <div class="item-left">
-                  <div class="item-check" onclick="toggleItem('item-1-1')"></div>
-                  <span class="item-text">Add a <a href="#">profile picture</a> 🖼️</span>
-                </div>
-                <button class="item-arrow" aria-label="Go">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
-                </button>
-              </div>
-              <div class="checklist-item" id="item-1-2">
-                <div class="item-left">
-                  <div class="item-check" onclick="toggleItem('item-1-2')"></div>
-                  <span class="item-text">Review your <a href="#">notification preferences</a> 🔔</span>
-                </div>
-                <button class="item-arrow" aria-label="Go">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
-                </button>
-              </div>
-              <div class="checklist-item" id="item-1-3">
-                <div class="item-left">
-                  <div class="item-check" onclick="toggleItem('item-1-3')"></div>
-                  <span class="item-text">Download and log in to the <a href="#">MigrantPortal app</a> 📱</span>
-                </div>
-                <button class="item-arrow" aria-label="Go">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
-                </button>
-              </div>
-            </div>
+        <div id="requests-section">
+          <div class="sec-hd">
+            <h2>Requests for you</h2>
+            <a href="requests.html">See all →</a>
           </div>
-
-          <!-- Section 2: Make a difference -->
-          <div class="checklist-section">
-            <div class="checklist-section-header">
-              <span class="section-icon">🤝</span>
-              <div class="section-meta">
-                <div class="section-name">Make a difference</div>
-                <div class="section-count" id="count-2">0 of 4 Complete</div>
-              </div>
-            </div>
-            <div class="checklist-items" id="section-2">
-              <div class="checklist-item" id="item-2-1">
-                <div class="item-left">
-                  <div class="item-check" onclick="toggleItem('item-2-1')"></div>
-                  <span class="item-text">Learn how MigrantPortal works by <a href="/how-migrantportal-works.html">watch how it works</a> 🎬</span>
-                </div>
-                <button class="item-arrow" aria-label="Go">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
-                </button>
-              </div>
-              <div class="checklist-item" id="item-2-2">
-                <div class="item-left">
-                  <div class="item-check" onclick="toggleItem('item-2-2')"></div>
-                  <span class="item-text">Learn how to respond to a need by <a href="/how-migrantportal-works.html">watch how it works</a> 🎬</span>
-                </div>
-                <button class="item-arrow" aria-label="Go">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
-                </button>
-              </div>
-              <div class="checklist-item" id="item-2-3">
-                <div class="item-left">
-                  <div class="item-check" onclick="toggleItem('item-2-3')"></div>
-                  <span class="item-text">Browse needs near you 📍</span>
-                </div>
-                <button class="item-arrow" aria-label="Go">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
-                </button>
-              </div>
-              <div class="checklist-item" id="item-2-4">
-                <div class="item-left">
-                  <div class="item-check" onclick="toggleItem('item-2-4')"></div>
-                  <span class="item-text">Respond to your first need 🌟 <span class="item-badge">Required</span></span>
-                </div>
-                <button class="item-arrow" aria-label="Go">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4M8 12h8"/></svg>
-                </button>
-              </div>
-            </div>
+          <div class="req-list" id="req-cards-container">
+            <div style="color:var(--text-sub);font-size:13px;padding:20px 0">Loading requests…</div>
           </div>
-
-          <div class="checklist-dismiss">
-            ⓘ Respond to your first need to dismiss checklist
-          </div>
-        </div>
-
-        <!-- REQUESTS CARD -->
-        <div class="card" id="requests-section">
-          <div class="requests-header">
-            <div class="requests-title">Requests for you</div>
-          </div>
-
-          <div class="req-cards" id="req-cards-container">
-            <div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading requests…</div>
-          </div>
-
-          <a href="mailto:support@migrantportal.com?subject=Browse+All+Requests" class="browse-btn">Browse all requests</a>
-        </div>
-
-      </div><!-- /col-main -->
-
-      <!-- ── SIDEBAR ─────────────────────────── -->
-      <!-- Navigator quick actions (hidden for non-navigators) -->
-      <div class="col-side" id="navigator-sidebar" style="display:none;margin-bottom:16px">
-        <div class="card" style="padding:20px">
-          <div style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;margin-bottom:14px;color:var(--text)">Navigator Tools</div>
-          <a href="submit-need.html" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:42px;background:var(--orange);color:white;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;">
-            + Submit a Need
+          <a href="requests.html" class="browse-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            Browse all requests
           </a>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:10px;text-align:center;line-height:1.4">Submit a new need on behalf of a family you're working with.</div>
         </div>
       </div>
 
-      <div class="col-side" id="faqs-section">
-        <div class="card">
+      <!-- RIGHT: SIDEBAR -->
+      <div class="col-side">
+
+        <!-- Navigator Tools -->
+        <div class="card" id="navigator-sidebar" style="display:none">
+          <div class="nav-tools-title">Navigator Tools</div>
+          <a href="submit-need.html" class="btn-submit-need">+ Submit a Need</a>
+          <div style="font-size:12px;color:var(--text-sub);margin-top:8px;text-align:center;line-height:1.4">Submit a need on behalf of a family you're working with.</div>
+        </div>
+
+        <!-- ONBOARDING CHECKLIST -->
+        <div class="card" id="checklist-section">
+          <div class="cl-hd">
+            <div style="font-size:20px">📋</div>
+            <div class="cl-hd-text">
+              <div class="cl-hd-title">Onboarding checklist</div>
+              <div class="cl-hd-sub"><a href="/how-migrantportal-works.html">How it works →</a></div>
+            </div>
+            <button class="cl-toggle open" id="checklist-toggle-btn" onclick="toggleChecklist()" aria-label="Toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="cl-prog-bar"><div class="cl-prog-fill" id="prog-fill" style="width:0%"></div></div>
+          <div class="cl-prog-lbl" id="prog-label">0% — You got this!</div>
+          <div class="cl-body" id="checklist-body">
+            <div class="cl-sec">
+              <div class="cl-sec-name">☀️ Get started &nbsp;<span id="count-1" style="font-weight:400;text-transform:none;letter-spacing:0">0 of 3</span></div>
+              <div class="cl-items" id="section-1">
+                <div class="checklist-item" id="item-1-1">
+                  <div class="item-left">
+                    <div class="item-check" onclick="toggleItem('item-1-1')"></div>
+                    <span class="item-text">Add a <a href="#">profile picture</a> 🖼️</span>
+                  </div>
+                  <button class="item-arrow" aria-label="Go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+                <div class="checklist-item" id="item-1-2">
+                  <div class="item-left">
+                    <div class="item-check" onclick="toggleItem('item-1-2')"></div>
+                    <span class="item-text">Review <a href="#">notification preferences</a> 🔔</span>
+                  </div>
+                  <button class="item-arrow" aria-label="Go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+                <div class="checklist-item" id="item-1-3">
+                  <div class="item-left">
+                    <div class="item-check" onclick="toggleItem('item-1-3')"></div>
+                    <span class="item-text">Download the <a href="#">MigrantPortal app</a> 📱</span>
+                  </div>
+                  <button class="item-arrow" aria-label="Go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <div class="cl-sec">
+              <div class="cl-sec-name">🤝 Make a difference &nbsp;<span id="count-2" style="font-weight:400;text-transform:none;letter-spacing:0">0 of 4</span></div>
+              <div class="cl-items" id="section-2">
+                <div class="checklist-item" id="item-2-1">
+                  <div class="item-left">
+                    <div class="item-check" onclick="toggleItem('item-2-1')"></div>
+                    <span class="item-text">Learn how it works — <a href="/how-migrantportal-works.html">watch video</a> 🎬</span>
+                  </div>
+                  <button class="item-arrow" aria-label="Go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+                <div class="checklist-item" id="item-2-2">
+                  <div class="item-left">
+                    <div class="item-check" onclick="toggleItem('item-2-2')"></div>
+                    <span class="item-text">Learn to respond to a need 🎬</span>
+                  </div>
+                  <button class="item-arrow" aria-label="Go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+                <div class="checklist-item" id="item-2-3">
+                  <div class="item-left">
+                    <div class="item-check" onclick="toggleItem('item-2-3')"></div>
+                    <span class="item-text">Browse needs near you 📍</span>
+                  </div>
+                  <button class="item-arrow" aria-label="Go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+                <div class="checklist-item" id="item-2-4">
+                  <div class="item-left">
+                    <div class="item-check" onclick="toggleItem('item-2-4')"></div>
+                    <span class="item-text">Respond to your first need 🌟 <span class="item-badge">Required</span></span>
+                  </div>
+                  <button class="item-arrow" aria-label="Go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <div class="cl-dismiss">ⓘ Respond to your first need to dismiss</div>
+          </div>
+        </div>
+
+        <!-- FAQs -->
+        <div class="card" id="faqs-section">
           <div class="faq-title">Frequently Asked Questions</div>
-
           <div class="faq-item" onclick="toggleFaq(this)">
-            <button class="faq-q">
-              <span>Where do MigrantPortal requests come from?</span>
-              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-            </button>
-            <div class="faq-a">Requests are entered by verified navigators — caseworkers, social workers, teachers, and faith community leaders trained and approved in each city. Every need is reviewed before it goes live.</div>
+            <button class="faq-q"><span>Where do requests come from?</span><span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span></button>
+            <div class="faq-a">Requests are entered by verified navigators — caseworkers, social workers, teachers, and faith community leaders trained and approved in each city. Every need is reviewed before going live.</div>
           </div>
-
           <div class="faq-item" onclick="toggleFaq(this)">
-            <button class="faq-q">
-              <span>What's the difference between Providing and Funding a request?</span>
-              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-            </button>
-            <div class="faq-a">If you choose to <strong>Provide</strong>, you personally obtain or donate the item or service. If you choose to <strong>Fund</strong>, you make a monetary donation that allows a local partner faith community or organization to fulfill the need on your behalf.</div>
+            <button class="faq-q"><span>Providing vs. Funding a request?</span><span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span></button>
+            <div class="faq-a"><strong>Provide</strong> = you personally obtain or donate the item. <strong>Fund</strong> = you donate money so a local partner fulfills it on your behalf.</div>
           </div>
-
           <div class="faq-item" onclick="toggleFaq(this)">
-            <button class="faq-q">
-              <span>When I Fund a request, where does the money go?</span>
-              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-            </button>
-            <div class="faq-a">Your donation goes to a vetted local partner who then purchases and delivers the item or service directly to the family. If no partner claims the donation, it is refunded to you.</div>
+            <button class="faq-q"><span>Where does my donation go?</span><span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span></button>
+            <div class="faq-a">To a vetted local partner who purchases and delivers the item directly to the family. If unclaimed, it's refunded to you.</div>
           </div>
-
           <div class="faq-item" onclick="toggleFaq(this)">
-            <button class="faq-q">
-              <span>When I respond to a request, what am I responsible for?</span>
-              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-            </button>
-            <div class="faq-a">When you claim a need, you commit to fulfilling it within the agreed timeframe. You'll receive contact information for the navigator who can coordinate delivery with the family.</div>
+            <button class="faq-q"><span>What am I responsible for?</span><span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span></button>
+            <div class="faq-a">When you claim a need, you commit to fulfilling it within the agreed timeframe. You'll receive navigator contact info to coordinate delivery.</div>
           </div>
-
           <div class="faq-item" onclick="toggleFaq(this)">
-            <button class="faq-q">
-              <span>If I have more questions, who should I contact?</span>
-              <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
-            </button>
-            <div class="faq-a">Email us at <a href="mailto:support@migrantportal.com">support@migrantportal.com</a> and we'll get back to you within one business day.</div>
+            <button class="faq-q"><span>Still have questions?</span><span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span></button>
+            <div class="faq-a">Email <a href="mailto:support@migrantportal.com">support@migrantportal.com</a> — we reply within one business day.</div>
           </div>
-
-          <div class="faq-footer">Still have questions? Read all our FAQs <a href="/how-migrantportal-works.html">here</a>.</div>
+          <div class="faq-footer">Read all FAQs <a href="/how-migrantportal-works.html">here →</a></div>
         </div>
-      </div>
 
+      </div><!-- /col-side -->
     </div><!-- /two-col -->
 
-    <!-- MY RESPONSES (responders only) -->
-    <div id="responses-section" style="display:none;margin-top:28px">
+    <!-- MY RESPONSES -->
+    <div id="responses-section" class="full-sec" style="display:none">
       <div class="card">
-        <div class="requests-header">
-          <div class="requests-title">My Responses</div>
-        </div>
-        <div id="responses-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div class="full-sec-hd"><h2>My Responses</h2></div>
+        <div id="responses-list" aria-live="polite"><div style="color:var(--text-sub);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
-    <!-- FAMILIES (navigators only) -->
-    <div id="families-section" style="display:none;margin-top:28px">
+    <!-- FAMILIES -->
+    <div id="families-section" class="full-sec" style="display:none">
       <div class="card">
-        <div class="requests-header">
-          <div class="requests-title">My Families</div>
+        <div class="full-sec-hd">
+          <h2>My Families</h2>
           <div style="display:flex;gap:8px">
-            <a href="submit-need.html" style="display:flex;align-items:center;height:36px;padding:0 14px;background:var(--orange);color:white;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">+ Submit Need</a>
-            <button onclick="showAddFamilyModal()" style="background:var(--teal);color:white;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">+ Add Family</button>
+            <a href="submit-need.html" style="display:flex;align-items:center;height:36px;padding:0 14px;background:var(--coral);color:white;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">+ Submit Need</a>
+            <button onclick="showAddFamilyModal()" style="background:var(--primary);color:white;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">+ Add Family</button>
           </div>
         </div>
-        <div id="families-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div id="families-list" aria-live="polite"><div style="color:var(--text-sub);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
     <!-- BOOKMARKS -->
-    <div id="bookmarks-section" style="display:none;margin-top:28px">
+    <div id="bookmarks-section" class="full-sec" style="display:none">
       <div class="card">
-        <div class="requests-header"><div class="requests-title">Bookmarked Needs</div></div>
-        <div id="bookmarks-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div class="full-sec-hd"><h2>Bookmarked Needs</h2></div>
+        <div id="bookmarks-list" aria-live="polite"><div style="color:var(--text-sub);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
     <!-- DONATIONS -->
-    <div id="donations-section" style="display:none;margin-top:28px">
+    <div id="donations-section" class="full-sec" style="display:none">
       <div class="card">
-        <div class="requests-header"><div class="requests-title">My Donations</div></div>
-        <div id="donations-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div class="full-sec-hd"><h2>My Donations</h2></div>
+        <div id="donations-list" aria-live="polite"><div style="color:var(--text-sub);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
     <!-- RESOURCES -->
-    <div id="resources-section" style="display:none;margin-top:28px">
+    <div id="resources-section" class="full-sec" style="display:none">
       <div class="card">
-        <div class="requests-header">
-          <div class="requests-title">Resource Directory</div>
-          <button id="add-resource-btn" onclick="showAddResourceModal()" style="display:none;font-size:12px;font-weight:700;color:white;background:var(--teal);border:none;border-radius:8px;padding:7px 14px;cursor:pointer">+ Add Resource</button>
+        <div class="full-sec-hd">
+          <h2>Resource Directory</h2>
+          <button id="add-resource-btn" onclick="showAddResourceModal()" style="display:none;font-size:12px;font-weight:700;color:white;background:var(--primary);border:none;border-radius:8px;padding:7px 14px;cursor:pointer">+ Add Resource</button>
         </div>
         <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
           <input id="res-search" type="text" placeholder="Search resources…" oninput="loadResources()"
-            style="flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
+            style="flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
           <select id="res-state" onchange="loadResources()"
-            style="padding:8px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;background:white">
+            style="padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)">
             <option value="">All States</option>
             <option>KS</option><option>MO</option><option>TX</option><option>CA</option><option>FL</option><option>NY</option><option>IL</option>
           </select>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="res-cats"></div>
-        <div id="resources-list" aria-live="polite"><div style="color:var(--gray-400);font-size:13px;padding:20px 0">Loading…</div></div>
+        <div id="resources-list" aria-live="polite"><div style="color:var(--text-sub);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
 
   </div><!-- /page -->
 
   <!-- FAMILY PROGRESS MODAL -->
-  <div id="progress-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;">
-    <div style="background:white;border-radius:16px;padding:24px;width:100%;max-width:440px;margin:20px;max-height:80vh;display:flex;flex-direction:column">
+  <div id="progress-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:16px;padding:24px;width:100%;max-width:440px;margin:20px;max-height:80vh;display:flex;flex-direction:column">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <div id="progress-modal-title" style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800"></div>
-        <button onclick="document.getElementById('progress-modal').style.display='none'"
-          style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray-400)">×</button>
+        <div id="progress-modal-title" style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--text)"></div>
+        <button onclick="document.getElementById('progress-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-sub)">×</button>
       </div>
       <div id="progress-modal-body" style="overflow-y:auto;flex:1"></div>
     </div>
   </div>
 
   <!-- ADD RESOURCE MODAL -->
-  <div id="add-resource-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;">
-    <div style="background:white;border-radius:16px;padding:24px;width:100%;max-width:480px;margin:20px;max-height:85vh;overflow-y:auto">
-      <div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;margin-bottom:18px">Add Resource</div>
+  <div id="add-resource-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:16px;padding:24px;width:100%;max-width:480px;margin:20px;max-height:85vh;overflow-y:auto">
+      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;margin-bottom:18px;color:var(--text)">Add Resource</div>
       <div style="display:grid;gap:10px">
-        <input id="res-name" placeholder="Resource name *" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
-        <select id="res-cat-sel" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;background:white">
+        <input id="res-name" placeholder="Resource name *" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
+        <select id="res-cat-sel" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)">
           <option value="">Category *</option>
           <option value="shelter">Shelter</option><option value="food">Food</option><option value="clinic">Clinic / Medical</option>
           <option value="legal">Legal Aid</option><option value="employment">Employment</option><option value="education">Education</option>
           <option value="clothing">Clothing</option><option value="transportation">Transportation</option><option value="other">Other</option>
         </select>
-        <textarea id="res-desc" placeholder="Description" rows="2" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit;resize:vertical"></textarea>
-        <input id="res-addr" placeholder="Address" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
+        <textarea id="res-desc" placeholder="Description" rows="2" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;background:var(--surface);color:var(--text)"></textarea>
+        <input id="res-addr" placeholder="Address" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
         <div style="display:grid;grid-template-columns:1fr 80px;gap:8px">
-          <input id="res-city" placeholder="City" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
-          <input id="res-st" placeholder="State" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
+          <input id="res-city" placeholder="City" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
+          <input id="res-st"   placeholder="State" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
         </div>
-        <input id="res-phone" placeholder="Phone" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
-        <input id="res-web" placeholder="Website (https://…)" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
-        <input id="res-hours" placeholder="Hours (e.g. Mon–Fri 9am–5pm)" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
-        <input id="res-langs" placeholder="Languages supported" style="padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:inherit" />
+        <input id="res-phone" placeholder="Phone" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
+        <input id="res-web"   placeholder="Website (https://…)" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
+        <input id="res-hours" placeholder="Hours (e.g. Mon–Fri 9am–5pm)" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
+        <input id="res-langs" placeholder="Languages supported" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
       </div>
       <div style="display:flex;gap:10px;margin-top:18px">
-        <button onclick="document.getElementById('add-resource-modal').style.display='none'"
-          style="flex:1;height:40px;border:1px solid var(--gray-200);background:white;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
-        <button onclick="submitResource()"
-          style="flex:1;height:40px;background:var(--teal);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Submit</button>
+        <button onclick="document.getElementById('add-resource-modal').style.display='none'" style="flex:1;height:40px;border:1px solid var(--border);background:var(--surface);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text)">Cancel</button>
+        <button onclick="submitResource()" style="flex:1;height:40px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Submit</button>
       </div>
     </div>
   </div>
 
   <!-- ADD FAMILY MODAL -->
-  <div id="add-family-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;">
-    <div style="background:white;border-radius:16px;padding:28px;width:100%;max-width:440px;margin:20px">
-      <div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;margin-bottom:20px">Add Family</div>
+  <div id="add-family-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:16px;padding:28px;width:100%;max-width:440px;margin:20px">
+      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;margin-bottom:20px;color:var(--text)">Add Family</div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <input id="fam-name" type="text" placeholder="Family name *" style="border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:14px;font-family:Inter,sans-serif" />
-        <input id="fam-country" type="text" placeholder="Country of origin" style="border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:14px;font-family:Inter,sans-serif" />
-        <input id="fam-lang" type="text" placeholder="Primary language" style="border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:14px;font-family:Inter,sans-serif" />
+        <input id="fam-name"     type="text"   placeholder="Family name *"       style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text)" />
+        <input id="fam-country"  type="text"   placeholder="Country of origin"   style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text)" />
+        <input id="fam-lang"     type="text"   placeholder="Primary language"    style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text)" />
         <div style="display:flex;gap:10px">
-          <input id="fam-adults" type="number" min="1" value="1" placeholder="Adults" style="flex:1;border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:14px;font-family:Inter,sans-serif" />
-          <input id="fam-children" type="number" min="0" value="0" placeholder="Children" style="flex:1;border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:14px;font-family:Inter,sans-serif" />
+          <input id="fam-adults"   type="number" min="1" value="1" placeholder="Adults"   style="flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text)" />
+          <input id="fam-children" type="number" min="0" value="0" placeholder="Children" style="flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text)" />
         </div>
-        <textarea id="fam-notes" placeholder="Notes (optional)" rows="2" style="border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:14px;font-family:Inter,sans-serif;resize:vertical"></textarea>
+        <textarea id="fam-notes" placeholder="Notes (optional)" rows="2" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;resize:vertical;background:var(--surface);color:var(--text)"></textarea>
       </div>
       <div style="display:flex;gap:10px;margin-top:20px">
-        <button onclick="document.getElementById('add-family-modal').style.display='none'" style="flex:1;padding:11px;border:1px solid #e5e7eb;border-radius:8px;background:white;font-size:14px;font-weight:600;cursor:pointer">Cancel</button>
-        <button onclick="submitAddFamily()" style="flex:1;padding:11px;background:var(--teal);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Save Family</button>
+        <button onclick="document.getElementById('add-family-modal').style.display='none'" style="flex:1;padding:11px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-size:14px;font-weight:600;cursor:pointer;color:var(--text)">Cancel</button>
+        <button onclick="submitAddFamily()" style="flex:1;padding:11px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Save Family</button>
       </div>
     </div>
   </div>
@@ -733,42 +698,30 @@
   <script src="api.js"></script>
   <script src="notif-bell.js"></script>
   <script>
-    /* ── Toast helper ─────────────────────── */
-    function toast(msg, err = false) {
+    /* ── Toast ─────────────────────────── */
+    function toast(msg, err=false) {
       let el = document.getElementById('dash-toast');
       if (!el) {
-        el = document.createElement('div');
-        el.id = 'dash-toast';
-        Object.assign(el.style, {
-          position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
-          padding: '10px 20px', borderRadius: '8px', fontSize: '13px', fontFamily: 'Inter,sans-serif',
-          fontWeight: '600', zIndex: '9999', opacity: '0', pointerEvents: 'none',
-          transition: 'opacity .2s', whiteSpace: 'nowrap',
-        });
+        el = document.createElement('div'); el.id = 'dash-toast';
+        Object.assign(el.style, { position:'fixed', bottom:'80px', left:'50%', transform:'translateX(-50%)', padding:'10px 20px', borderRadius:'8px', fontSize:'13px', fontFamily:'DM Sans,sans-serif', fontWeight:'600', zIndex:'9999', opacity:'0', pointerEvents:'none', transition:'opacity .2s', whiteSpace:'nowrap' });
         document.body.appendChild(el);
       }
-      el.textContent = msg;
-      el.style.background = err ? '#EF4444' : '#1a1a1a';
-      el.style.color = '#fff';
-      el.style.opacity = '1';
-      clearTimeout(el._t);
-      el._t = setTimeout(() => { el.style.opacity = '0'; }, 3000);
+      el.textContent = msg; el.style.background = err ? '#EF4444' : '#1a1a1a'; el.style.color = '#fff'; el.style.opacity = '1';
+      clearTimeout(el._t); el._t = setTimeout(() => { el.style.opacity = '0'; }, 3000);
     }
 
-    /* ── Auth check + personalize ─────────── */
+    /* ── Auth + personalize ─────────────── */
     const user = requireAuth();
+    if (user) document.body.style.visibility = 'visible';
     const name = user ? user.name : 'there';
-    const initials = name !== 'there'
-      ? name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2)
-      : '?';
+    const initials = name !== 'there' ? name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?';
     document.getElementById('user-greeting').textContent = 'Hi, ' + name.split(' ')[0] + '!';
     document.getElementById('user-avatar').textContent = initials;
     document.getElementById('avatar-link').href = 'profile.html?name=' + encodeURIComponent(name);
     document.getElementById('profile-link').href = 'profile.html?name=' + encodeURIComponent(name);
 
-    /* ── Announcements banner ─────────────── */
+    /* ── Announcements ──────────────────── */
     const _dismissedAnns = JSON.parse(localStorage.getItem('mp_dismissed_anns') || '[]');
-
     async function loadAnnouncements() {
       if (!user) return;
       try {
@@ -778,533 +731,269 @@
         const visible = anns.filter(a => !_dismissedAnns.includes(a.id));
         if (!visible.length) { banner.style.display = 'none'; return; }
         banner.style.display = 'flex';
-        banner.innerHTML = visible.map(a => `
-          <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:10px;border:1.5px solid ${a.urgent ? '#FECACA' : '#BFDBFE'};background:${a.urgent ? '#FEF2F2' : '#EFF6FF'}">
-            <span style="font-size:18px;flex-shrink:0">${a.urgent ? '⚠️' : '📢'}</span>
-            <div style="flex:1">
-              <div style="font-weight:700;font-size:13px;color:${a.urgent ? '#B91C1C' : '#1D4ED8'};margin-bottom:2px">${a.title}</div>
-              <div style="font-size:12px;color:#374151;line-height:1.5">${a.body}</div>
-            </div>
-            <button onclick="dismissAnn('${a.id}',this.parentElement)"
-              style="background:none;border:none;cursor:pointer;font-size:18px;line-height:1;color:#9CA3AF;flex-shrink:0;padding:0">×</button>
-          </div>`).join('');
-      } catch(e) { /* non-fatal */ }
+        banner.innerHTML = visible.map(a => `<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:10px;border:1.5px solid ${a.urgent?'#FECACA':'#BFDBFE'};background:${a.urgent?'#FEF2F2':'#EFF6FF'}"><span style="font-size:18px;flex-shrink:0">${a.urgent?'⚠️':'📢'}</span><div style="flex:1"><div style="font-weight:700;font-size:13px;color:${a.urgent?'#B91C1C':'#1D4ED8'};margin-bottom:2px">${a.title}</div><div style="font-size:12px;color:#374151;line-height:1.5">${a.body}</div></div><button onclick="dismissAnn('${a.id}',this.parentElement)" style="background:none;border:none;cursor:pointer;font-size:18px;color:#9CA3AF;flex-shrink:0;padding:0">×</button></div>`).join('');
+      } catch(e) {}
     }
-
     function dismissAnn(id, el) {
-      _dismissedAnns.push(id);
-      localStorage.setItem('mp_dismissed_anns', JSON.stringify(_dismissedAnns));
-      el.remove();
-      if (!document.getElementById('ann-banner').children.length) {
-        document.getElementById('ann-banner').style.display = 'none';
-      }
+      _dismissedAnns.push(id); localStorage.setItem('mp_dismissed_anns', JSON.stringify(_dismissedAnns)); el.remove();
+      if (!document.getElementById('ann-banner').children.length) document.getElementById('ann-banner').style.display = 'none';
     }
-
     loadAnnouncements();
 
-    /* ── Load real requests from API ────────── */
-    const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
-    function ageLabel(dateStr) {
-      if (!dateStr) return '';
-      const diff = Math.floor((Date.now() - new Date(dateStr)) / 86400000);
-      return diff < 1 ? 'Today' : diff + 'd';
-    }
-    function buildCard(n) {
-      const emoji = CATEGORY_EMOJI[n.category] || '📦';
-      const loc = [n.city, n.state].filter(Boolean).join(', ');
-      const org = n.navigator_org ? `<a href="need.html?id=${n.id}">${n.navigator_org}</a>` : '';
-      const kids = n.family_children || 0, adults = n.family_adults || 1;
-      const amtNeeded = typeof n.amount_needed === 'number' ? '$' + n.amount_needed.toFixed(2) : '$0.00';
-      const pct = n.amount_needed > 0 && n.amount_funded >= 0 ? Math.min(100, Math.round((n.amount_funded / n.amount_needed) * 100)) : 0;
-      const items = (n.items || []).map(i => i.name || i.category || '').filter(Boolean);
-      const needsLine = items.length ? `<strong>${items.length} Need${items.length > 1 ? 's' : ''}</strong> · ${items.slice(0,2).join(' · ')}` : '';
-      const svgHeart = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
-      const svgUser = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
-      const svgShare = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
-      return `<a class="req-card" href="need.html?id=${n.id}" style="text-decoration:none;color:inherit;display:block;">
-        <div class="req-card-top">${emoji}<div class="req-id">#${n.case_number}</div><div class="req-dot"></div></div>
-        <div class="req-card-body">
-          <div class="req-actions">
-            <button class="req-action-btn" aria-label="Save" onclick="event.stopPropagation();event.preventDefault();">${svgHeart}</button>
-            <button class="req-action-btn" aria-label="Profile" onclick="event.stopPropagation();event.preventDefault();">${svgUser}</button>
-            <button class="req-action-btn" aria-label="Share" onclick="event.stopPropagation();event.preventDefault();">${svgShare}</button>
-            <span class="req-age">${ageLabel(n.created_at)}</span>
-          </div>
-          <div class="req-title">${n.title || ''}</div>
-          <div class="req-desc">${n.description ? n.description.slice(0, 100) + (n.description.length > 100 ? '…' : '') : ''}</div>
-          ${loc || org ? `<div class="req-location">${loc}${loc && org ? ' · ' : ''}${org}</div>` : ''}
-          <div class="req-amount"><span>${amtNeeded}</span> still needed</div>
-          <div class="req-prog"><div class="req-prog-fill" style="width:${pct}%"></div></div>
-          <div class="req-people">${kids > 0 ? `👶 ${kids} Child${kids !== 1 ? 'ren' : ''} &nbsp; ` : ''}👤 ${adults} Adult${adults !== 1 ? 's' : ''}</div>
-          ${needsLine ? `<div class="req-needs">${needsLine}</div>` : ''}
-        </div>
-      </a>`;
-    }
-    async function loadRequests() {
-      const container = document.getElementById('req-cards-container');
-      try {
-        const data = await apiGet('/needs?sort=recent');
-        const needs = data.needs || data.items || data || [];
-        if (!needs.length) { container.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">No active requests right now.</div>'; return; }
-        container.innerHTML = needs.slice(0, 6).map(buildCard).join('');
-      } catch(e) {
-        container.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load requests.</div>';
-      }
-    }
-    loadRequests();
-
-    /* ── Announcements banner ─────────────────── */
-    (async function loadAnnouncements() {
+    /* ── Announcements banner (duplicate path) ── */
+    (async function() {
       try {
         const items = await apiGet('/announcements/active');
         if (!items.length) return;
-        const container = document.getElementById('ann-banners');
-        container.textContent = '';
+        const container = document.getElementById('ann-banners'); container.textContent = '';
         items.forEach(a => {
           const wrap = document.createElement('div');
           wrap.style.cssText = `background:${a.urgent?'#fef2f2':'#fffbeb'};border:1px solid ${a.urgent?'#fca5a5':'#fde68a'};border-radius:10px;padding:12px 16px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start`;
-          const icon = document.createElement('span');
-          icon.style.fontSize = '18px';
-          icon.textContent = a.urgent ? '🚨' : '📢';
+          const icon = document.createElement('span'); icon.style.fontSize = '18px'; icon.textContent = a.urgent ? '🚨' : '📢';
           const body = document.createElement('div');
-          const titleEl = document.createElement('div');
-          titleEl.style.cssText = `font-weight:700;font-size:13px;color:${a.urgent?'#dc2626':'#92400e'}`;
-          titleEl.textContent = a.title || '';
-          const bodyEl = document.createElement('div');
-          bodyEl.style.cssText = 'font-size:12px;color:#555;margin-top:2px';
-          bodyEl.textContent = a.body || '';
-          body.appendChild(titleEl);
-          body.appendChild(bodyEl);
-          wrap.appendChild(icon);
-          wrap.appendChild(body);
-          container.appendChild(wrap);
+          const titleEl = document.createElement('div'); titleEl.style.cssText = `font-weight:700;font-size:13px;color:${a.urgent?'#dc2626':'#92400e'}`; titleEl.textContent = a.title||'';
+          const bodyEl  = document.createElement('div'); bodyEl.style.cssText  = 'font-size:12px;color:#555;margin-top:2px'; bodyEl.textContent = a.body||'';
+          body.appendChild(titleEl); body.appendChild(bodyEl); wrap.appendChild(icon); wrap.appendChild(body); container.appendChild(wrap);
         });
-      } catch(e) { /* silent */ }
+      } catch(e) {}
     })();
 
-    /* ── Tab highlight on scroll ─────────────── */
+    /* ── Requests ───────────────────────── */
+    const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
+    function ageLabel(d) { if (!d) return ''; const diff = Math.floor((Date.now()-new Date(d))/86400000); return diff<1?'Today':diff+'d ago'; }
+
+    function buildCard(n) {
+      const emoji = CATEGORY_EMOJI[n.category] || '📦';
+      const loc = [n.city, n.state].filter(Boolean).join(', ');
+      const kids = n.family_children||0, adults = n.family_adults||1;
+      const amtNeeded = typeof n.amount_needed==='number' ? '$'+n.amount_needed.toFixed(2) : '$0.00';
+      const pct = n.amount_needed>0 && n.amount_funded>=0 ? Math.min(100,Math.round((n.amount_funded/n.amount_needed)*100)) : 0;
+      const urg = (n.urgency||'').toLowerCase();
+      const urgBadge = urg && urg!=='low' ? `<span class="req-urgency-badge" style="background:${urg==='critical'?'#FEE2E2':urg==='high'?'#FEF3C7':'#f3f4f6'};color:${urg==='critical'?'#DC2626':urg==='high'?'#D97706':'#555'}">${urg.toUpperCase()}</span>` : '';
+      const svgHeart = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+      const svgShare = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
+      return `<a class="req-row" href="need.html?id=${n.id}">
+        <div class="req-accent ${urg}"></div>
+        <div class="req-icon">${emoji}</div>
+        <div class="req-body">
+          <div class="req-meta">
+            <span class="req-meta-id">#${n.case_number}</span>
+            <div class="req-meta-dot"></div>
+            <span class="req-meta-age">${ageLabel(n.created_at)}</span>
+            ${urgBadge}
+          </div>
+          <div class="req-title">${n.title||''}</div>
+          <div class="req-desc">${n.description ? n.description.slice(0,120)+(n.description.length>120?'…':'') : ''}</div>
+          <div class="req-footer">
+            ${loc ? `<span class="req-loc">📍 ${loc}</span>` : ''}
+            <span class="req-amt"><span>${amtNeeded}</span> still needed</span>
+            <div class="req-prog"><div class="req-prog-fill" style="width:${pct}%"></div></div>
+            <span class="req-people">${kids>0?`👶${kids} `:''}👤${adults}</span>
+          </div>
+        </div>
+        <div class="req-cta">
+          <button class="btn-respond" onclick="event.preventDefault();event.stopPropagation();window.location.href='need.html?id=${n.id}'">Respond →</button>
+          <div class="req-icons">
+            <button class="req-icon-btn" aria-label="Save" onclick="event.stopPropagation();event.preventDefault()">${svgHeart}</button>
+            <button class="req-icon-btn" aria-label="Share" onclick="event.stopPropagation();event.preventDefault()">${svgShare}</button>
+          </div>
+        </div>
+      </a>`;
+    }
+
+    async function loadRequests() {
+      const c = document.getElementById('req-cards-container');
+      try {
+        const data = await apiGet('/needs?sort=recent');
+        const needs = data.needs || data.items || data || [];
+        if (!needs.length) { c.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:20px 0">No active requests right now.</div>'; return; }
+        c.innerHTML = needs.slice(0,6).map(buildCard).join('');
+      } catch(e) { c.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:20px 0">Could not load requests.</div>'; }
+    }
+    loadRequests();
+
+    /* ── Tab switching ──────────────────── */
     const EXTRA_SECTIONS = ['responses','families','bookmarks','donations','resources'];
     function setTab(t) {
       ['home','checklist','faqs','requests','responses','families','bookmarks','donations','resources'].forEach(id => {
-        const el = document.getElementById('tab-' + id);
-        if (el) el.classList.toggle('active', id === t);
+        const el = document.getElementById('tab-'+id); if (el) el.classList.toggle('active', id===t);
       });
-      // hide/show main two-col so hidden sections don't consume scroll height
       const mainCol = document.getElementById('main-two-col');
       if (mainCol) mainCol.style.display = EXTRA_SECTIONS.includes(t) ? 'none' : 'flex';
-      EXTRA_SECTIONS.forEach(s => {
-        const el = document.getElementById(s + '-section');
-        if (el) el.style.display = s === t ? '' : 'none';
-      });
-      if (t === 'responses') loadMyResponses();
-      if (t === 'families')  loadMyFamilies();
-      if (t === 'bookmarks') loadBookmarks();
-      if (t === 'donations') loadDonations();
-      if (t === 'resources') { initResCats(); loadResources(); }
+      EXTRA_SECTIONS.forEach(s => { const el = document.getElementById(s+'-section'); if (el) el.style.display = s===t ? '' : 'none'; });
+      if (t==='responses') loadMyResponses();
+      if (t==='families')  loadMyFamilies();
+      if (t==='bookmarks') loadBookmarks();
+      if (t==='donations') loadDonations();
+      if (t==='resources') { initResCats(); loadResources(); }
     }
 
-    /* ── My Responses (responder) ─────────────── */
-    const STATUS_LABEL = { offered:'Offered', in_progress:'In Progress', completed:'Completed' };
+    /* ── My Responses ───────────────────── */
+    const STATUS_LABEL  = { offered:'Offered', in_progress:'In Progress', completed:'Completed' };
     const URGENCY_COLOR = { critical:'#dc2626', high:'#f97316', medium:'#f59e0b', low:'#22c55e' };
     async function loadMyResponses() {
       const el = document.getElementById('responses-list');
       try {
         const needs = await apiGet('/needs/responded');
-        if (!needs.length) { el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">You haven\'t responded to any needs yet. <a href="requests.html">Browse requests →</a></div>'; return; }
-        el.innerHTML = needs.map(n => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--gray-100)">
-            <div style="display:flex;align-items:center;gap:12px">
-              <div style="font-size:28px">${CATEGORY_EMOJI[n.category]||'📦'}</div>
-              <div>
-                <div style="font-size:14px;font-weight:600">${n.title}</div>
-                <div style="font-size:12px;color:var(--gray-600)">#${n.case_number} · ${[n.city,n.state].filter(Boolean).join(', ')}</div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-              <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;background:${URGENCY_COLOR[n.urgency]||'#999'}22;color:${URGENCY_COLOR[n.urgency]||'#999'}">${n.urgency}</span>
-              <span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;background:var(--teal-lt);color:var(--teal)">${STATUS_LABEL[n.my_response_status]||n.my_response_status||'offered'}</span>
-              <span style="font-size:11px;padding:3px 8px;border-radius:12px;background:var(--gray-100);color:var(--gray-600)">${n.status}</span>
-            </div>
-          </div>`).join('');
-      } catch(e) {
-        el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load responses. <button onclick="loadMyResponses()" style="background:none;border:none;color:var(--teal);font-size:13px;cursor:pointer;text-decoration:underline;font-family:Inter,sans-serif;">Retry</button></div>';
-      }
+        if (!needs.length) { el.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:20px 0">You haven\'t responded to any needs yet. <a href="requests.html">Browse requests →</a></div>'; return; }
+        el.innerHTML = needs.map(n => `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:28px">${CATEGORY_EMOJI[n.category]||'📦'}</div><div><div style="font-size:14px;font-weight:600;color:var(--text)">${n.title}</div><div style="font-size:12px;color:var(--text-sub)">#${n.case_number} · ${[n.city,n.state].filter(Boolean).join(', ')}</div></div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;background:${URGENCY_COLOR[n.urgency]||'#999'}22;color:${URGENCY_COLOR[n.urgency]||'#999'}">${n.urgency}</span><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;background:var(--primary-lt);color:var(--primary)">${STATUS_LABEL[n.my_response_status]||n.my_response_status||'offered'}</span></div></div>`).join('');
+      } catch(e) { el.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:20px 0">Could not load. <button onclick="loadMyResponses()" style="background:none;border:none;color:var(--primary);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit">Retry</button></div>'; }
     }
 
-    /* ── Resource Directory ───────────────────── */
+    /* ── Resources ──────────────────────── */
     const RES_CATS = ['all','shelter','food','clinic','legal','employment','education','clothing','transportation','other'];
     let activeResCategory = 'all';
-
     function initResCats() {
-      const el = document.getElementById('res-cats');
-      if (!el) return;
-      el.innerHTML = RES_CATS.map(c => `
-        <button onclick="setResCategory('${c}')" id="rescat-${c}"
-          style="padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--gray-200);cursor:pointer;
-          background:${c==='all'?'var(--teal)':'white'};color:${c==='all'?'white':'var(--gray-600)'}">
-          ${c==='all'?'All':c.charAt(0).toUpperCase()+c.slice(1)}
-        </button>`).join('');
+      const el = document.getElementById('res-cats'); if (!el) return;
+      el.innerHTML = RES_CATS.map(c => `<button onclick="setResCategory('${c}')" id="rescat-${c}" style="padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);cursor:pointer;background:${c==='all'?'var(--primary)':'var(--surface)'};color:${c==='all'?'white':'var(--text-sub)'}">${c==='all'?'All':c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
     }
-
     function setResCategory(cat) {
       activeResCategory = cat;
-      RES_CATS.forEach(c => {
-        const btn = document.getElementById(`rescat-${c}`);
-        if (!btn) return;
-        const active = c === cat;
-        btn.style.background = active ? 'var(--teal)' : 'white';
-        btn.style.color = active ? 'white' : 'var(--gray-600)';
-      });
+      RES_CATS.forEach(c => { const btn = document.getElementById(`rescat-${c}`); if (!btn) return; btn.style.background = c===cat?'var(--primary)':'var(--surface)'; btn.style.color = c===cat?'white':'var(--text-sub)'; });
       loadResources();
     }
-
     const CAT_COLORS = { shelter:'#7C3AED',food:'#16A34A',clinic:'#DC2626',legal:'#2563EB',employment:'#D97706',education:'#0891B2',clothing:'#BE185D',transportation:'#0369A1',other:'#6B7280' };
-    const CAT_BG    = { shelter:'#EDE9FE',food:'#DCFCE7',clinic:'#FEE2E2',legal:'#DBEAFE',employment:'#FEF3C7',education:'#CFFAFE',clothing:'#FCE7F3',transportation:'#E0F2FE',other:'#F3F4F6' };
-
+    const CAT_BG     = { shelter:'#EDE9FE',food:'#DCFCE7',clinic:'#FEE2E2',legal:'#DBEAFE',employment:'#FEF3C7',education:'#CFFAFE',clothing:'#FCE7F3',transportation:'#E0F2FE',other:'#F3F4F6' };
     async function loadResources() {
       const el = document.getElementById('resources-list');
-      const search = document.getElementById('res-search')?.value.trim() || '';
-      const state = document.getElementById('res-state')?.value || '';
+      const search = document.getElementById('res-search')?.value.trim()||'';
+      const state  = document.getElementById('res-state')?.value||'';
       const params = new URLSearchParams();
-      if (activeResCategory && activeResCategory !== 'all') params.set('category', activeResCategory);
+      if (activeResCategory && activeResCategory!=='all') params.set('category', activeResCategory);
       if (search) params.set('search', search);
-      if (state) params.set('state', state);
+      if (state)  params.set('state', state);
       try {
-        const resources = await apiGet('/resources?' + params.toString());
-        if (!resources.length) {
-          el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0;text-align:center">No resources found. Try different filters.</div>';
-          return;
-        }
-        el.innerHTML = resources.map(r => {
-          const cat = r.category || 'other';
-          const color = CAT_COLORS[cat] || CAT_COLORS.other;
-          const bg = CAT_BG[cat] || CAT_BG.other;
-          return `
-            <div style="border:1px solid var(--gray-100);border-radius:10px;padding:14px;margin-bottom:10px">
-              <div style="display:flex;align-items:flex-start;gap:10px">
-                <span style="font-size:11px;font-weight:700;color:${color};background:${bg};padding:3px 9px;border-radius:10px;flex-shrink:0;margin-top:2px">
-                  ${cat.charAt(0).toUpperCase()+cat.slice(1)}
-                </span>
-                <div style="flex:1;min-width:0">
-                  <div style="font-size:14px;font-weight:700;margin-bottom:2px">${r.name}</div>
-                  ${r.description ? `<div style="font-size:12px;color:var(--gray-600);margin-bottom:6px">${r.description}</div>` : ''}
-                  <div style="display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--gray-600)">
-                    ${r.address ? `<span>📍 ${r.address}${r.city ? ', ' + r.city : ''}${r.state ? ', ' + r.state : ''}</span>` : (r.city ? `<span>📍 ${r.city}${r.state ? ', ' + r.state : ''}</span>` : '')}
-                    ${r.phone ? `<a href="tel:${r.phone}" style="color:var(--teal);text-decoration:none">📞 ${r.phone}</a>` : ''}
-                    ${r.website ? `<a href="${r.website}" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none">🌐 Website</a>` : ''}
-                    ${r.hours ? `<span>🕐 ${r.hours}</span>` : ''}
-                    ${r.languages ? `<span>🗣 ${r.languages}</span>` : ''}
-                  </div>
-                </div>
-              </div>
-            </div>`;
-        }).join('');
-      } catch(e) {
-        el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load resources.</div>';
-      }
+        const resources = await apiGet('/resources?'+params.toString());
+        if (!resources.length) { el.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:20px 0;text-align:center">No resources found.</div>'; return; }
+        el.innerHTML = resources.map(r => { const cat=r.category||'other', color=CAT_COLORS[cat]||CAT_COLORS.other, bg=CAT_BG[cat]||CAT_BG.other; return `<div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;gap:10px"><span style="font-size:11px;font-weight:700;color:${color};background:${bg};padding:3px 9px;border-radius:10px;flex-shrink:0;margin-top:2px">${cat.charAt(0).toUpperCase()+cat.slice(1)}</span><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;margin-bottom:2px;color:var(--text)">${r.name}</div>${r.description?`<div style="font-size:12px;color:var(--text-sub);margin-bottom:6px">${r.description}</div>`:''}<div style="display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--text-sub)">${r.address?`<span>📍 ${r.address}${r.city?', '+r.city:''}${r.state?', '+r.state:''}</span>`:(r.city?`<span>📍 ${r.city}${r.state?', '+r.state:''}</span>`:'')}${r.phone?`<a href="tel:${r.phone}" style="color:var(--primary)">📞 ${r.phone}</a>`:''}${r.website?`<a href="${r.website}" target="_blank" rel="noopener" style="color:var(--primary)">🌐 Website</a>`:''}${r.hours?`<span>🕐 ${r.hours}</span>`:''}${r.languages?`<span>🗣 ${r.languages}</span>`:''}</div></div></div></div>`; }).join('');
+      } catch(e) { el.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:20px 0">Could not load resources.</div>'; }
     }
-
-    function showAddResourceModal() {
-      document.getElementById('add-resource-modal').style.display = 'flex';
-    }
-
+    function showAddResourceModal() { document.getElementById('add-resource-modal').style.display='flex'; }
     async function submitResource() {
-      const name = document.getElementById('res-name').value.trim();
-      const category = document.getElementById('res-cat-sel').value;
-      if (!name || !category) { toast('Name and category are required.', true); return; }
+      const name=document.getElementById('res-name').value.trim(), category=document.getElementById('res-cat-sel').value;
+      if (!name||!category) { toast('Name and category are required.',true); return; }
       try {
-        await apiPost('/resources', {
-          name,
-          category,
-          description: document.getElementById('res-desc').value.trim() || null,
-          address: document.getElementById('res-addr').value.trim() || null,
-          city: document.getElementById('res-city').value.trim() || null,
-          state: document.getElementById('res-st').value.trim() || null,
-          phone: document.getElementById('res-phone').value.trim() || null,
-          website: document.getElementById('res-web').value.trim() || null,
-          hours: document.getElementById('res-hours').value.trim() || null,
-          languages: document.getElementById('res-langs').value.trim() || null,
-        });
-        document.getElementById('add-resource-modal').style.display = 'none';
-        toast('Resource submitted! Admins will review and approve it.');
-        loadResources();
-      } catch(e) { toast('Failed: ' + e.message, true); }
+        await apiPost('/resources',{name,category,description:document.getElementById('res-desc').value.trim()||null,address:document.getElementById('res-addr').value.trim()||null,city:document.getElementById('res-city').value.trim()||null,state:document.getElementById('res-st').value.trim()||null,phone:document.getElementById('res-phone').value.trim()||null,website:document.getElementById('res-web').value.trim()||null,hours:document.getElementById('res-hours').value.trim()||null,languages:document.getElementById('res-langs').value.trim()||null});
+        document.getElementById('add-resource-modal').style.display='none'; toast('Resource submitted!'); loadResources();
+      } catch(e) { toast('Failed: '+e.message,true); }
     }
 
-    /* ── My Families (navigator) ──────────────── */
+    /* ── Families ───────────────────────── */
     async function loadMyFamilies() {
       const el = document.getElementById('families-list');
       try {
         const families = await apiGet('/families/mine');
-        if (!families.length) { el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">No families yet. Add one to get started.</div>'; return; }
-        el.innerHTML = families.map(f => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--gray-100)">
-            <div style="flex:1;min-width:0">
-              <div style="font-size:14px;font-weight:600">${f.name}</div>
-              <div style="font-size:12px;color:var(--gray-600)">${[f.origin_country, f.language].filter(Boolean).join(' · ')} · 👤 ${f.adults} adult${f.adults!==1?'s':''} · 👶 ${f.children} child${f.children!==1?'ren':''}</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-              <span style="font-size:12px;color:var(--teal);font-weight:600">${f.needs_count} need${f.needs_count!==1?'s':''}</span>
-              <button onclick="showFamilyProgress('${f.id}','${f.name.replace(/'/g,"\\'")}');event.stopPropagation()"
-                style="font-size:11px;font-weight:600;color:white;background:var(--teal);border:none;border-radius:6px;padding:4px 10px;cursor:pointer">📊 Progress</button>
-            </div>
-          </div>`).join('');
-      } catch(e) {
-        el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load families.</div>';
-      }
+        if (!families.length) { el.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:20px 0">No families yet. Add one to get started.</div>'; return; }
+        el.innerHTML = families.map(f => `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;color:var(--text)">${f.name}</div><div style="font-size:12px;color:var(--text-sub)">${[f.origin_country,f.language].filter(Boolean).join(' · ')} · 👤 ${f.adults} adult${f.adults!==1?'s':''} · 👶 ${f.children} child${f.children!==1?'ren':''}</div></div><div style="display:flex;align-items:center;gap:10px;flex-shrink:0"><span style="font-size:12px;color:var(--primary);font-weight:600">${f.needs_count} need${f.needs_count!==1?'s':''}</span><button onclick="showFamilyProgress('${f.id}','${f.name.replace(/'/g,"\\'")}');event.stopPropagation()" style="font-size:11px;font-weight:600;color:white;background:var(--primary);border:none;border-radius:6px;padding:4px 10px;cursor:pointer">📊 Progress</button></div></div>`).join('');
+      } catch(e) { el.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:20px 0">Could not load families.</div>'; }
     }
-
     async function showFamilyProgress(familyId, familyName) {
-      const modal = document.getElementById('progress-modal');
-      const body = document.getElementById('progress-modal-body');
-      document.getElementById('progress-modal-title').textContent = familyName + ' — Progress';
-      body.innerHTML = '<div style="text-align:center;padding:24px;color:var(--gray-400)">Loading…</div>';
-      modal.style.display = 'flex';
+      const modal=document.getElementById('progress-modal'), body=document.getElementById('progress-modal-body');
+      document.getElementById('progress-modal-title').textContent = familyName+' — Progress';
+      body.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-sub)">Loading…</div>'; modal.style.display='flex';
       try {
-        const p = await apiGet(`/families/${familyId}/progress`);
-        const pct = p.total_needs > 0 ? Math.round((p.fulfilled_count / p.total_needs) * 100) : 0;
-        const donated = p.total_donated_cents > 0 ? `$${(p.total_donated_cents/100).toFixed(2)} donated` : '';
-        const fulfilledRows = p.fulfilled_needs.length
-          ? p.fulfilled_needs.map(n => `
-              <a href="need.html?id=${n.id}" target="_blank"
-                style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--gray-100);text-decoration:none;color:inherit">
-                <span style="color:#10B981;font-size:16px">✓</span>
-                <div style="flex:1;min-width:0">
-                  <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n.title}</div>
-                  <div style="font-size:11px;color:var(--gray-400)">${n.case_number} · ${n.response_count} response${n.response_count!==1?'s':''}</div>
-                </div>
-              </a>`).join('')
-          : '<div style="font-size:13px;color:var(--gray-400);padding:12px 0">No fulfilled needs yet.</div>';
-        body.innerHTML = `
-          <div style="margin-bottom:14px">
-            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#065F46;margin-bottom:6px">
-              <span>${p.fulfilled_count} of ${p.total_needs} needs fulfilled</span>
-              <span>${pct}%${donated ? '  ·  '+donated : ''}</span>
-            </div>
-            <div style="height:10px;background:#D1FAE5;border-radius:5px;overflow:hidden">
-              <div style="height:10px;width:${pct}%;background:#10B981;border-radius:5px"></div>
-            </div>
-          </div>
-          <div style="display:flex;gap:12px;margin-bottom:14px">
-            <div style="flex:1;background:#F0FDF4;border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:20px;font-weight:800;color:#10B981">${p.fulfilled_count}</div>
-              <div style="font-size:11px;color:#065F46;font-weight:600">Fulfilled</div>
-            </div>
-            <div style="flex:1;background:#EFF6FF;border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:20px;font-weight:800;color:#3B82F6">${p.active_count}</div>
-              <div style="font-size:11px;color:#1D4ED8;font-weight:600">Active</div>
-            </div>
-            <div style="flex:1;background:#F5F3FF;border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:20px;font-weight:800;color:#7C3AED">${p.total_needs}</div>
-              <div style="font-size:11px;color:#5B21B6;font-weight:600">Total</div>
-            </div>
-          </div>
-          <div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Fulfilled Needs</div>
-          ${fulfilledRows}`;
-      } catch(e) {
-        body.innerHTML = '<div style="color:#dc2626;font-size:13px;padding:12px 0">Could not load progress.</div>';
-      }
+        const p=await apiGet(`/families/${familyId}/progress`);
+        const pct=p.total_needs>0?Math.round((p.fulfilled_count/p.total_needs)*100):0;
+        const donated=p.total_donated_cents>0?`$${(p.total_donated_cents/100).toFixed(2)} donated`:'';
+        const fulfilledRows=p.fulfilled_needs.length?p.fulfilled_needs.map(n=>`<a href="need.html?id=${n.id}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--border);text-decoration:none;color:inherit"><span style="color:#10B981;font-size:16px">✓</span><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${n.title}</div><div style="font-size:11px;color:var(--text-sub)">${n.case_number} · ${n.response_count} response${n.response_count!==1?'s':''}</div></div></a>`).join(''):'<div style="font-size:13px;color:var(--text-sub);padding:12px 0">No fulfilled needs yet.</div>';
+        body.innerHTML=`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#065F46;margin-bottom:6px"><span>${p.fulfilled_count} of ${p.total_needs} needs fulfilled</span><span>${pct}%${donated?' · '+donated:''}</span></div><div style="height:10px;background:#D1FAE5;border-radius:5px;overflow:hidden"><div style="height:10px;width:${pct}%;background:#10B981;border-radius:5px"></div></div></div><div style="display:flex;gap:12px;margin-bottom:14px"><div style="flex:1;background:#F0FDF4;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#10B981">${p.fulfilled_count}</div><div style="font-size:11px;color:#065F46;font-weight:600">Fulfilled</div></div><div style="flex:1;background:#EFF6FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#3B82F6">${p.active_count}</div><div style="font-size:11px;color:#1D4ED8;font-weight:600">Active</div></div><div style="flex:1;background:#F5F3FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#7C3AED">${p.total_needs}</div><div style="font-size:11px;color:#5B21B6;font-weight:600">Total</div></div></div><div style="font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Fulfilled Needs</div>${fulfilledRows}`;
+      } catch(e) { body.innerHTML='<div style="color:#dc2626;font-size:13px;padding:12px 0">Could not load progress.</div>'; }
     }
-
-    function showAddFamilyModal() {
-      document.getElementById('add-family-modal').style.display = 'flex';
-    }
-
+    function showAddFamilyModal() { document.getElementById('add-family-modal').style.display='flex'; }
     async function submitAddFamily() {
-      const name = document.getElementById('fam-name').value.trim();
-      if (!name) { toast('Family name is required.', true); return; }
+      const name=document.getElementById('fam-name').value.trim();
+      if (!name) { toast('Family name is required.',true); return; }
       try {
-        await apiPost('/families', {
-          name,
-          origin_country: document.getElementById('fam-country').value.trim() || null,
-          language: document.getElementById('fam-lang').value.trim() || null,
-          adults: parseInt(document.getElementById('fam-adults').value) || 1,
-          children: parseInt(document.getElementById('fam-children').value) || 0,
-          notes: document.getElementById('fam-notes').value.trim() || null,
-        });
-        document.getElementById('add-family-modal').style.display = 'none';
-        toast('Family added successfully!');
-        loadMyFamilies();
-      } catch(e) { toast('Failed to add family: ' + e.message, true); }
+        await apiPost('/families',{name,origin_country:document.getElementById('fam-country').value.trim()||null,language:document.getElementById('fam-lang').value.trim()||null,adults:parseInt(document.getElementById('fam-adults').value)||1,children:parseInt(document.getElementById('fam-children').value)||0,notes:document.getElementById('fam-notes').value.trim()||null});
+        document.getElementById('add-family-modal').style.display='none'; toast('Family added successfully!'); loadMyFamilies();
+      } catch(e) { toast('Failed: '+e.message,true); }
     }
 
-    /* ── Role-based tab visibility ───────────── */
+    /* ── Role tabs ──────────────────────── */
     (function initRoleTabs() {
       const role = user?.role;
-      if (role === 'responder') {
-        document.getElementById('tab-responses').style.display = '';
-        document.getElementById('mob-tab-responses').style.display = '';
-        loadRoleStats('responder');
-      }
-      if (role === 'navigator' || role === 'admin') {
-        document.getElementById('add-resource-btn').style.display = '';
-      }
-      if (role === 'navigator') {
-        document.getElementById('tab-families').style.display = '';
-        document.getElementById('mob-tab-families').style.display = '';
-        document.getElementById('navigator-sidebar').style.display = '';
-        loadRoleStats('navigator');
-      }
-    })();
-    /* Hash nav restore on load */
-    (function initHashNav() {
-      var hashToTab = {
-        'home-section': 'home',
-        'checklist-section': 'checklist',
-        'faqs-section': 'faqs',
-        'requests-section': 'requests',
-        'responses-section': 'responses',
-        'families-section': 'families',
-        'bookmarks-section': 'bookmarks',
-        'donations-section': 'donations',
-        'resources-section': 'resources',
-      };
-      var tab = hashToTab[location.hash.replace('#', '')];
-      if (tab) setTab(tab);
+      if (role==='responder') { document.getElementById('tab-responses').style.display=''; document.getElementById('mob-tab-responses').style.display=''; loadRoleStats('responder'); }
+      if (role==='navigator'||role==='admin') { document.getElementById('add-resource-btn').style.display=''; }
+      if (role==='navigator') { document.getElementById('tab-families').style.display=''; document.getElementById('mob-tab-families').style.display=''; document.getElementById('navigator-sidebar').style.display=''; loadRoleStats('navigator'); }
     })();
 
+    /* ── Hash nav restore ───────────────── */
+    (function() {
+      const map={'home-section':'home','checklist-section':'checklist','faqs-section':'faqs','requests-section':'requests','responses-section':'responses','families-section':'families','bookmarks-section':'bookmarks','donations-section':'donations','resources-section':'resources'};
+      const tab=map[location.hash.replace('#','')]; if (tab) setTab(tab);
+    })();
 
-    /* ── Role stats ──────────────────────────── */
-    function statCard(label, value, color) {
-      return `<div style="background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:14px 18px;min-width:110px;flex:1">
-        <div style="font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:4px">${label}</div>
-        <div style="font-size:22px;font-weight:800;color:${color||'var(--text)'}">${value}</div>
-      </div>`;
+    /* ── Role stats ─────────────────────── */
+    function statCard(label,value,color) {
+      return `<div style="background:var(--surface);border-radius:10px;box-shadow:var(--shadow-sm);border:1px solid var(--border);padding:14px 18px;min-width:110px;flex:1"><div style="font-size:11px;font-weight:600;color:var(--text-sub);margin-bottom:4px">${label}</div><div style="font-size:22px;font-weight:800;font-family:var(--font-head);color:${color||'var(--text)'}">${value}</div></div>`;
     }
     async function loadRoleStats(role) {
       try {
-        const url = role === 'navigator' ? '/needs/navigator/stats' : '/needs/responder/stats';
-        const s = await apiGet(url);
-        const inner = document.getElementById('role-stats-inner');
-        if (role === 'navigator') {
-          inner.innerHTML =
-            statCard('Families', s.families_count, 'var(--teal)') +
-            statCard('Active Needs', s.active_count, 'var(--green)') +
-            statCard('Pending', s.pending_count, '#f59e0b') +
-            statCard('Fulfilled', s.fulfilled_count, 'var(--teal)') +
-            statCard('Responses', s.total_responses, 'var(--orange)');
-        } else {
-          inner.innerHTML =
-            statCard('Responses', s.responses_made, 'var(--teal)') +
-            statCard('Active', s.active_responses, 'var(--green)') +
-            statCard('Helped Fulfill', s.fulfilled_helped, 'var(--orange)') +
-            statCard('Shifts', s.shifts_count, '#7c3aed') +
-            statCard('Donations', s.donations_count, '#0973A7');
-        }
-        document.getElementById('role-stats').style.display = '';
-      } catch(e) { /* silent */ }
-    }
-
-    /* ── Bookmarks ───────────────────────────── */
-    async function loadBookmarks() {
-      const el = document.getElementById('bookmarks-list');
-      try {
-        const needs = await apiGet('/needs/bookmarked');
-        if (!needs.length) { el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">No bookmarks yet. Bookmark needs from <a href="requests.html">Requests</a>.</div>'; return; }
-        el.innerHTML = needs.map(n => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--gray-100)">
-            <div style="display:flex;align-items:center;gap:12px">
-              <div style="font-size:26px">${CATEGORY_EMOJI[n.category]||'📦'}</div>
-              <div>
-                <a href="need.html?id=${n.id}" style="font-size:14px;font-weight:600;color:var(--text)">${n.title}</a>
-                <div style="font-size:12px;color:var(--gray-600)">#${n.case_number} · ${n.status} · ${[n.city,n.state].filter(Boolean).join(', ')||'—'}</div>
-              </div>
-            </div>
-            <button onclick="removeBookmark('${n.id}', this)" style="background:var(--gray-100);border:1px solid var(--gray-200);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--gray-600)">Remove</button>
-          </div>`).join('');
-      } catch(e) { el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load bookmarks. <button onclick="loadBookmarks()" style="background:none;border:none;color:var(--teal);font-size:13px;cursor:pointer;text-decoration:underline;font-family:Inter,sans-serif;">Retry</button></div>'; }
-    }
-
-    async function removeBookmark(needId, btn) {
-      try {
-        await apiDelete(`/needs/${needId}/bookmark`);
-        btn.closest('div[style*="border-bottom"]').remove();
+        const s=await apiGet(role==='navigator'?'/needs/navigator/stats':'/needs/responder/stats');
+        const inner=document.getElementById('role-stats-inner');
+        inner.innerHTML = role==='navigator'
+          ? statCard('Families',s.families_count,'var(--primary)')+statCard('Active Needs',s.active_count,'var(--green)')+statCard('Pending',s.pending_count,'#f59e0b')+statCard('Fulfilled',s.fulfilled_count,'var(--primary)')+statCard('Responses',s.total_responses,'var(--coral)')
+          : statCard('Responses',s.responses_made,'var(--primary)')+statCard('Active',s.active_responses,'var(--green)')+statCard('Helped Fulfill',s.fulfilled_helped,'var(--coral)')+statCard('Shifts',s.shifts_count,'#7c3aed')+statCard('Donations',s.donations_count,'#0973A7');
+        document.getElementById('role-stats').style.display='';
       } catch(e) {}
     }
 
-    /* ── Donations ───────────────────────────── */
+    /* ── Bookmarks ──────────────────────── */
+    async function loadBookmarks() {
+      const el=document.getElementById('bookmarks-list');
+      try {
+        const needs=await apiGet('/needs/bookmarked');
+        if (!needs.length) { el.innerHTML='<div style="color:var(--text-sub);font-size:13px;padding:20px 0">No bookmarks yet. <a href="requests.html">Browse requests →</a></div>'; return; }
+        el.innerHTML=needs.map(n=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:26px">${CATEGORY_EMOJI[n.category]||'📦'}</div><div><a href="need.html?id=${n.id}" style="font-size:14px;font-weight:600;color:var(--text)">${n.title}</a><div style="font-size:12px;color:var(--text-sub)">#${n.case_number} · ${n.status} · ${[n.city,n.state].filter(Boolean).join(', ')||'—'}</div></div></div><button onclick="removeBookmark('${n.id}',this)" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--text-sub)">Remove</button></div>`).join('');
+      } catch(e) { el.innerHTML='<div style="color:var(--text-sub);font-size:13px;padding:20px 0">Could not load. <button onclick="loadBookmarks()" style="background:none;border:none;color:var(--primary);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit">Retry</button></div>'; }
+    }
+    async function removeBookmark(needId,btn) { try { await apiDelete(`/needs/${needId}/bookmark`); btn.closest('div[style*="border-bottom"]').remove(); } catch(e){} }
+
+    /* ── Donations ──────────────────────── */
     async function loadDonations() {
-      const el = document.getElementById('donations-list');
+      const el=document.getElementById('donations-list');
       try {
-        const items = await apiGet('/donations/mine');
-        if (!items.length) { el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">No donations yet.</div>'; return; }
-        el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px">
-          <thead><tr style="border-bottom:2px solid var(--gray-200)">
-            <th style="text-align:left;padding:8px 0;font-weight:600;color:var(--gray-600)">Date</th>
-            <th style="text-align:left;padding:8px 0;font-weight:600;color:var(--gray-600)">Need</th>
-            <th style="text-align:right;padding:8px 0;font-weight:600;color:var(--gray-600)">Amount</th>
-            <th style="text-align:center;padding:8px 0;font-weight:600;color:var(--gray-600)">Status</th>
-          </tr></thead>
-          <tbody>${items.map(d => `
-            <tr style="border-bottom:1px solid var(--gray-100)">
-              <td style="padding:10px 0;color:var(--gray-600)">${d.created_at.slice(0,10)}</td>
-              <td style="padding:10px 0">${d.need_id ? `<a href="need.html?id=${d.need_id}" style="color:var(--teal)">View Need</a>` : '—'}</td>
-              <td style="padding:10px 0;text-align:right;font-weight:700">$${(d.amount_cents/100).toFixed(2)}</td>
-              <td style="padding:10px 0;text-align:center"><span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;background:${d.status==='succeeded'?'#dcfce7':'#fef9c3'};color:${d.status==='succeeded'?'#16a34a':'#92400e'}">${d.status}</span></td>
-            </tr>`).join('')}
-          </tbody></table>`;
-      } catch(e) { el.innerHTML = '<div style="color:var(--gray-400);font-size:13px;padding:20px 0">Could not load donations.</div>'; }
+        const items=await apiGet('/donations/mine');
+        if (!items.length) { el.innerHTML='<div style="color:var(--text-sub);font-size:13px;padding:20px 0">No donations yet.</div>'; return; }
+        el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="border-bottom:2px solid var(--border)"><th style="text-align:left;padding:8px 0;font-weight:600;color:var(--text-sub)">Date</th><th style="text-align:left;padding:8px 0;font-weight:600;color:var(--text-sub)">Need</th><th style="text-align:right;padding:8px 0;font-weight:600;color:var(--text-sub)">Amount</th><th style="text-align:center;padding:8px 0;font-weight:600;color:var(--text-sub)">Status</th></tr></thead><tbody>${items.map(d=>`<tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 0;color:var(--text-sub)">${d.created_at.slice(0,10)}</td><td style="padding:10px 0">${d.need_id?`<a href="need.html?id=${d.need_id}" style="color:var(--primary)">View Need</a>`:'—'}</td><td style="padding:10px 0;text-align:right;font-weight:700;color:var(--text)">$${(d.amount_cents/100).toFixed(2)}</td><td style="padding:10px 0;text-align:center"><span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;background:${d.status==='succeeded'?'#dcfce7':'#fef9c3'};color:${d.status==='succeeded'?'#16a34a':'#92400e'}">${d.status}</span></td></tr>`).join('')}</tbody></table>`;
+      } catch(e) { el.innerHTML='<div style="color:var(--text-sub);font-size:13px;padding:20px 0">Could not load donations.</div>'; }
     }
 
-    /* ── FAQ accordion ───────────────────────── */
-    function toggleFaq(el) {
-      el.classList.toggle('open');
+    /* ── FAQ accordion ──────────────────── */
+    function toggleFaq(el) { el.classList.toggle('open'); }
+
+    /* ── Checklist collapse ─────────────── */
+    function toggleChecklist() {
+      const body=document.getElementById('checklist-body'), btn=document.getElementById('checklist-toggle-btn');
+      const isOpen=btn.classList.contains('open');
+      body.style.display=isOpen?'none':''; btn.classList.toggle('open',!isOpen);
     }
 
-    /* ── Checklist progress ──────────────────── */
-    const TOTAL_ITEMS = 7;
-    let doneCount = 0;
-    const section1Items = ['item-1-1','item-1-2','item-1-3'];
-    const section2Items = ['item-2-1','item-2-2','item-2-3','item-2-4'];
-
-    function _checklistKey() {
-      const user = getUser();
-      return 'mp_checklist_' + (user && (user.id || user.email) ? (user.id || user.email) : 'default');
-    }
-
-    function saveChecklist() {
-      const allItems = [...section1Items, ...section2Items];
-      const state = allItems.reduce((acc, id) => {
-        acc[id] = document.getElementById(id).classList.contains('done');
-        return acc;
-      }, {});
-      localStorage.setItem(_checklistKey(), JSON.stringify(state));
-    }
-
+    /* ── Checklist progress ─────────────── */
+    const TOTAL_ITEMS=7;
+    const section1Items=['item-1-1','item-1-2','item-1-3'];
+    const section2Items=['item-2-1','item-2-2','item-2-3','item-2-4'];
+    function _checklistKey() { const u=getUser(); return 'mp_checklist_'+(u&&(u.id||u.email)?(u.id||u.email):'default'); }
+    function saveChecklist() { const all=[...section1Items,...section2Items]; localStorage.setItem(_checklistKey(),JSON.stringify(all.reduce((acc,id)=>{acc[id]=document.getElementById(id).classList.contains('done');return acc;},{}))); }
     function restoreChecklist() {
-      try {
-        const state = JSON.parse(localStorage.getItem(_checklistKey()) || '{}');
-        Object.entries(state).forEach(([id, done]) => {
-          if (!done) return;
-          const el = document.getElementById(id);
-          if (!el) return;
-          el.querySelector('.item-check').classList.add('checked');
-          el.classList.add('done');
-        });
-      } catch {}
+      try { const state=JSON.parse(localStorage.getItem(_checklistKey())||'{}'); Object.entries(state).forEach(([id,done])=>{ if(!done)return; const el=document.getElementById(id); if(!el)return; el.querySelector('.item-check').classList.add('checked'); el.classList.add('done'); }); } catch{}
       updateProgress();
     }
-
     function toggleItem(id) {
-      const el = document.getElementById(id);
-      const check = el.querySelector('.item-check');
-      const isDone = check.classList.toggle('checked');
-      el.classList.toggle('done', isDone);
-      saveChecklist();
-      updateProgress();
+      const el=document.getElementById(id), check=el.querySelector('.item-check');
+      const isDone=check.classList.toggle('checked'); el.classList.toggle('done',isDone);
+      saveChecklist(); updateProgress();
     }
-
     function updateProgress() {
-      const s1done = section1Items.filter(id => document.getElementById(id).classList.contains('done')).length;
-      const s2done = section2Items.filter(id => document.getElementById(id).classList.contains('done')).length;
-      document.getElementById('count-1').textContent = s1done + ' of 3 Complete';
-      document.getElementById('count-2').textContent = s2done + ' of 4 Complete';
-      const total = s1done + s2done;
-      const pct = Math.round((total / TOTAL_ITEMS) * 100);
-      document.getElementById('prog-fill').style.width = pct + '%';
-      document.getElementById('prog-label').textContent = pct + '% You got this!';
+      const s1done=section1Items.filter(id=>document.getElementById(id).classList.contains('done')).length;
+      const s2done=section2Items.filter(id=>document.getElementById(id).classList.contains('done')).length;
+      document.getElementById('count-1').textContent=s1done+' of 3';
+      document.getElementById('count-2').textContent=s2done+' of 4';
+      const pct=Math.round(((s1done+s2done)/TOTAL_ITEMS)*100);
+      document.getElementById('prog-fill').style.width=pct+'%';
+      document.getElementById('prog-label').textContent=pct+'% — You got this!';
+      if (pct===100) { const body=document.getElementById('checklist-body'),btn=document.getElementById('checklist-toggle-btn'); if(body)body.style.display='none'; if(btn)btn.classList.remove('open'); }
     }
-
     restoreChecklist();
   </script>
 
@@ -1312,16 +1001,9 @@
   <style>
     .mob-nav { display: none; }
     @media (max-width: 768px) {
-      .mob-nav {
-        display: flex; position: fixed; bottom: 0; left: 0; right: 0;
-        background: white; border-top: 1px solid #E8E8E8; z-index: 300;
-      }
-      .mob-nav-btn {
-        flex: 1; display: flex; flex-direction: column; align-items: center;
-        justify-content: center; padding: 10px 4px 8px; gap: 3px;
-        font-size: 10px; font-weight: 600; color: #999; border: none; background: none;
-      }
-      .mob-nav-btn.active { color: #009DA5; }
+      .mob-nav { display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:300; }
+      .mob-nav-btn { flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;gap:3px;font-size:10px;font-weight:600;color:var(--text-sub);border:none;background:none;font-family:var(--font-body); }
+      .mob-nav-btn.active { color: var(--primary); }
       body { padding-bottom: 62px; }
     }
   </style>
