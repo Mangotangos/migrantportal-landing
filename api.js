@@ -1,8 +1,11 @@
 const API = 'https://migrant-portal-backend.up.railway.app';
 
+let _isLogoutInProgress = false;
+
 function _handle401() {
+  if (_isLogoutInProgress) return;
   localStorage.removeItem('mp_user');
-  window.location.href = '/login.html';
+  window.location.replace('/login.html');
 }
 
 async function apiPost(path, body) {
@@ -57,14 +60,15 @@ function getUser() {
 }
 
 async function logout() {
-  try { await fetch(API + '/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+  _isLogoutInProgress = true;
   localStorage.removeItem('mp_user');
-  window.location.href = '/login.html';
+  try { await fetch(API + '/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+  window.location.replace('/login.html');
 }
 
 function requireAuth() {
   if (!localStorage.getItem('mp_user')) {
-    window.location.href = '/login.html';
+    window.location.replace('/login.html');
     return null;
   }
   return getUser();
