@@ -104,7 +104,7 @@
   <script src="api.js"></script>
   <script>
     // Redirect if already logged in
-    if (localStorage.getItem('mp_token')) window.location.href = 'dashboard.html';
+    if (localStorage.getItem('mp_user')) window.location.href = 'dashboard.html';
 
     // BUG-014: Prevent auto-submit when browser fills saved credentials
     document.addEventListener('DOMContentLoaded', function() {

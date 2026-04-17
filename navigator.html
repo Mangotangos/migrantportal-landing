@@ -282,7 +282,7 @@
   if (!user) { window.location.href = 'login.html'; }
   if (user && user.role !== 'navigator') { window.location.href = 'dashboard.html'; }
 
-  function signOut() { localStorage.removeItem('mp_user'); localStorage.removeItem('mp_token'); window.location.href = 'login.html'; }
+  function signOut() { fetch('https://migrant-portal-production.up.railway.app/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {}); localStorage.removeItem('mp_user'); window.location.href = 'login.html'; }
 
   // ── Populate header ─────────────────────────────────────
   const initials = (user?.name || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();

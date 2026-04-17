@@ -478,6 +478,9 @@
         }
         requestAnimationFrame(step);
       }
+      // Stats start at 0 and will increase as real data accumulates
+      // Re-enable fetch below once numbers are meaningful
+      /*
       fetch(API_BASE + '/impact')
         .then(r => r.json())
         .then(d => {
@@ -489,6 +492,7 @@
           countUp(document.getElementById('stat-rate'), rate, '%', 1200);
         })
         .catch(() => {});
+      */
     })();
   </script>
 

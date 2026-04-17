@@ -25,6 +25,8 @@
   <meta name="twitter:image" content="https://migrantportal.com/community.png" />
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="canonical" href="https://migrantportal.com" />
+  <script type="module" src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.js"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -526,7 +528,8 @@
     /* ── Feature Strip ── */
     .feature-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; margin-top: 8px; text-align: left; }
     .feature-card { background: var(--gray-100); border-radius: 16px; padding: 32px 28px; display: flex; flex-direction: column; gap: 12px; }
-    .feature-icon { font-size: 36px; line-height: 1; }
+    .feature-icon { font-size: 36px; line-height: 1; display: flex; align-items: center; }
+    .feature-icon ion-icon { width: 40px; height: 40px; color: var(--teal-bg); }
     .feature-card h3 { font-family: 'Montserrat',sans-serif; font-size: 18px; font-weight: 700; color: var(--text); margin: 0; }
     .feature-card p { font-size: 14px; color: var(--gray-500); line-height: 1.6; margin: 0; flex: 1; }
     @media(max-width:768px){ .feature-strip { grid-template-columns: 1fr; } }
@@ -542,6 +545,7 @@
     .partner-card { background: #fff; border-radius: 16px; padding: 24px 20px; border: 1.5px solid var(--gray-200); transition: box-shadow 0.2s, transform 0.2s; }
     .partner-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
     .partner-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
+    .partner-icon ion-icon { width: 24px; height: 24px; }
     .partner-card h3 { font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 6px; }
     .partner-card p { font-size: 13px; color: var(--gray-500); margin: 0; line-height: 1.5; }
     .partner-cta { text-align: center; margin-top: 32px; }
@@ -746,19 +750,19 @@
     <div class="section-inner" style="text-align:center;">
       <div class="feature-strip">
         <div class="feature-card">
-          <div class="feature-icon">🗺️</div>
+          <div class="feature-icon"><ion-icon name="map-outline"></ion-icon></div>
           <h3>Discover live needs</h3>
           <p>Explore vetted, urgent needs of migrant families across the nation — verified before they reach your community.</p>
           <a href="/requests.html" class="text-cta">View Map of Requests</a>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">👩‍💼</div>
+          <div class="feature-icon"><ion-icon name="briefcase-outline"></ion-icon></div>
           <h3>For professionals</h3>
           <p>Caseworkers, educators, and clinics use MigrantPortal to engage faith communities and wrap support around families they serve.</p>
           <a href="/submit-need.html" class="text-cta">Submit a Need</a>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🤝</div>
+          <div class="feature-icon"><ion-icon name="people-outline"></ion-icon></div>
           <h3>Launch a network</h3>
           <p>Connect all your partners in one place and maximize the impact you and others are making in the community.</p>
           <a href="/signup.html" class="text-cta">Become a Partner</a>
@@ -828,32 +832,32 @@
       <h2 id="partners-h" style="margin-bottom:8px;">Who We Serve</h2>
       <div class="partner-grid">
         <div class="partner-card">
-          <div class="partner-icon" style="background:#FFF3E0;">🏛️</div>
+          <div class="partner-icon" style="background:#FFF3E0;color:#E65100;"><ion-icon name="business-outline"></ion-icon></div>
           <h3>Local Faith Communities</h3>
           <p>Coordinate outreach, track needs in your congregation, and connect families to services.</p>
         </div>
         <div class="partner-card">
-          <div class="partner-icon" style="background:#E8F5E9;">🤝</div>
+          <div class="partner-icon" style="background:#E8F5E9;color:#2E7D32;"><ion-icon name="people-outline"></ion-icon></div>
           <h3>Nonprofits</h3>
           <p>Manage volunteers, respond to community needs, and document your impact in one place.</p>
         </div>
         <div class="partner-card">
-          <div class="partner-icon" style="background:#E3F2FD;">🏥</div>
+          <div class="partner-icon" style="background:#E3F2FD;color:#1565C0;"><ion-icon name="medical-outline"></ion-icon></div>
           <h3>Health Clinics</h3>
           <p>Refer patients to housing, food, and legal support without extra administrative burden.</p>
         </div>
         <div class="partner-card">
-          <div class="partner-icon" style="background:#F3E5F5;">🏫</div>
+          <div class="partner-icon" style="background:#F3E5F5;color:#6A1B9A;"><ion-icon name="school-outline"></ion-icon></div>
           <h3>Schools</h3>
           <p>Flag student and family needs early and loop in the right support organizations fast.</p>
         </div>
         <div class="partner-card">
-          <div class="partner-icon" style="background:#FFF8E1;">⚖️</div>
+          <div class="partner-icon" style="background:#FFF8E1;color:#F57F17;"><ion-icon name="scale-outline"></ion-icon></div>
           <h3>Legal Aid</h3>
           <p>Receive referrals from trusted partners and prioritize cases needing urgent legal help.</p>
         </div>
         <div class="partner-card">
-          <div class="partner-icon" style="background:#FCE4EC;">🏠</div>
+          <div class="partner-icon" style="background:#FCE4EC;color:#AD1457;"><ion-icon name="home-outline"></ion-icon></div>
           <h3>Shelters</h3>
           <p>Post available beds, coordinate arrivals, and connect guests to wraparound services.</p>
         </div>
@@ -869,19 +873,19 @@
       <p style="color:#6B6B6B;margin-bottom:32px;">Choose the role that fits how you want to help</p>
       <div class="vol-cards">
         <div class="vol-card card-orange">
-          <div style="font-size:48px;margin-bottom:12px;">🌐</div>
+          <div style="margin-bottom:12px;"><ion-icon name="globe-outline" style="width:48px;height:48px;color:#b83d10;"></ion-icon></div>
           <h3>Navigator</h3>
           <p>Know a migrant family in need? Submit their needs directly and connect them with responders in your community.</p>
           <a href="/register.html?role=navigator" class="vol-btn">Join as Navigator</a>
         </div>
         <div class="vol-card card-teal">
-          <div style="font-size:48px;margin-bottom:12px;">🙌</div>
+          <div style="margin-bottom:12px;"><ion-icon name="heart-circle-outline" style="width:48px;height:48px;color:#0D7A8A;"></ion-icon></div>
           <h3>Responder</h3>
           <p>Are you a faith community, volunteer, or organization? Browse real needs and respond with your time, resources, or skills.</p>
           <a href="/register.html?role=responder" class="vol-btn">Join as Responder</a>
         </div>
         <div class="vol-card card-navy">
-          <div style="font-size:48px;margin-bottom:12px;">🏛️</div>
+          <div style="margin-bottom:12px;"><ion-icon name="business-outline" style="width:48px;height:48px;color:#1e3a8a;"></ion-icon></div>
           <h3>Organization</h3>
           <p>Are you a nonprofit, church, or agency? Sign up to both submit needs on behalf of families and respond to needs in your community.</p>
           <a href="/register.html?role=organization" class="vol-btn">Join as Organization</a>

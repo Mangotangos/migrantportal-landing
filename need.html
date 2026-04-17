@@ -986,15 +986,13 @@
     async function uploadPhoto(input) {
       const file = input.files?.[0];
       if (!file) return;
-      const token = localStorage.getItem('mp_token');
-      if (!token) return;
       document.getElementById('photo-uploading').style.display = 'inline';
       try {
         const form = new FormData();
         form.append('file', file);
         const res = await fetch(`${API}/needs/${needId}/photos`, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: 'include',
           body: form,
         });
         if (!res.ok) throw new Error('Upload failed');
@@ -1010,11 +1008,10 @@
 
     async function deletePhoto(photoId) {
       if (!confirm('Remove this photo?')) return;
-      const token = localStorage.getItem('mp_token');
       try {
         const res = await fetch(`${API}/needs/${needId}/photos/${photoId}`, {
           method: 'DELETE',
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          credentials: 'include',
         });
         if (!res.ok && res.status !== 204) throw new Error('Delete failed');
         toast('Photo removed.');
@@ -1059,9 +1056,9 @@
     async function claimShift(shiftId, isSignedUp) {
       try {
         if (isSignedUp) {
-          await fetch(`${API}/shifts/${shiftId}/signup`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + localStorage.getItem('mp_token') } });
+          await fetch(`${API}/shifts/${shiftId}/signup`, { method: 'DELETE', credentials: 'include' });
         } else {
-          await fetch(`${API}/shifts/${shiftId}/signup`, { method: 'POST', headers: { Authorization: 'Bearer ' + localStorage.getItem('mp_token') } });
+          await fetch(`${API}/shifts/${shiftId}/signup`, { method: 'POST', credentials: 'include' });
         }
         toast(isSignedUp ? 'Dropped from shift.' : 'Joined shift!');
         loadShifts();
@@ -1336,10 +1333,9 @@
       const form = new FormData();
       form.append('file', file);
       try {
-        const token = localStorage.getItem('mp_token');
         const r = await fetch(`https://migrant-portal-production-3826.up.railway.app/disbursements/${disbId}/receipt`, {
           method: 'POST',
-          headers: { 'Authorization': 'Bearer ' + token },
+          credentials: 'include',
           body: form,
         });
         const data = await r.json();
