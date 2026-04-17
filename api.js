@@ -17,8 +17,15 @@ async function apiPost(path, body) {
   });
   const data = await r.json();
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
-  if (!r.ok) throw new Error(data.detail || 'Request failed');
+  if (!r.ok) throw new Error(_extractDetail(data.detail));
   return data;
+}
+
+function _extractDetail(detail) {
+  if (!detail) return 'Request failed';
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) return detail.map(e => e.msg || JSON.stringify(e)).join('; ');
+  return JSON.stringify(detail);
 }
 
 async function apiPatch(path, body) {
@@ -30,7 +37,7 @@ async function apiPatch(path, body) {
   });
   const data = await r.json();
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
-  if (!r.ok) throw new Error(data.detail || 'Request failed');
+  if (!r.ok) throw new Error(_extractDetail(data.detail));
   return data;
 }
 
@@ -38,7 +45,7 @@ async function apiGet(path) {
   const r = await fetch(API + path, { credentials: 'include' });
   const data = await r.json();
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
-  if (!r.ok) throw new Error(data.detail || 'Request failed');
+  if (!r.ok) throw new Error(_extractDetail(data.detail));
   return data;
 }
 
