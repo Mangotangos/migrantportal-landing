@@ -12,14 +12,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:          #0D1117;
-      --surface:     #161B22;
-      --surface-2:   #21262D;
-      --border:      rgba(255,255,255,0.07);
-      --border-2:    rgba(255,255,255,0.12);
-      --text:        #E6EDF3;
-      --text-2:      #8B949E;
-      --text-3:      #6E7681;
+      --bg:          #EEF2F7;
+      --surface:     #FFFFFF;
+      --surface-2:   #E2E8F0;
+      --border:      rgba(0,0,0,0.08);
+      --border-2:    rgba(0,0,0,0.14);
+      --text:        #1A2332;
+      --text-2:      #4A5568;
+      --text-3:      #718096;
       --teal:        #00C7CF;
       --teal-d:      #009DA5;
       --teal-glow:   rgba(0,199,207,0.12);
@@ -166,15 +166,15 @@
     /* ── BUTTONS ── */
     .btn { height:32px;padding:0 14px;border-radius:7px;font-size:12px;font-weight:600;transition:all .15s;border:1px solid transparent; }
     .btn-approve { background:var(--green-bg);color:var(--green);border-color:rgba(63,186,99,0.2); }
-    .btn-approve:hover { background:var(--green);color:#0D1117; }
+    .btn-approve:hover { background:var(--green);color:#FFFFFF; }
     .btn-reject  { background:var(--red-bg);color:var(--red);border-color:rgba(248,81,73,0.2); }
     .btn-reject:hover  { background:var(--red);color:white; }
     .btn-delete  { background:transparent;color:var(--text-3);border-color:var(--border-2); }
     .btn-delete:hover  { background:var(--red-bg);color:var(--red);border-color:rgba(248,81,73,0.2); }
-    .btn-bulk    { background:var(--teal);color:#0D1117;font-weight:700; }
+    .btn-bulk    { background:var(--teal);color:#FFFFFF;font-weight:700; }
     .btn-bulk:hover { background:#00D9E3; }
     .btn-bulk:disabled { background:var(--surface-2);color:var(--text-3);cursor:not-allowed; }
-    .btn-primary { background:var(--teal);color:#0D1117;font-weight:700; }
+    .btn-primary { background:var(--teal);color:#FFFFFF;font-weight:700; }
     .btn-primary:hover { background:#00D9E3; }
     .btn-export {
       height:32px;padding:0 12px;border-radius:7px;font-size:12px;font-weight:600;
@@ -187,7 +187,7 @@
     .need-table th { text-align:left;padding:8px 10px;color:var(--text-3);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--border); }
     .need-table td { padding:11px 10px;border-bottom:1px solid var(--border);color:var(--text); }
     .need-table tr:last-child td { border-bottom:none; }
-    .need-table tr:hover td { background:rgba(255,255,255,0.02); }
+    .need-table tr:hover td { background:rgba(0,0,0,0.03); }
 
     /* ── STATUS / URGENCY ── */
     .status-pill { display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600; }
