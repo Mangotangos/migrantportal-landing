@@ -329,7 +329,7 @@
       font-size:15px;color:var(--text);font-family:inherit;
     }
     #cmdInput::placeholder { color:var(--text-3); }
-    .cmd-list { padding:6px;max-height:360px;overflow-y:auto; }
+    .cmd-list { padding:6px;max-height:440px;overflow-y:auto; }
     .cmd-section { font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.7px;padding:8px 10px 4px; }
     .cmd-item {
       display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;
@@ -605,8 +605,22 @@
     <!-- ORGS TAB -->
     <div id="tab-orgs" style="display:none">
       <div class="page-header">
-        <div class="page-title">Organizations</div>
-        <div class="page-subtitle">All registered orgs and invite codes</div>
+        <div><div class="page-title">Organizations</div><div class="page-subtitle">All registered orgs and invite codes</div></div>
+        <button class="btn btn-approve" onclick="toggleAddOrgForm()">+ Add Organization</button>
+      </div>
+      <div id="addOrgForm" style="display:none;margin-bottom:16px">
+        <div class="card" style="max-width:480px">
+          <div class="card-header"><span class="card-title">New Organization</span></div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div><label class="form-label">Name *</label><input class="form-input" id="org-name" type="text" placeholder="Organization name" /></div>
+            <div><label class="form-label">City</label><input class="form-input" id="org-city" type="text" placeholder="City" /></div>
+            <div><label class="form-label">State</label><input class="form-input" id="org-state" type="text" placeholder="State" maxlength="2" /></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-approve" onclick="submitAddOrg()">Create</button>
+              <button class="btn" onclick="toggleAddOrgForm()" style="background:var(--surface-2);color:var(--text-2)">Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="card"><div id="orgsContent"><div class="loading">Loading</div></div></div>
     </div>
@@ -1141,7 +1155,7 @@
             ${data.items.map(n => `
               <tr>
                 <td><a href="need.html?id=${n.id}" style="color:var(--text-3);font-family:monospace;font-size:12px">#${n.case_number}</a></td>
-                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;cursor:pointer;color:var(--teal)" onclick="openAllNeedModal('${n.id}')">${n.title}</td>
+                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;cursor:pointer;color:var(--teal)" title="${n.title.replace(/"/g,'&quot;')}" onclick="openAllNeedModal('${n.id}')">${n.title}</td>
                 <td style="color:var(--text-2)">${CAT_EMOJI[n.category]||''} ${n.category}</td>
                 <td><span class="urgency-dot ${URGENCY_COLOR[n.urgency]}"></span><span style="color:var(--text-2)">${n.urgency}</span></td>
                 <td>${triageBadge(n)}</td>
@@ -1149,6 +1163,7 @@
                 <td><span class="status-pill ${STATUS_CLASS[n.status]||''}">${n.status}</span></td>
                 <td>${staleBadge(n.created_at) || `<span style="font-size:11px;color:var(--text-3)">${staleDays(n.created_at)}d</span>`}</td>
                 <td style="display:flex;gap:6px">
+                  <button class="btn" style="background:var(--blue-bg);color:var(--blue);border:1px solid rgba(88,166,255,0.25)" onclick="openAllNeedModal('${n.id}')">View</button>
                   ${n.status==='pending'?`<button class="btn btn-approve" onclick="approveSingle('${n.id}')">Approve</button>`:''}
                   <button class="btn btn-delete" onclick="deleteNeed('${n.id}','${n.title.replace(/'/g,"\\'")}')">Delete</button>
                 </td>
@@ -1457,9 +1472,18 @@
   }
 
   async function createAnnouncement() {
-    const title = document.getElementById('ann-title').value.trim();
-    const body  = document.getElementById('ann-body').value.trim();
-    if (!title || !body) { toast('Title and body are required.', true); return; }
+    const titleEl = document.getElementById('ann-title');
+    const bodyEl  = document.getElementById('ann-body');
+    const title = titleEl.value.trim();
+    const body  = bodyEl.value.trim();
+    if (!title || !body) {
+      if (!title) { titleEl.style.borderColor = 'var(--red)'; titleEl.focus(); }
+      if (!body)  { bodyEl.style.borderColor  = 'var(--red)'; if (title) bodyEl.focus(); }
+      toast('Title and body are required.', true);
+      return;
+    }
+    titleEl.style.borderColor = '';
+    bodyEl.style.borderColor  = '';
     const target_role = document.getElementById('ann-role').value || null;
     const urgent = document.getElementById('ann-urgent').checked;
     try {
@@ -1501,6 +1525,28 @@
           </tbody>
         </table>`;
     } catch(e) { el.innerHTML = `<div class="empty" style="color:var(--red)">${e.message}</div>`; }
+  }
+
+  function toggleAddOrgForm() {
+    const el = document.getElementById('addOrgForm');
+    el.style.display = el.style.display === 'none' ? '' : 'none';
+    if (el.style.display !== 'none') document.getElementById('org-name').focus();
+  }
+
+  async function submitAddOrg() {
+    const nameEl = document.getElementById('org-name');
+    const name = nameEl.value.trim();
+    if (!name) { nameEl.style.borderColor = 'var(--red)'; nameEl.focus(); toast('Name is required.', true); return; }
+    nameEl.style.borderColor = '';
+    const city  = document.getElementById('org-city').value.trim() || null;
+    const state = document.getElementById('org-state').value.trim() || null;
+    try {
+      await apiPost('/admin/orgs', { name, city, state });
+      toast('✓ Organization created.');
+      ['org-name','org-city','org-state'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('addOrgForm').style.display = 'none';
+      loadOrgs();
+    } catch(e) { toast(e.message, true); }
   }
 
   async function deleteOrg(id, name) {
@@ -1653,7 +1699,7 @@
                 <td style="color:var(--text-3);white-space:nowrap">${ts}</td>
                 <td style="font-weight:600">${e.admin_name || e.actor || '—'}</td>
                 <td><span class="audit-action ${cls}">${(e.action||'').replace(/_/g,' ')}</span></td>
-                <td style="font-family:monospace;font-size:11px;color:var(--text-2)">${e.entity_type||'—'} ${e.entity_id?'#'+e.entity_id:''}</td>
+                <td style="font-family:monospace;font-size:11px;color:var(--text-2)">${e.entity_type||'—'} ${e.entity_id?`<span title="${e.entity_id}" style="cursor:default">#${e.entity_id.slice(0,8)}…</span>`:''}</td>
                 <td style="color:var(--text-2);max-width:260px;font-size:12px">${e.detail || e.reason || '—'}</td>
               </tr>`;
             }).join('')}
@@ -1721,18 +1767,35 @@
   }
 
   function renderCmdList(q) {
-    const items = q ? CMD_ITEMS.filter(i => i.label.toLowerCase().includes(q.toLowerCase())) : CMD_ITEMS;
+    const tabs = q ? CMD_ITEMS.filter(i => i.label.toLowerCase().includes(q.toLowerCase())) : CMD_ITEMS;
+    const isCaseNum = q && /^\d{3,}$/.test(q.trim());
     cmdIdx = 0;
     document.getElementById('cmdList').innerHTML = `
       <div class="cmd-section">Navigate to</div>
-      ${items.map((item, i) => `
-        <div class="cmd-item ${i===0?'cmd-active':''}" data-tab="${item.tab}" onclick="cmdGo('${item.tab}')">
+      ${tabs.map((item, i) => `
+        <div class="cmd-item ${i===0 && !isCaseNum ?'cmd-active':''}" data-tab="${item.tab}" onclick="cmdGo('${item.tab}')">
           <span class="cmd-item-icon">${item.icon}</span>
           ${item.label}
           ${item.tab === activeTab ? '<span class="cmd-item-badge">current</span>' : ''}
         </div>`).join('')}
-      ${!items.length ? '<div style="padding:20px;text-align:center;color:var(--text-3);font-size:13px">No results</div>' : ''}
+      ${isCaseNum ? `
+        <div class="cmd-section" style="margin-top:4px">Search cases</div>
+        <div class="cmd-item cmd-active" onclick="cmdSearchCase('${q.trim()}')">
+          <span class="cmd-item-icon">🔍</span>
+          Search All Needs for #${q.trim()}
+        </div>` : ''}
+      ${!tabs.length && !isCaseNum ? '<div style="padding:20px;text-align:center;color:var(--text-3);font-size:13px">No results</div>' : ''}
     `;
+  }
+
+  function cmdSearchCase(num) {
+    document.getElementById('cmdOverlay').classList.remove('open');
+    document.getElementById('cmdInput').value = '';
+    switchTab('all');
+    setTimeout(() => {
+      const el = document.getElementById('allSearch');
+      if (el) { el.value = num; loadAllNeeds(); }
+    }, 100);
   }
 
   function filterCmd() {
