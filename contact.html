@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,6 +28,7 @@
       --gray-100:#F4F4F4;
     }
     html { scroll-behavior: smooth; }
+    .hp-field { position: absolute; left: -9999px; top: -9999px; opacity: 0; height: 0; width: 0; }
     body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.7; }
     a { text-decoration: none; color: var(--teal); }
     button { font-family: 'Inter', sans-serif; cursor: pointer; }
@@ -343,6 +345,14 @@
           <textarea id="message" name="message" placeholder="Tell us how we can help…" required></textarea>
         </div>
 
+        <!-- Honeypot — bots fill this, humans don't see it -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="g-recaptcha" data-sitekey="6LeOV7wsAAAAAFYbK0PU_qTa5VZfY5scTXrzOdhp" style="margin-bottom:16px"></div>
+
         <button type="submit" class="btn-submit" id="submitBtn">Send Message</button>
         <p class="form-note">We never share your information with third parties.</p>
       </form>
@@ -379,9 +389,26 @@
       const form = document.getElementById('contactForm');
       const btn = document.getElementById('submitBtn');
       const successMsg = document.getElementById('successMsg');
+      const formLoadTime = Date.now();
+      let lastSubmitTime = 0;
 
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
+
+        // 1. Honeypot check — bots fill this field
+        if (document.getElementById('website').value !== '') return;
+
+        // 2. Timing check — reject if submitted in < 3 seconds (bot speed)
+        if (Date.now() - formLoadTime < 3000) {
+          alert('Please take a moment to fill out the form.');
+          return;
+        }
+
+        // 3. Rate limit — 60 second cooldown between submissions
+        if (lastSubmitTime && Date.now() - lastSubmitTime < 60000) {
+          alert('Please wait a moment before sending another message.');
+          return;
+        }
 
         const firstName = document.getElementById('firstName').value.trim();
         const lastName = document.getElementById('lastName').value.trim();
@@ -394,14 +421,22 @@
           return;
         }
 
+        // 4. reCAPTCHA token check
+        const captchaToken = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
+        if (!captchaToken) {
+          alert('Please complete the CAPTCHA verification.');
+          return;
+        }
+
         btn.disabled = true;
         btn.textContent = 'Sending…';
+        lastSubmitTime = Date.now();
 
         try {
           const res = await fetch('https://migrant-portal-production.up.railway.app/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ firstName, lastName, email, subject, message })
+            body: JSON.stringify({ firstName, lastName, email, subject, message, captchaToken })
           });
 
           if (res.ok) {
@@ -416,6 +451,7 @@
           window.location.href = `mailto:support@migrantportal.com?subject=${encodeURIComponent(subject)}&body=${body}`;
           btn.disabled = false;
           btn.textContent = 'Send Message';
+          if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
         }
       });
     })();
