@@ -1,0 +1,30 @@
+# Force HTML as default index (WordPress index.php must not take precedence)
+DirectoryIndex index.html index.htm
+
+# Security Headers
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-Content-Type-Options "nosniff"
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' www.googletagmanager.com unpkg.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: tile.openstreetmap.org www.google-analytics.com; connect-src 'self' migrant-portal-production-3826.up.railway.app www.google-analytics.com www.googletagmanager.com; frame-src 'none'; object-src 'none'"
+
+# Referrer Policy
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Permissions Policy
+Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+# Enable mod_headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# Redirect HTTP to HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Privacy policy canonical redirect
+RewriteRule ^privacy-policy/?$ /privacy.html [L,R=301]
+
+# Custom 404
+ErrorDocument 404 /404.html
