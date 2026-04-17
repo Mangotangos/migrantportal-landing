@@ -107,6 +107,7 @@
     if (localStorage.getItem('mp_user')) window.location.href = 'dashboard.html';
 
     // BUG-014: Prevent auto-submit when browser fills saved credentials
+    // Also clear autofilled email to avoid leaking a different account's address
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.querySelector('form');
       if (form) {
@@ -115,6 +116,10 @@
           if (!e.isTrusted) { e.preventDefault(); }
         });
       }
+      setTimeout(function() {
+        const emailEl = document.getElementById('email');
+        if (emailEl) emailEl.value = '';
+      }, 50);
     });
 
     function togglePw() {
