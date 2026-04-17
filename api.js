@@ -1,4 +1,4 @@
-const API = 'https://migrant-portal-backend.up.railway.app';
+const API = 'https://migrant-portal-production.up.railway.app';
 
 let _isLogoutInProgress = false;
 
