@@ -508,6 +508,7 @@
             I will not share, publish, or misuse any personal information submitted through MigrantPortal.
           </label>
         </div>
+        <div id="reg-error" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;line-height:1.4;"></div>
         <div class="btn-row">
           <button class="btn-back" onclick="goTo(3)">Back</button>
           <button class="btn-next" id="btn-5" disabled onclick="submitForm()">Create Account</button>
@@ -710,6 +711,8 @@
     }
 
     function checkStep5() {
+      const errEl = document.getElementById('reg-error');
+      if (errEl) errEl.style.display = 'none';
       const pw  = document.getElementById('pw').value;
       const pw2 = document.getElementById('pw2').value;
       const ok  = pw.length >= 8 && pw === pw2
@@ -756,7 +759,13 @@
       } catch (ex) {
         btn.disabled = false;
         btn.textContent = 'Create Account';
-        alert(ex.message);
+        const errEl = document.getElementById('reg-error');
+        const msg = ex.message || 'Something went wrong. Please try again.';
+        const isEmailTaken = msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists');
+        errEl.innerHTML = isEmailTaken
+          ? `That email is already registered. <a href="/login.html" style="color:#dc2626;font-weight:600;text-decoration:underline;">Sign in instead?</a>`
+          : msg;
+        errEl.style.display = 'block';
       }
     }
   </script>
