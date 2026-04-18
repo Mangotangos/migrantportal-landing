@@ -416,66 +416,90 @@
 
     /* ── REJECTION MODAL ── */
     .rej-overlay {
-      display:none;position:fixed;inset:0;z-index:9000;
-      background:rgba(10,18,30,0.55);backdrop-filter:blur(4px);
-      align-items:center;justify-content:center;
+      position:fixed;inset:0;z-index:9000;
+      background:rgba(8,14,24,0.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      display:flex;align-items:center;justify-content:center;padding:16px;
+      opacity:0;pointer-events:none;transition:opacity .2s ease;
     }
-    .rej-overlay.open { display:flex; }
+    .rej-overlay.open { opacity:1;pointer-events:all; }
     .rej-modal {
-      background:var(--surface);border:1px solid var(--border-2);border-radius:18px;
-      width:100%;max-width:480px;margin:16px;
-      box-shadow:0 24px 60px rgba(0,0,0,0.22);
-      animation:rej-in .18s cubic-bezier(.2,.8,.3,1);
+      background:#ffffff;border-radius:20px;width:100%;max-width:500px;
+      box-shadow:0 8px 12px rgba(0,0,0,.06),0 32px 80px rgba(0,0,0,.22),0 0 0 1px rgba(0,0,0,.06);
+      transform:scale(.94) translateY(12px);transition:transform .22s cubic-bezier(.2,.8,.3,1),opacity .22s ease;
+      opacity:0;overflow:hidden;
     }
-    @keyframes rej-in { from{opacity:0;transform:scale(.95) translateY(8px)} to{opacity:1;transform:none} }
-    .rej-header {
-      padding:24px 24px 0;border-bottom:1px solid var(--border);padding-bottom:16px;
-      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+    .rej-overlay.open .rej-modal { transform:scale(1) translateY(0);opacity:1; }
+    .rej-modal-top {
+      background:linear-gradient(135deg,#fff1f1 0%,#fff7f7 100%);
+      border-bottom:1px solid rgba(248,81,73,.12);
+      padding:28px 28px 22px;
+      display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
     }
-    .rej-icon {
-      width:40px;height:40px;border-radius:10px;background:var(--red-bg);
-      display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+    .rej-icon-wrap {
+      width:46px;height:46px;border-radius:14px;flex-shrink:0;
+      background:linear-gradient(135deg,#F85149,#d93f3a);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 4px 14px rgba(248,81,73,.4);
     }
-    .rej-title { font-size:16px;font-weight:800;letter-spacing:-.4px;margin-bottom:3px; }
-    .rej-subtitle { font-size:12px;color:var(--text-3);line-height:1.5; }
+    .rej-icon-wrap svg { width:20px;height:20px;stroke:#fff;stroke-width:2.5;fill:none; }
+    .rej-title { font-size:17px;font-weight:800;letter-spacing:-.5px;color:#1A2332;margin-bottom:5px; }
+    .rej-subtitle { font-size:12.5px;color:#718096;line-height:1.55; }
     .rej-close {
-      width:28px;height:28px;border-radius:7px;border:1px solid var(--border-2);
-      background:transparent;color:var(--text-3);font-size:15px;
+      width:30px;height:30px;border-radius:8px;border:1px solid rgba(0,0,0,.1);
+      background:rgba(255,255,255,.8);color:#718096;font-size:16px;line-height:1;
       display:flex;align-items:center;justify-content:center;flex-shrink:0;
-      cursor:pointer;transition:all .15s;
+      cursor:pointer;transition:all .15s;margin-top:-2px;
     }
-    .rej-close:hover { background:var(--red-bg);color:var(--red);border-color:rgba(248,81,73,.2); }
-    .rej-body { padding:20px 24px; }
-    .rej-presets-label { font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px; }
-    .rej-presets { display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px; }
+    .rej-close:hover { background:var(--red-bg);color:var(--red);border-color:rgba(248,81,73,.25); }
+    .rej-body { padding:22px 28px 20px; }
+    .rej-section-label {
+      font-size:10px;font-weight:700;color:#A0AEC0;text-transform:uppercase;letter-spacing:.9px;
+      margin-bottom:10px;display:flex;align-items:center;gap:6px;
+    }
+    .rej-section-label::after { content:'';flex:1;height:1px;background:var(--border); }
+    .rej-presets { display:flex;flex-wrap:wrap;gap:7px;margin-bottom:22px; }
     .rej-chip {
-      padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;
-      border:1px solid var(--border-2);background:var(--surface-2);color:var(--text-2);
-      transition:all .15s;user-select:none;
+      padding:7px 14px;border-radius:100px;font-size:12px;font-weight:500;cursor:pointer;
+      border:1.5px solid #E2E8F0;background:#F7FAFC;color:#4A5568;
+      transition:all .18s;user-select:none;letter-spacing:-.1px;
     }
-    .rej-chip:hover { border-color:var(--red);color:var(--red);background:var(--red-bg); }
-    .rej-chip.selected { border-color:var(--red);color:var(--red);background:var(--red-bg);font-weight:600; }
-    .rej-textarea-label { font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px; }
+    .rej-chip:hover {
+      border-color:rgba(248,81,73,.4);color:#F85149;background:#fff1f1;
+      transform:translateY(-1px);box-shadow:0 3px 10px rgba(248,81,73,.15);
+    }
+    .rej-chip.selected {
+      border-color:#F85149;color:#F85149;background:#fff1f1;font-weight:600;
+      box-shadow:0 0 0 3px rgba(248,81,73,.1);
+    }
     .rej-textarea {
-      width:100%;min-height:72px;padding:10px 12px;border-radius:10px;resize:vertical;
-      border:1px solid var(--border-2);background:var(--bg);color:var(--text);font-size:13px;
-      font-family:inherit;outline:none;transition:border-color .15s;line-height:1.5;
+      width:100%;min-height:76px;padding:11px 14px;border-radius:12px;resize:vertical;
+      border:1.5px solid #E2E8F0;background:#F7FAFC;color:#1A2332;font-size:13px;
+      font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s;line-height:1.6;
     }
-    .rej-textarea:focus { border-color:var(--red); }
-    .rej-textarea::placeholder { color:var(--text-3); }
-    .rej-footer { padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:10px; }
-    .rej-skip { font-size:12px;color:var(--text-3);cursor:pointer;margin-right:auto;transition:color .15s; }
-    .rej-skip:hover { color:var(--text-2); }
+    .rej-textarea:focus { border-color:#F85149;background:#fff;box-shadow:0 0 0 3px rgba(248,81,73,.1); }
+    .rej-textarea::placeholder { color:#A0AEC0; }
+    .rej-footer {
+      padding:18px 28px;border-top:1px solid var(--border);
+      display:flex;align-items:center;gap:10px;
+      background:linear-gradient(to bottom,#ffffff,#fafbfc);
+    }
+    .rej-skip {
+      font-size:12px;color:#A0AEC0;cursor:pointer;margin-right:auto;
+      transition:color .15s;text-decoration:underline;text-decoration-color:transparent;
+    }
+    .rej-skip:hover { color:#718096;text-decoration-color:#718096; }
     .btn-rej-cancel {
-      height:36px;padding:0 18px;border-radius:8px;font-size:13px;font-weight:600;
-      background:transparent;color:var(--text-2);border:1px solid var(--border-2);transition:all .15s;
+      height:38px;padding:0 20px;border-radius:10px;font-size:13px;font-weight:600;
+      background:#fff;color:#4A5568;border:1.5px solid #E2E8F0;transition:all .15s;
     }
-    .btn-rej-cancel:hover { border-color:var(--border-2);background:var(--surface-2); }
+    .btn-rej-cancel:hover { background:#F7FAFC;border-color:#CBD5E0; }
     .btn-rej-confirm {
-      height:36px;padding:0 20px;border-radius:8px;font-size:13px;font-weight:700;
-      background:var(--red);color:white;border:none;transition:all .15s;
+      height:38px;padding:0 22px;border-radius:10px;font-size:13px;font-weight:700;
+      background:linear-gradient(135deg,#F85149,#d93f3a);color:white;border:none;
+      transition:all .18s;box-shadow:0 4px 12px rgba(248,81,73,.35);letter-spacing:-.1px;
     }
-    .btn-rej-confirm:hover { background:#d93f3a; }
+    .btn-rej-confirm:hover { background:linear-gradient(135deg,#ff6360,#e8463f);box-shadow:0 6px 18px rgba(248,81,73,.45);transform:translateY(-1px); }
+    .btn-rej-confirm:active { transform:translateY(0); }
   </style>
 </head>
 <body>
@@ -1943,24 +1967,28 @@
   <!-- ── REJECTION MODAL ── -->
   <div class="rej-overlay" id="rejOverlay" onclick="if(event.target===this)_rejCancel()">
     <div class="rej-modal" role="dialog" aria-modal="true" aria-labelledby="rejTitle">
-      <div class="rej-header">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div class="rej-icon">✕</div>
-          <div>
+      <div class="rej-modal-top">
+        <div style="display:flex;align-items:flex-start;gap:14px;flex:1;min-width:0">
+          <div class="rej-icon-wrap">
+            <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </div>
+          <div style="min-width:0">
             <div class="rej-title" id="rejTitle">Reject</div>
             <div class="rej-subtitle" id="rejSubtitle">Select a reason or write a custom one below.</div>
           </div>
         </div>
-        <button class="rej-close" onclick="_rejCancel()" aria-label="Close">✕</button>
+        <button class="rej-close" onclick="_rejCancel()" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
       <div class="rej-body">
-        <div class="rej-presets-label">Quick reasons</div>
+        <div class="rej-section-label">Quick reasons</div>
         <div class="rej-presets" id="rejPresets"></div>
-        <div class="rej-textarea-label">Custom reason <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
-        <textarea class="rej-textarea" id="rejTextarea" placeholder="Type a reason or leave blank…" rows="3"></textarea>
+        <div class="rej-section-label" style="margin-bottom:10px">Or write your own</div>
+        <textarea class="rej-textarea" id="rejTextarea" placeholder="Optional — leave blank to reject without a reason…" rows="3"></textarea>
       </div>
       <div class="rej-footer">
-        <span class="rej-skip" onclick="_rejConfirm(true)">Skip reason &amp; reject</span>
+        <span class="rej-skip" onclick="_rejConfirm(true)">Skip &amp; reject anyway</span>
         <button class="btn-rej-cancel" onclick="_rejCancel()">Cancel</button>
         <button class="btn-rej-confirm" onclick="_rejConfirm(false)">Confirm Rejection</button>
       </div>
