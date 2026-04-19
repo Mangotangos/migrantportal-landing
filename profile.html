@@ -352,7 +352,7 @@
             </div>
             <div class="avatar-name" id="avatarName">—</div>
             <div class="avatar-role">Responder</div>
-            <button class="payment-btn" onclick="alert('Payment methods — coming soon!')">Manage Payment Methods</button>
+            <button class="payment-btn" onclick="_mpToast('Payment methods — coming soon!')">Manage Payment Methods</button>
           </div>
         </div>
       </div>
@@ -599,7 +599,7 @@
       } catch(e) {
         // revert on failure
         setAvailUI(!isNowAvail);
-        alert('Could not save availability. Please try again.');
+        _mpToast('Could not save availability. Please try again.', true);
       }
     }
 
@@ -639,7 +639,7 @@
         s.style.display = 'block';
         setTimeout(() => s.style.display = 'none', 3000);
       } catch (e) {
-        alert('Save failed: ' + (e.message || 'Unknown error'));
+        _mpToast('Save failed: ' + (e.message || 'Unknown error'), true);
       }
     }
   </script>
@@ -683,5 +683,8 @@
       Profile
     </button>
   </nav>
+  <script>
+  function _mpToast(msg,err=false){let t=document.getElementById('_mpToast');if(!t){t=document.createElement('div');t.id='_mpToast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:11px 20px;border-radius:12px;font-size:13px;font-weight:600;color:#fff;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);';document.body.appendChild(t);}t.textContent=msg;t.style.background=err?'linear-gradient(135deg,#F85149,#d93f3a)':'linear-gradient(135deg,#2D3748,#1A202C)';t.style.opacity='1';clearTimeout(t._to);t._to=setTimeout(()=>t.style.opacity='0',3500);}
+  </script>
 </body>
 </html>

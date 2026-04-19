@@ -850,7 +850,6 @@
 <script>
   const user = requireAuth();
   if (!user || user.role !== 'admin') {
-    if (user) alert('Admin access only.');
     window.location.replace('login.html');
     throw new Error('Unauthorized');
   }
@@ -1104,7 +1103,7 @@
   }
 
   async function deleteNeed(id, title) {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    if (!await showConfirmModal({ title: 'Delete Need', message: `Delete "${title}"? This cannot be undone.`, confirmText: 'Delete', danger: true })) return;
     try {
       await apiDelete(`/admin/needs/${id}`);
       toast('Need deleted.');
@@ -1624,7 +1623,7 @@
   }
 
   async function deleteOrg(id, name) {
-    if (!confirm(`Delete org "${name}"? This cannot be undone.`)) return;
+    if (!await showConfirmModal({ title: 'Delete Organization', message: `Delete org "${name}"? This cannot be undone.`, confirmText: 'Delete', danger: true })) return;
     try { await apiDelete(`/admin/orgs/${id}`); toast('Organization deleted.'); loadOrgs(); }
     catch(e) { toast(e.message, true); }
   }
@@ -1661,7 +1660,7 @@
     catch(e) { toast(e.message, true); }
   }
   async function deleteResource(id) {
-    if (!confirm('Delete this resource?')) return;
+    if (!await showConfirmModal({ title: 'Delete Resource', message: 'This resource will be permanently removed.', confirmText: 'Delete', danger: true })) return;
     try { await apiDelete(`/resources/${id}`); toast('Resource deleted.'); loadResources(); }
     catch(e) { toast(e.message, true); }
   }
@@ -1714,9 +1713,9 @@
 
   async function approveDisbursement(id) {
     const code = document.getElementById('gc-' + id)?.value.trim() || null;
-    const note = prompt('Optional note to navigator:') || null;
-    if (!confirm(`Approve disbursement${code?' with gift card code':''}?`)) return;
-    try { await apiPost(`/admin/disbursements/${id}/approve`, { gift_card_code: code, admin_note: note }); toast('✓ Disbursement approved.'); loadDisbursements(); }
+    const result = await showApproveModal(`Approve disbursement${code ? ' with gift card code' : ''}?`);
+    if (!result.confirmed) return;
+    try { await apiPost(`/admin/disbursements/${id}/approve`, { gift_card_code: code, admin_note: result.note }); toast('✓ Disbursement approved.'); loadDisbursements(); }
     catch(e) { toast(e.message, true); }
   }
 
@@ -1788,9 +1787,9 @@
     } catch(e) {
       document.getElementById('auditContent').innerHTML = `
         <div class="empty">
-          <div class="empty-icon">🔧</div>
-          <div>Audit log endpoint not yet available.</div>
-          <div style="margin-top:6px;font-size:11px">Add <code style="color:var(--teal)">GET /admin/audit-log</code> to the backend to enable this tab.</div>
+          <div class="empty-icon">📋</div>
+          <div>Audit log coming soon.</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--muted)">Full activity history will be available in a future update.</div>
         </div>`;
       document.getElementById('auditPagination').style.display = 'none';
     }
@@ -2063,6 +2062,93 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.getElementById('rejOverlay').classList.contains('open')) _rejCancel();
   });
+  </script>
+
+  <!-- ── CONFIRM MODAL ── -->
+  <style>
+    .conf-overlay{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.48);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s ease;}
+    .conf-overlay.open{opacity:1;pointer-events:all;}
+    .conf-modal{background:#fff;border-radius:20px;width:calc(100% - 32px);max-width:420px;box-shadow:0 8px 12px rgba(0,0,0,.06),0 32px 80px rgba(0,0,0,.22),0 0 0 1px rgba(0,0,0,.06);transform:scale(.94) translateY(12px);opacity:0;overflow:hidden;transition:transform .22s cubic-bezier(.2,.8,.3,1),opacity .22s ease;}
+    .conf-overlay.open .conf-modal{transform:scale(1) translateY(0);opacity:1;}
+    .conf-top{padding:24px 24px 18px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(0,0,0,.07);}
+    .conf-icon{width:44px;height:44px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+    .conf-icon svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+    .conf-icon.danger{background:linear-gradient(135deg,#F85149,#d93f3a);box-shadow:0 4px 14px rgba(248,81,73,.4);}
+    .conf-icon.teal{background:linear-gradient(135deg,#00C7CF,#0D7A8A);box-shadow:0 4px 14px rgba(0,199,207,.35);}
+    .conf-title{font-size:16px;font-weight:800;letter-spacing:-.4px;color:#1A2332;margin-bottom:4px;}
+    .conf-msg{font-size:13px;color:#718096;line-height:1.55;}
+    .conf-note-wrap{padding:16px 24px 0;}
+    .conf-note-label{font-size:10px;font-weight:700;color:#A0AEC0;text-transform:uppercase;letter-spacing:.9px;margin-bottom:8px;}
+    .conf-note-ta{width:100%;box-sizing:border-box;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:13px;color:#2D3748;resize:none;outline:none;transition:border-color .18s;font-family:inherit;}
+    .conf-note-ta:focus{border-color:#00C7CF;}
+    .conf-footer{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:16px 24px;background:#f9fafb;border-top:1px solid rgba(0,0,0,.06);}
+    .conf-btn-cancel{padding:9px 18px;border-radius:10px;border:1.5px solid #E2E8F0;background:#fff;color:#4A5568;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
+    .conf-btn-cancel:hover{background:#f1f5f9;border-color:#cbd5e0;}
+    .conf-btn-ok{padding:9px 20px;border-radius:10px;border:none;font-size:13px;font-weight:700;cursor:pointer;color:#fff;transition:all .15s;}
+    .conf-btn-ok.danger{background:linear-gradient(135deg,#F85149,#d93f3a);box-shadow:0 2px 8px rgba(248,81,73,.35);}
+    .conf-btn-ok.teal{background:linear-gradient(135deg,#00C7CF,#0D7A8A);box-shadow:0 2px 8px rgba(0,199,207,.35);}
+    .conf-btn-ok:hover{opacity:.88;transform:translateY(-1px);}
+  </style>
+  <div class="conf-overlay" id="confOverlay" onclick="if(event.target===this)_confCancel()">
+    <div class="conf-modal" role="dialog" aria-modal="true">
+      <div class="conf-top">
+        <div class="conf-icon danger" id="confIcon">
+          <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        </div>
+        <div>
+          <div class="conf-title" id="confTitle">Confirm</div>
+          <div class="conf-msg" id="confMsg"></div>
+        </div>
+      </div>
+      <div class="conf-note-wrap" id="confNoteWrap" style="display:none">
+        <div class="conf-note-label">Optional note</div>
+        <textarea class="conf-note-ta" id="confNoteTA" rows="3" placeholder="Leave a note for the navigator (optional)…"></textarea>
+      </div>
+      <div class="conf-footer">
+        <button class="conf-btn-cancel" onclick="_confCancel()">Cancel</button>
+        <button class="conf-btn-ok danger" id="confOkBtn" onclick="_confOk()">Confirm</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  let _confResolve=null,_confHasNote=false;
+  function showConfirmModal({title='Confirm',message='',confirmText='Confirm',danger=true}={}){
+    document.getElementById('confTitle').textContent=title;
+    document.getElementById('confMsg').textContent=message;
+    const btn=document.getElementById('confOkBtn'),icon=document.getElementById('confIcon'),cls=danger?'danger':'teal';
+    btn.textContent=confirmText;btn.className='conf-btn-ok '+cls;
+    icon.className='conf-icon '+cls;
+    icon.innerHTML=danger
+      ?'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+    document.getElementById('confNoteWrap').style.display='none';
+    _confHasNote=false;
+    document.getElementById('confOverlay').classList.add('open');
+    return new Promise(res=>{_confResolve=res;});
+  }
+  function showApproveModal(message){
+    document.getElementById('confTitle').textContent='Approve Disbursement';
+    document.getElementById('confMsg').textContent=message;
+    const btn=document.getElementById('confOkBtn'),icon=document.getElementById('confIcon');
+    btn.textContent='Approve';btn.className='conf-btn-ok teal';
+    icon.className='conf-icon teal';
+    icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+    document.getElementById('confNoteTA').value='';
+    document.getElementById('confNoteWrap').style.display='block';
+    _confHasNote=true;
+    document.getElementById('confOverlay').classList.add('open');
+    return new Promise(res=>{_confResolve=res;});
+  }
+  function _confOk(){
+    const note=_confHasNote?(document.getElementById('confNoteTA').value.trim()||null):null;
+    document.getElementById('confOverlay').classList.remove('open');
+    if(_confResolve){_confResolve(_confHasNote?{confirmed:true,note}:true);_confResolve=null;}
+  }
+  function _confCancel(){
+    document.getElementById('confOverlay').classList.remove('open');
+    if(_confResolve){_confResolve(_confHasNote?{confirmed:false,note:null}:false);_confResolve=null;}
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('confOverlay').classList.contains('open'))_confCancel();});
   </script>
 </body>
 </html>
