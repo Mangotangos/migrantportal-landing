@@ -403,7 +403,7 @@
     } catch {
       btn.disabled = false;
       btn.textContent = 'Renew';
-      alert('Failed to renew. Please try again.');
+      _mpToast('Failed to renew. Please try again.', true);
     }
   }
 
@@ -460,12 +460,12 @@
     const needId = document.getElementById('fu-need-id').value;
     const note   = document.getElementById('fu-note').value.trim() || 'Follow-up scheduled';
     const due_at = document.getElementById('fu-date').value;
-    if (!due_at) { alert('Please pick a due date.'); return; }
+    if (!due_at) { _mpToast('Please pick a due date.', true); return; }
     try {
       await apiPost(`/needs/${needId}/followup`, { note, due_at });
       closeFollowupModal();
     } catch {
-      alert('Failed to save follow-up.');
+      _mpToast('Failed to save follow-up.', true);
     }
   }
 
@@ -477,5 +477,8 @@
   // ── Init ────────────────────────────────────────────────
   loadDashboard();
 </script>
+  <script>
+  function _mpToast(msg,err=false){let t=document.getElementById('_mpToast');if(!t){t=document.createElement('div');t.id='_mpToast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:11px 20px;border-radius:12px;font-size:13px;font-weight:600;color:#fff;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);';document.body.appendChild(t);}t.textContent=msg;t.style.background=err?'linear-gradient(135deg,#F85149,#d93f3a)':'linear-gradient(135deg,#2D3748,#1A202C)';t.style.opacity='1';clearTimeout(t._to);t._to=setTimeout(()=>t.style.opacity='0',3500);}
+  </script>
 </body>
 </html>

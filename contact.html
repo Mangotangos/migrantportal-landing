@@ -400,13 +400,13 @@
 
         // 2. Timing check — reject if submitted in < 3 seconds (bot speed)
         if (Date.now() - formLoadTime < 3000) {
-          alert('Please take a moment to fill out the form.');
+          _mpToast('Please take a moment to fill out the form.', true);
           return;
         }
 
         // 3. Rate limit — 60 second cooldown between submissions
         if (lastSubmitTime && Date.now() - lastSubmitTime < 60000) {
-          alert('Please wait a moment before sending another message.');
+          _mpToast('Please wait a moment before sending another message.', true);
           return;
         }
 
@@ -417,14 +417,14 @@
         const message = document.getElementById('message').value.trim();
 
         if (!firstName || !lastName || !email || !subject || !message) {
-          alert('Please fill in all required fields.');
+          _mpToast('Please fill in all required fields.', true);
           return;
         }
 
         // 4. reCAPTCHA token check
         const captchaToken = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
         if (!captchaToken) {
-          alert('Please complete the CAPTCHA verification.');
+          _mpToast('Please complete the CAPTCHA verification.', true);
           return;
         }
 
@@ -455,6 +455,9 @@
         }
       });
     })();
+  </script>
+  <script>
+  function _mpToast(msg,err=false){let t=document.getElementById('_mpToast');if(!t){t=document.createElement('div');t.id='_mpToast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:11px 20px;border-radius:12px;font-size:13px;font-weight:600;color:#fff;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25);';document.body.appendChild(t);}t.textContent=msg;t.style.background=err?'linear-gradient(135deg,#F85149,#d93f3a)':'linear-gradient(135deg,#2D3748,#1A202C)';t.style.opacity='1';clearTimeout(t._to);t._to=setTimeout(()=>t.style.opacity='0',3500);}
   </script>
 
 </body>

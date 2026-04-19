@@ -26,5 +26,8 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # Privacy policy canonical redirect
 RewriteRule ^privacy-policy/?$ /privacy.html [L,R=301]
 
+# Admin canonical redirect
+RewriteRule ^admin/?$ /admin.html [L,R=301]
+
 # Custom 404
 ErrorDocument 404 /404.html

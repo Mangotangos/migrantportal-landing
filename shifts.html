@@ -236,13 +236,13 @@
   }
 
   async function dropShift(id) {
-    if (!confirm('Drop this shift?')) return;
+    if (!await showConfirmModal({ title: 'Drop Shift', message: 'Are you sure you want to drop this shift?', confirmText: 'Drop Shift', danger: true })) return;
     try { await apiDelete(`/shifts/${id}/signup`); toast('Dropped.'); loadTab(activeTab); }
     catch(e) { toast(e.message, true); }
   }
 
   async function cancelShift(id) {
-    if (!confirm('Cancel this shift for all volunteers?')) return;
+    if (!await showConfirmModal({ title: 'Cancel Shift', message: 'This will cancel the shift and remove all volunteer sign-ups.', confirmText: 'Cancel Shift', danger: true })) return;
     try { await apiDelete(`/shifts/${id}`); toast('Shift cancelled.'); loadTab(activeTab); }
     catch(e) { toast(e.message, true); }
   }
@@ -284,5 +284,62 @@
 
   loadTab('all');
 </script>
+
+  <!-- ── CONFIRM MODAL ── -->
+  <style>
+    .conf-overlay{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.48);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s ease;}
+    .conf-overlay.open{opacity:1;pointer-events:all;}
+    .conf-modal{background:#fff;border-radius:20px;width:calc(100% - 32px);max-width:420px;box-shadow:0 8px 12px rgba(0,0,0,.06),0 32px 80px rgba(0,0,0,.22),0 0 0 1px rgba(0,0,0,.06);transform:scale(.94) translateY(12px);opacity:0;overflow:hidden;transition:transform .22s cubic-bezier(.2,.8,.3,1),opacity .22s ease;}
+    .conf-overlay.open .conf-modal{transform:scale(1) translateY(0);opacity:1;}
+    .conf-top{padding:24px 24px 18px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(0,0,0,.07);}
+    .conf-icon{width:44px;height:44px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+    .conf-icon svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+    .conf-icon.danger{background:linear-gradient(135deg,#F85149,#d93f3a);box-shadow:0 4px 14px rgba(248,81,73,.4);}
+    .conf-icon.teal{background:linear-gradient(135deg,#00C7CF,#0D7A8A);box-shadow:0 4px 14px rgba(0,199,207,.35);}
+    .conf-title{font-size:16px;font-weight:800;letter-spacing:-.4px;color:#1A2332;margin-bottom:4px;}
+    .conf-msg{font-size:13px;color:#718096;line-height:1.55;}
+    .conf-footer{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:16px 24px;background:#f9fafb;border-top:1px solid rgba(0,0,0,.06);}
+    .conf-btn-cancel{padding:9px 18px;border-radius:10px;border:1.5px solid #E2E8F0;background:#fff;color:#4A5568;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
+    .conf-btn-cancel:hover{background:#f1f5f9;border-color:#cbd5e0;}
+    .conf-btn-ok{padding:9px 20px;border-radius:10px;border:none;font-size:13px;font-weight:700;cursor:pointer;color:#fff;transition:all .15s;}
+    .conf-btn-ok.danger{background:linear-gradient(135deg,#F85149,#d93f3a);box-shadow:0 2px 8px rgba(248,81,73,.35);}
+    .conf-btn-ok.teal{background:linear-gradient(135deg,#00C7CF,#0D7A8A);box-shadow:0 2px 8px rgba(0,199,207,.35);}
+    .conf-btn-ok:hover{opacity:.88;transform:translateY(-1px);}
+  </style>
+  <div class="conf-overlay" id="confOverlay" onclick="if(event.target===this)_confCancel()">
+    <div class="conf-modal" role="dialog" aria-modal="true">
+      <div class="conf-top">
+        <div class="conf-icon danger" id="confIcon">
+          <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        </div>
+        <div>
+          <div class="conf-title" id="confTitle">Confirm</div>
+          <div class="conf-msg" id="confMsg"></div>
+        </div>
+      </div>
+      <div class="conf-footer">
+        <button class="conf-btn-cancel" onclick="_confCancel()">Cancel</button>
+        <button class="conf-btn-ok danger" id="confOkBtn" onclick="_confOk()">Confirm</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  let _confResolve=null;
+  function showConfirmModal({title='Confirm',message='',confirmText='Confirm',danger=true}={}){
+    document.getElementById('confTitle').textContent=title;
+    document.getElementById('confMsg').textContent=message;
+    const btn=document.getElementById('confOkBtn'),icon=document.getElementById('confIcon'),cls=danger?'danger':'teal';
+    btn.textContent=confirmText;btn.className='conf-btn-ok '+cls;
+    icon.className='conf-icon '+cls;
+    icon.innerHTML=danger
+      ?'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+    document.getElementById('confOverlay').classList.add('open');
+    return new Promise(res=>{_confResolve=res;});
+  }
+  function _confOk(){document.getElementById('confOverlay').classList.remove('open');if(_confResolve){_confResolve(true);_confResolve=null;}}
+  function _confCancel(){document.getElementById('confOverlay').classList.remove('open');if(_confResolve){_confResolve(false);_confResolve=null;}}
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('confOverlay').classList.contains('open'))_confCancel();});
+  </script>
 </body>
 </html>
