@@ -13,7 +13,9 @@ REMOTE_BASE = "/public_html/migrantportal.com"
 LOCAL_DIR = Path(__file__).parent
 
 # Files/dirs to skip
-SKIP = {".git", ".github", "deploy_cpanel.py", "CNAME", "_headers", "node_modules"}
+SKIP = {".git", ".github", "deploy_cpanel.py", "CNAME", "_headers", "node_modules",
+        "community.png", "logo.png", "logo.webp", "favicon.ico",
+        "MigrantPortal-Partner-Deck.pptx", "logo - Copy.png"}
 
 TEXT_EXTS = {".html", ".css", ".js", ".txt", ".xml", ".svg", ".json", ".md", ".htaccess"}
 
@@ -37,7 +39,7 @@ def upload_dir(ftp: ftplib.FTP, local: Path, remote: str) -> None:
 
 
 def upload_file(ftp: ftplib.FTP, local: Path, remote: str) -> None:
-    print(f"  upload {local.name} → {remote}")
+    print(f"  upload {local.name} -> {remote}")
     with open(local, "rb") as f:
         ftp.storbinary(f"STOR {remote}", f)
 
@@ -45,7 +47,7 @@ def upload_file(ftp: ftplib.FTP, local: Path, remote: str) -> None:
 def main() -> None:
     print(f"Connecting to {FTP_HOST}...")
     ftp = ftplib.FTP()
-    ftp.connect(FTP_HOST, 21, timeout=30)
+    ftp.connect(FTP_HOST, 21, timeout=60)
     ftp.login(FTP_USER, FTP_PASS)
     ftp.set_pasv(True)
     print(f"Logged in as {FTP_USER}")
@@ -64,7 +66,7 @@ def main() -> None:
             continue
         if item.is_file():
             remote_path = f"{REMOTE_BASE}/{item.name}"
-            print(f"  {item.name} → {remote_path}")
+            print(f"  {item.name} -> {remote_path}")
             with open(item, "rb") as f:
                 ftp.storbinary(f"STOR {remote_path}", f)
             total += 1
