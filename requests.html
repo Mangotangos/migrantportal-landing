@@ -255,6 +255,27 @@
     .map-pin.urgent { background: var(--orange); }
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
   .skip-link:focus { top: 0; }
+
+  /* ── UNSIGNED USER STATE ── */
+  #signup-banner {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--blue) 100%);
+    color: white; padding: 16px 20px; text-align: center; font-size: 14px;
+    font-weight: 600; display: none; gap: 12px; align-items: center; justify-content: center;
+  }
+  #signup-banner.show { display: flex; }
+  #signup-banner-btn {
+    background: white; color: var(--teal); padding: 8px 24px; border-radius: 6px;
+    font-weight: 700; font-size: 13px; border: none; cursor: pointer;
+    transition: transform 0.15s;
+  }
+  #signup-banner-btn:hover { transform: scale(1.05); }
+
+  body.unsigned .action-ico {
+    opacity: 0.3; cursor: not-allowed; pointer-events: none;
+  }
+  body.unsigned .card-actions {
+    opacity: 0.5;
+  }
   </style>
 <script>
   (function() {
@@ -267,13 +288,7 @@
   })();
 </script>
 </head>
-<body>
-<script>
-  // Auth guard: redirect unsigned users to signup
-  if (!localStorage.getItem('mp_user')) {
-    window.location.replace('/signup.html');
-  }
-</script>
+<body id="app-body">
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- TOP BAR -->
@@ -397,6 +412,11 @@
           <button class="sort-opt" data-sort="recent" onclick="setSort('recent')">🕐 Recent</button>
           <button class="close-panel" onclick="window.location.href='dashboard.html'">×</button>
         </div>
+      </div>
+
+      <div id="signup-banner">
+        <span>Sign up to help or post needs</span>
+        <button id="signup-banner-btn">Sign Up</button>
       </div>
 
       <div class="cards-list" id="cardsList">
@@ -673,13 +693,17 @@
   <script src="api.js"></script>
   <script src="notif-bell.js"></script>
   <script>
-    requireAuth();
     // ── User identity from JWT
     const user = getUser();
     if (user) {
       const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
       document.getElementById('topAvatar').textContent = initials;
       document.getElementById('topName').textContent = user.name || user.email || 'User';
+    } else {
+      // Unsigned user — show limited preview
+      document.body.classList.add('unsigned');
+      document.getElementById('signup-banner').classList.add('show');
+      document.getElementById('signup-banner-btn').onclick = () => window.location.href = '/signup.html';
     }
 
     // ── Map setup
@@ -849,6 +873,11 @@
 
     // ── Select card → pan map + navigate
     function selectCard(el, idx) {
+      // Unsigned users: allow preview but block navigation
+      if (document.body.classList.contains('unsigned')) {
+        document.getElementById('signup-banner').classList.add('show');
+        return;
+      }
       document.querySelectorAll('.req-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
       if (markers[idx]) {
