@@ -800,6 +800,11 @@
     let loadDebounce = null;
 
     async function loadNeeds() {
+      // Unsigned users: skip API call, use static cards
+      if (document.body.classList.contains('unsigned')) {
+        document.getElementById('cardsLoading').style.display = 'none';
+        return;
+      }
       // Hide static fallback cards
       document.querySelectorAll('.static-card').forEach(c => c.style.display = 'none');
       document.getElementById('cardsLoading').style.display = 'block';
