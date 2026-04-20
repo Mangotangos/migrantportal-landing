@@ -1907,7 +1907,10 @@
                 ${n.website ? `<div style="font-size:12px;margin-top:3px"><a href="${escHtml(n.website)}" target="_blank" rel="noopener noreferrer" style="color:var(--teal)">🔗 ${escHtml(n.website)}</a></div>` : ''}
                 ${n.lat ? `<div style="font-size:11px;color:#94a3b8;margin-top:4px">📌 ${n.lat.toFixed(4)}, ${n.lng.toFixed(4)}</div>` : '<div style="font-size:11px;color:#f59e0b;margin-top:4px">⚠️ No coordinates — zipcode may be invalid</div>'}
               </div>
-              <button onclick="deleteNonprofit('${escHtml(n.id)}')" class="btn btn-delete" style="flex-shrink:0">Delete</button>
+              <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+                ${!n.is_active ? `<button onclick="approveNonprofit('${escHtml(n.id)}')" class="btn btn-approve">Approve</button>` : ''}
+                <button onclick="deleteNonprofit('${escHtml(n.id)}')" class="btn btn-delete">Delete</button>
+              </div>
             </div>
           </div>`;
       }).join('');
@@ -1947,6 +1950,14 @@
         document.getElementById(id).value = '';
       });
       document.querySelectorAll('#np-services-picker input[type=checkbox]').forEach(c => { c.checked = false; });
+      loadNonprofits();
+    } catch(e) { toast(e.message, true); }
+  }
+
+  async function approveNonprofit(id) {
+    try {
+      await apiPatch(`/nonprofits/${id}`, { is_active: true });
+      toast('✓ Nonprofit approved — now live on Find Help page.');
       loadNonprofits();
     } catch(e) { toast(e.message, true); }
   }
