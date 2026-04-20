@@ -416,7 +416,7 @@
     .newsletter-submit:hover { background: var(--orange-d); }
 
     /* ─── FOOTER ───────────────────────────────── */
-    .footer { background: #4a9cb0; }
+    .footer { background: #2e8fa8; }
     .footer-trusted {
       border-top: 1px solid rgba(255,255,255,0.1);
       padding: 56px 48px;
@@ -481,18 +481,19 @@
     .footer-bottom {
       border-top: 1px solid rgba(255,255,255,0.1);
       padding: 22px 48px;
+      background: transparent;
     }
     .footer-bottom-inner {
       max-width: 1120px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 12px;
     }
-    .footer-social { display: flex; gap: 10px; }
+    .footer-social { display: flex; gap: 10px; background: transparent !important; }
     .footer-social a {
       width: 34px; height: 34px; border-radius: 7px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.2);
       display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,0.6); transition: background 0.15s, color 0.15s;
+      color: #fff; transition: background 0.15s, color 0.15s;
     }
     .footer-social a:hover { background: #F59E0B; color: white; }
     .footer-legal { display: flex; gap: 16px; }
@@ -757,19 +758,19 @@
     <div class="section-inner" style="text-align:center;">
       <div class="feature-strip">
         <div class="feature-card">
-          <div class="feature-icon"><ion-icon name="map-outline" aria-label="Discover live needs map"></ion-icon></div>
+          <div class="feature-icon" aria-label="Discover live needs map"><ion-icon name="map-outline" aria-hidden="true"></ion-icon></div>
           <h3>Discover live needs</h3>
           <p>Explore vetted, urgent needs of migrant families across the nation — verified before they reach your community.</p>
           <a href="/requests.html" class="text-cta">View Map of Requests</a>
         </div>
         <div class="feature-card">
-          <div class="feature-icon"><ion-icon name="briefcase-outline" aria-label="Briefcase for professionals"></ion-icon></div>
+          <div class="feature-icon" aria-label="Briefcase for professionals"><ion-icon name="briefcase-outline" aria-hidden="true"></ion-icon></div>
           <h3>For professionals</h3>
           <p>Caseworkers, educators, and clinics use MigrantPortal to engage faith communities and wrap support around families they serve.</p>
           <a href="/submit-need.html" class="text-cta">Submit a Need</a>
         </div>
         <div class="feature-card">
-          <div class="feature-icon"><ion-icon name="people-outline" aria-label="Launch a network"></ion-icon></div>
+          <div class="feature-icon" aria-label="Launch a network"><ion-icon name="people-outline" aria-hidden="true"></ion-icon></div>
           <h3>Launch a network</h3>
           <p>Connect all your partners in one place and maximize the impact you and others are making in the community.</p>
           <a href="/signup.html" class="text-cta">Become a Partner</a>
@@ -940,29 +941,30 @@
           <p id="eo-msg" style="font-size:13px;margin-top:4px;display:none;"></p>
         </form>
         <script>
-          async function eoSubscribe(e) {
+          function eoSubscribe(e) {
             e.preventDefault();
             if (e.target.querySelector('[name="hp_name"]').value) return;
             const email = document.getElementById('eo-email').value;
             const btn = document.getElementById('eo-btn');
             const msg = document.getElementById('eo-msg');
-            btn.disabled = true; btn.textContent = 'Subscribing…';
-            try {
-              await fetch('https://emailoctopus.com/lists/2e646492-2bee-11f1-bc0c-4794b1b22e22/members/embedded/1.3/add', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ 'field_0': email, 'successRedirectUrl': '' })
-              });
-              msg.style.display = 'block';
-              msg.style.color = '#90e0c8';
-              msg.textContent = 'Thanks for subscribing!';
-              document.getElementById('eo-email').value = '';
-            } catch {
-              msg.style.display = 'block'; msg.style.color = '#f9a8a8';
+            msg.style.display = 'block';
+            if (!navigator.onLine) {
+              msg.style.color = '#f9a8a8';
               msg.textContent = 'Network error. Please try again.';
-              btn.disabled = false; btn.textContent = 'Subscribe';
+              return;
             }
+            btn.disabled = true; btn.textContent = 'Subscribing…';
+            // no-cors returns an opaque response — status is unreadable, fire-and-forget
+            fetch('https://emailoctopus.com/lists/2e646492-2bee-11f1-bc0c-4794b1b22e22/members/embedded/1.3/add', {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams({ 'field_0': email, 'successRedirectUrl': '' })
+            }).catch(function() {});
+            msg.style.color = '#90e0c8';
+            msg.textContent = 'Thanks for subscribing!';
+            document.getElementById('eo-email').value = '';
+            btn.disabled = false; btn.textContent = 'Subscribe';
           }
         </script>
       </div>
@@ -980,10 +982,6 @@
         <h3>Trusted By Teams Across:</h3>
         <div class="trusted-logos">
           <div class="trusted-logo">Kansas City, MO</div>
-          <div class="trusted-logo">Houston, TX</div>
-          <div class="trusted-logo">Chicago, IL</div>
-          <div class="trusted-logo">Phoenix, AZ</div>
-          <div class="trusted-logo">Los Angeles, CA</div>
         </div>
       </div>
     </div>
