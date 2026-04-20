@@ -225,8 +225,8 @@
     .need-tag.met { background: #f0f0f0; color: var(--gray-400); text-decoration: line-through; }
 
     /* ── MAP ── */
-    .map-container { flex: 1; position: relative; }
-    #map { width: 100%; height: 100%; }
+    .map-container { flex: 1; position: relative; min-height: 400px; }
+    #map { width: 100%; height: 100%; min-height: 400px; }
 
     /* Leaflet popup tweak */
     .leaflet-popup-content-wrapper { border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px; }
@@ -298,7 +298,7 @@
     </button>
     <a href="dashboard.html" class="topbar-logo">
       <div class="logo-icon"><picture><source srcset="logo.webp" type="image/webp" /><img src="logo.png" alt="MigrantPortal" loading="lazy" /></picture></div>
-      <span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span>
+      <span style="display:inline-flex;gap:0"><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
     </a>
     <div class="topbar-search" style="position:relative">
       <input id="topbar-search-input" type="text" aria-label="Search requests" placeholder="Search requests, families, needs…" oninput="debounceTopSearch(this.value)" autocomplete="off" />
@@ -306,13 +306,14 @@
       <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:white;border:1px solid #E8E8E8;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:500;max-height:340px;overflow-y:auto"></div>
     </div>
     <div class="topbar-right">
-      <div class="user-chip">
+      <div class="user-chip" id="userChip">
         <div class="user-avatar" id="topAvatar">U</div>
         <div>
           <div class="user-name" id="topName">User</div>
           <div class="user-role">Responder ▾</div>
         </div>
       </div>
+      <a id="loginBtn" href="/login.html" style="display:none;height:34px;padding:0 16px;background:var(--teal);color:white;border-radius:6px;font-size:13px;font-weight:600;align-items:center;gap:8px;text-decoration:none;">Log In</a>
     </div>
   </div>
 
@@ -704,6 +705,8 @@
       document.body.classList.add('unsigned');
       document.getElementById('signup-banner').classList.add('show');
       document.getElementById('signup-banner-btn').onclick = () => window.location.href = '/signup.html';
+      document.getElementById('userChip').style.display = 'none';
+      document.getElementById('loginBtn').style.display = 'flex';
     }
 
     // ── Map setup
@@ -712,6 +715,8 @@
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 18
     }).addTo(map);
+    setTimeout(() => map.invalidateSize(), 200);
+    setTimeout(() => map.invalidateSize(), 800);
 
     const markers = [];
     let allNeeds = [];
@@ -800,9 +805,45 @@
     let loadDebounce = null;
 
     async function loadNeeds() {
-      // Unsigned users: skip API call, use static cards
+      // Unsigned users: load real public data (no auth, fuzzed coords)
       if (document.body.classList.contains('unsigned')) {
         document.getElementById('cardsLoading').style.display = 'none';
+        try {
+          const params = new URLSearchParams();
+          if (activeCategory) params.set('category', activeCategory);
+          const res = await fetch(`${API}/needs/public?${params.toString()}`);
+          if (!res.ok) throw new Error('public api error');
+          const needs = await res.json();
+          if (!needs || needs.length === 0) throw new Error('no public needs');
+          document.querySelectorAll('.static-card').forEach(c => c.remove());
+          markers.forEach(m => m && map.removeLayer(m));
+          markers.length = 0;
+          document.getElementById('countLabel').textContent = needs.length;
+          const list = document.getElementById('cardsList');
+          needs.forEach((need, i) => {
+            list.insertAdjacentHTML('beforeend', buildCard(need, i));
+            addMarker(need, i);
+          });
+        } catch {
+          // Keep static fallback HTML cards; static markers already absent — add them
+          const staticNeeds = [
+            { id:'MP001', lat:39.1150, lng:-94.7977, title:"Help Improve a Child's Wellbeing",       urgency:'medium', category:'other' },
+            { id:'MP002', lat:37.6872, lng:-97.3301, title:"Help Preserve a Kinship Placement",        urgency:'medium', category:'housing' },
+            { id:'MP003', lat:39.1090, lng:-94.7550, title:"Help Improve a Child's Wellbeing",         urgency:'medium', category:'other' },
+            { id:'MP004', lat:39.1250, lng:-94.8130, title:"Urgent: Family Needs Housing Assistance",  urgency:'urgent', category:'housing' },
+            { id:'MP005', lat:37.7000, lng:-97.3100, title:"School Supplies for 4 Kids",               urgency:'low',    category:'education' },
+          ];
+          staticNeeds.forEach((r, i) => {
+            const urgent = r.urgency === 'urgent';
+            const icon = L.divIcon({
+              html: `<div class="map-pin${urgent ? ' urgent' : ''}">${urgent ? '🔴 ' : '📍 '}Need</div>`,
+              className: '', iconAnchor: [28, 12]
+            });
+            const m = L.marker([r.lat, r.lng], { icon }).addTo(map)
+              .bindPopup(`<div class="popup-title">${r.title}</div><div style="margin-top:8px"><a href="/signup.html" style="color:#009DA5;font-size:12px;font-weight:600;">Sign up to view details →</a></div>`);
+            markers.push(m);
+          });
+        }
         return;
       }
       // Hide static fallback cards
