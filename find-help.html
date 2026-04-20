@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Help Near You — MigrantPortal</title>
+  <meta name="description" content="Enter your zipcode to find partner nonprofits and local organizations that can help migrants near you." />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    :root {
+      --teal: #0D7A8A;
+      --teal-light: #e6f5f6;
+      --orange: #E85D26;
+      --orange-light: #fdf0ec;
+      --text: #1a2e44;
+      --text-2: #4a5568;
+      --border: #e2e8f0;
+      --bg: #f7f9fc;
+      --white: #ffffff;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: clip; max-width: 100vw; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); overflow-x: clip; }
+
+    /* ── Nav ── */
+    nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { height: 36px; width: 36px; object-fit: contain; }
+    .nav-logo-text { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: -0.3px; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-link { color: var(--text-2); text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; transition: background 0.15s; }
+    .nav-link:hover { background: var(--bg); color: var(--text); }
+    .nav-link.active { color: var(--teal); background: var(--teal-light); }
+    .nav-signup { background: var(--teal); color: #fff; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; transition: background 0.15s; }
+    .nav-signup:hover { background: #0b6878; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
+    .hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+    .mobile-nav { display: none; position: fixed; inset: 0; background: var(--white); z-index: 200; flex-direction: column; padding: 24px; gap: 8px; }
+    .mobile-nav.open { display: flex; }
+    .mobile-close { align-self: flex-end; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-2); margin-bottom: 16px; }
+    .mobile-link { display: block; color: var(--text); text-decoration: none; font-size: 16px; font-weight: 500; padding: 12px 0; border-bottom: 1px solid var(--border); }
+
+    /* ── Hero ── */
+    .hero { background: linear-gradient(135deg, #0D7A8A 0%, #0b5d6b 100%); color: #fff; padding: 64px 24px 80px; text-align: center; }
+    .hero h1 { font-family: 'Montserrat', sans-serif; font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 16px; }
+    .hero p { font-size: 1.1rem; opacity: 0.9; max-width: 520px; margin: 0 auto 40px; line-height: 1.6; }
+
+    /* ── Search Box ── */
+    .search-wrap { display: flex; gap: 0; max-width: 480px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .search-wrap input { flex: 1; padding: 16px 20px; font-size: 1.1rem; border: none; outline: none; font-family: 'Inter', sans-serif; color: var(--text); }
+    .search-wrap input::placeholder { color: #94a3b8; }
+    .search-btn { background: var(--orange); color: #fff; border: none; padding: 16px 28px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.15s; font-family: 'Montserrat', sans-serif; white-space: nowrap; }
+    .search-btn:hover { background: #c94e1e; }
+    .search-btn:disabled { background: #aaa; cursor: not-allowed; }
+    .radius-hint { margin-top: 12px; font-size: 13px; opacity: 0.75; }
+
+    /* ── Filters ── */
+    .filters-wrap { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 24px; }
+    .filters-inner { max-width: 900px; margin: 0 auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .filter-label { font-size: 13px; font-weight: 600; color: var(--text-2); margin-right: 4px; }
+    .chip { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .chip:hover { border-color: var(--teal); color: var(--teal); }
+    .chip.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+
+    /* ── Results ── */
+    .results-section { max-width: 900px; margin: 40px auto; padding: 0 24px 60px; }
+    .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .results-count { font-size: 15px; color: var(--text-2); font-weight: 500; }
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+    /* ── Nonprofit Card ── */
+    .np-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; border: 1px solid var(--border); transition: transform 0.15s, box-shadow 0.15s; }
+    .np-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
+    .np-name { font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .np-location { font-size: 13px; color: var(--text-2); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .np-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; margin-bottom: 14px; }
+    .np-services { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .np-tag { background: var(--teal-light); color: var(--teal); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .np-contact { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--border); padding-top: 14px; margin-top: 4px; }
+    .np-contact a { color: var(--teal); text-decoration: none; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .np-contact a:hover { text-decoration: underline; }
+    .np-phone { font-size: 13px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
+
+    /* ── States ── */
+    .state-box { text-align: center; padding: 60px 24px; }
+    .state-icon { font-size: 3rem; margin-bottom: 16px; }
+    .state-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.2rem; margin-bottom: 8px; }
+    .state-sub { font-size: 14px; color: var(--text-2); max-width: 360px; margin: 0 auto; line-height: 1.5; }
+    .state-error { color: #dc2626; }
+
+    /* ── CTA ── */
+    .cta-band { background: var(--orange-light); border-top: 1px solid #f5c4b0; padding: 40px 24px; text-align: center; margin-top: 20px; }
+    .cta-band h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--text); margin-bottom: 8px; }
+    .cta-band p { font-size: 14px; color: var(--text-2); margin-bottom: 20px; }
+    .cta-band .btn { background: var(--orange); color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; display: inline-block; transition: background 0.15s; }
+    .cta-band .btn:hover { background: #c94e1e; }
+
+    /* ── Footer ── */
+    footer { background: #F4F6F8; border-top: 1px solid var(--border); padding: 24px; text-align: center; font-size: 13px; color: var(--text-2); }
+    footer a { color: var(--teal); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .nav-links, .nav-signup { display: none; }
+      .hamburger { display: flex; }
+      .hero { padding: 48px 20px 64px; }
+      .results-section { padding: 0 16px 40px; }
+      .results-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">Skip to main content</a>
+
+<!-- NAV -->
+<nav aria-label="Main navigation">
+  <a href="/" class="nav-logo">
+    <img src="logo.png" alt="MigrantPortal logo" />
+    <span class="nav-logo-text"><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/" class="nav-link">Home</a>
+    <a href="how-migrantportal-works.html" class="nav-link">How It Works</a>
+    <a href="find-help.html" class="nav-link active">Find Help</a>
+    <a href="requests.html" class="nav-link">Browse Requests</a>
+    <a href="faq.html" class="nav-link">FAQ</a>
+  </div>
+  <a href="login.html" class="nav-signup">Sign In</a>
+  <button class="hamburger" onclick="document.querySelector('.mobile-nav').classList.add('open')" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-nav" role="dialog" aria-label="Mobile menu">
+  <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close menu">✕</button>
+  <a href="/" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
+  <a href="how-migrantportal-works.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
+  <a href="find-help.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Find Help</a>
+  <a href="requests.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Browse Requests</a>
+  <a href="faq.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">FAQ</a>
+  <a href="login.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Sign In</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Find Help Near You</h1>
+  <p>Enter your zipcode to see local nonprofits and partner organizations ready to help migrants in your area.</p>
+  <div class="search-wrap">
+    <input type="text" id="zipInput" placeholder="Enter zipcode (e.g. 64108)" maxlength="10" inputmode="numeric"
+      onkeydown="if(event.key==='Enter') doSearch()" aria-label="Zipcode" />
+    <button class="search-btn" id="searchBtn" onclick="doSearch()">Search</button>
+  </div>
+  <div class="radius-hint">Showing results within 25 miles</div>
+</section>
+
+<!-- FILTERS -->
+<div class="filters-wrap" id="filtersWrap" style="display:none">
+  <div class="filters-inner">
+    <span class="filter-label">Filter:</span>
+    <button class="chip active" onclick="setFilter('')" data-service="">All Services</button>
+    <button class="chip" onclick="setFilter('food')" data-service="food">Food</button>
+    <button class="chip" onclick="setFilter('shelter')" data-service="shelter">Shelter</button>
+    <button class="chip" onclick="setFilter('medical')" data-service="medical">Medical</button>
+    <button class="chip" onclick="setFilter('legal')" data-service="legal">Legal</button>
+    <button class="chip" onclick="setFilter('employment')" data-service="employment">Employment</button>
+    <button class="chip" onclick="setFilter('education')" data-service="education">Education</button>
+    <button class="chip" onclick="setFilter('clothing')" data-service="clothing">Clothing</button>
+    <button class="chip" onclick="setFilter('immigration')" data-service="immigration">Immigration</button>
+    <button class="chip" onclick="setFilter('transportation')" data-service="transportation">Transportation</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<main id="main-content" class="results-section">
+  <div id="resultsState">
+    <div class="state-box">
+      <div class="state-icon">🗺️</div>
+      <div class="state-title">Search by Zipcode</div>
+      <div class="state-sub">Enter your zipcode above to find partner nonprofits in your area. No account needed.</div>
+    </div>
+  </div>
+</main>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h3>Is your organization not listed?</h3>
+  <p>Partner nonprofits and local organizations can register to be listed here and connect with migrants who need help.</p>
+  <a href="signup.html" class="btn">Become a Partner</a>
+</div>
+
+<footer>
+  <div style="margin-bottom:8px">
+    <a href="/">Home</a> &middot; <a href="how-migrantportal-works.html">How It Works</a> &middot;
+    <a href="find-help.html">Find Help</a> &middot; <a href="requests.html">Browse Requests</a> &middot;
+    <a href="privacy.html">Privacy</a>
+  </div>
+  &copy; 2026 MigrantPortal &middot; <a href="mailto:support@migrantportal.com">support@migrantportal.com</a>
+</footer>
+
+<script>
+  const API = 'https://migrant-portal-production.up.railway.app';
+  let allResults = [];
+  let activeService = '';
+  let lastZip = '';
+
+  async function doSearch() {
+    const zip = document.getElementById('zipInput').value.trim();
+    if (!zip || zip.length < 5) {
+      showError('Please enter a valid 5-digit zipcode.');
+      return;
+    }
+    lastZip = zip;
+    setLoading();
+    try {
+      const url = `${API}/nonprofits?zip=${encodeURIComponent(zip)}${activeService ? '&service=' + activeService : ''}`;
+      const resp = await fetch(url);
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.detail || 'Search failed. Please try again.');
+      }
+      allResults = await resp.json();
+      renderResults(allResults);
+      document.getElementById('filtersWrap').style.display = '';
+    } catch (e) {
+      showError(e.message);
+    }
+  }
+
+  function setFilter(service) {
+    activeService = service;
+    document.querySelectorAll('.chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.service === service);
+    });
+    if (!lastZip) return;
+
+    const filtered = service
+      ? allResults.filter(n => n.services && n.services.toLowerCase().includes(service))
+      : allResults;
+    renderResults(filtered);
+  }
+
+  function renderResults(items) {
+    const el = document.getElementById('resultsState');
+    if (!items.length) {
+      el.innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">🔍</div>
+          <div class="state-title">No results found</div>
+          <div class="state-sub">No partner nonprofits found within 25 miles of <strong>${escHtml(lastZip)}</strong>. Try a different zipcode or remove the service filter.</div>
+        </div>`;
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="results-header">
+        <div class="results-count">${items.length} organization${items.length !== 1 ? 's' : ''} found near ${escHtml(lastZip)}</div>
+      </div>
+      <div class="results-grid">
+        ${items.map(n => cardHtml(n)).join('')}
+      </div>`;
+  }
+
+  function cardHtml(n) {
+    const services = n.services ? n.services.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const location = [n.city, n.state].filter(Boolean).join(', ');
+    return `
+      <div class="np-card">
+        <div class="np-name">${escHtml(n.name)}</div>
+        ${location ? `<div class="np-location">📍 ${escHtml(location)}${n.zipcode ? ' ' + escHtml(n.zipcode) : ''}</div>` : ''}
+        ${n.description ? `<div class="np-desc">${escHtml(n.description)}</div>` : ''}
+        ${services.length ? `<div class="np-services">${services.map(s => `<span class="np-tag">${escHtml(s)}</span>`).join('')}</div>` : ''}
+        <div class="np-contact">
+          ${n.phone ? `<span class="np-phone">📞 <a href="tel:${escHtml(n.phone)}">${escHtml(n.phone)}</a></span>` : ''}
+          ${n.email ? `<a href="mailto:${escHtml(n.email)}">✉️ ${escHtml(n.email)}</a>` : ''}
+          ${n.website ? `<a href="${escHtml(safeSrc(n.website))}" target="_blank" rel="noopener noreferrer">🔗 Visit Website</a>` : ''}
+          ${!n.phone && !n.email && !n.website ? '<span style="font-size:13px;color:#94a3b8">No contact info listed</span>' : ''}
+        </div>
+      </div>`;
+  }
+
+  function setLoading() {
+    document.getElementById('resultsState').innerHTML = `
+      <div class="state-box">
+        <div class="state-icon">⏳</div>
+        <div class="state-title">Searching...</div>
+        <div class="state-sub">Finding partner nonprofits near ${escHtml(lastZip)}</div>
+      </div>`;
+    document.getElementById('searchBtn').disabled = true;
+    setTimeout(() => { document.getElementById('searchBtn').disabled = false; }, 3000);
+  }
+
+  function showError(msg) {
+    document.getElementById('resultsState').innerHTML = `
+      <div class="state-box">
+        <div class="state-icon">⚠️</div>
+        <div class="state-title state-error">${escHtml(msg)}</div>
+        <div class="state-sub">Check the zipcode and try again.</div>
+      </div>`;
+    document.getElementById('searchBtn').disabled = false;
+  }
+
+  function escHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function safeSrc(url) {
+    if (!url) return '#';
+    try {
+      const u = new URL(url.startsWith('http') ? url : 'https://' + url);
+      if (!['http:','https:'].includes(u.protocol)) return '#';
+      return u.href;
+    } catch { return '#'; }
+  }
+</script>
+</body>
+</html>
