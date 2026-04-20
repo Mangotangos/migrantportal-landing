@@ -176,6 +176,8 @@
     footer a { color: var(--gray-600); margin-left: 20px; }
     footer a:hover { color: var(--teal); }
 
+    .hamburger { display: none; cursor: pointer; background: none; border: none; padding: 8px; }
+    .hamburger svg { width: 22px; height: 22px; }
     @media (max-width: 768px) {
       .contact-section { grid-template-columns: 1fr; gap: 40px; }
     }
@@ -190,8 +192,6 @@
       footer { flex-direction: column; align-items: flex-start; }
       footer a { margin-left: 0; margin-right: 16px; }
     }
-    .hamburger { display: none; cursor: pointer; background: none; border: none; padding: 8px; }
-    .hamburger svg { width: 22px; height: 22px; }
     .mobile-nav {
       display: none; position: fixed; inset: 0; z-index: 300;
       background: white; padding: 24px; flex-direction: column;
@@ -240,8 +240,7 @@
     </div>
     <a href="/" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
     <a href="/how-migrantportal-works.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
-    <a href="/vision.html" class="mobile-link" onclick="document.querySelector(\'.mobile-nav\').classList.remove(\'open\')">Our Vision</a>
-      <a href="/vision.html" class="nav-link">Our Vision</a>
+    <a href="/vision.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Our Vision</a>
     <a href="/requests.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Browse Requests</a>
     <a href="/faq.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">FAQ</a>
     <a href="/contact.html" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
