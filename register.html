@@ -246,6 +246,10 @@
     }
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
   .skip-link:focus { top: 0; }
+  .org-svc-label { display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;transition:border-color 0.15s,background 0.15s; }
+  .org-svc-label:hover { border-color:var(--teal);background:#f0fbfb; }
+  .org-svc-label input[type=checkbox] { width:16px;height:16px;accent-color:var(--teal);flex-shrink:0; }
+  .org-svc-label:has(input:checked) { border-color:var(--teal);background:#e6f7f8;color:var(--teal-d); }
   </style>
 <script>
   (function() {
@@ -503,6 +507,163 @@
         </div>
       </div>
 
+      <!-- ══ ORG FLOW STEPS (only shown when role=organization) ══ -->
+
+      <!-- ORG Step 1: Org Type -->
+      <div class="step" id="step-org-1">
+        <h2 class="step-heading" style="text-align:center">What type of organization are you?</h2>
+        <p class="step-sub" style="margin-bottom:20px;">This helps us categorize your listing in the Find Help directory.</p>
+        <div class="cards" id="cards-org-type">
+          <div class="card" data-val="nonprofit" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+            <div class="card-icon">🏛️</div>
+            <div class="card-body"><div class="card-title">Nonprofit / 501(c)(3)</div><div class="card-desc">Registered nonprofit organization serving migrant families.</div></div>
+          </div>
+          <div class="card" data-val="church" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+            <div class="card-icon">⛪</div>
+            <div class="card-body"><div class="card-title">Church / Faith Community</div><div class="card-desc">Faith-based organization mobilizing members to respond to needs.</div></div>
+          </div>
+          <div class="card" data-val="government" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+            <div class="card-icon">🏢</div>
+            <div class="card-body"><div class="card-title">Government Agency</div><div class="card-desc">Local, state, or federal agency providing services to migrants.</div></div>
+          </div>
+          <div class="card" data-val="school" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+            <div class="card-icon">🎓</div>
+            <div class="card-body"><div class="card-title">School / University</div><div class="card-desc">Educational institution offering support programs for migrants.</div></div>
+          </div>
+          <div class="card" data-val="community" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+            <div class="card-icon">🤝</div>
+            <div class="card-body"><div class="card-title">Community Group</div><div class="card-desc">Informal or grassroots group serving your local area.</div></div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-next" id="btn-org-1" disabled onclick="goOrgTo(2)">Next</button>
+        </div>
+      </div>
+
+      <!-- ORG Step 2: Services -->
+      <div class="step" id="step-org-2">
+        <h2 class="step-heading">What services do you provide?</h2>
+        <p style="font-size:14px;color:var(--gray-600);margin-bottom:20px;line-height:1.6;">Select all that apply. These show as tags on your public listing.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px" id="org-services-grid">
+          <label class="org-svc-label"><input type="checkbox" value="food" onchange="checkOrgServices()" /> 🥗 Food</label>
+          <label class="org-svc-label"><input type="checkbox" value="shelter" onchange="checkOrgServices()" /> 🏠 Shelter</label>
+          <label class="org-svc-label"><input type="checkbox" value="clothing" onchange="checkOrgServices()" /> 👕 Clothing</label>
+          <label class="org-svc-label"><input type="checkbox" value="medical" onchange="checkOrgServices()" /> 🏥 Medical</label>
+          <label class="org-svc-label"><input type="checkbox" value="legal" onchange="checkOrgServices()" /> ⚖️ Legal</label>
+          <label class="org-svc-label"><input type="checkbox" value="employment" onchange="checkOrgServices()" /> 💼 Employment</label>
+          <label class="org-svc-label"><input type="checkbox" value="education" onchange="checkOrgServices()" /> 📚 Education</label>
+          <label class="org-svc-label"><input type="checkbox" value="immigration" onchange="checkOrgServices()" /> 📋 Immigration</label>
+          <label class="org-svc-label"><input type="checkbox" value="transportation" onchange="checkOrgServices()" /> 🚗 Transportation</label>
+          <label class="org-svc-label"><input type="checkbox" value="mental_health" onchange="checkOrgServices()" /> 🧠 Mental Health</label>
+          <label class="org-svc-label"><input type="checkbox" value="financial" onchange="checkOrgServices()" /> 💰 Financial Aid</label>
+          <label class="org-svc-label"><input type="checkbox" value="childcare" onchange="checkOrgServices()" /> 👶 Childcare</label>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goOrgTo(1)">Back</button>
+          <button class="btn-next" id="btn-org-2" disabled onclick="goOrgTo(3)">Next</button>
+        </div>
+      </div>
+
+      <!-- ORG Step 3: Org Details -->
+      <div class="step" id="step-org-3">
+        <h2 class="step-heading">Tell us about your organization</h2>
+        <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">This information appears on your public Find Help listing.</p>
+        <div class="fields">
+          <div class="field">
+            <label for="org-name">Organization name <span style="color:#dc2626">*</span></label>
+            <input type="text" id="org-name" placeholder="e.g. Hope Community Center" oninput="checkOrgDetails()" />
+          </div>
+          <div class="field">
+            <label for="org-desc">Brief description</label>
+            <textarea id="org-desc" rows="2" placeholder="What does your organization do for migrants?" oninput="checkOrgDetails()" style="padding:12px 14px;border-radius:8px;border:1.5px solid var(--gray-200);font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s;width:100%"></textarea>
+          </div>
+          <div class="field">
+            <label for="org-address">Street address</label>
+            <input type="text" id="org-address" placeholder="123 Main St" oninput="checkOrgDetails()" />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="org-city">City</label>
+              <input type="text" id="org-city" placeholder="Kansas City" oninput="checkOrgDetails()" />
+            </div>
+            <div class="field" style="max-width:80px">
+              <label for="org-state">State</label>
+              <input type="text" id="org-state" placeholder="KS" maxlength="2" oninput="checkOrgDetails()" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="org-zip">Zipcode <span style="color:#dc2626">*</span></label>
+            <input type="text" id="org-zip" placeholder="64108" maxlength="10" inputmode="numeric" oninput="checkOrgDetails()" />
+          </div>
+          <div class="field">
+            <label for="org-phone">Phone number</label>
+            <input type="tel" id="org-phone" placeholder="(555) 000-0000" oninput="checkOrgDetails()" />
+          </div>
+          <div class="field">
+            <label for="org-email">Public contact email</label>
+            <input type="email" id="org-email" placeholder="help@yourorg.org" oninput="checkOrgDetails()" />
+          </div>
+          <div class="field">
+            <label for="org-website">Website</label>
+            <input type="url" id="org-website" placeholder="https://yourorg.org" oninput="checkOrgDetails()" />
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goOrgTo(2)">Back</button>
+          <button class="btn-next" id="btn-org-3" disabled onclick="goOrgTo(4)">Next</button>
+        </div>
+      </div>
+
+      <!-- ORG Step 4: Account + Submit -->
+      <div class="step" id="step-org-4">
+        <h2 class="step-heading">Create your account</h2>
+        <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">Your personal login for managing your organization on MigrantPortal.</p>
+        <div class="fields">
+          <div class="field-row">
+            <div class="field">
+              <label for="org-fname">First name <span style="color:#dc2626">*</span></label>
+              <input type="text" id="org-fname" autocomplete="given-name" placeholder="Jane" oninput="checkOrgAccount()" />
+            </div>
+            <div class="field">
+              <label for="org-lname">Last name <span style="color:#dc2626">*</span></label>
+              <input type="text" id="org-lname" autocomplete="family-name" placeholder="Doe" oninput="checkOrgAccount()" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="org-login-email">Your login email <span style="color:#dc2626">*</span></label>
+            <input type="email" id="org-login-email" autocomplete="email" placeholder="jane@yourorg.org" oninput="checkOrgAccount()" />
+          </div>
+          <div class="field">
+            <label for="org-pw">Password <span style="color:#dc2626">*</span></label>
+            <input type="password" id="org-pw" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" oninput="checkOrgAccount(); updateStrength(this.value)" />
+            <div style="margin-top:8px">
+              <div style="display:flex;gap:4px;margin-bottom:4px">
+                <div class="str-seg" id="str-1"></div><div class="str-seg" id="str-2"></div>
+                <div class="str-seg" id="str-3"></div><div class="str-seg" id="str-4"></div>
+              </div>
+              <span id="str-label" style="font-size:12px;color:var(--gray-400)"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="org-pw2">Confirm password <span style="color:#dc2626">*</span></label>
+            <input type="password" id="org-pw2" autocomplete="new-password" minlength="8" placeholder="Re-enter password" oninput="checkOrgAccount()" />
+          </div>
+        </div>
+        <div class="check-row" style="margin-bottom:12px">
+          <input type="checkbox" id="org-agree" onchange="checkOrgAccount()" />
+          <label for="org-agree">I agree to the MigrantPortal <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>.</label>
+        </div>
+        <div class="check-row" style="margin-bottom:24px">
+          <input type="checkbox" id="org-agree-data" onchange="checkOrgAccount()" />
+          <label for="org-agree-data">I agree to handle all migrant information with strict confidentiality and will not share or misuse any personal data.</label>
+        </div>
+        <div id="org-reg-error" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;line-height:1.4"></div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goOrgTo(3)">Back</button>
+          <button class="btn-next" id="btn-org-4" disabled onclick="submitOrgForm()">Submit Application</button>
+        </div>
+      </div>
+
       <!-- ── SUCCESS ────────────────────────────── -->
       <div class="step" id="step-success">
         <div class="success-icon" id="success-icon">🎉</div>
@@ -525,15 +686,24 @@
   <script>
     // Read role from URL — skip step 1 if provided
     const _urlRole = new URLSearchParams(window.location.search).get('role');
-    const _roleMap = { navigator: 'navigator', responder: 'responder', organization: 'responder' };
+    const _roleMap = { navigator: 'navigator', responder: 'responder' };
     const _preselectedRole = _urlRole ? (_roleMap[_urlRole] || null) : null;
 
     const TOTAL = 5;
     let currentStep = 1;
     const selectedLocations = new Set();
 
-    // Auto-skip step 1 if role came from signup page
-    if (_preselectedRole) {
+    // ── Org flow (completely separate from navigator/responder) ──────────────
+    let isOrgFlow = false;
+    let currentOrgStep = 1;
+    const ORG_TOTAL = 4;
+
+    if (_urlRole === 'organization') {
+      isOrgFlow = true;
+      document.getElementById('step-1').classList.remove('visible');
+      goOrgTo(1);
+    } else if (_preselectedRole) {
+      // ── Navigator / Responder auto-skip ─────────────────────────────────
       const cardVal = _preselectedRole === 'navigator' ? 'church' : 'own';
       const matchingCard = document.querySelector(`#cards-1 .card[data-val="${cardVal}"]`);
       if (matchingCard) {
@@ -541,8 +711,7 @@
         document.getElementById('btn-1').disabled = false;
         document.getElementById('btn-1').classList.add('ready');
       }
-      // Responders + Orgs pick their type first; navigators go straight to location
-      if (_preselectedRole === 'responder' || _urlRole === 'organization') {
+      if (_preselectedRole === 'responder') {
         document.getElementById('step-1').classList.remove('visible');
         document.getElementById('step-rt').classList.add('visible');
         currentStep = 'rt';
@@ -580,7 +749,120 @@
     }
 
     function goBack() {
+      if (isOrgFlow) { if (currentOrgStep > 1) goOrgTo(currentOrgStep - 1); return; }
       if (currentStep > 1) goTo(currentStep - 1);
+    }
+
+    /* ══ ORG FLOW FUNCTIONS ════════════════════════════════════════════════ */
+    function goOrgTo(n) {
+      if (currentOrgStep >= 1) {
+        const cur = document.getElementById('step-org-' + currentOrgStep);
+        if (cur) cur.classList.remove('visible');
+      }
+      currentOrgStep = n;
+      const next = document.getElementById('step-org-' + n);
+      if (next) next.classList.add('visible');
+      updateOrgProgress(n);
+      window.scrollTo(0, 0);
+    }
+
+    function updateOrgProgress(n) {
+      for (let i = 1; i <= 5; i++) {
+        const seg = document.getElementById('seg-' + i);
+        if (!seg) continue;
+        seg.className = 'progress-seg';
+        if (i < n)         seg.classList.add('done');
+        else if (i === n)  seg.classList.add('active');
+      }
+      document.getElementById('prog-back-btn').classList.toggle('hidden', n === 1);
+    }
+
+    function checkOrgServices() {
+      const any = [...document.querySelectorAll('#org-services-grid input[type=checkbox]:checked')].length > 0;
+      setBtn('btn-org-2', any);
+    }
+
+    function checkOrgDetails() {
+      const ok = document.getElementById('org-name').value.trim() &&
+                 document.getElementById('org-zip').value.trim().length >= 5;
+      setBtn('btn-org-3', ok);
+    }
+
+    function checkOrgAccount() {
+      const pw  = document.getElementById('org-pw').value;
+      const pw2 = document.getElementById('org-pw2').value;
+      const ok  = document.getElementById('org-fname').value.trim() &&
+                  document.getElementById('org-lname').value.trim() &&
+                  document.getElementById('org-login-email').value.includes('@') &&
+                  pw.length >= 8 && pw === pw2 &&
+                  document.getElementById('org-agree').checked &&
+                  document.getElementById('org-agree-data').checked;
+      setBtn('btn-org-4', ok);
+    }
+
+    async function submitOrgForm() {
+      const btn = document.getElementById('btn-org-4');
+      const errEl = document.getElementById('org-reg-error');
+      errEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      const fname = document.getElementById('org-fname').value.trim();
+      const lname = document.getElementById('org-lname').value.trim();
+      const loginEmail = document.getElementById('org-login-email').value.trim();
+      const password   = document.getElementById('org-pw').value;
+
+      const orgType = document.querySelector('#cards-org-type .card.selected')?.dataset.val || 'nonprofit';
+      const services = [...document.querySelectorAll('#org-services-grid input:checked')].map(c => c.value).join(',');
+
+      const orgPayload = {
+        org_name:    document.getElementById('org-name').value.trim(),
+        org_type:    orgType,
+        description: document.getElementById('org-desc').value.trim() || null,
+        services:    services || null,
+        address:     document.getElementById('org-address').value.trim() || null,
+        city:        document.getElementById('org-city').value.trim() || null,
+        state:       document.getElementById('org-state').value.trim().toUpperCase() || null,
+        zipcode:     document.getElementById('org-zip').value.trim(),
+        phone:       document.getElementById('org-phone').value.trim() || null,
+        email:       document.getElementById('org-email').value.trim() || null,
+        website:     document.getElementById('org-website').value.trim() || null,
+        contact_name: fname + ' ' + lname,
+      };
+
+      const userPayload = {
+        name: fname + ' ' + lname,
+        email: loginEmail,
+        password,
+        role: 'responder',
+        responder_type: 'church',
+        registration_notes: `Organization application: ${orgPayload.org_name} (${orgType})`,
+      };
+
+      try {
+        // 1. Register user account
+        const userData = await apiPost('/auth/register', userPayload);
+
+        // 2. Submit nonprofit application (public endpoint — no auth needed)
+        await apiPost('/nonprofits/apply', orgPayload);
+
+        // 3. Redirect to pending
+        if (userData.user?.status === 'pending') {
+          window.location.href = '/pending.html';
+        } else {
+          saveSession(userData.access_token, userData.user);
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+        }
+      } catch (ex) {
+        btn.disabled = false;
+        btn.textContent = 'Submit Application';
+        const msg = ex.message || 'Something went wrong. Please try again.';
+        const isEmailTaken = msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists');
+        errEl.innerHTML = isEmailTaken
+          ? `That email is already registered. <a href="/login.html" style="color:#dc2626;font-weight:600;text-decoration:underline">Sign in instead?</a>`
+          : msg;
+        errEl.style.display = 'block';
+      }
     }
 
     function updateProgress(n) {
