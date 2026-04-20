@@ -396,6 +396,20 @@
     .t-p3 { background:var(--yellow-bg);color:var(--yellow);border:1px solid rgba(240,180,41,.25); }
     .t-p4 { background:var(--surface-2);color:var(--text-3);border:1px solid var(--border-2); }
 
+    /* ── TIME IN QUEUE ── */
+    .tiq { display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.4px;vertical-align:middle; }
+    .tiq-hot   { background:var(--green-bg);color:var(--green);border:1px solid rgba(63,186,99,.25); }
+    .tiq-warn  { background:var(--yellow-bg);color:var(--yellow);border:1px solid rgba(240,180,41,.25); }
+    .tiq-stale { background:var(--red-bg);color:var(--red);border:1px solid rgba(248,81,73,.25); }
+
+    /* ── KPI DELTA ── */
+    .kpi-delta { font-size:11px;font-weight:700;margin-top:1px;min-height:14px; }
+    .kpi-delta.up   { color:var(--red); }
+    .kpi-delta.down { color:var(--green); }
+    .kpi-delta.same { color:var(--text-3); }
+    /* fulfilled delta: up = good */
+    .kpi-delta.up-good { color:var(--green); }
+
     /* ── AUDIT LOG ── */
     .audit-row { font-size:12px; }
     .audit-action { display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase; }
@@ -505,6 +519,13 @@
   </style>
 </head>
 <body>
+<script>
+  (function() {
+    const token = localStorage.getItem('mp_token');
+    const _adminUser = (() => { try { return JSON.parse(localStorage.getItem('mp_user')); } catch { return null; } })();
+    if (!token || _adminUser?.role !== 'admin') { window.location.replace('/login.html'); }
+  })();
+</script>
 
 <!-- TOPBAR -->
 <header class="topbar">
@@ -567,6 +588,9 @@
     <div class="nav-item" onclick="switchTab('announcements')">
       <span class="nav-icon">📢</span> Announcements
     </div>
+    <div class="nav-item" onclick="switchTab('nonprofits')">
+      <span class="nav-icon">🏛️</span> Nonprofits
+    </div>
     <div class="nav-item" onclick="switchTab('audit')">
       <span class="nav-icon">📜</span> Audit Log
     </div>
@@ -586,19 +610,19 @@
 
     <!-- Stats — always visible -->
     <div class="stats-row">
-      <div class="stat-card c-orange" data-filter="pending" onclick="kpiFilter('pending')" title="View pending needs"><div class="stat-label">Pending</div><div class="stat-value v-orange" id="sPending">—</div></div>
-      <div class="stat-card c-teal" data-filter="active" onclick="kpiFilter('active')" title="View active needs"><div class="stat-label">Active</div><div class="stat-value v-teal" id="sActive">—</div></div>
-      <div class="stat-card c-green" data-filter="fulfilled" onclick="kpiFilter('fulfilled')" title="View fulfilled needs"><div class="stat-label">Fulfilled</div><div class="stat-value v-green" id="sFulfilled">—</div></div>
-      <div class="stat-card c-neutral" data-filter="all" onclick="kpiFilter('all')" title="View all needs"><div class="stat-label">Total Needs</div><div class="stat-value v-neutral" id="sTotal">—</div></div>
-      <div class="stat-card c-neutral" data-filter="users" onclick="kpiFilter('users')" title="Manage responders"><div class="stat-label">Responders</div><div class="stat-value v-neutral" id="sResponders">—</div></div>
-      <div class="stat-card c-teal"><div class="stat-label">Fulfillment %</div><div class="stat-value v-teal" id="sRate">—</div></div>
+      <div class="stat-card c-orange" data-filter="pending" onclick="kpiFilter('pending')" title="View pending needs"><div class="stat-label">Pending</div><div class="stat-value v-orange" id="sPending">—</div><div class="kpi-delta" id="dPending"></div></div>
+      <div class="stat-card c-teal" data-filter="active" onclick="kpiFilter('active')" title="View active needs"><div class="stat-label">Active</div><div class="stat-value v-teal" id="sActive">—</div><div class="kpi-delta" id="dActive"></div></div>
+      <div class="stat-card c-green" data-filter="fulfilled" onclick="kpiFilter('fulfilled')" title="View fulfilled needs"><div class="stat-label">Fulfilled</div><div class="stat-value v-green" id="sFulfilled">—</div><div class="kpi-delta" id="dFulfilled"></div></div>
+      <div class="stat-card c-neutral" data-filter="all" onclick="kpiFilter('all')" title="View all needs"><div class="stat-label">Total Needs</div><div class="stat-value v-neutral" id="sTotal">—</div><div class="kpi-delta" id="dTotal"></div></div>
+      <div class="stat-card c-neutral" data-filter="users" onclick="kpiFilter('users')" title="Manage responders"><div class="stat-label">Responders</div><div class="stat-value v-neutral" id="sResponders">—</div><div class="kpi-delta" id="dResponders"></div></div>
+      <div class="stat-card c-teal"><div class="stat-label">Fulfillment %</div><div class="stat-value v-teal" id="sRate">—</div><div class="kpi-delta" id="dRate"></div></div>
     </div>
 
     <!-- PENDING TAB -->
     <div id="tab-pending">
       <div class="page-header">
         <div class="page-title">Pending Queue</div>
-        <div class="page-subtitle">Review and approve submitted needs &nbsp;·&nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">J/K</kbd> navigate &nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">A</kbd> approve &nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">R</kbd> reject</div>
+        <div class="page-subtitle">Review and approve submitted needs &nbsp;·&nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">J/K</kbd> navigate &nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">A</kbd> approve &nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">R</kbd> reject &nbsp;·&nbsp; <span id="lastUpdatedStamp" style="font-size:11px;color:var(--text-3);font-style:italic"></span></div>
       </div>
       <div class="card">
         <div class="card-header"><span class="card-title">Awaiting Approval</span></div>
@@ -724,6 +748,60 @@
         <div class="page-subtitle">Pending community-submitted resources</div>
       </div>
       <div class="card"><div id="resourcesContent"><div class="loading">Loading</div></div></div>
+    </div>
+
+    <!-- NONPROFITS TAB -->
+    <div id="tab-nonprofits" style="display:none">
+      <div class="page-header">
+        <div class="page-title">Partner Nonprofits</div>
+        <div class="page-subtitle">Manage organizations listed on the public "Find Help" page</div>
+      </div>
+      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+        <!-- Add form -->
+        <div class="card" style="width:300px;flex-shrink:0;min-width:260px">
+          <div class="card-header"><span class="card-title">Add Nonprofit</span></div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div><label class="form-label">Name *</label><input class="form-input" id="np-name" type="text" placeholder="Organization name" /></div>
+            <div><label class="form-label">Description</label><textarea class="form-textarea" id="np-desc" rows="2" placeholder="Brief description…"></textarea></div>
+            <div>
+              <label class="form-label">Services (select all that apply)</label>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px" id="np-services-picker">
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="food" /> Food</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="shelter" /> Shelter</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="clothing" /> Clothing</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="medical" /> Medical</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="legal" /> Legal</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="employment" /> Employment</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="education" /> Education</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="immigration" /> Immigration</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="transportation" /> Transportation</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="mental_health" /> Mental Health</label>
+                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="financial" /> Financial</label>
+              </div>
+            </div>
+            <div><label class="form-label">Address</label><input class="form-input" id="np-address" type="text" placeholder="Street address" /></div>
+            <div style="display:flex;gap:8px">
+              <div style="flex:1"><label class="form-label">City</label><input class="form-input" id="np-city" type="text" placeholder="City" /></div>
+              <div style="width:60px"><label class="form-label">State</label><input class="form-input" id="np-state" type="text" placeholder="KS" maxlength="2" /></div>
+            </div>
+            <div><label class="form-label">Zipcode *</label><input class="form-input" id="np-zip" type="text" placeholder="64108" maxlength="10" inputmode="numeric" /></div>
+            <div><label class="form-label">Phone</label><input class="form-input" id="np-phone" type="tel" placeholder="(555) 000-0000" /></div>
+            <div><label class="form-label">Email</label><input class="form-input" id="np-email" type="email" placeholder="help@org.org" /></div>
+            <div><label class="form-label">Website</label><input class="form-input" id="np-website" type="url" placeholder="https://…" /></div>
+            <button onclick="addNonprofit()" class="btn btn-primary" style="height:40px;font-size:13px;border-radius:8px;width:100%">Add Nonprofit</button>
+          </div>
+        </div>
+        <!-- List -->
+        <div style="flex:1;min-width:260px">
+          <div class="card" style="padding:0;overflow:hidden">
+            <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:14px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+              <span>All Partner Nonprofits</span>
+              <a href="/find-help.html" target="_blank" rel="noopener" style="font-size:12px;color:var(--teal);text-decoration:none">View public page →</a>
+            </div>
+            <div id="np-list" style="padding:16px 20px"><div class="loading">Loading…</div></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ANNOUNCEMENTS TAB -->
@@ -886,7 +964,7 @@
      TAB SWITCHING
   ═══════════════════════════════════════════ */
   let activeTab = 'pending';
-  const ALL_TABS = ['pending','all','users','reports','flagged','announcements','orgs','resources','disbursements','audit'];
+  const ALL_TABS = ['pending','all','users','reports','flagged','announcements','orgs','resources','disbursements','nonprofits','audit'];
 
   function switchTab(name) {
     document.querySelectorAll('.nav-item').forEach(el => {
@@ -902,6 +980,7 @@
     if (name === 'announcements') loadAnnouncements();
     if (name === 'orgs')          loadOrgs();
     if (name === 'resources')     loadResources();
+    if (name === 'nonprofits')    loadNonprofits();
     if (name === 'disbursements') loadDisbursements();
     if (name === 'audit')         loadAuditLog();
   }
@@ -941,22 +1020,66 @@
   /* ═══════════════════════════════════════════
      STATS + AUTO-REFRESH
   ═══════════════════════════════════════════ */
+  function renderKpiDelta(elId, curr, prev, higherIsBad) {
+    const el = document.getElementById(elId);
+    if (!el || prev === null) return;
+    const diff = curr - prev;
+    if (diff === 0) { el.textContent = ''; el.className = 'kpi-delta same'; return; }
+    const sign = diff > 0 ? '+' : '';
+    const isUp = diff > 0;
+    el.textContent = `${sign}${diff}`;
+    if (higherIsBad) {
+      el.className = 'kpi-delta ' + (isUp ? 'up' : 'down');
+    } else {
+      el.className = 'kpi-delta ' + (isUp ? 'up-good' : 'up');
+    }
+  }
+
   async function loadStats() {
     try {
       const s = await apiGet('/admin/stats');
+
+      // Read previous values from sessionStorage for delta
+      const prev = JSON.parse(sessionStorage.getItem('mp_kpi_prev') || 'null');
+
       document.getElementById('sPending').textContent    = s.pending;
       document.getElementById('sActive').textContent     = s.approved;
       document.getElementById('sFulfilled').textContent  = s.fulfilled;
       document.getElementById('sTotal').textContent      = s.total;
       document.getElementById('sResponders').textContent = s.responders;
       document.getElementById('sRate').textContent       = s.fulfillment_rate + '%';
+
+      if (prev) {
+        renderKpiDelta('dPending',   s.pending,          prev.pending,   true);
+        renderKpiDelta('dActive',    s.approved,         prev.approved,  false);
+        renderKpiDelta('dFulfilled', s.fulfilled,        prev.fulfilled, false);
+        renderKpiDelta('dTotal',     s.total,            prev.total,     false);
+        renderKpiDelta('dResponders',s.responders,       prev.responders,false);
+        const rateDiff = s.fulfillment_rate - prev.fulfillment_rate;
+        const rEl = document.getElementById('dRate');
+        if (rEl && rateDiff !== 0) {
+          rEl.textContent = (rateDiff > 0 ? '+' : '') + rateDiff + '%';
+          rEl.className = 'kpi-delta ' + (rateDiff > 0 ? 'up-good' : 'up');
+        }
+      }
+
+      // Save current as previous for next poll
+      sessionStorage.setItem('mp_kpi_prev', JSON.stringify({
+        pending: s.pending, approved: s.approved, fulfilled: s.fulfilled,
+        total: s.total, responders: s.responders, fulfillment_rate: s.fulfillment_rate
+      }));
+
       const badge = document.getElementById('pendingBadge');
       badge.textContent = s.pending;
       badge.className = 'nav-badge' + (s.pending === 0 ? ' zero' : '');
+
+      // Update last-refreshed timestamp
+      const stamp = document.getElementById('lastUpdatedStamp');
+      if (stamp) stamp.textContent = 'Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     } catch(e) {}
   }
 
-  // Auto-refresh every 60s
+  // Auto-refresh every 30s; re-renders visible tab data and timestamps
   setInterval(async () => {
     await loadStats();
     if (activeTab === 'pending') {
@@ -966,6 +1089,11 @@
         renderPending();
       } catch(e) {}
     }
+  }, 30000);
+
+  // Re-render pending cards every 60s to keep time-in-queue badges accurate
+  setInterval(() => {
+    if (activeTab === 'pending' && pendingNeeds.length) renderPending();
   }, 60000);
 
   /* ═══════════════════════════════════════════
@@ -974,6 +1102,15 @@
   const URGENCY_COLOR = { urgent:'urg-urgent', high:'urg-high', medium:'urg-medium', low:'urg-low' };
   const CAT_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
   const STATUS_CLASS = { pending:'s-pending', active:'s-active', fulfilled:'s-fulfilled', closed:'s-closed' };
+
+  function escHtml(str) {
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function safeSrc(url) {
+    try { const u = new URL(url); return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '#'; }
+    catch { return '#'; }
+  }
 
   function staleDays(createdAt) {
     if (!createdAt) return 0;
@@ -985,6 +1122,16 @@
     if (d >= 7) return `<span class="stale-badge stale-crit">⚠ ${d}d old</span>`;
     if (d >= 3) return `<span class="stale-badge stale-warn">⏰ ${d}d old</span>`;
     return '';
+  }
+
+  function timeInQueue(createdAt) {
+    if (!createdAt) return '';
+    const mins = Math.floor((Date.now() - new Date(createdAt)) / 60000);
+    if (mins < 60)  return `<span class="tiq tiq-hot" title="In queue ${mins} minute${mins !== 1 ? 's' : ''}">⏱ ${mins}m</span>`;
+    const hrs = Math.floor(mins / 60);
+    if (mins < 1440) return `<span class="tiq tiq-warn" title="In queue ${hrs} hour${hrs !== 1 ? 's' : ''}">${hrs}h in queue</span>`;
+    const days = Math.floor(mins / 1440);
+    return `<span class="tiq tiq-stale" title="In queue ${days} day${days !== 1 ? 's' : ''}">⚠ ${days}d in queue</span>`;
   }
 
   // AI triage scoring — client-side, zero backend changes
@@ -1079,7 +1226,7 @@
             </span>
             <span style="font-size:12px;color:var(--text-2)">${CAT_EMOJI[n.category]||'📦'} ${n.category}</span>
             ${triageBadge(n)}
-            ${staleBadge(n.created_at)}
+            ${timeInQueue(n.created_at)}
           </div>
           <div class="pc-meta">${n.city}, ${n.state} ${n.zip} &nbsp;·&nbsp; ${n.family_adults} adult${n.family_adults!==1?'s':''}, ${n.family_children} child${n.family_children!==1?'ren':''} &nbsp;·&nbsp; ${n.navigator_org || 'No org'}</div>
           <div class="pc-desc">${n.description.slice(0,160)}${n.description.length>160?'…':''}</div>
@@ -1275,22 +1422,33 @@
           <tbody>
             ${data.items.map(n => `
               <tr>
-                <td><a href="need.html?id=${n.id}" style="color:var(--text-3);font-family:monospace;font-size:12px">#${n.case_number}</a></td>
-                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;cursor:pointer;color:var(--teal)" title="${n.title.replace(/"/g,'&quot;')}" onclick="openAllNeedModal('${n.id}')">${n.title}</td>
-                <td style="color:var(--text-2)">${CAT_EMOJI[n.category]||''} ${n.category}</td>
-                <td><span class="urgency-dot ${URGENCY_COLOR[n.urgency]}"></span><span style="color:var(--text-2)">${n.urgency}</span></td>
+                <td><a href="need.html?id=${escHtml(n.id)}" style="color:var(--text-3);font-family:monospace;font-size:12px">#${escHtml(n.case_number)}</a></td>
+                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;cursor:pointer;color:var(--teal)" title="${escHtml(n.title)}" data-need-id="${escHtml(n.id)}" data-action="view-need">${escHtml(n.title)}</td>
+                <td style="color:var(--text-2)">${escHtml(CAT_EMOJI[n.category]||'')} ${escHtml(n.category)}</td>
+                <td><span class="urgency-dot ${escHtml(URGENCY_COLOR[n.urgency]||'')}"></span><span style="color:var(--text-2)">${escHtml(n.urgency)}</span></td>
                 <td>${triageBadge(n)}</td>
-                <td style="color:var(--text-2)">${n.city}, ${n.state}</td>
-                <td><span class="status-pill ${STATUS_CLASS[n.status]||''}">${n.status}</span></td>
+                <td style="color:var(--text-2)">${escHtml(n.city)}, ${escHtml(n.state)}</td>
+                <td><span class="status-pill ${escHtml(STATUS_CLASS[n.status]||'')}">${escHtml(n.status)}</span></td>
                 <td>${staleBadge(n.created_at) || `<span style="font-size:11px;color:var(--text-3)">${staleDays(n.created_at)}d</span>`}</td>
                 <td style="display:flex;gap:6px">
-                  <button class="btn" style="background:var(--blue-bg);color:var(--blue);border:1px solid rgba(88,166,255,0.25)" onclick="openAllNeedModal('${n.id}')">View</button>
-                  ${n.status==='pending'?`<button class="btn btn-approve" onclick="approveSingle('${n.id}')">Approve</button>`:''}
-                  <button class="btn btn-delete" onclick="deleteNeed('${n.id}','${n.title.replace(/'/g,"\\'")}')">Delete</button>
+                  <button class="btn" style="background:var(--blue-bg);color:var(--blue);border:1px solid rgba(88,166,255,0.25)" data-need-id="${escHtml(n.id)}" data-action="view-need">View</button>
+                  ${n.status==='pending'?`<button class="btn btn-approve" data-need-id="${escHtml(n.id)}" data-action="approve-need">Approve</button>`:''}
+                  <button class="btn btn-delete" data-need-id="${escHtml(n.id)}" data-need-title="${escHtml(n.title)}" data-action="delete-need">Delete</button>
                 </td>
               </tr>`).join('')}
           </tbody>
         </table>`;
+      // Wire up data-action buttons (safe — no inline onclick with user data)
+      document.getElementById('allNeedsContent').querySelectorAll('[data-action]').forEach(el => {
+        el.addEventListener('click', () => {
+          const action = el.dataset.action;
+          const id = el.dataset.needId;
+          const title = el.dataset.needTitle;
+          if (action === 'view-need') openAllNeedModal(id);
+          else if (action === 'approve-need') approveSingle(id);
+          else if (action === 'delete-need') deleteNeed(id, title);
+        });
+      });
       const pag = document.getElementById('allPagination');
       pag.style.display = allPages > 1 ? 'flex' : 'none';
       document.getElementById('allPageInfo').textContent = `Page ${allPage} / ${allPages}`;
@@ -1692,7 +1850,7 @@
               <div style="font-size:12px;color:var(--text-2);margin-top:3px">${r.category} · ${[r.city,r.state].filter(Boolean).join(', ')||'—'}</div>
               ${r.description?`<div style="font-size:12px;color:var(--text-2);margin-top:4px">${r.description}</div>`:''}
               ${r.phone?`<div style="font-size:12px;color:var(--text-2);margin-top:3px">📞 ${r.phone}</div>`:''}
-              ${r.website?`<div style="font-size:12px;margin-top:3px"><a href="${r.website}" target="_blank" style="color:var(--teal)">🔗 ${r.website}</a></div>`:''}
+              ${r.website?`<div style="font-size:12px;margin-top:3px"><a href="${escHtml(safeSrc(r.website))}" target="_blank" rel="noopener noreferrer" style="color:var(--teal)">🔗 ${escHtml(r.website)}</a></div>`:''}
             </div>
             <div style="display:flex;gap:8px;flex-shrink:0">
               <button onclick="approveResource('${r.id}')" class="btn btn-approve">Approve</button>
@@ -1700,7 +1858,14 @@
             </div>
           </div>
         </div>`).join('');
-    } catch(e) { el.innerHTML = `<div class="empty" style="color:var(--red)">${e.message}</div>`; }
+    } catch(e) {
+      const errDiv = document.createElement('div');
+      errDiv.className = 'empty';
+      errDiv.style.color = 'var(--red)';
+      errDiv.textContent = e.message;
+      el.innerHTML = '';
+      el.appendChild(errDiv);
+    }
   }
 
   async function approveResource(id) {
@@ -1710,6 +1875,85 @@
   async function deleteResource(id) {
     if (!await showConfirmModal({ title: 'Delete Resource', message: 'This resource will be permanently removed.', confirmText: 'Delete', danger: true })) return;
     try { await apiDelete(`/resources/${id}`); toast('Resource deleted.'); loadResources(); }
+    catch(e) { toast(e.message, true); }
+  }
+
+  /* ═══════════════════════════════════════════
+     NONPROFITS
+  ═══════════════════════════════════════════ */
+  async function loadNonprofits() {
+    const el = document.getElementById('np-list');
+    el.innerHTML = '<div class="loading">Loading…</div>';
+    try {
+      const items = await apiGet('/nonprofits/admin/all');
+      if (!items.length) {
+        el.innerHTML = '<div class="empty"><div class="empty-icon">🏛️</div>No nonprofits yet. Add one using the form.</div>';
+        return;
+      }
+      el.innerHTML = items.map(n => {
+        const services = n.services ? n.services.split(',').map(s => `<span style="background:#e6f5f6;color:#0D7A8A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase">${escHtml(s.trim())}</span>`).join(' ') : '';
+        const location = [n.city, n.state, n.zipcode].filter(Boolean).join(', ');
+        return `
+          <div style="padding:16px 0;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px">
+                  ${escHtml(n.name)}
+                  <span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;background:${n.is_active?'#d1fae5':'#fee2e2'};color:${n.is_active?'#065f46':'#991b1b'}">${n.is_active?'Active':'Inactive'}</span>
+                </div>
+                ${location ? `<div style="font-size:12px;color:var(--text-2);margin-top:3px">📍 ${escHtml(location)}</div>` : ''}
+                ${services ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${services}</div>` : ''}
+                ${n.phone ? `<div style="font-size:12px;color:var(--text-2);margin-top:4px">📞 ${escHtml(n.phone)}</div>` : ''}
+                ${n.website ? `<div style="font-size:12px;margin-top:3px"><a href="${escHtml(n.website)}" target="_blank" rel="noopener noreferrer" style="color:var(--teal)">🔗 ${escHtml(n.website)}</a></div>` : ''}
+                ${n.lat ? `<div style="font-size:11px;color:#94a3b8;margin-top:4px">📌 ${n.lat.toFixed(4)}, ${n.lng.toFixed(4)}</div>` : '<div style="font-size:11px;color:#f59e0b;margin-top:4px">⚠️ No coordinates — zipcode may be invalid</div>'}
+              </div>
+              <button onclick="deleteNonprofit('${escHtml(n.id)}')" class="btn btn-delete" style="flex-shrink:0">Delete</button>
+            </div>
+          </div>`;
+      }).join('');
+    } catch(e) {
+      el.innerHTML = `<div class="empty" style="color:var(--red)">${escHtml(e.message)}</div>`;
+    }
+  }
+
+  async function addNonprofit() {
+    const name = document.getElementById('np-name').value.trim();
+    const zip  = document.getElementById('np-zip').value.trim();
+    if (!name) { toast('Name is required.', true); return; }
+    if (!zip)  { toast('Zipcode is required for map placement.', true); return; }
+
+    const checked = [...document.querySelectorAll('#np-services-picker input[type=checkbox]:checked')];
+    const services = checked.map(c => c.value).join(',');
+
+    const payload = {
+      name,
+      description: document.getElementById('np-desc').value.trim() || null,
+      services: services || null,
+      address:  document.getElementById('np-address').value.trim() || null,
+      city:     document.getElementById('np-city').value.trim() || null,
+      state:    document.getElementById('np-state').value.trim().toUpperCase() || null,
+      zipcode:  zip,
+      phone:    document.getElementById('np-phone').value.trim() || null,
+      email:    document.getElementById('np-email').value.trim() || null,
+      website:  document.getElementById('np-website').value.trim() || null,
+      is_active: true,
+    };
+
+    try {
+      await apiPost('/nonprofits', payload);
+      toast('✓ Nonprofit added and geocoded.');
+      // Clear form
+      ['np-name','np-desc','np-address','np-city','np-state','np-zip','np-phone','np-email','np-website'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.querySelectorAll('#np-services-picker input[type=checkbox]').forEach(c => { c.checked = false; });
+      loadNonprofits();
+    } catch(e) { toast(e.message, true); }
+  }
+
+  async function deleteNonprofit(id) {
+    if (!await showConfirmModal({ title: 'Remove Nonprofit', message: 'This nonprofit will be removed from the public Find Help page.', confirmText: 'Remove', danger: true })) return;
+    try { await apiDelete(`/nonprofits/${id}`); toast('Nonprofit removed.'); loadNonprofits(); }
     catch(e) { toast(e.message, true); }
   }
 
