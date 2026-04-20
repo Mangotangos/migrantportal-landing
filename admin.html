@@ -134,9 +134,11 @@
     .stats-row { display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px; }
     .stat-card {
       background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;
-      position:relative;overflow:hidden;transition:border-color .2s;
+      position:relative;overflow:hidden;transition:border-color .2s,background .2s;
     }
-    .stat-card:hover { border-color:var(--border-2); }
+    .stat-card[data-filter] { cursor:pointer; }
+    .stat-card[data-filter]:hover { border-color:var(--border-2);background:var(--surface-2); }
+    .stat-card[data-filter].kpi-active { border-color:var(--teal);box-shadow:0 0 0 2px rgba(0,199,207,.18); }
     .stat-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px; }
     .stat-card.c-orange::before { background:var(--orange); }
     .stat-card.c-teal::before   { background:var(--teal); }
@@ -518,7 +520,10 @@
       <kbd>⌘K</kbd>
     </button>
     <div class="live-dot" title="Live — auto-refreshes every 60s"></div>
-    <span class="topbar-name" id="adminName" style="cursor:pointer" onclick="openAdminSettings()" title="Click to edit"></span>
+    <button onclick="openAdminSettings()" style="display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--text);font-size:13px;font-weight:600;transition:all .15s;" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--border-2)'">
+      <span id="adminName"></span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--text-3)"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
     <button class="btn-logout" onclick="logout()">Logout</button>
   </div>
 </header>
@@ -581,11 +586,11 @@
 
     <!-- Stats — always visible -->
     <div class="stats-row">
-      <div class="stat-card c-orange"><div class="stat-label">Pending</div><div class="stat-value v-orange" id="sPending">—</div></div>
-      <div class="stat-card c-teal"><div class="stat-label">Active</div><div class="stat-value v-teal" id="sActive">—</div></div>
-      <div class="stat-card c-green"><div class="stat-label">Fulfilled</div><div class="stat-value v-green" id="sFulfilled">—</div></div>
-      <div class="stat-card c-neutral"><div class="stat-label">Total Needs</div><div class="stat-value v-neutral" id="sTotal">—</div></div>
-      <div class="stat-card c-neutral"><div class="stat-label">Responders</div><div class="stat-value v-neutral" id="sResponders">—</div></div>
+      <div class="stat-card c-orange" data-filter="pending" onclick="kpiFilter('pending')" title="View pending needs"><div class="stat-label">Pending</div><div class="stat-value v-orange" id="sPending">—</div></div>
+      <div class="stat-card c-teal" data-filter="active" onclick="kpiFilter('active')" title="View active needs"><div class="stat-label">Active</div><div class="stat-value v-teal" id="sActive">—</div></div>
+      <div class="stat-card c-green" data-filter="fulfilled" onclick="kpiFilter('fulfilled')" title="View fulfilled needs"><div class="stat-label">Fulfilled</div><div class="stat-value v-green" id="sFulfilled">—</div></div>
+      <div class="stat-card c-neutral" data-filter="all" onclick="kpiFilter('all')" title="View all needs"><div class="stat-label">Total Needs</div><div class="stat-value v-neutral" id="sTotal">—</div></div>
+      <div class="stat-card c-neutral" data-filter="users" onclick="kpiFilter('users')" title="Manage responders"><div class="stat-label">Responders</div><div class="stat-value v-neutral" id="sResponders">—</div></div>
       <div class="stat-card c-teal"><div class="stat-label">Fulfillment %</div><div class="stat-value v-teal" id="sRate">—</div></div>
     </div>
 
@@ -836,6 +841,28 @@
   </div>
 </div>
 
+<!-- KEYBOARD SHORTCUT OVERLAY -->
+<div id="shortcutsOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center" onclick="closeShortcuts(event)">
+  <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:16px;padding:28px 32px;max-width:460px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.5)" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <span style="font-size:15px;font-weight:800;color:var(--text-1)">Keyboard Shortcuts</span>
+      <button onclick="closeShortcuts()" style="background:none;border:none;color:var(--text-3);font-size:18px;cursor:pointer;padding:0 4px">✕</button>
+    </div>
+    <div style="display:grid;gap:8px;font-size:13px">
+      <div style="color:var(--text-3);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-top:4px">Navigation</div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">Open command bar</span><span><kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">⌘K</kbd></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">Show this help</span><span><kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">?</kbd></span></div>
+      <div style="color:var(--text-3);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-top:8px">Pending Queue</div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">Move down / up</span><span><kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">J</kbd> <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">K</kbd></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">Approve focused need</span><span><kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">A</kbd></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">Reject focused need</span><span><kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">R</kbd></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">Select / deselect (for bulk)</span><span><kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">X</kbd></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">Clear focus / close</span><span><kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px">Esc</kbd></span></div>
+    </div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--text-3);text-align:center">Click a KPI card to filter the needs list</div>
+  </div>
+</div>
+
 <!-- NEED DETAIL MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
@@ -877,6 +904,27 @@
     if (name === 'resources')     loadResources();
     if (name === 'disbursements') loadDisbursements();
     if (name === 'audit')         loadAuditLog();
+  }
+
+  function kpiFilter(filter) {
+    // Clear any previous active KPI card
+    document.querySelectorAll('.stat-card[data-filter]').forEach(c => c.classList.remove('kpi-active'));
+    const card = document.querySelector(`.stat-card[data-filter="${filter}"]`);
+    if (card) card.classList.add('kpi-active');
+
+    if (filter === 'pending') {
+      switchTab('pending');
+    } else if (filter === 'users') {
+      switchTab('users');
+    } else {
+      // Navigate to All Needs and apply status filter
+      switchTab('all');
+      const sel = document.getElementById('allStatus');
+      if (sel) {
+        sel.value = (filter === 'all') ? '' : filter;
+        goAllPage(1);
+      }
+    }
   }
 
   /* ═══════════════════════════════════════════
@@ -1016,7 +1064,7 @@
   function renderPending() {
     const el = document.getElementById('pendingList');
     if (!pendingNeeds.length) {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>Queue is clear — all caught up.</div>';
+      el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div><div style="margin-bottom:16px;font-weight:600;color:var(--text-2)">Queue is clear — all caught up.</div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" onclick="kpiFilter(\'all\')" style="font-size:12px">📋 All Needs</button><button class="btn" onclick="switchTab(\'reports\')" style="font-size:12px">📊 Reports</button><button class="btn" onclick="switchTab(\'users\')" style="font-size:12px">👥 Manage Users</button><button class="btn" onclick="switchTab(\'announcements\')" style="font-size:12px">📢 Announcements</button></div></div>';
       return;
     }
     el.innerHTML = pendingNeeds.map((n, i) => `
@@ -1702,7 +1750,7 @@
                         <button class="btn btn-reject" onclick="rejectDisbursement('${d.id}')">Reject</button>
                       </div>
                     </div>`:''}
-                  ${d.status==='sent'?`<span style="font-size:11px;color:var(--text-3)">Awaiting receipt</span>`:''}
+                  ${d.status==='sent'?`<div style="display:flex;flex-direction:column;gap:5px;align-items:flex-start"><span style="font-size:11px;color:var(--text-3)">Awaiting receipt</span><button class="btn btn-approve" onclick="showReceiptModal('${d.id}')" style="font-size:11px;padding:4px 10px">📄 Upload Receipt</button></div>`:''}
                   ${d.status==='confirmed'&&d.receipt_url?`<a href="${API}${d.receipt_url}" target="_blank" style="font-size:12px;font-weight:600;color:var(--teal)">📄 View Receipt</a>`:''}
                 </td>
               </tr>`).join('')}
@@ -1839,6 +1887,16 @@
     document.getElementById('cmdInput').value = '';
   }
 
+  function toggleShortcuts() {
+    const el = document.getElementById('shortcutsOverlay');
+    const isOpen = el.style.display === 'flex';
+    el.style.display = isOpen ? 'none' : 'flex';
+  }
+  function closeShortcuts(e) {
+    if (e && e.target !== document.getElementById('shortcutsOverlay')) return;
+    document.getElementById('shortcutsOverlay').style.display = 'none';
+  }
+
   function renderCmdList(q) {
     const tabs = q ? CMD_ITEMS.filter(i => i.label.toLowerCase().includes(q.toLowerCase())) : CMD_ITEMS;
     const isCaseNum = q && /^\d{3,}$/.test(q.trim());
@@ -1920,6 +1978,7 @@
       if (e.key === 'k') { e.preventDefault(); openCmd(); }
       return;
     }
+    if (e.key === '?') { e.preventDefault(); toggleShortcuts(); return; }
 
     if (activeTab === 'pending') {
       const cards = document.querySelectorAll('.pending-card');
@@ -1951,6 +2010,7 @@
     }
 
     if (e.key === 'Escape') {
+      document.getElementById('shortcutsOverlay').style.display = 'none';
       document.getElementById('modalOverlay').classList.remove('open');
       document.getElementById('cmdOverlay').classList.remove('open');
     }
@@ -2286,7 +2346,77 @@
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.getElementById('adminSettingsOverlay').classList.contains('open')) closeAdminSettings();
+    if (e.key === 'Escape') closeReceiptModal();
   });
+
+  /* ── Receipt Upload Modal ── */
+  let _receiptDisbId = null;
+
+  function showReceiptModal(id) {
+    _receiptDisbId = id;
+    document.getElementById('receipt-url-input').value = '';
+    document.getElementById('receipt-note-input').value = '';
+    document.getElementById('receipt-alert').style.display = 'none';
+    const btn = document.getElementById('receipt-submit-btn');
+    btn.disabled = false; btn.textContent = 'Submit Receipt';
+    document.getElementById('receipt-modal').style.display = 'flex';
+  }
+
+  function closeReceiptModal() {
+    document.getElementById('receipt-modal').style.display = 'none';
+    _receiptDisbId = null;
+  }
+
+  async function submitReceipt() {
+    const url = document.getElementById('receipt-url-input').value.trim();
+    const note = document.getElementById('receipt-note-input').value.trim() || null;
+    const alertEl = document.getElementById('receipt-alert');
+    const btn = document.getElementById('receipt-submit-btn');
+
+    if (!url) {
+      alertEl.textContent = 'Please enter a receipt URL.';
+      alertEl.style.display = 'block';
+      return;
+    }
+    alertEl.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Submitting…';
+
+    try {
+      await apiPost(`/admin/disbursements/${_receiptDisbId}/receipt`, { receipt_url: url, note });
+      closeReceiptModal();
+      toast('✓ Receipt submitted and disbursement confirmed.');
+      loadDisbursements();
+    } catch(e) {
+      alertEl.textContent = e.message || 'Failed to submit receipt. Please try again.';
+      alertEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Submit Receipt';
+    }
+  }
   </script>
+
+  <!-- RECEIPT UPLOAD MODAL -->
+  <div id="receipt-modal" onclick="if(event.target===this)closeReceiptModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:14px;padding:28px;width:100%;max-width:440px;margin:20px;box-shadow:0 8px 40px rgba(0,0,0,.3)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div style="font-size:17px;font-weight:800;color:var(--text)">📄 Submit Receipt</div>
+        <button onclick="closeReceiptModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-3);line-height:1">×</button>
+      </div>
+      <div id="receipt-alert" style="display:none;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:14px"></div>
+      <div style="display:grid;gap:12px">
+        <div>
+          <label style="font-size:11px;font-weight:700;color:var(--text-3);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Receipt URL *</label>
+          <input id="receipt-url-input" type="url" placeholder="https://drive.google.com/… or https://imgur.com/…"
+            style="width:100%;padding:9px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface-2);color:var(--text);outline:none" />
+          <div style="font-size:11px;color:var(--text-3);margin-top:4px">Upload your receipt image to Google Drive, Dropbox, or Imgur and paste the link here.</div>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:700;color:var(--text-3);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">Note (optional)</label>
+          <textarea id="receipt-note-input" rows="2" placeholder="Any notes about this receipt…"
+            style="width:100%;padding:9px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;background:var(--surface-2);color:var(--text);outline:none"></textarea>
+        </div>
+        <button id="receipt-submit-btn" onclick="submitReceipt()" style="width:100%;padding:11px;background:var(--teal);color:white;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s">Submit Receipt</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
