@@ -635,13 +635,13 @@
           </div>
           <div class="field">
             <label for="org-pw">Password <span style="color:#dc2626">*</span></label>
-            <input type="password" id="org-pw" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" oninput="checkOrgAccount(); updateStrength(this.value)" />
+            <input type="password" id="org-pw" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" oninput="checkOrgAccount(); updateOrgStrength(this.value)" />
             <div style="margin-top:8px">
               <div style="display:flex;gap:4px;margin-bottom:4px">
-                <div class="str-seg" id="str-1"></div><div class="str-seg" id="str-2"></div>
-                <div class="str-seg" id="str-3"></div><div class="str-seg" id="str-4"></div>
+                <div class="str-seg" id="org-str-1"></div><div class="str-seg" id="org-str-2"></div>
+                <div class="str-seg" id="org-str-3"></div><div class="str-seg" id="org-str-4"></div>
               </div>
-              <span id="str-label" style="font-size:12px;color:var(--gray-400)"></span>
+              <span id="org-str-label" style="font-size:12px;color:var(--gray-400)"></span>
             </div>
           </div>
           <div class="field">
@@ -775,6 +775,22 @@
         else if (i === n)  seg.classList.add('active');
       }
       document.getElementById('prog-back-btn').classList.toggle('hidden', n === 1);
+    }
+
+    function updateOrgStrength(pw) {
+      let score = 0;
+      if (pw.length >= 8)  score++;
+      if (pw.length >= 12) score++;
+      if (/[0-9]/.test(pw) || /[^a-zA-Z0-9]/.test(pw)) score++;
+      if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+      const colors = ['', '#ef4444', '#f97316', '#eab308', '#22c55e'];
+      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById('org-str-' + i).style.background = i <= score ? colors[score] : 'var(--gray-200)';
+      }
+      const lbl = document.getElementById('org-str-label');
+      lbl.textContent = pw.length ? labels[score] : '';
+      lbl.style.color = colors[score] || 'var(--gray-400)';
     }
 
     function checkOrgServices() {
