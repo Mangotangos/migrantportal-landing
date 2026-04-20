@@ -389,10 +389,11 @@
       const state = document.getElementById('state').value.trim().toUpperCase();
       const zip = document.getElementById('zip').value.trim();
 
-      if (!title) return showError('Please enter a title for this need.');
+      if (!title || title.length < 5) return showError('Title must be at least 5 characters.');
       if (!category) return showError('Please select a category.');
-      if (!city || !state || !zip) return showError('Please fill in city, state, and ZIP.');
-      if (!description) return showError('Please add a description of the need.');
+      if (!city || !state) return showError('Please fill in city and state.');
+      if (!/^\d{5}(-\d{4})?$/.test(zip)) return showError('Please enter a valid 5-digit ZIP code (e.g. 64108).');
+      if (!description || description.length < 20) return showError('Description must be at least 20 characters.');
 
       // Collect items (ignore incomplete rows)
       const itemsPayload = items

@@ -440,18 +440,6 @@
         <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">This helps us connect you with the right needs and partners.</p>
         <div class="fields">
           <div class="field">
-            <label for="hear2">How did you hear about MigrantPortal?</label>
-            <select id="hear2" name="hear2" onchange="checkStep4()">
-              <option value="">Select one...</option>
-              <option>From a faith community or faith community</option>
-              <option>From a caseworker or social worker</option>
-              <option>Friend or family member</option>
-              <option>Social media</option>
-              <option>Internet search</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="field" style="display:none">
             <label for="interest">What type of needs would you like to help with?</label>
             <select id="interest">
               <option value="any">Any / all types</option>
@@ -523,7 +511,11 @@
           Thanks for joining MigrantPortal. We've sent a confirmation to your email.<br /><br />
           You'll receive notifications when migrant families in your area have urgent needs you can help with.
         </p>
-        <a href="/" class="btn-home">Go to Homepage</a>
+        <div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:10px;padding:16px;margin:16px 0;text-align:left">
+          <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:6px">📧 Check Your Email</div>
+          <p style="font-size:13px;color:#1e40af;margin:0;line-height:1.5">We sent a verification link to your email address. Click it to verify your account — check your inbox and spam folder.</p>
+        </div>
+        <a href="pending.html" class="btn-home">View Application Status</a>
       </div>
 
     </div>
@@ -641,7 +633,12 @@
       selectedLocations.forEach(loc => {
         const tag = document.createElement('div');
         tag.className = 'loc-tag';
-        tag.innerHTML = `${loc} <button onclick="removeTag('${loc}')" aria-label="Remove ${loc}">×</button>`;
+        tag.textContent = loc + ' ';
+        const removeBtn = document.createElement('button');
+        removeBtn.setAttribute('aria-label', `Remove ${loc}`);
+        removeBtn.textContent = '×';
+        removeBtn.addEventListener('click', () => removeTag(loc));
+        tag.appendChild(removeBtn);
         container.appendChild(tag);
       });
     }
@@ -736,6 +733,7 @@
 
       btn.disabled = true;
       btn.textContent = 'Creating account…';
+      document.querySelectorAll('#step-5 input, #step-5 select, #step-5 textarea').forEach(el => { el.disabled = true; });
 
       const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
       const role = serveChoice === 'church' ? 'navigator' : 'responder';
@@ -749,10 +747,7 @@
         goTo(6);
         if (data.user?.status === 'pending') {
           // Do NOT save session — pending users must wait for admin approval
-          document.getElementById('success-icon').textContent = '⏳';
-          document.getElementById('success-heading').textContent = 'Application Submitted!';
-          document.getElementById('success-text').innerHTML = 'Thanks for joining MigrantPortal.<br /><br />Your account is <strong>pending admin approval</strong>. You\'ll receive a notification once approved (usually 1–2 business days).';
-          setTimeout(() => window.location.href = '/pending.html', 2000);
+          window.location.href = '/pending.html';
         } else {
           saveSession(data.access_token, data.user);
           const dest = role === 'navigator' ? 'org-dashboard.html' : 'dashboard.html';
