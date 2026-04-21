@@ -69,23 +69,32 @@
   <div class="page">
     <div class="card">
       <div class="icon">⏳</div>
-      <h1>Application Submitted, <span class="name" id="user-name">Friend</span>!</h1>
-      <p>Your account is <strong>pending admin review</strong>. We verify all users to protect the migrant families we serve.</p>
+      <h1>Application Submitted!</h1>
 
       <div class="steps">
         <h3>What happens next</h3>
         <div class="step-row">
           <div class="step-num">1</div>
-          <div>Our team reviews your application (usually 1–2 business days)</div>
+          <div>Check <strong id="user-email">your email</strong> for updates on your application</div>
         </div>
         <div class="step-row">
           <div class="step-num">2</div>
-          <div>You'll receive an email at <strong id="user-email">your email</strong> once approved</div>
+          <div>Our team reviews your application (usually 1–2 business days)</div>
         </div>
         <div class="step-row">
           <div class="step-num">3</div>
+          <div>You'll receive an email once your account is approved</div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">4</div>
           <div>Sign in to access your dashboard and start serving</div>
         </div>
+      </div>
+
+      <div id="verify-reminder" style="background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:16px;margin:20px 0;text-align:left;display:none">
+        <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:8px">📧 Verify Your Email</div>
+        <p style="font-size:13px;color:#1e40af;margin-bottom:12px;line-height:1.5">We'll email you once your application has been reviewed. Check your inbox (and spam folder) so you don't miss it.</p>
+        <button onclick="resendVerificationEmail()" style="background:#1e40af;color:white;border:none;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s">Resend Verification Email</button>
       </div>
 
       <p style="font-size:13px">Questions? Email us at <a href="mailto:support@migrantportal.com" style="color:var(--teal)">support@migrantportal.com</a></p>
