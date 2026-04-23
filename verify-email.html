@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Verify your MigrantPortal email address to activate your account.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Email — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --teal:#009DA5; --orange:#FF6129; --navy:#172936; --text:#0D0D0D; --gray-600:#555; --gray-400:#999; --gray-200:#E8E8E8; --gray-100:#F4F4F4; }
+    body { font-family: 'Inter', sans-serif; background: #F0F2F5; min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: var(--teal); text-decoration: none; }
+
+    nav { background: white; border-bottom: 1px solid var(--gray-200); height: 64px; display: flex; align-items: center; padding: 0 40px; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px; color: var(--text); }
+
+    .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+    .card { background: white; border-radius: 14px; border: 1px solid var(--gray-200); padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+
+    .icon-wrap { width: 52px; height: 52px; border-radius: 12px; background: #eff6ff; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    h1 { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .sub { font-size: 14px; color: var(--gray-600); margin-bottom: 28px; line-height: 1.5; }
+
+    .btn { width: 100%; height: 44px; background: var(--orange); color: white; border: none; border-radius: 7px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
+    .btn:hover { background: #e05020; }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .alert { border-radius: 7px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .alert-error { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; }
+
+    .back-link { text-align: center; margin-top: 20px; font-size: 14px; color: var(--gray-600); }
+
+    .success-state { display: none; text-align: center; }
+    .success-icon-wrap { width: 64px; height: 64px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .success-state h2 { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .success-state p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
+
+    .invalid-state { display: none; text-align: center; }
+    .invalid-state h2 { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #dc2626; margin-bottom: 10px; }
+    .invalid-state p { font-size: 14px; color: var(--gray-600); line-height: 1.6; margin-bottom: 20px; }
+
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: white; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .form-state h2 { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .form-state { display: block; }
+
+    .code-input { width: 100%; height: 52px; border: 1.5px solid var(--gray-200); border-radius: 8px; font-size: 24px; font-weight: 700; letter-spacing: 6px; text-align: center; color: var(--navy); outline: none; margin-bottom: 12px; transition: border-color .15s; }
+    .code-input:focus { border-color: var(--teal); }
+    .resend-link { font-size: 13px; color: var(--gray-600); text-align: center; margin-top: 14px; }
+    .resend-link button { background: none; border: none; color: var(--teal); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; }
+    .alert-success { background: #f0fdf4; border: 1px solid #86efac; color: #16a34a; }
+  </style>
+<script>
+  (function() {
+    window.addEventListener('error', function(e) {
+      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      console.error('[MP Promise]', e.reason);
+    });
+  })();
+</script>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="logo.png" style="width:36px;height:36px;border-radius:8px;" alt="MigrantPortal" />
+      MigrantPortal
+    </a>
+    <a href="login.html" style="font-size:14px;font-weight:600;color:var(--teal);">← Back to Sign In</a>
+  </nav>
+
+  <div class="page">
+    <div class="card">
+
+      <!-- FORM STATE -->
+      <div id="formState" class="form-state">
+        <div class="icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <h2>Verify Your Email</h2>
+        <p class="sub">We're confirming your email address to complete your MigrantPortal registration.</p>
+
+        <div class="alert alert-error" id="alertError"></div>
+        <div class="alert alert-success" id="alertSuccess"></div>
+
+        <input class="code-input" id="codeInput" type="text" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="000000" autocomplete="one-time-code" />
+
+        <button class="btn" id="verifyBtn" onclick="handleVerify()">Verify Email</button>
+
+        <div class="resend-link">Didn't get the code? <button onclick="handleResend()">Resend</button></div>
+        <div class="back-link" style="margin-top:10px">Wrong account? <a href="login.html">Sign in</a></div>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div id="successState" class="success-state">
+        <div class="success-icon-wrap">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h2>Email Verified!</h2>
+        <p>Your email has been verified successfully. You can now sign in to access your MigrantPortal account.</p>
+        <a href="login.html" class="btn" style="text-decoration:none;display:flex;margin-top:24px">Sign In Now</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    // Must be logged in to verify
+    const mpUser = JSON.parse(localStorage.getItem('mp_user') || 'null');
+    if (!mpUser || !mpUser.token) {
+      window.location.href = 'login.html';
+    }
+
+    async function handleVerify() {
+      const err = document.getElementById('alertError');
+      const btn = document.getElementById('verifyBtn');
+      const code = document.getElementById('codeInput').value.trim();
+
+      err.style.display = 'none';
+      if (!code || code.length !== 6) {
+        err.textContent = 'Please enter the 6-digit code from your email.';
+        err.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> Verifying…';
+
+      try {
+        await apiPost('/auth/verify-email', { verification_code: code });
+        document.getElementById('formState').style.display = 'none';
+        document.getElementById('successState').style.display = 'block';
+      } catch (ex) {
+        err.textContent = ex.message || 'Verification failed. Please try again.';
+        err.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = 'Verify Email';
+      }
+    }
+
+    async function handleResend() {
+      const ok = document.getElementById('alertSuccess');
+      const err = document.getElementById('alertError');
+      err.style.display = 'none';
+      try {
+        await apiPost('/auth/send-verification-email', {});
+        ok.textContent = 'A new code has been sent to your email.';
+        ok.style.display = 'block';
+        setTimeout(() => { ok.style.display = 'none'; }, 4000);
+      } catch (ex) {
+        err.textContent = ex.message || 'Could not resend. Try again.';
+        err.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

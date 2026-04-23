@@ -29,8 +29,8 @@ async function apiPost(path, body) {
     credentials: 'include',
     body: JSON.stringify(body),
   });
-  const data = await r.json();
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
+  const data = await r.json();
   if (!r.ok) throw new Error(_extractDetail(data.detail));
   return data;
 }
@@ -49,16 +49,16 @@ async function apiPatch(path, body) {
     credentials: 'include',
     body: JSON.stringify(body),
   });
-  const data = await r.json();
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
+  const data = await r.json();
   if (!r.ok) throw new Error(_extractDetail(data.detail));
   return data;
 }
 
 async function apiGet(path) {
   const r = await _fetchWithRetry(path, { headers: _authHeaders(), credentials: 'include' });
-  const data = await r.json();
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
+  const data = await r.json();
   if (!r.ok) throw new Error(_extractDetail(data.detail));
   return data;
 }
@@ -92,7 +92,7 @@ async function logout() {
   _isLogoutInProgress = true;
   localStorage.removeItem('mp_user');
   localStorage.removeItem('mp_token');
-  try { await fetch(API + '/auth/logout', { method: 'POST', headers: _authHeaders(), credentials: 'include' }); } catch {}
+  try { await fetch(API + '/auth/logout', { method: 'POST', headers: _authHeaders(), credentials: 'include' }); } catch(e) { console.error('Logout error:', e); }
   window.location.replace('/login.html');
 }
 
