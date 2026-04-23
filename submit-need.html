@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Submit a new help request on MigrantPortal — connect families to resources.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit a Need — MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <style>
+    body { visibility: hidden; }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --teal:#009DA5; --orange:#FF6129; --blue:#0973A7; --navy:#172936; --text:#0D0D0D; --gray-600:#555; --gray-400:#999; --gray-200:#E8E8E8; --gray-100:#F4F4F4; --cream:#FAF7F0; }
     body { font-family: 'Inter', sans-serif; background: #F0F2F5; min-height: 100vh; display: flex; flex-direction: column; }
@@ -180,7 +182,17 @@
     <div class="alert alert-error" id="alertError"></div>
 
     <!-- FORM SECTION -->
-    <div id="formSection">
+    <!-- AUTH GATE — shown when not logged in or wrong role -->
+    <div id="authGate" style="display:none; max-width:480px; margin:40px auto; text-align:center; background:white; border:1px solid var(--gray-200); border-radius:14px; padding:48px 32px; box-shadow:0 2px 8px rgba(0,0,0,.06);">
+      <div style="width:56px;height:56px;border-radius:50%;background:#FFF5F0;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6129" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2 id="authGateTitle" style="font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--navy);margin-bottom:10px;">Login Required</h2>
+      <p id="authGateMsg" style="font-size:14px;color:var(--gray-600);margin-bottom:28px;line-height:1.6;">You must be logged in with an approved account to submit a family need.</p>
+      <a id="authGateBtn" href="login.html?next=submit-need.html" style="display:inline-block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px 32px;border-radius:8px;text-decoration:none;">Log In to Continue</a>
+    </div>
+
+    <div id="formSection" style="display:none;">
 
       <!-- STEP 1: NEED BASICS -->
       <div class="card">
@@ -312,7 +324,49 @@
 
   <script src="api.js"></script>
   <script>
-    requireAuth();
+    (function() {
+      document.body.style.visibility = 'visible';
+      var user = getUser();
+
+      // Not logged in
+      if (!user || !localStorage.getItem('mp_token')) {
+        document.getElementById('authGate').style.display = 'block';
+        return;
+      }
+
+      // Pending approval
+      if (user.status === 'pending') {
+        document.getElementById('authGateTitle').textContent = 'Account Pending Approval';
+        document.getElementById('authGateMsg').textContent = 'Your account is awaiting admin approval. You will be able to submit needs once approved.';
+        document.getElementById('authGateBtn').textContent = 'Go to Dashboard';
+        document.getElementById('authGateBtn').href = 'pending.html';
+        document.getElementById('authGate').style.display = 'block';
+        return;
+      }
+
+      // Rejected
+      if (user.status === 'rejected') {
+        document.getElementById('authGateTitle').textContent = 'Account Not Approved';
+        document.getElementById('authGateMsg').textContent = 'Your account was not approved. Contact support@migrantportal.com for help.';
+        document.getElementById('authGateBtn').textContent = 'Contact Support';
+        document.getElementById('authGateBtn').href = 'mailto:support@migrantportal.com';
+        document.getElementById('authGate').style.display = 'block';
+        return;
+      }
+
+      // Wrong role — only connectors and admins can submit needs
+      if (user.role !== 'connector' && user.role !== 'admin') {
+        document.getElementById('authGateTitle').textContent = 'Connector Account Required';
+        document.getElementById('authGateMsg').textContent = 'Only Connector accounts can submit family needs. If you believe this is an error, contact your administrator.';
+        document.getElementById('authGateBtn').textContent = 'Back to Dashboard';
+        document.getElementById('authGateBtn').href = 'dashboard.html';
+        document.getElementById('authGate').style.display = 'block';
+        return;
+      }
+
+      // Approved connector or admin — show the form
+      document.getElementById('formSection').style.display = 'block';
+    })();
 
     let urgency = 'medium';
     let adults = 1;

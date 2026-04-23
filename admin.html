@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="MigrantPortal admin dashboard — manage users, needs, and organizations.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin — MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
@@ -691,6 +692,15 @@
           </select>
         </div>
         <div id="usersContent"><div class="loading">Loading</div></div>
+        <!-- Deleted Users -->
+        <div class="card" id="deleted-users-card" style="margin-top:16px;display:none">
+          <div class="card-header">
+            <span class="card-title" style="color:var(--red)">🗑 Deleted Users</span>
+            <button class="btn btn-secondary" onclick="loadDeletedUsers()" style="margin-left:auto">Refresh</button>
+          </div>
+          <div id="deletedUsersContent" style="padding:8px 0"></div>
+        </div>
+
         <div class="pagination" id="usersPagination" style="display:none">
           <button id="usersPrev" onclick="goUsersPage(usersPage-1)">← Prev</button>
           <span class="page-info" id="usersPageInfo"></span>
@@ -952,6 +962,7 @@
 <div id="toast"></div>
 
 <script src="api.js"></script>
+<script src="notif-bell.js"></script>
 <script>
   const user = requireAuth();
   if (!user || user.role !== 'admin') {
@@ -974,7 +985,7 @@
     ALL_TABS.forEach(t => { document.getElementById('tab-' + t).style.display = t === name ? '' : 'none'; });
     activeTab = name;
     if (name === 'all')           loadAllNeeds();
-    if (name === 'users')         { loadPendingUsers(); loadUsers(); }
+    if (name === 'users')         { loadPendingUsers(); loadUsers(); loadDeletedUsers(); }
     if (name === 'reports')       loadReports();
     if (name === 'flagged')       loadFlagged();
     if (name === 'announcements') loadAnnouncements();
@@ -1548,7 +1559,7 @@
       document.getElementById('usersContent').innerHTML = `
         <table class="need-table">
           <thead><tr>
-            <th>Name</th><th>Email</th><th>Role</th><th>Org</th><th>Location</th><th>Joined</th><th>Change Role</th>
+            <th>Name</th><th>Email</th><th>Role</th><th>Org</th><th>Location</th><th>Joined</th><th>Change Role</th><th></th>
           </tr></thead>
           <tbody>
             ${usersCache.map(u => `
@@ -1566,6 +1577,9 @@
                     <option value="navigator" ${u.role==='navigator'?'selected':''}>navigator</option>
                     <option value="responder" ${u.role==='responder'?'selected':''}>responder</option>
                   </select>
+                </td>
+                <td>
+                  ${u.id !== user.id && u.role !== 'admin' ? `<button class="btn btn-delete" onclick="deleteUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Delete</button>` : ''}
                 </td>
               </tr>`).join('')}
           </tbody>
@@ -1585,6 +1599,49 @@
     if (!role) return;
     try { await apiPatch(`/admin/users/${userId}/role`, { role }); toast(`Role changed to ${role}.`); }
     catch(e) { toast(e.message, true); }
+  }
+
+  async function deleteUser(id, name) {
+    if (!await showConfirmModal({ title: 'Delete User', message: `Delete "${name}"? They will be locked out immediately. You can restore them from the Deleted Users section below.`, confirmText: 'Delete', danger: true })) return;
+    try {
+      await apiDelete(`/admin/users/${id}`);
+      toast('User deleted. Restore anytime from the Deleted Users section.');
+      loadUsers();
+      loadDeletedUsers();
+    } catch(e) { toast(e.message || 'Failed to delete user.', true); }
+  }
+
+  async function loadDeletedUsers() {
+    try {
+      const users = await apiGet('/admin/users/deleted');
+      const card = document.getElementById('deleted-users-card');
+      if (!users.length) { card.style.display = 'none'; return; }
+      card.style.display = '';
+      document.getElementById('deletedUsersContent').innerHTML = `
+        <table class="need-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Deleted</th><th></th></tr></thead>
+          <tbody>
+            ${users.map(u => `
+              <tr>
+                <td style="font-weight:600">${u.name}</td>
+                <td style="color:var(--text-2)">${u.email}</td>
+                <td><span class="status-pill s-pending">${u.role}</span></td>
+                <td style="color:var(--text-3);font-size:12px">${u.deleted_at || '—'}</td>
+                <td><button class="btn btn-approve" onclick="restoreUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Restore</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+    } catch(e) { /* silently skip if endpoint unavailable */ }
+  }
+
+  async function restoreUser(id, name) {
+    if (!await showConfirmModal({ title: 'Restore User', message: `Restore "${name}"? They will be able to sign in again.`, confirmText: 'Restore', danger: false })) return;
+    try {
+      await apiPost(`/admin/users/${id}/restore`, {});
+      toast(`✓ ${name} restored.`);
+      loadUsers();
+      loadDeletedUsers();
+    } catch(e) { toast(e.message || 'Failed to restore user.', true); }
   }
 
   async function exportUsersCSV() {
@@ -2006,7 +2063,7 @@
                       </div>
                     </div>`:''}
                   ${d.status==='sent'?`<div style="display:flex;flex-direction:column;gap:5px;align-items:flex-start"><span style="font-size:11px;color:var(--text-3)">Awaiting receipt</span><button class="btn btn-approve" onclick="showReceiptModal('${d.id}')" style="font-size:11px;padding:4px 10px">📄 Upload Receipt</button></div>`:''}
-                  ${d.status==='confirmed'&&d.receipt_url?`<a href="${API}${d.receipt_url}" target="_blank" style="font-size:12px;font-weight:600;color:var(--teal)">📄 View Receipt</a>`:''}
+                  ${d.status==='confirmed'&&d.receipt_url?`<a href="${API}${d.receipt_url}"  target="_blank" rel="noopener noreferrer" style="font-size:12px;font-weight:600;color:var(--teal)">📄 View Receipt</a>`:''}
                 </td>
               </tr>`).join('')}
           </tbody>

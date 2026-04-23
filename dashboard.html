@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="MigrantPortal dashboard — view your impact, needs, and connections.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
   <style>
@@ -605,7 +606,10 @@
     <!-- DONATIONS -->
     <div id="donations-section" class="full-sec" style="display:none">
       <div class="card">
-        <div class="full-sec-hd"><h2>My Donations</h2></div>
+        <div class="full-sec-hd">
+          <h2>My Donations</h2>
+          <button onclick="showDonateModal()" style="font-size:12px;font-weight:700;color:white;background:var(--primary);border:none;border-radius:8px;padding:7px 14px;cursor:pointer">+ Make a Donation</button>
+        </div>
         <div id="donations-list" aria-live="polite"><div style="color:var(--text-sub);font-size:13px;padding:20px 0">Loading…</div></div>
       </div>
     </div>
@@ -641,6 +645,45 @@
         <button onclick="document.getElementById('progress-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-sub)">×</button>
       </div>
       <div id="progress-modal-body" style="overflow-y:auto;flex:1"></div>
+    </div>
+  </div>
+
+  <!-- DONATE MODAL -->
+  <div id="donate-modal" onclick="if(event.target===this)closeDonateModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border-radius:16px;padding:28px;width:100%;max-width:420px;margin:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--text)">💝 Make a Donation</div>
+        <button onclick="closeDonateModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-sub);line-height:1">×</button>
+      </div>
+      <div id="donate-alert" style="display:none;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:14px"></div>
+      <div style="display:grid;gap:12px">
+        <div>
+          <label style="font-size:12px;font-weight:700;color:var(--text-sub);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Amount (USD) *</label>
+          <div style="position:relative">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;font-weight:700;color:var(--text-sub)">$</span>
+            <input id="donate-amount" type="number" min="1" step="0.01" placeholder="0.00"
+              style="width:100%;padding:10px 12px 10px 28px;border:1px solid var(--border);border-radius:8px;font-size:15px;font-weight:700;font-family:inherit;background:var(--surface);color:var(--text)" />
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="setDonateAmount(10)"  style="flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--text)">$10</button>
+          <button onclick="setDonateAmount(25)"  style="flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--text)">$25</button>
+          <button onclick="setDonateAmount(50)"  style="flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--text)">$50</button>
+          <button onclick="setDonateAmount(100)" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--text)">$100</button>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:var(--text-sub);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Linked Need (optional)</label>
+          <input id="donate-need-id" type="text" placeholder="Paste need ID or leave blank for general fund"
+            style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)" />
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:var(--text-sub);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Note (optional)</label>
+          <textarea id="donate-note" rows="2" placeholder="Add a message with your donation…"
+            style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;background:var(--surface);color:var(--text)"></textarea>
+        </div>
+        <p style="font-size:12px;color:var(--text-sub);line-height:1.5;margin:0">Your donation helps fulfill needs for migrant families. 100% goes directly to verified needs.</p>
+        <button id="donate-submit-btn" onclick="submitDonation()" style="width:100%;padding:12px;background:var(--primary);color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s">Donate Now</button>
+      </div>
     </div>
   </div>
 
@@ -731,7 +774,32 @@
         const visible = anns.filter(a => !_dismissedAnns.includes(a.id));
         if (!visible.length) { banner.style.display = 'none'; return; }
         banner.style.display = 'flex';
-        banner.innerHTML = visible.map(a => `<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:10px;border:1.5px solid ${a.urgent?'#FECACA':'#BFDBFE'};background:${a.urgent?'#FEF2F2':'#EFF6FF'}"><span style="font-size:18px;flex-shrink:0">${a.urgent?'⚠️':'📢'}</span><div style="flex:1"><div style="font-weight:700;font-size:13px;color:${a.urgent?'#B91C1C':'#1D4ED8'};margin-bottom:2px">${a.title}</div><div style="font-size:12px;color:#374151;line-height:1.5">${a.body}</div></div><button onclick="dismissAnn('${a.id}',this.parentElement)" style="background:none;border:none;cursor:pointer;font-size:18px;color:#9CA3AF;flex-shrink:0;padding:0">×</button></div>`).join('');
+        banner.innerHTML = '';
+        visible.forEach(a => {
+          const wrap = document.createElement('div');
+          wrap.style.cssText = `display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:10px;border:1.5px solid ${a.urgent?'#FECACA':'#BFDBFE'};background:${a.urgent?'#FEF2F2':'#EFF6FF'}`;
+          const icon = document.createElement('span');
+          icon.style.cssText = 'font-size:18px;flex-shrink:0';
+          icon.textContent = a.urgent ? '⚠️' : '📢';
+          const content = document.createElement('div');
+          content.style.flex = '1';
+          const titleEl = document.createElement('div');
+          titleEl.style.cssText = `font-weight:700;font-size:13px;color:${a.urgent?'#B91C1C':'#1D4ED8'};margin-bottom:2px`;
+          titleEl.textContent = a.title;
+          const bodyEl = document.createElement('div');
+          bodyEl.style.cssText = 'font-size:12px;color:#374151;line-height:1.5';
+          bodyEl.textContent = a.body;
+          content.appendChild(titleEl);
+          content.appendChild(bodyEl);
+          const closeBtn = document.createElement('button');
+          closeBtn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:18px;color:#9CA3AF;flex-shrink:0;padding:0';
+          closeBtn.textContent = '×';
+          closeBtn.addEventListener('click', () => dismissAnn(a.id, wrap));
+          wrap.appendChild(icon);
+          wrap.appendChild(content);
+          wrap.appendChild(closeBtn);
+          banner.appendChild(wrap);
+        });
       } catch(e) {}
     }
     function dismissAnn(id, el) {
@@ -845,7 +913,15 @@
     let activeResCategory = 'all';
     function initResCats() {
       const el = document.getElementById('res-cats'); if (!el) return;
-      el.innerHTML = RES_CATS.map(c => `<button onclick="setResCategory('${c}')" id="rescat-${c}" style="padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);cursor:pointer;background:${c==='all'?'var(--primary)':'var(--surface)'};color:${c==='all'?'white':'var(--text-sub)'}">${c==='all'?'All':c.charAt(0).toUpperCase()+c.slice(1)}</button>`).join('');
+      el.innerHTML = '';
+      RES_CATS.forEach(c => {
+        const btn = document.createElement('button');
+        btn.id = `rescat-${c}`;
+        btn.style.cssText = `padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);cursor:pointer;background:${c==='all'?'var(--primary)':'var(--surface)'};color:${c==='all'?'white':'var(--text-sub)'}`;
+        btn.textContent = c === 'all' ? 'All' : c.charAt(0).toUpperCase() + c.slice(1);
+        btn.addEventListener('click', () => setResCategory(c));
+        el.appendChild(btn);
+      });
     }
     function setResCategory(cat) {
       activeResCategory = cat;
@@ -895,7 +971,7 @@
         const p=await apiGet(`/families/${familyId}/progress`);
         const pct=p.total_needs>0?Math.round((p.fulfilled_count/p.total_needs)*100):0;
         const donated=p.total_donated_cents>0?`$${(p.total_donated_cents/100).toFixed(2)} donated`:'';
-        const fulfilledRows=p.fulfilled_needs.length?p.fulfilled_needs.map(n=>`<a href="need.html?id=${n.id}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--border);text-decoration:none;color:inherit"><span style="color:#10B981;font-size:16px">✓</span><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${n.title}</div><div style="font-size:11px;color:var(--text-sub)">${n.case_number} · ${n.response_count} response${n.response_count!==1?'s':''}</div></div></a>`).join(''):'<div style="font-size:13px;color:var(--text-sub);padding:12px 0">No fulfilled needs yet.</div>';
+        const fulfilledRows=p.fulfilled_needs.length?p.fulfilled_needs.map(n=>`<a href="need.html?id=${n.id}"  target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--border);text-decoration:none;color:inherit"><span style="color:#10B981;font-size:16px">✓</span><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${n.title}</div><div style="font-size:11px;color:var(--text-sub)">${n.case_number} · ${n.response_count} response${n.response_count!==1?'s':''}</div></div></a>`).join(''):'<div style="font-size:13px;color:var(--text-sub);padding:12px 0">No fulfilled needs yet.</div>';
         body.innerHTML=`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#065F46;margin-bottom:6px"><span>${p.fulfilled_count} of ${p.total_needs} needs fulfilled</span><span>${pct}%${donated?' · '+donated:''}</span></div><div style="height:10px;background:#D1FAE5;border-radius:5px;overflow:hidden"><div style="height:10px;width:${pct}%;background:#10B981;border-radius:5px"></div></div></div><div style="display:flex;gap:12px;margin-bottom:14px"><div style="flex:1;background:#F0FDF4;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#10B981">${p.fulfilled_count}</div><div style="font-size:11px;color:#065F46;font-weight:600">Fulfilled</div></div><div style="flex:1;background:#EFF6FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#3B82F6">${p.active_count}</div><div style="font-size:11px;color:#1D4ED8;font-weight:600">Active</div></div><div style="flex:1;background:#F5F3FF;border-radius:8px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:800;color:#7C3AED">${p.total_needs}</div><div style="font-size:11px;color:#5B21B6;font-weight:600">Total</div></div></div><div style="font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Fulfilled Needs</div>${fulfilledRows}`;
       } catch(e) { body.innerHTML='<div style="color:#dc2626;font-size:13px;padding:12px 0">Could not load progress.</div>'; }
     }
@@ -957,6 +1033,52 @@
         if (!items.length) { el.innerHTML='<div style="color:var(--text-sub);font-size:13px;padding:20px 0">No donations yet.</div>'; return; }
         el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="border-bottom:2px solid var(--border)"><th style="text-align:left;padding:8px 0;font-weight:600;color:var(--text-sub)">Date</th><th style="text-align:left;padding:8px 0;font-weight:600;color:var(--text-sub)">Need</th><th style="text-align:right;padding:8px 0;font-weight:600;color:var(--text-sub)">Amount</th><th style="text-align:center;padding:8px 0;font-weight:600;color:var(--text-sub)">Status</th></tr></thead><tbody>${items.map(d=>`<tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 0;color:var(--text-sub)">${d.created_at.slice(0,10)}</td><td style="padding:10px 0">${d.need_id?`<a href="need.html?id=${d.need_id}" style="color:var(--primary)">View Need</a>`:'—'}</td><td style="padding:10px 0;text-align:right;font-weight:700;color:var(--text)">$${(d.amount_cents/100).toFixed(2)}</td><td style="padding:10px 0;text-align:center"><span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;background:${d.status==='succeeded'?'#dcfce7':'#fef9c3'};color:${d.status==='succeeded'?'#16a34a':'#92400e'}">${d.status}</span></td></tr>`).join('')}</tbody></table>`;
       } catch(e) { el.innerHTML='<div style="color:var(--text-sub);font-size:13px;padding:20px 0">Could not load donations.</div>'; }
+    }
+
+    /* ── Donate Modal ───────────────────── */
+    function showDonateModal() {
+      document.getElementById('donate-amount').value = '';
+      document.getElementById('donate-need-id').value = '';
+      document.getElementById('donate-note').value = '';
+      document.getElementById('donate-alert').style.display = 'none';
+      const btn = document.getElementById('donate-submit-btn');
+      btn.disabled = false; btn.textContent = 'Donate Now';
+      const modal = document.getElementById('donate-modal');
+      modal.style.display = 'flex';
+    }
+    function closeDonateModal() {
+      document.getElementById('donate-modal').style.display = 'none';
+    }
+    function setDonateAmount(n) {
+      document.getElementById('donate-amount').value = n;
+    }
+    async function submitDonation() {
+      const amountInput = document.getElementById('donate-amount');
+      const needId = document.getElementById('donate-need-id').value.trim() || null;
+      const note = document.getElementById('donate-note').value.trim() || null;
+      const alertEl = document.getElementById('donate-alert');
+      const btn = document.getElementById('donate-submit-btn');
+
+      const amount = parseFloat(amountInput.value);
+      if (!amount || amount < 1) {
+        alertEl.textContent = 'Please enter a donation amount of at least $1.';
+        alertEl.style.display = 'block';
+        return;
+      }
+      alertEl.style.display = 'none';
+      btn.disabled = true; btn.textContent = 'Processing…';
+
+      try {
+        await apiPost('/donations', { amount_cents: Math.round(amount * 100), need_id: needId, note });
+        const submitBtn = document.getElementById('donate-submit-btn');
+        submitBtn.style.background = '#16a34a';
+        submitBtn.textContent = '✓ Donation Recorded — Thank you!';
+        setTimeout(() => { closeDonateModal(); loadDonations(); }, 1800);
+      } catch(e) {
+        alertEl.textContent = e.message || 'Donation failed. Please try again.';
+        alertEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Donate Now';
+      }
     }
 
     /* ── FAQ accordion ──────────────────── */

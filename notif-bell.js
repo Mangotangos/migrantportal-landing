@@ -10,16 +10,16 @@
   const style = document.createElement('style');
   style.textContent = `
     #mp-bell-btn {
-      position: fixed; top: 10px; right: 16px; z-index: 1200;
-      width: 36px; height: 36px; border-radius: 50%;
-      background: white; border: 1px solid #E8E8E8;
-      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+      position: relative;
+      width: 36px; height: 36px; border-radius: 8px;
+      background: none; border: 1px solid #E8E8E8;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: box-shadow .15s;
+      cursor: pointer; transition: background .15s, border-color .15s;
+      flex-shrink: 0;
     }
-    #mp-bell-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+    #mp-bell-btn:hover { background: #F4F4F4; border-color: #D0D0D0; }
     #mp-bell-badge {
-      position: absolute; top: -4px; right: -4px;
+      position: absolute; top: -5px; right: -5px;
       background: #FF6129; color: white;
       font-size: 10px; font-weight: 700; font-family: Inter, sans-serif;
       min-width: 16px; height: 16px; border-radius: 8px;
@@ -29,7 +29,7 @@
     }
     #mp-bell-badge.hidden { display: none; }
     #mp-notif-panel {
-      position: fixed; top: 54px; right: 12px; z-index: 1200;
+      position: fixed; top: 60px; right: 12px; z-index: 1200;
       width: 340px; max-height: 460px;
       background: white; border-radius: 12px;
       box-shadow: 0 8px 32px rgba(0,0,0,.18);
@@ -88,7 +88,15 @@
     </svg>
     <span id="mp-bell-badge" class="hidden">0</span>
   `;
-  document.body.appendChild(btn);
+  // Inject bell into topbar-right (before Sign Out), fallback to body
+  const topbarRight = document.querySelector('.topbar-right, .admin-topbar-right, [data-notif-target]');
+  if (topbarRight) {
+    topbarRight.insertBefore(btn, topbarRight.firstChild);
+  } else {
+    // fallback: fixed position
+    btn.style.cssText = 'position:fixed;top:10px;right:16px;z-index:1200;width:36px;height:36px;border-radius:50%;background:white;border:1px solid #E8E8E8;box-shadow:0 2px 8px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;';
+    document.body.appendChild(btn);
+  }
 
   // ── Panel
   const panel = document.createElement('div');
@@ -122,22 +130,45 @@
   // ── Render list
   function renderList(notifs) {
     const el = document.getElementById('mp-notif-list');
+    el.innerHTML = '';
     if (!notifs.length) {
-      el.innerHTML = '<div class="mp-notif-empty">You\'re all caught up!</div>';
+      const empty = document.createElement('div');
+      empty.className = 'mp-notif-empty';
+      empty.textContent = "You're all caught up!";
+      el.appendChild(empty);
       return;
     }
-    el.innerHTML = notifs.map(n => `
-      <div class="mp-notif-item ${n.read ? '' : 'unread'}" data-id="${n.id}" data-link="${notifLink(n) || ''}">
-        <div class="mp-notif-dot ${n.read ? 'read' : ''}"></div>
-        <div class="mp-notif-body">
-          <div class="mp-notif-ntitle">${n.title}</div>
-          <div class="mp-notif-nbody">${n.body}</div>
-          <div class="mp-notif-time">${timeAgo(n.created_at)}</div>
-        </div>
-      </div>
-    `).join('');
+    notifs.forEach(n => {
+      const item = document.createElement('div');
+      item.className = `mp-notif-item ${n.read ? '' : 'unread'}`;
+      item.dataset.id = n.id;
+      item.dataset.link = notifLink(n) || '';
 
-    el.querySelectorAll('.mp-notif-item').forEach(item => {
+      const dot = document.createElement('div');
+      dot.className = `mp-notif-dot ${n.read ? 'read' : ''}`;
+
+      const body = document.createElement('div');
+      body.className = 'mp-notif-body';
+
+      const titleEl = document.createElement('div');
+      titleEl.className = 'mp-notif-ntitle';
+      titleEl.textContent = n.title;
+
+      const bodyEl = document.createElement('div');
+      bodyEl.className = 'mp-notif-nbody';
+      bodyEl.textContent = n.body;
+
+      const timeEl = document.createElement('div');
+      timeEl.className = 'mp-notif-time';
+      timeEl.textContent = timeAgo(n.created_at);
+
+      body.appendChild(titleEl);
+      body.appendChild(bodyEl);
+      body.appendChild(timeEl);
+      item.appendChild(dot);
+      item.appendChild(body);
+      el.appendChild(item);
+
       item.addEventListener('click', async () => {
         const id = item.dataset.id;
         const link = item.dataset.link;

@@ -5,7 +5,7 @@ DirectoryIndex index.html index.htm
 Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 Header always set X-Frame-Options "SAMEORIGIN"
 Header always set X-Content-Type-Options "nosniff"
-Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' www.googletagmanager.com unpkg.com www.google.com www.gstatic.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: tile.openstreetmap.org www.google-analytics.com www.gstatic.com; connect-src 'self' migrant-portal-production.up.railway.app migrant-portal-production-3826.up.railway.app www.google-analytics.com www.googletagmanager.com www.google.com; frame-src 'self' www.google.com; object-src 'none'"
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' www.googletagmanager.com unpkg.com www.google.com www.gstatic.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: tile.openstreetmap.org *.tile.openstreetmap.org www.google-analytics.com www.gstatic.com; connect-src 'self' https://unpkg.com migrant-portal-production.up.railway.app www.google-analytics.com www.googletagmanager.com www.google.com; frame-src 'self' www.google.com; object-src 'none'"
 
 # Referrer Policy
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
@@ -13,9 +13,25 @@ Header always set Referrer-Policy "strict-origin-when-cross-origin"
 # Permissions Policy
 Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 
-# Enable mod_headers
+# Gzip compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json text/xml image/svg+xml
+</IfModule>
+
+# Cache-Control
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options "nosniff"
+    Header unset Server
+    Header always unset X-Powered-By
+    <FilesMatch "\.(ico|svg|png|jpg|jpeg|webp|woff2|woff|ttf)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+    <FilesMatch "\.html$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
 </IfModule>
 
 # Redirect HTTP to HTTPS
@@ -23,11 +39,19 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# www → non-www
+RewriteCond %{HTTP_HOST} ^www\.migrantportal\.com$ [NC]
+RewriteRule ^ https://migrantportal.com%{REQUEST_URI} [R=301,L]
+
 # Privacy policy canonical redirect
 RewriteRule ^privacy-policy/?$ /privacy.html [L,R=301]
 
 # Admin canonical redirect
 RewriteRule ^admin/?$ /admin.html [L,R=301]
+
+# terms/cookie legal pages
+RewriteRule ^terms-of-service/?$ /terms.html [L,R=301]
+RewriteRule ^cookie-policy/?$ /privacy.html [L,R=301]
 
 # Custom 404
 ErrorDocument 404 /404.html

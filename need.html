@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="MigrantPortal need detail — view and respond to a specific need.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Help a Family Find Stable Housing — MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <style>
@@ -483,37 +484,8 @@
         <!-- MORE REQUESTS -->
         <div id="more-requests">
           <div class="more-heading">More Verified Requests</div>
-          <div class="more-grid">
-            <div class="more-card" onclick="window.location='need.html'">
-              <div class="more-card-top">
-                🎒
-                <div class="more-card-id">#MP002</div>
-                <div class="more-status green"></div>
-              </div>
-              <div class="more-card-body">
-                <div class="more-card-title">School Supplies for 3 Children</div>
-              </div>
-            </div>
-            <div class="more-card" onclick="window.location='need.html'">
-              <div class="more-card-top">
-                🏥
-                <div class="more-card-id">#MP003</div>
-                <div class="more-status yellow"></div>
-              </div>
-              <div class="more-card-body">
-                <div class="more-card-title">Medical Appointment Transportation</div>
-              </div>
-            </div>
-            <div class="more-card" onclick="window.location='need.html'">
-              <div class="more-card-top">
-                🍽️
-                <div class="more-card-id">#MP004</div>
-                <div class="more-status green"></div>
-              </div>
-              <div class="more-card-body">
-                <div class="more-card-title">Food Pantry Access for New Family</div>
-              </div>
-            </div>
+          <div class="more-grid" id="moreRequestsGrid">
+            <p style="color:#999;font-size:13px;padding:16px 0;">No additional requests at this time.</p>
           </div>
         </div>
 
@@ -1300,7 +1272,7 @@
                   ${d.note ? `<div style="color:var(--gray-600);margin-top:2px;margin-left:18px">${d.note}</div>` : ''}
                   ${d.gift_card_code ? `<div style="background:#F0FDF4;border:1px dashed #16A34A;border-radius:5px;padding:4px 8px;margin-top:4px;font-weight:700;letter-spacing:.05em;margin-left:18px">🎁 ${d.gift_card_code}</div>` : ''}
                   ${d.receipt_url
-                    ? `<a href="https://migrant-portal-production-3826.up.railway.app${d.receipt_url}" target="_blank" style="display:inline-block;margin-left:18px;margin-top:4px;color:var(--teal);font-weight:600">📄 View Receipt</a>`
+                    ? `<a href="https://migrant-portal-production.up.railway.app${d.receipt_url}"  target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-left:18px;margin-top:4px;color:var(--teal);font-weight:600">📄 View Receipt</a>`
                     : d.status === 'sent' ? `<div style="margin-left:18px;margin-top:4px"><label style="cursor:pointer;color:var(--teal);font-weight:600">📎 Upload Receipt<input type="file" accept="image/*" style="display:none" onchange="uploadReceipt('${d.id}',this)"></label></div>` : ''}
                 </div>
                 <span style="color:var(--gray-400);white-space:nowrap">${new Date(d.requested_at).toLocaleDateString()}</span>
@@ -1333,7 +1305,7 @@
       const form = new FormData();
       form.append('file', file);
       try {
-        const r = await fetch(`https://migrant-portal-production-3826.up.railway.app/disbursements/${disbId}/receipt`, {
+        const r = await fetch(`https://migrant-portal-production.up.railway.app/disbursements/${disbId}/receipt`, {
           method: 'POST',
           credentials: 'include',
           body: form,
@@ -1495,7 +1467,7 @@
               ? `<span style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:10px;background:${s.bg};color:${s.color}">${s.label}</span>`
               : `<span style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:10px;background:#F3F4F6;color:#555">In Escrow</span>`}
           </div>
-          ${receiptUrl ? `<a href="${receiptUrl}" target="_blank" style="display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--green)">📄 View Delivery Receipt →</a>` : ''}`;
+          ${receiptUrl ? `<a href="${receiptUrl}"  target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--green)">📄 View Delivery Receipt →</a>` : ''}`;
         card.style.display = '';
       } catch(e) { /* silent — not every user donated */ }
     }

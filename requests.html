@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Browse active help requests on MigrantPortal and respond to your neighbors.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Open Requests — MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -131,6 +132,16 @@
       border: 1px solid var(--gray-200); border-radius: 6px;
       font-size: 13px; font-weight: 500; background: white;
       display: flex; align-items: center; gap: 6px; color: var(--gray-700);
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .mapview-btn.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+    /* ── MAP BACK BUTTON (mobile only) ── */
+    .map-back-btn {
+      display: none; position: absolute; top: 12px; left: 12px; z-index: 500;
+      background: white; border: 1px solid var(--gray-200); border-radius: 8px;
+      padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--teal);
+      align-items: center; gap: 6px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.12);
     }
 
     /* ── LAYOUT ── */
@@ -339,9 +350,9 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
       Quick Filters
     </button>
-    <button class="mapview-btn">
+    <button class="mapview-btn" id="mapViewBtn" onclick="toggleMapView()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-      Map View ▾
+      Map View
     </button>
   </div>
 
@@ -425,266 +436,15 @@
         <div id="cardsLoading" style="padding:40px;text-align:center;color:#999;font-size:13px;">Loading needs…</div>
         <div id="cardsEmpty" style="display:none;padding:40px;text-align:center;color:#999;font-size:13px;">No open needs found.</div>
 
-        <!-- Card 1 (static fallback, hidden until JS runs) -->
-        <div class="req-card selected static-card" onclick="selectCard(this, 0)">
-          <div class="card-img" style="background:#fdf3e7;">
-            <span class="card-img-illus">👨‍👩‍👧</span>
-            <div class="card-badge"></div>
-          </div>
-          <div class="card-body">
-            <div class="card-meta-top">
-              <span class="card-id">#MP001</span>
-              <span class="card-age">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                13d
-              </span>
-            </div>
-            <div class="card-title">Help Improve a Child's Wellbeing</div>
-            <div class="card-desc">I am requesting a Hatch Rest Baby Sound Machine, Night Light & Alarm Clock to help a child sleep better.</div>
-            <div class="card-loc">Kansas City, Kansas • 66101</div>
-            <div class="card-church">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Grace Community Faith Community
-            </div>
-            <div class="card-amount">
-              <span class="amount-badge zero">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-                $0.00
-              </span>
-              <span class="amount-label">still needed</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill full" style="width:100%"></div></div>
-            <div class="card-footer">
-              <div class="family-count">
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-                  3 Children
-                </span>
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  1 Adult
-                </span>
-              </div>
-              <div class="card-actions">
-                <button class="action-ico" title="Save"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
-                <button class="action-ico" title="Share"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
-              </div>
-            </div>
-            <div class="card-needs">
-              <span class="need-tag met">1 Hatch Rest Baby Sound Machine</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="req-card static-card" onclick="selectCard(this, 1)">
-          <div class="card-img" style="background:#eef5e8;">
-            <span class="card-img-illus">🏫</span>
-            <div class="card-badge"></div>
-          </div>
-          <div class="card-body">
-            <div class="card-meta-top">
-              <span class="card-id">#MP002</span>
-              <span class="card-age">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                15d
-              </span>
-            </div>
-            <div class="card-title">Help Preserve a Kinship Placement</div>
-            <div class="card-desc">A teen girl has a chance to receive the life-changing gift of braces through Smiles Change Lives. Help make it happen.</div>
-            <div class="card-loc">Wichita, Kansas • 67201</div>
-            <div class="card-church">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Westside Family Faith Community
-            </div>
-            <div class="card-amount">
-              <span class="amount-badge">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-                $650.00
-              </span>
-              <span class="amount-label">still needed</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
-            <div class="card-footer">
-              <div class="family-count">
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                  2 Children
-                </span>
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  2 Adults
-                </span>
-              </div>
-              <div class="card-actions">
-                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
-                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
-              </div>
-            </div>
-            <div class="card-needs">
-              <span class="need-tag">2 Medical / Dental</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="req-card static-card" onclick="selectCard(this, 2)">
-          <div class="card-img" style="background:#f0eaf8;">
-            <span class="card-img-illus">👗</span>
-            <div class="card-badge"></div>
-          </div>
-          <div class="card-body">
-            <div class="card-meta-top">
-              <span class="card-id">#MP003</span>
-              <span class="card-age">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                20d
-              </span>
-            </div>
-            <div class="card-title">Help Improve a Child's Wellbeing</div>
-            <div class="card-desc">This family is in need of new clothing because she is getting too big for her old clothes. Growing fast and needs support.</div>
-            <div class="card-loc">Kansas City, Kansas • 66063</div>
-            <div class="card-church">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Prince of Peace Catholic Faith Community
-            </div>
-            <div class="card-amount">
-              <span class="amount-badge">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-                $120.00
-              </span>
-              <span class="amount-label">still needed</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
-            <div class="card-footer">
-              <div class="family-count">
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                  2 Children
-                </span>
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  1 Adult
-                </span>
-              </div>
-              <div class="card-actions">
-                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
-                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
-              </div>
-            </div>
-            <div class="card-needs">
-              <span class="need-tag">Clothing</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="req-card static-card" onclick="selectCard(this, 3)">
-          <div class="card-img" style="background:#e8f4fd;">
-            <span class="card-img-illus">🏠</span>
-            <div class="card-badge"></div>
-          </div>
-          <div class="card-body">
-            <div class="card-meta-top">
-              <span class="card-id">#MP004</span>
-              <span class="card-age">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                3d
-              </span>
-            </div>
-            <div class="card-title">Urgent: Family Needs Housing Assistance</div>
-            <div class="card-desc">A family of 5 recently arrived and is staying in a motel. They need help with a security deposit to get into stable housing.</div>
-            <div class="card-loc">Wyandotte County, Kansas • 66102</div>
-            <div class="card-church">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Nueva Vida Faith Community
-            </div>
-            <div class="card-amount">
-              <span class="amount-badge">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-                $900.00
-              </span>
-              <span class="amount-label">still needed</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:10%"></div></div>
-            <div class="card-footer">
-              <div class="family-count">
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                  3 Children
-                </span>
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  2 Adults
-                </span>
-              </div>
-              <div class="card-actions">
-                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
-                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
-              </div>
-            </div>
-            <div class="card-needs">
-              <span class="need-tag">Housing</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="req-card static-card" onclick="selectCard(this, 4)">
-          <div class="card-img" style="background:#fff3e6;">
-            <span class="card-img-illus">📚</span>
-            <div class="card-badge"></div>
-          </div>
-          <div class="card-body">
-            <div class="card-meta-top">
-              <span class="card-id">#MP005</span>
-              <span class="card-age">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                7d
-              </span>
-            </div>
-            <div class="card-title">School Supplies for 4 Kids</div>
-            <div class="card-desc">Four school-age children arrived mid-year and urgently need backpacks, notebooks, pencils, and basic school supplies to start class.</div>
-            <div class="card-loc">Sedgwick County, Kansas • 67203</div>
-            <div class="card-church">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
-              Harvest Faith Community
-            </div>
-            <div class="card-amount">
-              <span class="amount-badge">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-                $210.00
-              </span>
-              <span class="amount-label">still needed</span>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" style="width:35%"></div></div>
-            <div class="card-footer">
-              <div class="family-count">
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                  4 Children
-                </span>
-                <span class="fam-chip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  2 Adults
-                </span>
-              </div>
-              <div class="card-actions">
-                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
-                <button class="action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
-              </div>
-            </div>
-            <div class="card-needs">
-              <span class="need-tag">Education</span>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /cards-list -->
+        </div><!-- /cards-list -->
     </div><!-- /panel -->
 
     <!-- MAP -->
     <div class="map-container">
+      <button class="map-back-btn" onclick="toggleMapView()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        List View
+      </button>
       <div id="map"></div>
     </div>
 
@@ -825,24 +585,7 @@
             addMarker(need, i);
           });
         } catch {
-          // Keep static fallback HTML cards; static markers already absent — add them
-          const staticNeeds = [
-            { id:'MP001', lat:39.1150, lng:-94.7977, title:"Help Improve a Child's Wellbeing",       urgency:'medium', category:'other' },
-            { id:'MP002', lat:37.6872, lng:-97.3301, title:"Help Preserve a Kinship Placement",        urgency:'medium', category:'housing' },
-            { id:'MP003', lat:39.1090, lng:-94.7550, title:"Help Improve a Child's Wellbeing",         urgency:'medium', category:'other' },
-            { id:'MP004', lat:39.1250, lng:-94.8130, title:"Urgent: Family Needs Housing Assistance",  urgency:'urgent', category:'housing' },
-            { id:'MP005', lat:37.7000, lng:-97.3100, title:"School Supplies for 4 Kids",               urgency:'low',    category:'education' },
-          ];
-          staticNeeds.forEach((r, i) => {
-            const urgent = r.urgency === 'urgent';
-            const icon = L.divIcon({
-              html: `<div class="map-pin${urgent ? ' urgent' : ''}">${urgent ? '🔴 ' : '📍 '}Need</div>`,
-              className: '', iconAnchor: [28, 12]
-            });
-            const m = L.marker([r.lat, r.lng], { icon }).addTo(map)
-              .bindPopup(`<div class="popup-title">${r.title}</div><div style="margin-top:8px"><a href="/signup.html" style="color:#009DA5;font-size:12px;font-weight:600;">Sign up to view details →</a></div>`);
-            markers.push(m);
-          });
+          document.getElementById('cardsEmpty').style.display = 'block';
         }
         return;
       }
@@ -885,33 +628,9 @@
         document.getElementById('countLabel').textContent = needs.length;
 
       } catch (err) {
-        // API not reachable — show static cards as fallback
         document.getElementById('cardsLoading').style.display = 'none';
-        document.querySelectorAll('.static-card').forEach(c => c.style.display = '');
-        document.getElementById('countLabel').textContent = '5';
-        // Add static markers for fallback
-        const staticNeeds = [
-          { id:'MP001', lat:39.1150, lng:-94.7977, title:"Help Improve a Child's Wellbeing",      loc:"Kansas City, KS 66101", urgent:false },
-          { id:'MP002', lat:37.6872, lng:-97.3301, title:"Help Preserve a Kinship Placement",       loc:"Wichita, KS 67201",    urgent:false },
-          { id:'MP003', lat:39.1090, lng:-94.7550, title:"Help Improve a Child's Wellbeing",        loc:"Kansas City, KS 66063", urgent:false },
-          { id:'MP004', lat:39.1250, lng:-94.8130, title:"Urgent: Family Needs Housing Assistance", loc:"Wyandotte Co., KS",    urgent:true  },
-          { id:'MP005', lat:37.7000, lng:-97.3100, title:"School Supplies for 4 Kids",              loc:"Sedgwick Co., KS",     urgent:false },
-        ];
-        staticNeeds.forEach((r, i) => {
-          const icon = L.divIcon({
-            html: `<div class="map-pin${r.urgent ? ' urgent' : ''}">${r.urgent ? '🔴 ' : '📍 '}Need</div>`,
-            className: '', iconAnchor: [28, 12]
-          });
-          const m = L.marker([r.lat, r.lng], { icon }).addTo(map)
-            .bindPopup(`<div class="popup-id">${r.id}</div><div class="popup-title">${r.title}</div><div class="popup-loc">${r.loc}</div><div style="margin-top:8px"><a href="need.html" style="color:#009DA5;font-size:12px;font-weight:600;">View Details →</a></div>`);
-          m.on('click', () => {
-            const cards = document.querySelectorAll('.static-card');
-            cards.forEach(c => c.classList.remove('selected'));
-            cards[i]?.classList.add('selected');
-            cards[i]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          });
-          markers.push(m);
-        });
+        document.getElementById('cardsEmpty').style.display = 'block';
+        document.getElementById('countLabel').textContent = '0';
       }
     }
 
@@ -951,6 +670,23 @@
       panel.classList.toggle('open', !isOpen);
       document.getElementById('filterBtn').classList.toggle('active', !isOpen);
       document.getElementById('quickBtn').classList.toggle('active', !isOpen);
+    }
+
+    // ── Map / List toggle (mobile)
+    function toggleMapView() {
+      const ws = document.querySelector('.workspace');
+      const isMap = ws.classList.toggle('map-active');
+      const btn = document.getElementById('mapViewBtn');
+      const fab = document.getElementById('mapFab');
+      if (btn) btn.classList.toggle('active', isMap);
+      if (fab) {
+        fab.classList.toggle('list-mode', isMap);
+        fab.innerHTML = isMap
+          ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> List View'
+          : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Map View';
+      }
+      setTimeout(() => { map.invalidateSize(); }, 50);
+      setTimeout(() => { map.invalidateSize(); }, 350);
     }
 
     // ── Filters → server reload
@@ -1031,6 +767,29 @@
   <style>
     .mob-nav { display: none; }
     @media (max-width: 768px) {
+      /* ── Mobile list/map toggle ── */
+      .panel { width: 100%; }
+      /* Keep map in DOM so Leaflet tiles load — just hide visually */
+      .map-container {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 60px;
+        z-index: 400; visibility: hidden; pointer-events: none;
+        display: flex; flex-direction: column;
+      }
+      #map { flex: 1; min-height: 0; width: 100%; }
+      .workspace.map-active .panel { visibility: hidden; pointer-events: none; }
+      .workspace.map-active .map-container { visibility: visible; pointer-events: auto; }
+      .map-back-btn { display: flex; }
+
+      /* ── Map FAB toggle button ── */
+      .map-fab {
+        display: flex; position: fixed; bottom: 70px; right: 16px; z-index: 410;
+        background: var(--teal); color: white; border: none; border-radius: 28px;
+        padding: 10px 18px; font-size: 13px; font-weight: 700;
+        align-items: center; gap: 7px; cursor: pointer;
+        box-shadow: 0 4px 14px rgba(0,157,165,.45);
+      }
+      .map-fab.list-mode { background: white; color: var(--teal); border: 2px solid var(--teal); }
+
       .mob-nav {
         display: flex; position: fixed; bottom: 0; left: 0; right: 0;
         background: white; border-top: 1px solid #E8E8E8; z-index: 300;
@@ -1043,6 +802,12 @@
       .mob-nav-btn.active { color: #009DA5; }
     }
   </style>
+  <!-- Mobile map FAB -->
+  <button class="map-fab" id="mapFab" onclick="toggleMapView()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+    Map View
+  </button>
+
   <nav class="mob-nav">
     <button class="mob-nav-btn" onclick="window.location.href='dashboard.html'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
