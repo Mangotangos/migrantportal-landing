@@ -6,7 +6,17 @@
   <title>Contact Us — MigrantPortal</title>
   <meta name="description" content="Get in touch with the MigrantPortal team. We're here to help navigators, responders, and partner organizations." />
   <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0D7A8A" />
   <link rel="canonical" href="https://migrantportal.com/contact.html" />
+  <link rel="alternate" hreflang="en" href="https://migrantportal.com/contact.html" />
+  <link rel="alternate" hreflang="es" href="https://migrantportal.com/contact.html?lang=es" />
+  <link rel="alternate" hreflang="x-default" href="https://migrantportal.com/contact.html" />
+  <meta property="og:title" content="Contact Us — MigrantPortal" />
+  <meta property="og:description" content="Get in touch with the MigrantPortal team. We're here to help navigators, responders, and partner organizations." />
+  <meta property="og:url" content="https://migrantportal.com/contact.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://migrantportal.com/community.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
@@ -464,5 +474,13 @@
   function _mpToast(msg,err=false){const t=document.getElementById('_mpToast');if(!t)return;t.textContent=msg;t.style.background=err?'linear-gradient(135deg,#F85149,#d93f3a)':'linear-gradient(135deg,#2D3748,#1A202C)';t.style.display='block';clearTimeout(t._to);t._to=setTimeout(()=>{t.style.display='none';},3500);}
   </script>
 
+<script src="i18n.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
+  }
+</script>
 </body>
 </html>

@@ -3,9 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Find Help Near You — MigrantPortal</title>
-  <meta name="description" content="Enter your zipcode to find partner nonprofits and local organizations that can help migrants near you." />
+  <title>Find Migrant Help Near You — MigrantPortal</title>
+  <meta name="description" content="Enter your zipcode to find partner nonprofits and local organizations that help migrants and immigrants near you. Free directory by MigrantPortal." />
+  <link rel="canonical" href="https://migrantportal.com/find-help.html" />
+  <link rel="alternate" hreflang="en" href="https://migrantportal.com/find-help.html" />
+  <link rel="alternate" hreflang="es" href="https://migrantportal.com/find-help.html?lang=es" />
+  <link rel="alternate" hreflang="x-default" href="https://migrantportal.com/find-help.html" />
+  <meta property="og:title" content="Find Migrant Help Near You — MigrantPortal" />
+  <meta property="og:description" content="Enter your zipcode to find partner nonprofits and local organizations that help migrants and immigrants near you." />
+  <meta property="og:url" content="https://migrantportal.com/find-help.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://migrantportal.com/community.png" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0D7A8A" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
@@ -318,6 +329,14 @@
       if (!['http:','https:'].includes(u.protocol)) return '#';
       return u.href;
     } catch { return '#'; }
+  }
+</script>
+<script src="i18n.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
   }
 </script>
 </body>
