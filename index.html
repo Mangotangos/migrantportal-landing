@@ -12,37 +12,67 @@
     gtag('config', 'G-VBSGKX340V');
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MigrantPortal — Help a Migrant Family Now</title>
-  <meta name="description" content="MigrantPortal connects migrants in need with faith communities, volunteers, and donors. Submit needs, respond with compassion, and track impact — all in one app." />
-  <meta property="og:title" content="MigrantPortal — Help a Migrant Family Now" />
-  <meta property="og:description" content="Take meaningful action on the platform connecting caring people to meet the needs of migrant families in crisis." />
+  <title>MigrantPortal — Migrant Resource Platform & Immigrant Needs Network</title>
+  <meta name="description" content="MigrantPortal is the immigrant needs network connecting migrant families with faith communities, volunteers, and donors. Submit a need, find help nearby, or join as a navigator." />
+  <meta property="og:title" content="MigrantPortal — Migrant Resource Platform & Immigrant Needs Network" />
+  <meta property="og:description" content="The immigrant needs network connecting migrant families with faith communities, volunteers, and donors. Submit a need, find help, or join as a navigator." />
   <meta property="og:url" content="https://migrantportal.com" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://migrantportal.com/community.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="MigrantPortal — Help a Migrant Family Now" />
-  <meta name="twitter:description" content="Connect migrants in need with faith communities, volunteers, and donors." />
+  <meta name="twitter:title" content="MigrantPortal — Migrant Resource Platform & Immigrant Needs Network" />
+  <meta name="twitter:description" content="Connect migrant families with faith communities, volunteers, and donors. Submit a need, find help, or join as a navigator." />
   <meta name="twitter:image" content="https://migrantportal.com/community.png" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0D7A8A" />
   <link rel="canonical" href="https://migrantportal.com" />
+  <link rel="alternate" hreflang="en" href="https://migrantportal.com/" />
+  <link rel="alternate" hreflang="es" href="https://migrantportal.com/?lang=es" />
+  <link rel="alternate" hreflang="x-default" href="https://migrantportal.com/" />
   <script type="module" src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.js"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "NGO",
     "name": "MigrantPortal",
+    "alternateName": "Migrant Portal",
     "url": "https://migrantportal.com",
     "logo": "https://migrantportal.com/logo.png",
-    "description": "MigrantPortal connects migrants in need with faith communities, volunteers, and donors. Submit needs, respond with compassion, and track impact — all in one app.",
+    "description": "MigrantPortal is the immigrant needs network and migrant resource platform connecting migrant families with faith communities, volunteers, and donors. Submit a need, find help nearby, or join as a navigator.",
+    "areaServed": {
+      "@type": "Country",
+      "name": "United States"
+    },
+    "knowsLanguage": ["en", "es"],
     "contactPoint": {
       "@type": "ContactPoint",
       "email": "support@migrantportal.com",
-      "contactType": "customer support"
+      "contactType": "customer support",
+      "availableLanguage": ["English", "Spanish"]
     },
     "sameAs": [
       "https://www.facebook.com/migrantportalusa"
     ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "MigrantPortal",
+    "alternateName": "Migrant Resource Platform",
+    "url": "https://migrantportal.com",
+    "inLanguage": ["en", "es"],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://migrantportal.com/find-help.html?zip={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -643,11 +673,11 @@
     <div class="hero-inner">
       <!-- Left: text + 3 actions -->
       <div class="hero-text">
-        <h1>Help a migrant family now</h1>
+        <h1>The Immigrant Needs Network Connecting Families with Help</h1>
         <p class="hero-tagline">Where Help Meets Hope</p>
         <p class="hero-sub">
-          Take meaningful action on the platform connecting the largest network of
-          <a href="#get-involved">caring people</a> to meet the needs of migrant families in crisis.
+          MigrantPortal is a free migrant resource platform where families post real needs and
+          <a href="#get-involved">faith communities, volunteers, and donors</a> respond — with compassion, in their language, near them.
         </p>
         <h2 class="sr-only">Take action</h2>
         <div class="hero-actions">
@@ -1161,5 +1191,13 @@
   })();
   </script>
 
+  <script src="i18n.js" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>

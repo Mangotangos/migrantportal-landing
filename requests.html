@@ -4,8 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="description" content="Browse active help requests on MigrantPortal and respond to your neighbors.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Open Requests — MigrantPortal</title>
+  <title>Open Migrant Requests — MigrantPortal</title>
+  <link rel="canonical" href="https://migrantportal.com/requests.html" />
+  <link rel="alternate" hreflang="en" href="https://migrantportal.com/requests.html" />
+  <link rel="alternate" hreflang="es" href="https://migrantportal.com/requests.html?lang=es" />
+  <link rel="alternate" hreflang="x-default" href="https://migrantportal.com/requests.html" />
+  <meta property="og:title" content="Open Migrant Requests — MigrantPortal" />
+  <meta property="og:description" content="Browse active help requests from migrant families and respond to your neighbors." />
+  <meta property="og:url" content="https://migrantportal.com/requests.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://migrantportal.com/community.png" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0D7A8A" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
@@ -184,6 +195,39 @@
     }
     .req-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,.08); border-color: var(--teal); }
     .req-card.selected { border-color: var(--teal); box-shadow: 0 0 0 2px rgba(0,157,165,.2); }
+
+    /* Urgency color-coded left border + chip */
+    .req-card { border-left-width: 4px; }
+    .req-card[data-urgency="urgent"] { border-left-color: #dc2626; }
+    .req-card[data-urgency="high"]   { border-left-color: #f97316; }
+    .req-card[data-urgency="medium"] { border-left-color: #eab308; }
+    .req-card[data-urgency="low"]    { border-left-color: #0D7A8A; }
+    .urgency-chip {
+      position: absolute; top: 8px; left: 8px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+      padding: 3px 8px; border-radius: 999px; color: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    }
+    .urgency-chip[data-urgency="urgent"] { background: #dc2626; }
+    .urgency-chip[data-urgency="high"]   { background: #f97316; }
+    .urgency-chip[data-urgency="medium"] { background: #eab308; color: #1f2937; }
+    .urgency-chip[data-urgency="low"]    { background: #0D7A8A; }
+
+    /* Skeleton loader */
+    .skel-card {
+      border: 1px solid var(--gray-200); border-left: 4px solid #e5e7eb;
+      border-radius: 10px; overflow: hidden; background: white;
+    }
+    .skel-img { height: 110px; background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: skel-shimmer 1.4s ease-in-out infinite; }
+    .skel-body { padding: 12px; }
+    .skel-line { height: 10px; border-radius: 4px; background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: skel-shimmer 1.4s ease-in-out infinite; margin-bottom: 8px; }
+    .skel-line.sm { width: 40%; height: 8px; }
+    .skel-line.md { width: 75%; }
+    .skel-line.lg { width: 90%; }
+    @keyframes skel-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
 
     .card-img {
       height: 110px; background: #f5f0ea; display: flex; align-items: center; justify-content: center;
@@ -433,7 +477,11 @@
 
       <div class="cards-list" id="cardsList">
         <!-- dynamically populated -->
-        <div id="cardsLoading" style="padding:40px;text-align:center;color:#999;font-size:13px;">Loading needs…</div>
+        <div id="cardsLoading">
+          <div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line sm"></div><div class="skel-line lg"></div><div class="skel-line md"></div></div></div>
+          <div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line sm"></div><div class="skel-line lg"></div><div class="skel-line md"></div></div></div>
+          <div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line sm"></div><div class="skel-line lg"></div><div class="skel-line md"></div></div></div>
+        </div>
         <div id="cardsEmpty" style="display:none;padding:40px;text-align:center;color:#999;font-size:13px;">No open needs found.</div>
 
         </div><!-- /cards-list -->
@@ -501,10 +549,12 @@
       const loc   = [need.city, need.state, need.zip].filter(Boolean).join(', ');
       const adults   = need.family_adults   || 1;
       const children = need.family_children || 0;
+      const urgencyLabel = need.urgency ? need.urgency.charAt(0).toUpperCase() + need.urgency.slice(1) : '';
       return `
-        <a class="req-card" href="need.html?id=${need.id}" onclick="selectCard(this, ${idx}); event.preventDefault();" data-id="${need.id}" style="text-decoration:none;color:inherit;display:block;">
+        <a class="req-card" href="need.html?id=${need.id}" onclick="selectCard(this, ${idx}); event.preventDefault();" data-id="${need.id}" data-urgency="${need.urgency || ''}" style="text-decoration:none;color:inherit;display:block;">
           <div class="card-img" style="background:${bg};">
             <span class="card-img-illus">${emoji}</span>
+            ${urgencyLabel ? `<span class="urgency-chip" data-urgency="${need.urgency}">${urgencyLabel}</span>` : ''}
             <div class="card-badge" style="background:${dot};width:8px;height:8px;border-radius:50%;position:absolute;top:8px;right:8px;"></div>
           </div>
           <div class="card-body">
@@ -584,6 +634,7 @@
             list.insertAdjacentHTML('beforeend', buildCard(need, i));
             addMarker(need, i);
           });
+          if (window.mpReapplyI18n) window.mpReapplyI18n();
         } catch {
           document.getElementById('cardsEmpty').style.display = 'block';
         }
@@ -626,6 +677,7 @@
           addMarker(need, i);
         });
         document.getElementById('countLabel').textContent = needs.length;
+        if (window.mpReapplyI18n) window.mpReapplyI18n();
 
       } catch (err) {
         document.getElementById('cardsLoading').style.display = 'none';
@@ -831,5 +883,13 @@
     </button>
   </nav>
 
+<script src="i18n.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
+  }
+</script>
 </body>
 </html>
