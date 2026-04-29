@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Help a Family Find Stable Housing — MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0D7A8A" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
@@ -354,6 +356,10 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3l-7 3.5a3 3 0 1 0 0 5L15 18a3 3 0 1 0 .7-1.4L8.1 13a3.1 3.1 0 0 0 0-2L15.3 7.4A3 3 0 1 0 18 3z"/></svg>
                     Share
                   </button>
+                  <button class="req-action" id="qr-btn" onclick="showQrModal()" title="Print a QR code for this need">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3v1M20 20h1"/></svg>
+                    Print QR
+                  </button>
                 </div>
               </div>
               <div class="req-amount-row">
@@ -403,7 +409,7 @@
               Needs
               <span class="section-badge">3 Needs</span>
             </div>
-            <button class="btn-help" onclick="document.getElementById('donations-panel').classList.add('active')">
+            <button class="btn-help" onclick="document.getElementById('action-panel')?.scrollIntoView({behavior:'smooth'})">
               🤝 Yes, I Can Help!
             </button>
           </div>
@@ -494,7 +500,7 @@
       <!-- ── SIDEBAR ─────────────────────────── -->
       <div class="col-side">
         <div class="card" id="action-panel">
-          <div id="panel-content" style="font-size:13px;color:var(--gray-400);text-align:center;padding:20px 0"><a href="login.html" style="display:block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px;border-radius:8px;text-decoration:none;margin-bottom:10px;">Log In to Help</a><div style="font-size:12px;color:var(--gray-400)">Or <a href="requests.html" style="color:var(--teal)">browse open needs →</a></div></div>
+          <div id="panel-content" style="font-size:13px;color:var(--gray-400);text-align:center;padding:20px 0">Loading…</div>
         </div>
         <div class="card" id="donate-card" style="margin-top:14px;display:none">
           <div style="font-weight:700;font-size:14px;margin-bottom:4px">Support This Family</div>
@@ -1614,5 +1620,135 @@
   function _confCancel(){document.getElementById('confOverlay').classList.remove('open');if(_confResolve){_confResolve(false);_confResolve=null;}}
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('confOverlay').classList.contains('open'))_confCancel();});
   </script>
+<!-- QR CODE MODAL -->
+<style>
+  .qr-modal {
+    display: none;
+    position: fixed; inset: 0; z-index: 10000;
+    background: rgba(17, 24, 39, 0.65);
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .qr-modal.open { display: flex; }
+  .qr-sheet {
+    background: white; border-radius: 18px;
+    max-width: 420px; width: 100%;
+    padding: 32px 28px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    position: relative;
+  }
+  .qr-close {
+    position: absolute; top: 12px; right: 12px;
+    background: transparent; border: none; font-size: 24px;
+    width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; color: #6b7280;
+  }
+  .qr-close:hover { background: #f3f4f6; color: #111827; }
+  .qr-code-wrap {
+    width: 220px; height: 220px;
+    margin: 8px auto 20px; padding: 12px;
+    background: white; border: 2px solid #e5e7eb; border-radius: 12px;
+  }
+  .qr-code-wrap svg, .qr-code-wrap img { width: 100%; height: 100%; display: block; }
+  .qr-title {
+    font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 20px;
+    color: #111827; margin-bottom: 8px; letter-spacing: -0.3px;
+  }
+  .qr-desc { font-size: 13px; color: #6b7280; line-height: 1.5; margin-bottom: 16px; }
+  .qr-tagline {
+    font-weight: 700; color: #0D7A8A; font-size: 14px;
+    margin-top: 12px; letter-spacing: 0.02em;
+  }
+  .qr-url {
+    font-family: monospace; font-size: 11px; color: #9ca3af;
+    margin-top: 6px; word-break: break-all;
+  }
+  .qr-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
+  .qr-btn {
+    background: #0D7A8A; color: white; border: none;
+    padding: 10px 20px; border-radius: 8px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .qr-btn:hover { opacity: 0.9; }
+  .qr-btn.secondary { background: white; color: #6b7280; border: 1px solid #e5e7eb; }
+  .qr-btn.secondary:hover { border-color: #0D7A8A; color: #0D7A8A; }
+
+  @media print {
+    body * { visibility: hidden !important; }
+    .qr-modal, .qr-modal * { visibility: visible !important; }
+    .qr-modal { position: static !important; background: white !important; padding: 0 !important; display: block !important; }
+    .qr-sheet { box-shadow: none !important; border: none !important; max-width: 100% !important; padding: 40px !important; }
+    .qr-close, .qr-actions { display: none !important; }
+    .qr-code-wrap { width: 320px !important; height: 320px !important; }
+  }
+</style>
+<div class="qr-modal" id="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qr-title">
+  <div class="qr-sheet">
+    <button class="qr-close" onclick="closeQrModal()" aria-label="Close">×</button>
+    <div class="qr-code-wrap" id="qr-code-wrap" aria-hidden="true"></div>
+    <div class="qr-title" id="qr-title">Need Title</div>
+    <div class="qr-desc" id="qr-desc">Short description.</div>
+    <div class="qr-tagline" data-i18n="Scan to help">Scan to help</div>
+    <div class="qr-url" id="qr-url"></div>
+    <div class="qr-actions">
+      <button class="qr-btn" onclick="window.print()" data-i18n="Print QR Code">Print</button>
+      <button class="qr-btn secondary" onclick="closeQrModal()" data-i18n="Close">Close</button>
+    </div>
+  </div>
+</div>
+<script>
+  let _qrLibPromise = null;
+  function loadQrLib() {
+    if (window.qrcode) return Promise.resolve(window.qrcode);
+    if (_qrLibPromise) return _qrLibPromise;
+    _qrLibPromise = new Promise(function (resolve, reject) {
+      const s = document.createElement('script');
+      s.src = 'https://unpkg.com/qrcode-generator@1.4.4/qrcode.js';
+      s.onload = function () { resolve(window.qrcode); };
+      s.onerror = function () { reject(new Error('QR library failed to load')); };
+      document.head.appendChild(s);
+    });
+    return _qrLibPromise;
+  }
+  function showQrModal() {
+    const needTitle = (document.querySelector('.req-title') || {}).textContent || 'MigrantPortal Need';
+    const descEl = document.querySelector('#need-description, .req-desc, .req-body-desc, .desc');
+    const descText = descEl ? (descEl.textContent || '').trim().slice(0, 140) : '';
+    const url = location.href;
+    document.getElementById('qr-title').textContent = needTitle.trim();
+    document.getElementById('qr-desc').textContent = descText || 'Help meet this real need today.';
+    document.getElementById('qr-url').textContent = url;
+    const wrap = document.getElementById('qr-code-wrap');
+    wrap.innerHTML = '<div style="color:#999;font-size:12px;padding:80px 0">Generating QR…</div>';
+    document.getElementById('qr-modal').classList.add('open');
+    loadQrLib().then(function (qrcode) {
+      const qr = qrcode(0, 'M');
+      qr.addData(url);
+      qr.make();
+      wrap.innerHTML = qr.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+    }).catch(function () {
+      wrap.innerHTML = '<div style="color:#dc2626;font-size:12px;padding:80px 0">QR unavailable offline.</div>';
+    });
+  }
+  function closeQrModal() {
+    document.getElementById('qr-modal').classList.remove('open');
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeQrModal();
+  });
+  document.getElementById('qr-modal').addEventListener('click', function (e) {
+    if (e.target.id === 'qr-modal') closeQrModal();
+  });
+</script>
+
+<script src="i18n.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
+  }
+</script>
 </body>
 </html>
