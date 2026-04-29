@@ -796,13 +796,19 @@
 
     // ── Submit response
     async function submitResponse() {
+      const btn = document.querySelector('[onclick="submitResponse()"]');
+      const origText = btn?.textContent;
+      if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
       const checkedIds = [...document.querySelectorAll('#item-checks input:checked')].map(c => c.value);
       const msg = document.getElementById('respond-msg')?.value.trim() || '';
       try {
         await apiPost(`/needs/${needId}/respond`, { item_ids: checkedIds, message: msg, help_type: selectedHelpType });
         toast('Response submitted! The navigator will be notified.');
         renderPanel(currentNeed, true);
-      } catch(e) { toast(e.message, true); }
+      } catch(e) {
+        toast(e.message, true);
+        if (btn) { btn.disabled = false; btn.textContent = origText; }
+      }
     }
 
     // ── Bookmark toggle

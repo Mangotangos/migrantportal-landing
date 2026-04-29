@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register — MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0D7A8A" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
@@ -251,6 +253,60 @@
   .org-svc-label:hover { border-color:var(--teal);background:#f0fbfb; }
   .org-svc-label input[type=checkbox] { width:16px;height:16px;accent-color:var(--teal);flex-shrink:0; }
   .org-svc-label:has(input:checked) { border-color:var(--teal);background:#e6f7f8;color:var(--teal-d); }
+
+  /* ─── INFO BANNER ──────────────────────────── */
+  .info-banner {
+    background:#eff9fa; border:1px solid #a5d8dc; border-radius:10px;
+    padding:14px 16px; display:flex; gap:10px; align-items:flex-start;
+    margin-bottom:20px; font-size:13px; color:#0a5f6a; line-height:1.55;
+  }
+  .info-banner .ib-icon { flex-shrink:0; font-size:16px; margin-top:1px; }
+
+  /* ─── RADIUS + NEED + REFERRAL CHIPS ──────── */
+  .section-label {
+    font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700;
+    color:var(--text); margin-bottom:10px; margin-top:20px;
+  }
+  .radius-pills { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+  .radius-pill {
+    border:1.5px solid var(--gray-200); border-radius:999px;
+    padding:7px 16px; font-size:13px; font-weight:500;
+    cursor:pointer; background:white; color:var(--text);
+    transition:border-color 0.15s,background 0.15s;
+    font-family:'Inter',sans-serif;
+  }
+  .radius-pill:hover { border-color:var(--teal); background:#f0fbfb; }
+  .radius-pill.selected { border-color:var(--teal); background:#e6f7f8; color:var(--teal-d); font-weight:600; }
+  .need-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:6px; }
+  .need-chip {
+    border:1.5px solid var(--gray-200); border-radius:7px;
+    padding:7px 12px; font-size:13px; font-weight:500; color:var(--text);
+    cursor:pointer; background:white;
+    transition:border-color 0.15s,background 0.15s;
+    font-family:'Inter',sans-serif;
+  }
+  .need-chip:hover { border-color:var(--teal); background:#f0fbfb; }
+  .need-chip.selected { border-color:var(--teal); background:#e6f7f8; color:var(--teal-d); }
+  .chip-toggle-link {
+    font-size:12px; color:var(--teal); cursor:pointer; text-decoration:underline;
+    background:none; border:none; font-family:'Inter',sans-serif; padding:0;
+  }
+  .chip-toggle-link:hover { color:var(--teal-d); }
+  .referral-chips { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
+  .referral-chip {
+    border:1.5px solid var(--gray-200); border-radius:8px;
+    padding:10px 16px; font-size:14px; font-weight:500; color:var(--text);
+    cursor:pointer; background:white;
+    transition:border-color 0.15s,background 0.15s;
+    font-family:'Inter',sans-serif;
+  }
+  .referral-chip:hover { border-color:var(--teal); background:#f0fbfb; }
+  .referral-chip.selected { border-color:var(--teal); background:#e6f7f8; color:var(--teal-d); font-weight:600; }
+  .skip-step {
+    font-size:13px; color:var(--gray-400); cursor:pointer; text-decoration:underline;
+    background:none; border:none; font-family:'Inter',sans-serif; padding:4px 8px;
+  }
+  .skip-step:hover { color:var(--gray-600); }
   </style>
 <script>
   (function() {
@@ -299,25 +355,39 @@
       <div class="step visible" id="step-1">
         <h2 class="step-heading">How would you like to serve?</h2>
         <p class="step-sub">Your choice shapes how you impact families in your community.</p>
-        <p class="step-note">If you are connected with a faith community, we encourage you to choose <strong>Serve with my faith community</strong>.</p>
+        <p class="step-note">If you are connected with a faith community, we encourage you to choose <strong>Faith Community Member</strong>.</p>
         <div class="cards" id="cards-1">
           <div class="card" data-val="own" onclick="selectCard('cards-1', this, 'btn-1')">
-            <div class="card-icon">🧑‍💻</div>
+            <div class="card-icon">🙋</div>
             <div class="card-body">
-              <div class="card-title">Serve on my own</div>
-              <div class="card-desc">Meet real-time, vetted needs for migrant families — wherever and whenever they arise.</div>
+              <div class="card-title">Individual Helper</div>
+              <div class="card-desc">I want to volunteer, donate, or offer my skills to families in need.</div>
             </div>
           </div>
           <div class="card" data-val="church" onclick="selectCard('cards-1', this, 'btn-1')">
             <div class="card-icon">⛪</div>
             <div class="card-body">
-              <div class="card-title">Serve with my faith community</div>
-              <div class="card-desc">Serve as part of your faith community's ministry and step into deeper care opportunities.</div>
+              <div class="card-title">Faith Community Member</div>
+              <div class="card-desc">I serve through my church or faith organization.</div>
+            </div>
+          </div>
+          <div class="card" data-val="connector" onclick="selectCard('cards-1', this, 'btn-1')">
+            <div class="card-icon">🤝</div>
+            <div class="card-body">
+              <div class="card-title">Case Worker / Connector</div>
+              <div class="card-desc">I manage migrant families, submit needs on their behalf, and track progress.</div>
+            </div>
+          </div>
+          <div class="card" data-val="navigator" onclick="selectCard('cards-1', this, 'btn-1')">
+            <div class="card-icon">🧭</div>
+            <div class="card-body">
+              <div class="card-title">Community Navigator</div>
+              <div class="card-desc">I coordinate resources, provide guidance, and connect families to services.</div>
             </div>
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-next" id="btn-1" disabled onclick="goTo(2)">Next</button>
+          <button class="btn-next" id="btn-1" disabled onclick="goFromStep1()">Next</button>
         </div>
       </div>
 
@@ -392,7 +462,35 @@
           <button class="loc-chip" onclick="toggleChip(this)">Douglas, NE</button>
         </div>
 
-        <div class="btn-row">
+        <!-- Responder-only: radius + category -->
+        <div id="responder-only-sections" style="display:none">
+          <div class="section-label">Notify me about needs within...</div>
+          <div class="radius-pills">
+            <button class="radius-pill" onclick="selectRadius(this, 25)">25 mi</button>
+            <button class="radius-pill selected" onclick="selectRadius(this, 50)">50 mi</button>
+            <button class="radius-pill" onclick="selectRadius(this, 200)">200 mi</button>
+            <button class="radius-pill" onclick="selectRadius(this, null)">Any distance</button>
+          </div>
+
+          <div class="section-label">What types of needs can you help with?</div>
+          <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
+            <button class="chip-toggle-link" onclick="toggleAllNeeds(this)">Clear All</button>
+          </div>
+          <div class="need-chips">
+            <button class="need-chip selected" data-cat="education" onclick="toggleNeedChip(this)">🎓 Education</button>
+            <button class="need-chip selected" data-cat="legal" onclick="toggleNeedChip(this)">📋 Legal Aid</button>
+            <button class="need-chip selected" data-cat="healthcare" onclick="toggleNeedChip(this)">🏥 Healthcare</button>
+            <button class="need-chip selected" data-cat="housing" onclick="toggleNeedChip(this)">🏠 Housing</button>
+            <button class="need-chip selected" data-cat="clothing" onclick="toggleNeedChip(this)">👕 Clothing</button>
+            <button class="need-chip selected" data-cat="food" onclick="toggleNeedChip(this)">🍎 Food</button>
+            <button class="need-chip selected" data-cat="employment" onclick="toggleNeedChip(this)">💼 Employment</button>
+            <button class="need-chip selected" data-cat="transportation" onclick="toggleNeedChip(this)">🚗 Transportation</button>
+            <button class="need-chip selected" data-cat="childcare" onclick="toggleNeedChip(this)">👶 Childcare</button>
+            <button class="need-chip selected" data-cat="financial" onclick="toggleNeedChip(this)">💰 Financial</button>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top:24px">
           <button class="btn-next" id="btn-2" disabled onclick="goTo(3)">Next</button>
         </div>
       </div>
@@ -420,22 +518,30 @@
             <label for="phone">Phone number</label>
             <input type="tel" id="phone" name="tel" autocomplete="tel" placeholder="(555) 000-0000" oninput="checkStep3()" />
           </div>
-          <div class="field">
-            <label for="hear">How did you hear about MigrantPortal?</label>
-            <select id="hear" name="hear" onchange="checkStep3()">
-              <option value="">Select one...</option>
-              <option>From a faith community or church</option>
-              <option>From a caseworker or social worker</option>
-              <option>Friend or family member</option>
-              <option>Social media</option>
-              <option>Internet search</option>
-              <option>Other</option>
-            </select>
-          </div>
         </div>
         <div class="btn-row">
           <button class="btn-back" onclick="goTo(2)">Back</button>
-          <button class="btn-next" id="btn-3" disabled onclick="goTo(5)">Next</button>
+          <button class="btn-next" id="btn-3" disabled onclick="goTo('3b')">Next</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3b: Referral source ─────────────── -->
+      <div class="step" id="step-3b">
+        <h2 class="step-heading">How did you hear about MigrantPortal?</h2>
+        <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">Optional — helps us understand how families and helpers find us.</p>
+        <div class="referral-chips">
+          <button class="referral-chip" onclick="selectReferral(this, 'friend_family')">👥 Friend or family</button>
+          <button class="referral-chip" onclick="selectReferral(this, 'church')">⛪ Church or faith org</button>
+          <button class="referral-chip" onclick="selectReferral(this, 'social_media')">📱 Social media</button>
+          <button class="referral-chip" onclick="selectReferral(this, 'google')">🔍 Google search</button>
+          <button class="referral-chip" onclick="selectReferral(this, 'news')">📰 News article</button>
+          <button class="referral-chip" onclick="selectReferral(this, 'organization')">🏢 Organization I work with</button>
+          <button class="referral-chip" onclick="selectReferral(this, 'other')">Other</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goTo(3)">Back</button>
+          <button class="btn-next ready" id="btn-3b" onclick="goTo(5)">Next</button>
+          <button class="skip-step" onclick="goTo(5)">Skip</button>
         </div>
       </div>
 
@@ -501,9 +607,13 @@
             I will not share, publish, or misuse any personal information submitted through MigrantPortal.
           </label>
         </div>
+        <div class="info-banner">
+          <span class="ib-icon">ℹ️</span>
+          <span>Your account will be reviewed by an administrator. You'll receive an email within 24 hours once approved.</span>
+        </div>
         <div id="reg-error" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;line-height:1.4;"></div>
         <div class="btn-row">
-          <button class="btn-back" onclick="goTo(3)">Back</button>
+          <button class="btn-back" onclick="goTo('3b')">Back</button>
           <button class="btn-next" id="btn-5" disabled onclick="submitForm()">Create Account</button>
         </div>
       </div>
@@ -693,6 +803,9 @@
     const TOTAL = 5;
     let currentStep = 1;
     const selectedLocations = new Set();
+    let notificationRadius = 50;
+    let needCategories = ['education','legal','healthcare','housing','clothing','food','employment','transportation','childcare','financial'];
+    let referralSource = '';
 
     // ── Org flow (completely separate from navigator/responder) ──────────────
     let isOrgFlow = false;
@@ -726,17 +839,26 @@
     let responderType = '';
 
     function goTo(n) {
-      // Hide current step (handle step-rt specially)
-      const curEl = document.getElementById(currentStep === 'rt' ? 'step-rt' : 'step-' + currentStep);
+      // Hide current step
+      const curId = currentStep === 'rt' ? 'step-rt' : currentStep === '3b' ? 'step-3b' : 'step-' + currentStep;
+      const curEl = document.getElementById(curId);
       if (curEl) curEl.classList.remove('visible');
 
-      // If coming from step-rt, capture responder type selection
+      // Capture responder type when leaving step-rt
       if (currentStep === 'rt') {
         const sel = document.querySelector('#cards-rt .card.selected');
         if (sel) responderType = sel.dataset.val;
       }
 
       currentStep = n;
+
+      if (n === '3b') {
+        document.getElementById('step-3b').classList.add('visible');
+        updateProgress(4);
+        window.scrollTo(0, 0);
+        return;
+      }
+
       const isSuccess = n > TOTAL;
       if (isSuccess) {
         document.getElementById('step-success').classList.add('visible');
@@ -745,13 +867,30 @@
         return;
       }
       document.getElementById('step-' + n).classList.add('visible');
+      if (n === 2) updateStep2Sections();
       updateProgress(n);
       window.scrollTo(0, 0);
     }
 
     function goBack() {
       if (isOrgFlow) { if (currentOrgStep > 1) goOrgTo(currentOrgStep - 1); return; }
+      if (currentStep === 'rt') { goTo(1); return; }
+      if (currentStep === '3b') { goTo(3); return; }
       if (currentStep > 1) goTo(currentStep - 1);
+    }
+
+    function goFromStep1() {
+      const sel = document.querySelector('#cards-1 .card.selected');
+      if (!sel) return;
+      if (sel.dataset.val === 'navigator' || sel.dataset.val === 'connector') {
+        goTo(2);
+      } else {
+        document.getElementById('step-1').classList.remove('visible');
+        currentStep = 'rt';
+        document.getElementById('step-rt').classList.add('visible');
+        updateProgress(1);
+        window.scrollTo(0, 0);
+      }
     }
 
     /* ══ ORG FLOW FUNCTIONS ════════════════════════════════════════════════ */
@@ -972,8 +1111,7 @@
     function checkStep3() {
       const ok = document.getElementById('fname').value.trim() &&
                  document.getElementById('lname').value.trim() &&
-                 document.getElementById('email').value.includes('@') &&
-                 document.getElementById('hear').value;
+                 document.getElementById('email').value.includes('@');
       setBtn('btn-3', ok);
     }
 
@@ -1023,6 +1161,54 @@
       btn.classList.toggle('ready', ok);
     }
 
+    /* ── Step 2: Responder sections visibility ── */
+    function updateStep2Sections() {
+      const sel = document.querySelector('#cards-1 .card.selected');
+      const isResponder = sel && (sel.dataset.val === 'own' || sel.dataset.val === 'church');
+      document.getElementById('responder-only-sections').style.display = isResponder ? '' : 'none';
+    }
+
+    /* ── Step 2: Radius pills ────────────────── */
+    function selectRadius(el, value) {
+      document.querySelectorAll('.radius-pill').forEach(p => p.classList.remove('selected'));
+      el.classList.add('selected');
+      notificationRadius = value;
+    }
+
+    /* ── Step 2: Need category chips ─────────── */
+    function toggleNeedChip(el) {
+      const cat = el.dataset.cat;
+      if (el.classList.contains('selected')) {
+        el.classList.remove('selected');
+        needCategories = needCategories.filter(c => c !== cat);
+      } else {
+        el.classList.add('selected');
+        if (!needCategories.includes(cat)) needCategories.push(cat);
+      }
+      const toggleBtn = document.querySelector('.chip-toggle-link');
+      if (toggleBtn) toggleBtn.textContent = needCategories.length === 0 ? 'Select All' : 'Clear All';
+    }
+
+    function toggleAllNeeds(btn) {
+      const chips = document.querySelectorAll('.need-chip');
+      if (btn.textContent === 'Clear All') {
+        chips.forEach(c => c.classList.remove('selected'));
+        needCategories = [];
+        btn.textContent = 'Select All';
+      } else {
+        chips.forEach(c => c.classList.add('selected'));
+        needCategories = ['education','legal','healthcare','housing','clothing','food','employment','transportation','childcare','financial'];
+        btn.textContent = 'Clear All';
+      }
+    }
+
+    /* ── Step 3b: Referral source ────────────── */
+    function selectReferral(el, value) {
+      document.querySelectorAll('.referral-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      referralSource = value;
+    }
+
     /* ── Submit ──────────────────────────────── */
     async function submitForm() {
       const btn   = document.getElementById('btn-5');
@@ -1035,13 +1221,18 @@
       document.querySelectorAll('#step-5 input, #step-5 select, #step-5 textarea').forEach(el => { el.disabled = true; });
 
       const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
-      const role = serveChoice === 'church' ? 'navigator' : 'responder';
+      const role = serveChoice === 'connector' ? 'connector' : (serveChoice === 'church' || serveChoice === 'navigator') ? 'navigator' : 'responder';
       const notes = document.getElementById('reg-notes')?.value.trim() || '';
 
       try {
         const payload = { name, email, password, role };
         if (notes) payload.registration_notes = notes;
         if (responderType && role === 'responder') payload.responder_type = responderType;
+        if (referralSource) payload.referral_source = referralSource;
+        if (role === 'responder') {
+          payload.notification_radius = notificationRadius;
+          payload.need_categories = needCategories;
+        }
         const data = await apiPost('/auth/register', payload);
         goTo(6);
         if (data.user?.status === 'pending') {
@@ -1066,5 +1257,13 @@
     }
   </script>
 
+<script src="i18n.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
+  }
+</script>
 </body>
 </html>

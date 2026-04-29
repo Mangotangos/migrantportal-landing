@@ -1027,7 +1027,7 @@
       const role = user?.role;
       if (role==='responder') { document.getElementById('tab-responses').style.display=''; document.getElementById('mob-tab-responses').style.display=''; loadRoleStats('responder'); }
       if (role==='navigator'||role==='connector'||role==='admin') { document.getElementById('add-resource-btn').style.display=''; }
-      if (role==='connector') { document.getElementById('tab-families').style.display=''; document.getElementById('mob-tab-families').style.display=''; document.getElementById('navigator-sidebar').style.display=''; loadRoleStats('connector'); }
+      if (role==='connector') { document.getElementById('tab-families').style.display=''; document.getElementById('mob-tab-families').style.display=''; document.getElementById('navigator-sidebar').style.display=''; document.querySelector('#navigator-sidebar .nav-tools-title').textContent='Connector Tools'; loadRoleStats('connector'); }
       if (role==='navigator') { document.getElementById('tab-families').style.display=''; document.getElementById('mob-tab-families').style.display=''; document.getElementById('navigator-sidebar').style.display=''; loadRoleStats('navigator'); }
     })();
 
