@@ -5,7 +5,7 @@ DirectoryIndex index.html index.htm
 Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 Header always set X-Frame-Options "SAMEORIGIN"
 Header always set X-Content-Type-Options "nosniff"
-Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' www.googletagmanager.com unpkg.com www.google.com www.gstatic.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: tile.openstreetmap.org *.tile.openstreetmap.org www.google-analytics.com www.gstatic.com; connect-src 'self' https://unpkg.com migrant-portal-production.up.railway.app www.google-analytics.com www.googletagmanager.com www.google.com; frame-src 'self' www.google.com; object-src 'none'"
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' www.googletagmanager.com unpkg.com www.google.com www.gstatic.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: tile.openstreetmap.org *.tile.openstreetmap.org www.google-analytics.com www.gstatic.com; connect-src 'self' https://unpkg.com migrant-portal-production.up.railway.app migrant-portal-production-3826.up.railway.app *.railway.app www.google-analytics.com www.googletagmanager.com www.google.com; frame-src 'self' www.google.com; object-src 'none'"
 
 # Referrer Policy
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
@@ -27,7 +27,7 @@ Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
     <FilesMatch "\.(css|js)$">
-        Header set Cache-Control "public, max-age=604800"
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
     </FilesMatch>
     <FilesMatch "\.html$">
         Header set Cache-Control "public, max-age=3600, must-revalidate"
