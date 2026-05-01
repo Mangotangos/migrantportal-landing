@@ -1087,7 +1087,7 @@
       // Update last-refreshed timestamp
       const stamp = document.getElementById('lastUpdatedStamp');
       if (stamp) stamp.textContent = 'Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    } catch(e) {}
+    } catch(e) { console.error('loadStats failed:', e); }
   }
 
   // Auto-refresh every 30s; re-renders visible tab data and timestamps
@@ -1098,7 +1098,7 @@
         const data = await apiGet('/admin/needs/pending?page=1');
         pendingNeeds = data.items;
         renderPending();
-      } catch(e) {}
+      } catch(e) { console.error('auto-refresh pending failed:', e); }
     }
   }, 30000);
 
@@ -1300,7 +1300,7 @@
     if (reason === null) return;
     let done = 0;
     for (const id of ids) {
-      try { await apiPatch(`/admin/needs/${id}/reject`, { reason }); done++; } catch(e) {}
+      try { await apiPatch(`/admin/needs/${id}/reject`, { reason }); done++; } catch(e) { console.error(`bulkReject failed for need ${id}:`, e); }
     }
     toast(`Rejected ${done} need(s).`);
     pendingNeeds = pendingNeeds.filter(n => !ids.includes(n.id));
@@ -1575,6 +1575,7 @@
                     <option value="">— set role —</option>
                     <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
                     <option value="navigator" ${u.role==='navigator'?'selected':''}>navigator</option>
+                    <option value="connector" ${u.role==='connector'?'selected':''}>connector</option>
                     <option value="responder" ${u.role==='responder'?'selected':''}>responder</option>
                   </select>
                 </td>
@@ -1860,7 +1861,7 @@
               </tr>`).join('')}
           </tbody>
         </table>`;
-    } catch(e) { el.innerHTML = `<div class="empty" style="color:var(--red)">${e.message}</div>`; }
+    } catch(e) { el.innerHTML = `<div class="empty" style="color:var(--red)">${escHtml(e.message)}</div>`; }
   }
 
   function toggleAddOrgForm() {
@@ -2068,7 +2069,7 @@
               </tr>`).join('')}
           </tbody>
         </table>`;
-    } catch(e) { el.innerHTML = `<div class="empty" style="color:var(--red)">Failed: ${e.message}</div>`; }
+    } catch(e) { el.innerHTML = `<div class="empty" style="color:var(--red)">Failed: ${escHtml(e.message)}</div>`; }
   }
 
   async function approveDisbursement(id) {
