@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You — MigrantPortal</title>
+  <meta name="description" content="Thank you for your donation to MigrantPortal." />
+  <meta name="theme-color" content="#0D7A8A" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --teal: #0D7A8A; --teal-d: #095d6a; --text: #111827; --muted: #6b7280; --border: #e5e7eb; --cream: #FAF7F0; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(160deg, #f0f9fa 0%, #ffffff 50%, #fef3e8 100%); min-height: 100vh; color: var(--text); display: flex; flex-direction: column; }
+
+    nav { background: white; border-bottom: 1px solid var(--border); height: 60px; display: flex; align-items: center; padding: 0 32px; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.3px; }
+    .nav-logo img { width: 30px; height: 30px; object-fit: contain; }
+    .mp-m { color: #1a2e44; }
+    .mp-p { color: var(--teal); }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+
+    .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+    .card { background: white; border-radius: 20px; padding: 48px 40px; max-width: 540px; width: 100%; text-align: center; box-shadow: 0 8px 32px rgba(13, 122, 138, 0.12); border: 1px solid var(--border); }
+
+    .checkmark { width: 88px; height: 88px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; animation: pop 520ms cubic-bezier(.18,1.25,.6,1) both; }
+    .checkmark svg { width: 48px; height: 48px; stroke: white; stroke-width: 3.5; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; stroke-dashoffset: 60; animation: draw 600ms ease-out 320ms forwards; }
+    @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.08); } 100% { transform: scale(1); } }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+
+    h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 30px; letter-spacing: -0.5px; margin-bottom: 12px; }
+    .subtitle { color: var(--muted); font-size: 16px; line-height: 1.6; margin-bottom: 24px; }
+
+    .amount-box { background: linear-gradient(135deg, #f0f9fa 0%, #e6f5f6 100%); border-radius: 14px; padding: 20px; margin: 20px 0 28px; border: 1px solid #bfe4e8; }
+    .amount-label { font-size: 12px; font-weight: 700; color: var(--teal-d); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .amount { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 36px; color: var(--teal-d); }
+    .amount-need { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+    .share-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0 28px; }
+    .share-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1.5px solid var(--border); background: white; color: var(--text); cursor: pointer; transition: all 0.15s; min-height: 40px; }
+    .share-btn:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-1px); }
+    .share-btn svg { width: 16px; height: 16px; }
+
+    .cta-row { display: flex; flex-direction: column; gap: 10px; }
+    .btn-primary { background: var(--teal); color: white; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 24px; border-radius: 999px; transition: opacity 0.15s; display: block; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { color: var(--muted); text-decoration: none; font-size: 14px; padding: 10px; transition: color 0.15s; }
+    .btn-secondary:hover { color: var(--teal); }
+
+    .quote { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); font-style: italic; font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    @media (max-width: 480px) {
+      .card { padding: 36px 24px; }
+      h1 { font-size: 24px; }
+      .amount { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <nav aria-label="Main navigation">
+    <a href="/" class="nav-logo">
+      <img src="logo.png" alt="MigrantPortal" />
+      <span><span class="mp-m">Migrant</span><span class="mp-p">Portal</span></span>
+    </a>
+    <div class="nav-right"></div>
+  </nav>
+
+  <main class="page" id="main-content">
+    <div class="card" role="status" aria-live="polite">
+      <div class="checkmark" aria-hidden="true">
+        <svg viewBox="0 0 52 52"><polyline points="14,27 22,35 38,17"/></svg>
+      </div>
+      <h1 data-i18n="Thank you for your gift!">Thank you for your gift!</h1>
+      <p class="subtitle" data-i18n="You helped meet a real need today.">You helped meet a real need today. Your generosity makes a real difference in a migrant family's life.</p>
+
+      <div class="amount-box" id="amount-box" style="display:none;">
+        <div class="amount-label">Amount donated</div>
+        <div class="amount" id="amount">—</div>
+        <div class="amount-need" id="amount-need"></div>
+      </div>
+
+      <div class="share-row" aria-label="Share this gift">
+        <a class="share-btn" id="share-fb" target="_blank" rel="noopener" href="#">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.87v-6.98H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.98A10 10 0 0 0 22 12z"/></svg>
+          <span data-i18n="Share on Facebook">Facebook</span>
+        </a>
+        <a class="share-btn" id="share-tw" target="_blank" rel="noopener" href="#">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+          <span data-i18n="Share on Twitter">Twitter / X</span>
+        </a>
+        <a class="share-btn" id="share-em" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          <span data-i18n="Share via Email">Email</span>
+        </a>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn-primary" id="primary-cta" href="/requests.html" data-i18n="Donate again">Donate again</a>
+        <a class="btn-secondary" href="/" data-i18n="Back to Homepage">Back to homepage</a>
+      </div>
+
+      <p class="quote">"Whoever is kind to the poor lends to the Lord, and he will reward them for what they have done." — Proverbs 19:17</p>
+    </div>
+  </main>
+
+  <script>
+    // Read ?amount= and ?need= query params (backend will append these on success redirect)
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const amountRaw = params.get('amount');
+      const needTitle = params.get('need');
+      const needId = params.get('need_id');
+
+      const amountBox = document.getElementById('amount-box');
+      if (amountRaw) {
+        const n = parseFloat(amountRaw);
+        if (!isNaN(n) && n > 0) {
+          document.getElementById('amount').textContent = '$' + n.toFixed(2);
+          amountBox.style.display = 'block';
+        }
+      }
+      if (needTitle) {
+        document.getElementById('amount-need').textContent = 'toward: ' + needTitle;
+      }
+      if (needId) {
+        document.getElementById('primary-cta').href = '/need.html?id=' + encodeURIComponent(needId);
+      }
+
+      // Share link setup
+      const shareUrl = location.origin + '/';
+      const shareMsg = 'I just donated through MigrantPortal to help a migrant family in need. Join me:';
+      document.getElementById('share-fb').href =
+        'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
+      document.getElementById('share-tw').href =
+        'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareMsg) + '&url=' + encodeURIComponent(shareUrl);
+      document.getElementById('share-em').href =
+        'mailto:?subject=' + encodeURIComponent('Help a migrant family') +
+        '&body=' + encodeURIComponent(shareMsg + ' ' + shareUrl);
+    })();
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    }
+  </script>
+  <script src="i18n.js" defer></script>
+</body>
+</html>

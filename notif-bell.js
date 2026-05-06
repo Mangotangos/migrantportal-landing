@@ -172,7 +172,7 @@
       item.addEventListener('click', async () => {
         const id = item.dataset.id;
         const link = item.dataset.link;
-        try { await apiPatch(`/notifications/${id}/read`, {}); } catch(e) {}
+        try { await apiPatch(`/notifications/${id}/read`, {}); } catch(e) { console.error('mark notification read failed:', e); }
         item.classList.remove('unread');
         item.querySelector('.mp-notif-dot')?.classList.add('read');
         if (link) window.location.href = link;
@@ -193,7 +193,7 @@
         badge.classList.add('hidden');
       }
       renderList(notifs);
-    } catch(e) {}
+    } catch(e) { console.error('loadNotifs failed:', e); }
   }
 
   // ── Toggle panel
@@ -216,7 +216,7 @@
         el.classList.remove('unread');
         el.querySelector('.mp-notif-dot')?.classList.add('read');
       });
-    } catch(e) {}
+    } catch(e) { console.error('mark-all-read failed:', e); }
   });
 
   // ── Close on outside click
@@ -238,7 +238,7 @@
       } else {
         badge.classList.add('hidden');
       }
-    } catch(e) {}
+    } catch(e) { console.error('pollCount failed:', e); }
   }
 
   pollCount();

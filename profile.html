@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <style>
@@ -225,9 +225,10 @@
         <div class="user-avatar" id="topAvatar">U</div>
         <div>
           <div class="user-name" id="topName">User</div>
-          <div class="user-role">Responder ▾</div>
+          <div class="user-role" id="topRole">—</div>
         </div>
       </div>
+      <button onclick="logout()" style="padding:7px 14px;border-radius:8px;border:1px solid var(--gray-200);background:white;font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--gray-100)'" onmouseout="this.style.background='white'">Sign Out</button>
     </div>
   </div>
 
@@ -570,17 +571,19 @@
       if (parts[0]) document.getElementById('firstName').value = parts[0];
       if (parts[1]) document.getElementById('lastName').value  = parts.slice(1).join(' ');
       if (u.email)  document.getElementById('emailField').value = u.email;
+      if (document.getElementById('topRole')) document.getElementById('topRole').textContent = u.role || '—';
       updateAvatar();
     }
     prefill(_stored);
 
-    // Try loading fresh data from /auth/me
-    apiGet('/auth/me').then(u => {
-      prefill(u);
-      localStorage.setItem('mp_user', JSON.stringify(u));
-      // Set availability toggle
-      setAvailUI(u.is_available !== false);
-    }).catch(() => {/* use stored */});
+    // Fetch fresh profile using Bearer token only — avoids cookie-session overwriting a different user's localStorage
+    const _tok = localStorage.getItem('mp_token');
+    if (_tok) {
+      fetch(API + '/auth/me', { headers: { 'Authorization': 'Bearer ' + _tok } })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(u => { prefill(u); localStorage.setItem('mp_user', JSON.stringify(u)); setAvailUI(u.is_available !== false); })
+        .catch(() => {/* use stored */});
+    }
 
     function setAvailUI(isAvail) {
       const btn = document.getElementById('avail-toggle');

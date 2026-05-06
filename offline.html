@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0D7A8A" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif; background: #f9fafb; color: #111827; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .card { background: white; border-radius: 16px; padding: 48px 32px; max-width: 440px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+    .icon { font-size: 60px; margin-bottom: 16px; }
+    h1 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+    p { color: #6b7280; line-height: 1.6; margin-bottom: 20px; font-size: 15px; }
+    .btn { display: inline-block; background: #0D7A8A; color: white; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 999px; border: none; cursor: pointer; }
+    .btn:hover { opacity: .88; }
+    ul { text-align: left; margin: 16px 0 24px; padding-left: 20px; color: #4b5563; font-size: 14px; line-height: 1.8; }
+    .brand { font-family: 'Montserrat', -apple-system, sans-serif; font-weight: 800; color: #0D7A8A; font-size: 18px; margin-bottom: 24px; letter-spacing: -0.3px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">MigrantPortal</div>
+    <div class="icon" aria-hidden="true">📡</div>
+    <h1 data-i18n="You're offline">You're offline</h1>
+    <p data-i18n="Saved pages available.">Saved pages available. Reconnect and tap below to reload.</p>
+    <ul>
+      <li>Home, Browse Requests, and Find Help may be cached.</li>
+      <li>Submitting new needs requires an internet connection.</li>
+    </ul>
+    <button class="btn" onclick="location.reload()" data-i18n="Try again">Try again</button>
+  </div>
+  <script src="i18n.js" defer></script>
+</body>
+</html>

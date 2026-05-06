@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
   <style>
@@ -577,8 +577,8 @@
           const ini = (m.name || m.email || '?').split(' ').map(p => p[0]).join('').toUpperCase().slice(0,2);
           const label = m.id === user.id ? 'Admin (You)' : (m.responder_type || 'Member');
           return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
-            <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;">${ini}</div>
-            <div><div style="font-size:13px;font-weight:600;">${m.name||m.email}</div><div style="font-size:11px;color:var(--gray-400);">${label}</div></div>
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;">${esc(ini)}</div>
+            <div><div style="font-size:13px;font-weight:600;">${esc(m.name||m.email)}</div><div style="font-size:11px;color:var(--gray-400);">${esc(label)}</div></div>
           </div>`;
         }).join('');
       teamList.innerHTML = memberRows + `<a href="#" style="font-size:12px;color:var(--teal);font-weight:600;display:block;margin-top:8px;">+ Invite a team member</a>`;

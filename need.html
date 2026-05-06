@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#0D7A8A" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <style>
@@ -834,7 +834,7 @@
       try {
         const bookmarked = await apiGet('/needs/bookmarked');
         setBookmarkUI(bookmarked.some(n => n.id === needId));
-      } catch(e) {}
+      } catch(e) { console.error('initBookmarkState failed:', e); }
     }
 
     // ── Load responders (navigator/admin only)
@@ -869,9 +869,9 @@
             ${serviceOffers.map(r => `
               <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;margin-bottom:6px">
                 <div style="flex:1">
-                  <div style="font-weight:700;font-size:13px">${r.name}</div>
-                  <div style="font-size:11px;color:#6B7280">${[r.responder_type, r.org_name, [r.city,r.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}</div>
-                  ${r.message ? `<div style="font-size:12px;color:#374151;margin-top:2px;font-style:italic">"${r.message}"</div>` : ''}
+                  <div style="font-weight:700;font-size:13px">${esc(r.name)}</div>
+                  <div style="font-size:11px;color:#6B7280">${esc([r.responder_type, r.org_name, [r.city,r.state].filter(Boolean).join(', ')].filter(Boolean).join(' · '))}</div>
+                  ${r.message ? `<div style="font-size:12px;color:#374151;margin-top:2px;font-style:italic">"${esc(r.message)}"</div>` : ''}
                 </div>
                 <button onclick="requestProvider('${r.id}')"
                   style="flex-shrink:0;background:#7C3AED;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;border:none;border-radius:8px;cursor:pointer">
@@ -886,19 +886,19 @@
           <div style="padding:10px 0;border-bottom:1px solid var(--gray-200)">
             <div style="display:flex;align-items:center;justify-content:space-between">
               <div>
-                <div style="font-weight:700;font-size:13px">${r.name}</div>
-                <div style="font-size:11px;color:var(--gray-600)">${[r.responder_type, r.org_name, [r.city,r.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}</div>
+                <div style="font-weight:700;font-size:13px">${esc(r.name)}</div>
+                <div style="font-size:11px;color:var(--gray-600)">${esc([r.responder_type, r.org_name, [r.city,r.state].filter(Boolean).join(', ')].filter(Boolean).join(' · '))}</div>
               </div>
-              ${r.help_type ? `<span style="font-size:10px;font-weight:700;padding:2px 8px;background:#EFF6FF;color:#1D4ED8;border-radius:10px">${HELP_LABEL[r.help_type]||r.help_type}</span>` : ''}
+              ${r.help_type ? `<span style="font-size:10px;font-weight:700;padding:2px 8px;background:#EFF6FF;color:#1D4ED8;border-radius:10px">${esc(HELP_LABEL[r.help_type]||r.help_type)}</span>` : ''}
             </div>
-            ${r.message ? `<div style="font-size:12px;color:var(--gray-700);margin-top:3px;font-style:italic">"${r.message}"</div>` : ''}
+            ${r.message ? `<div style="font-size:12px;color:var(--gray-700);margin-top:3px;font-style:italic">"${esc(r.message)}"</div>` : ''}
             ${r.items && r.items.length ? `
               <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
                 ${r.items.map(ri => `
                   <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:#F9FAFB;border-radius:7px">
-                    <span style="flex:1;font-size:12px;font-weight:600">${ri.label}</span>
-                    ${ri.tracking_info ? `<span style="font-size:10px;color:var(--gray-400)">📦 ${ri.tracking_info}</span>` : ''}
-                    <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:${STATUS_BG[ri.delivery_status]||'#F3F4F6'};color:${STATUS_COLOR[ri.delivery_status]||'#555'}">${ri.delivery_status}</span>
+                    <span style="flex:1;font-size:12px;font-weight:600">${esc(ri.label)}</span>
+                    ${ri.tracking_info ? `<span style="font-size:10px;color:var(--gray-400)">📦 ${esc(ri.tracking_info)}</span>` : ''}
+                    <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:${STATUS_BG[ri.delivery_status]||'#F3F4F6'};color:${STATUS_COLOR[ri.delivery_status]||'#555'}">${esc(ri.delivery_status)}</span>
                     ${ri.delivery_status === 'delivered' ? `<button onclick="confirmItemReceipt('${ri.response_item_id}')" style="font-size:10px;font-weight:700;padding:3px 9px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer">✓ Confirm</button>` : ''}
                   </div>`).join('')}
               </div>` : ''}
@@ -911,7 +911,7 @@
                 <div style="display:flex;gap:2px;margin-bottom:6px">
                   ${[1,2,3,4,5].map(n => `<button onclick="setRatingStar('${r.id}',${n})" id="star-${r.id}-${n}" style="background:none;border:none;cursor:pointer;font-size:22px;padding:0;line-height:1">${currentStars >= n ? '⭐' : '☆'}</button>`).join('')}
                 </div>
-                <textarea id="note-${r.id}" placeholder="Optional note about this helper…" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;resize:none;height:48px;font-family:inherit">${rated?.note || ''}</textarea>
+                <textarea id="note-${esc(r.id)}" placeholder="Optional note about this helper…" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;resize:none;height:48px;font-family:inherit">${esc(rated?.note || '')}</textarea>
                 <button onclick="submitRating('${r.id}')" style="margin-top:6px;background:var(--teal);color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">${rated ? 'Update Rating' : 'Save Rating'}</button>
               </div>`;
             })() : ''}
@@ -949,9 +949,8 @@
           <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:${canUpload?'10px':'0'}">
             ${photos.map(p => `
               <div style="position:relative;flex-shrink:0">
-                <img src="${p.url}" style="width:110px;height:82px;object-fit:cover;border-radius:8px;cursor:pointer"
-                     onclick="window.open('${p.url}','_blank')" />
-                ${canUpload ? `<button onclick="deletePhoto('${p.id}')" title="Remove"
+                <img src="${escUrl(p.url)}" data-photo-url="${escUrl(p.url)}" class="js-photo-img" style="width:110px;height:82px;object-fit:cover;border-radius:8px;cursor:pointer" />
+                ${canUpload ? `<button data-photo-id="${esc(p.id)}" class="js-photo-delete" title="Remove"
                   style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>` : ''}
               </div>`).join('')}
           </div>` : '';
@@ -964,6 +963,8 @@
           <span id="photo-uploading" style="display:none;font-size:12px;color:var(--gray-400);margin-left:8px">Uploading…</span>` : '';
 
         el.innerHTML = strip + uploadBtn;
+        el.querySelectorAll('.js-photo-img').forEach(img => img.addEventListener('click', () => window.open(img.dataset.photoUrl, '_blank', 'noopener')));
+        el.querySelectorAll('.js-photo-delete').forEach(btn => btn.addEventListener('click', () => deletePhoto(btn.dataset.photoId)));
       } catch(e) { /* non-fatal */ }
     }
 
@@ -1173,7 +1174,7 @@
       try {
         const msgs = await apiGet(`/chat/${needId}`);
         renderChat(msgs);
-      } catch(e) {}
+      } catch(e) { console.error('loadChat failed:', e); }
     }
 
     async function sendChat() {
@@ -1280,12 +1281,12 @@
                 <div>
                   <span style="margin-right:4px">${STATUS_ICON[d.status]||'•'}</span>
                   <span style="font-weight:600">$${(d.amount_cents/100).toFixed(2)}</span>
-                  <span style="color:var(--gray-400);margin-left:4px">${d.method.replace('_',' ')}</span>
-                  ${d.note ? `<div style="color:var(--gray-600);margin-top:2px;margin-left:18px">${d.note}</div>` : ''}
-                  ${d.gift_card_code ? `<div style="background:#F0FDF4;border:1px dashed #16A34A;border-radius:5px;padding:4px 8px;margin-top:4px;font-weight:700;letter-spacing:.05em;margin-left:18px">🎁 ${d.gift_card_code}</div>` : ''}
+                  <span style="color:var(--gray-400);margin-left:4px">${esc(String(d.method||'').replace('_',' '))}</span>
+                  ${d.note ? `<div style="color:var(--gray-600);margin-top:2px;margin-left:18px">${esc(d.note)}</div>` : ''}
+                  ${d.gift_card_code ? `<div style="background:#F0FDF4;border:1px dashed #16A34A;border-radius:5px;padding:4px 8px;margin-top:4px;font-weight:700;letter-spacing:.05em;margin-left:18px">🎁 ${esc(d.gift_card_code)}</div>` : ''}
                   ${d.receipt_url
-                    ? `<a href="https://migrant-portal-production.up.railway.app${d.receipt_url}"  target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-left:18px;margin-top:4px;color:var(--teal);font-weight:600">📄 View Receipt</a>`
-                    : d.status === 'sent' ? `<div style="margin-left:18px;margin-top:4px"><label style="cursor:pointer;color:var(--teal);font-weight:600">📎 Upload Receipt<input type="file" accept="image/*" style="display:none" onchange="uploadReceipt('${d.id}',this)"></label></div>` : ''}
+                    ? `<a href="${escUrl('https://migrant-portal-production-3826.up.railway.app' + d.receipt_url)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-left:18px;margin-top:4px;color:var(--teal);font-weight:600">📄 View Receipt</a>`
+                    : d.status === 'sent' ? `<div style="margin-left:18px;margin-top:4px"><label style="cursor:pointer;color:var(--teal);font-weight:600">📎 Upload Receipt<input type="file" accept="image/*" style="display:none" data-disbursement-id="${esc(d.id)}" onchange="uploadReceipt(this.dataset.disbursementId,this)"></label></div>` : ''}
                 </div>
                 <span style="color:var(--gray-400);white-space:nowrap">${new Date(d.requested_at).toLocaleDateString()}</span>
               </div>`).join('');
@@ -1317,7 +1318,7 @@
       const form = new FormData();
       form.append('file', file);
       try {
-        const r = await fetch(`https://migrant-portal-production.up.railway.app/disbursements/${disbId}/receipt`, {
+        const r = await fetch(`https://migrant-portal-production-3826.up.railway.app/disbursements/${disbId}/receipt`, {
           method: 'POST',
           credentials: 'include',
           body: form,
@@ -1408,7 +1409,7 @@
           try {
             const responded = await apiGet('/needs/responded');
             alreadyResponded = responded.some(n => n.id === needId);
-          } catch(e) {}
+          } catch(e) { console.error('loadResponded check failed:', e); }
         }
 
         // Render sidebar

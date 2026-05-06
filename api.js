@@ -114,3 +114,20 @@ function requireAuth() {
   }
   return user;
 }
+
+// HTML escape helper — wrap any backend string before injecting via innerHTML/template literals
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// URL escape — only allow http/https/mailto/tel; blocks javascript:, data:, etc.
+function escUrl(s) {
+  const v = String(s == null ? '' : s).trim();
+  if (!/^(https?:\/\/|mailto:|tel:|\/)/i.test(v)) return '#';
+  return esc(v);
+}

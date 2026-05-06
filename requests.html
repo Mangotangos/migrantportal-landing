@@ -19,7 +19,7 @@
   <meta name="theme-color" content="#0D7A8A" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://migrant-portal-production.up.railway.app" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -331,6 +331,42 @@
   body.unsigned .card-actions {
     opacity: 0.5;
   }
+  
+    /* ── Footer ── */
+    .footer { background: #2e8fa8; }
+    .footer-trusted { border-top: 1px solid rgba(255,255,255,0.1); padding: 56px 48px; }
+    .footer-trusted-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
+    .footer-trusted h3 { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; font-variant: small-caps; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
+    .trusted-logos { display: flex; gap: 32px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .trusted-logo { padding: 10px 24px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.06); font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); letter-spacing: 0.04em; }
+    .footer-main { border-top: 1px solid rgba(255,255,255,0.1); padding: 56px 48px; }
+    .footer-main-inner { max-width: 1120px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; justify-content: space-between; }
+    .footer-brand { max-width: 240px; }
+    .footer-brand-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 17px; color: white; margin-bottom: 12px; }
+    .footer-brand-logo-icon { width: 30px; height: 30px; border-radius: 6px; object-fit: contain; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+    .footer-stats { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+    .footer-stat-num { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: white; }
+    .footer-stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+    .footer-col { min-width: 140px; }
+    .footer-col-title { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-variant: small-caps; color: #F59E0B; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a { font-size: 14px; color: rgba(255,255,255,0.6); transition: color 0.15s; }
+    .footer-col ul li a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding: 22px 48px; background: transparent; }
+    .footer-bottom-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-social { display: flex; gap: 10px; background: transparent !important; }
+    .footer-social a { width: 34px; height: 34px; border-radius: 7px; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; color: #fff; transition: background 0.15s, color 0.15s; }
+    .footer-social a:hover { background: #F59E0B; color: white; }
+    .footer-legal { display: flex; gap: 16px; }
+    .footer-legal a { font-size: 12px; color: rgba(255,255,255,0.45); }
+    .footer-legal a:hover { color: white; }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
+    @media (max-width: 800px) {
+      .footer-trusted { padding: 32px 20px; }
+      .footer-main { padding: 32px 20px; }
+      .footer-bottom { padding: 16px 20px; }
+    }
   </style>
 <script>
   (function() {

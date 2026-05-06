@@ -635,12 +635,12 @@
     </a>
     <div class="nav-links">
       <a href="/" class="nav-link">Home</a>
-      <a href="how-migrantportal-works.html" class="nav-link">How It Works</a>
+      <a href="/how-migrantportal-works.html" class="nav-link">How It Works</a>
       <a href="/vision.html" class="nav-link">Our Vision</a>
-      <a href="find-help.html" class="nav-link">Find Help</a>
-      <a href="requests.html" class="nav-link">Browse Requests</a>
-      <a href="faq.html" class="nav-link">FAQ</a>
-      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="/find-help.html" class="nav-link">Find Help</a>
+      <a href="/requests.html" class="nav-link">Browse Requests</a>
+      <a href="/faq.html" class="nav-link">FAQ</a>
+      <a href="/contact.html" class="nav-link">Contact</a>
     </div>
     <div class="nav-right">
       <a href="login.html" class="nav-signup">Sign In</a>
@@ -676,7 +676,7 @@
         <h1>The Immigrant Needs Network Connecting Families with Help</h1>
         <p class="hero-tagline">Where Help Meets Hope</p>
         <p class="hero-sub">
-          MigrantPortal is a free migrant resource platform where families post real needs and
+          MigrantPortal is a free migrant resource platform where verified navigators submit real family needs and
           <a href="#get-involved">faith communities, volunteers, and donors</a> respond — with compassion, in their language, near them.
         </p>
         <h2 class="sr-only">Take action</h2>
@@ -956,7 +956,7 @@
   <section class="section-newsletter" id="get-involved" aria-labelledby="signup-h">
     <div class="newsletter-inner">
       <div class="newsletter-text">
-        <h2 id="signup-h">Don't miss out!</h2>
+        <h2 id="signup-h">Get the App</h2>
         <p>
           Sign up for updates from MigrantPortal — featuring real stories of impact,
           new opportunities to meet needs, and inspiring ways people like you are seeing
@@ -1036,8 +1036,8 @@
               <div class="footer-stat-label">Avg. Response Time</div>
             </div>
             <div class="footer-stat">
-              <div class="footer-stat-num">3+</div>
-              <div class="footer-stat-label">Launch Cities</div>
+              <div class="footer-stat-num">1</div>
+              <div class="footer-stat-label">Launch City</div>
             </div>
             <div class="footer-stat">
               <div class="footer-stat-num">Free</div>
@@ -1089,15 +1089,6 @@
           <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Facebook">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
           </a>
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          </a>
-          <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="Twitter / X">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <a href="https://www.youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
-          </a>
         </nav>
         <div class="footer-legal">
           <a href="/privacy.html">Privacy</a>
@@ -1112,7 +1103,7 @@
 
   <script>
     (function(){
-      const API = 'https://migrant-portal-production.up.railway.app/impact';
+      const API = 'https://migrant-portal-production-3826.up.railway.app/impact';
       function animateCount(el, target) {
         if (!el || isNaN(target)) return;
         var start = 0, duration = 1200, step = Math.ceil(target / 60);
@@ -1129,13 +1120,16 @@
           var totalNeeds = (d.total_active || 0) + (d.total_fulfilled || 0);
           animateCount(document.getElementById('stat-needs'),      totalNeeds);
           animateCount(document.getElementById('stat-responses'),  d.total_responders      || 0);
-          animateCount(document.getElementById('stat-families'),   d.total_families_helped || 0);
+          var famVal = d.total_families_helped || 0;
+          var famCard = document.getElementById('stat-families');
+          if (famVal > 0) { animateCount(famCard, famVal); }
+          else if (famCard && famCard.closest) { famCard.closest('.live-stat-card').style.display = 'none'; }
           animateCount(document.getElementById('stat-orgs'),       d.total_orgs            || 0);
         })
         .catch(function(){
           ['stat-needs','stat-responses','stat-families','stat-orgs'].forEach(function(id){
             var el = document.getElementById(id);
-            if (el) el.textContent = '0';
+            if (el) el.textContent = '—';
           });
         });
     })();
@@ -1144,7 +1138,7 @@
   <!-- Live needs rotator -->
   <script>
   (function() {
-    const API = 'https://migrant-portal-production.up.railway.app/needs?page=1';
+    const API = 'https://migrant-portal-production-3826.up.railway.app/needs?page=1';
     const INTERVAL = 4000;
     const dotColors = ['var(--orange)', 'var(--teal)', '#8b5cf6', '#10b981', '#f59e0b'];
 
@@ -1155,20 +1149,26 @@
       const pins = document.getElementById('pin-row');
       if (!screen || !n1 || !n2 || !pins) return;
 
+      function esc(str) {
+        return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+
       const a = items[offset % items.length];
       const b = items[(offset + 1) % items.length];
 
       screen.classList.add('fading');
       setTimeout(function() {
+        var descA = esc((a.description || '').slice(0, 60)) + (a.description && a.description.length > 60 ? '…' : '');
+        var descB = esc((b.description || '').slice(0, 60)) + (b.description && b.description.length > 60 ? '…' : '');
         n1.innerHTML = '<div class="screen-need-dot" style="background:' + dotColors[offset % dotColors.length] + '"></div>'
-          + '<div class="screen-need-text"><strong>' + a.title + '</strong><br/>' + (a.description || '').slice(0, 60) + (a.description && a.description.length > 60 ? '…' : '') + '</div>';
+          + '<div class="screen-need-text"><strong>' + esc(a.title) + '</strong><br/>' + descA + '</div>';
 
         n2.innerHTML = '<div class="screen-need-dot" style="background:' + dotColors[(offset + 1) % dotColors.length] + '"></div>'
-          + '<div class="screen-need-text"><strong>' + b.title + '</strong><br/>' + (b.description || '').slice(0, 60) + (b.description && b.description.length > 60 ? '…' : '') + '</div>';
+          + '<div class="screen-need-text"><strong>' + esc(b.title) + '</strong><br/>' + descB + '</div>';
 
         var cities = [a.city, b.city].filter(Boolean);
         pins.innerHTML = cities.map(function(c, i) {
-          return '<div class="screen-pin' + (i % 2 === 1 ? ' teal' : '') + '">📍 ' + c + '</div>';
+          return '<div class="screen-pin' + (i % 2 === 1 ? ' teal' : '') + '">📍 ' + esc(c) + '</div>';
         }).join('');
 
         screen.classList.remove('fading');

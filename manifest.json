@@ -1,0 +1,33 @@
+{
+  "name": "MigrantPortal",
+  "short_name": "MigrantPortal",
+  "description": "Connecting migrants in need with faith communities, volunteers, and donors.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0D7A8A",
+  "background_color": "#ffffff",
+  "lang": "en",
+  "categories": ["social", "lifestyle", "productivity"],
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -265,7 +265,93 @@
     'Español': 'Español',
     'English': 'English',
     'Switch to Spanish': 'Cambiar a español',
-    'Switch to English': 'Cambiar a inglés'
+    'Switch to English': 'Cambiar a inglés',
+
+    // ── Hero paragraph (mixed-content text nodes)
+    'MigrantPortal is a free migrant resource platform where families post real needs and': 'MigrantPortal es una plataforma gratuita de recursos para migrantes donde las familias publican sus necesidades y',
+    'faith communities, volunteers, and donors': 'comunidades de fe, voluntarios y donantes',
+    'respond — with compassion, in their language, near them.': 'responden — con compasión, en su idioma, cerca de ellos.',
+
+    // ── Hero actions
+    'Submit a need': 'Envía una solicitud',
+    'Unlock community resources': 'Desbloquea recursos comunitarios',
+    'Launch a network': 'Lanza una red',
+    'Launch a Network': 'Lanzar una Red',
+    'Connect and empower your partners': 'Conecta y empodera a tus socios',
+
+    // ── Feature strip
+    'Discover live needs': 'Descubre necesidades en tiempo real',
+    'Explore vetted, urgent needs of migrant families across the nation — verified before they reach your community.': 'Explora necesidades urgentes y verificadas de familias migrantes en todo el país, confirmadas antes de llegar a tu comunidad.',
+    'View Map of Requests': 'Ver mapa de solicitudes',
+    'For professionals': 'Para profesionales',
+    'Caseworkers, educators, and clinics use MigrantPortal to engage faith communities and wrap support around families they serve.': 'Trabajadores sociales, educadores y clínicas usan MigrantPortal para conectar comunidades de fe y brindar apoyo integral a las familias que atienden.',
+    'Connect all your partners in one place and maximize the impact you and others are making in the community.': 'Conecta a todos tus socios en un solo lugar y maximiza el impacto que tú y otros están haciendo en la comunidad.',
+    'Become a Partner': 'Conviértete en Socio',
+
+    // ── How it works
+    'Learn how our Care-Sharing technology drives action for migrant families in crisis.': 'Conoce cómo nuestra tecnología Care-Sharing impulsa la acción para familias migrantes en crisis.',
+
+    // ── Impact stats
+    'Real Impact, Right Now': 'Impacto Real, Ahora',
+    'Updated live from our network': 'Actualizado en tiempo real desde nuestra red',
+    'Needs Submitted': 'Solicitudes Enviadas',
+    'Responses Given': 'Respuestas Dadas',
+    'Families Served': 'Familias Atendidas',
+    'Partner Orgs': 'Organizaciones Socias',
+
+    // ── Who We Serve
+    'Who We Serve': 'A Quiénes Servimos',
+    'Local Faith Communities': 'Comunidades de Fe Locales',
+    'Coordinate outreach, track needs in your congregation, and connect families to services.': 'Coordina alcance, registra necesidades en tu congregación y conecta familias con servicios.',
+    'Nonprofits': 'Organizaciones sin Fines de Lucro',
+    'Manage volunteers, respond to community needs, and document your impact in one place.': 'Gestiona voluntarios, responde a necesidades comunitarias y documenta tu impacto en un solo lugar.',
+    'Health Clinics': 'Clínicas de Salud',
+    'Refer patients to housing, food, and legal support without extra administrative burden.': 'Refiere pacientes a vivienda, alimentos y apoyo legal sin carga administrativa adicional.',
+    'Schools': 'Escuelas',
+    'Flag student and family needs early and loop in the right support organizations fast.': 'Detecta necesidades de estudiantes y familias a tiempo y conecta rápidamente con las organizaciones de apoyo adecuadas.',
+    'Legal Aid': 'Ayuda Legal',
+    'Receive referrals from trusted partners and prioritize cases needing urgent legal help.': 'Recibe referencias de socios de confianza y prioriza casos que necesitan ayuda legal urgente.',
+    'Shelters': 'Refugios',
+    'Post available beds, coordinate arrivals, and connect guests to wraparound services.': 'Publica camas disponibles, coordina llegadas y conecta a los huéspedes con servicios integrales.',
+
+    // ── Get Involved
+    'Get Involved Today': 'Involúcrate Hoy',
+    'Choose the role that fits how you want to help': 'Elige el rol que se adapta a cómo quieres ayudar',
+    'Know a migrant family in need? Submit their needs directly and connect them with responders in your community.': '¿Conoces a una familia migrante en necesidad? Envía sus necesidades directamente y conéctalos con personas que pueden ayudar en tu comunidad.',
+    'Join as Navigator': 'Únete como Navegador',
+    'Are you a faith community, volunteer, or organization? Browse real needs and respond with your time, resources, or skills.': '¿Eres una comunidad de fe, voluntario u organización? Explora necesidades reales y responde con tu tiempo, recursos o habilidades.',
+    'Join as Responder': 'Únete como Ayudante',
+    'Organization': 'Organización',
+    'Are you a nonprofit, church, or agency? Sign up to both submit needs on behalf of families and respond to needs in your community.': '¿Eres una organización sin fines de lucro, iglesia o agencia? Regístrate para enviar necesidades en nombre de familias y responder a necesidades en tu comunidad.',
+    'Join as Organization': 'Únete como Organización',
+
+    // ── App download
+    'Get the App': 'Descarga la App',
+    'Free to download. Free to use. Built for community.': 'Gratis para descargar. Gratis para usar. Hecho para la comunidad.',
+    'Get it on': 'Disponible en',
+    'Google Play': 'Google Play',
+    'Notify me for iOS': 'Notificarme para iOS',
+    'App': 'App',
+
+    // ── Newsletter
+    "Don't miss out!": '¡No te lo pierdas!',
+    'Sign up for updates from MigrantPortal — featuring real stories of impact, new opportunities to meet needs, and inspiring ways people like you are seeing and serving migrant families across the country.': 'Regístrate para recibir actualizaciones de MigrantPortal con historias reales de impacto, nuevas oportunidades para cubrir necesidades e inspiradoras formas en que personas como tú están sirviendo a familias migrantes en todo el país.',
+    'Subscribe': 'Suscribirme',
+
+    // ── Footer
+    'Trusted By Teams Across:': 'Con la Confianza de Equipos En:',
+    'Connecting migrant families with faith communities, volunteers, and donors — one need at a time.': 'Conectando familias migrantes con comunidades de fe, voluntarios y donantes — una necesidad a la vez.',
+    'Avg. Response Time': 'Tiempo de Respuesta Prom.',
+    'Launch Cities': 'Ciudades de Lanzamiento',
+    'For Helpers': 'Para Ayudantes',
+    'About': 'Acerca de',
+    'Our Solution': 'Nuestra Solución',
+    'Response within 24 hours': 'Respuesta en 24 horas',
+    'Get Involved': 'Involúcrate',
+    'Download App': 'Descargar App',
+    'Meet a Need': 'Ayuda a Alguien',
+    'View Needs Map': 'Ver Mapa de Necesidades',
+    'View Map of Requests': 'Ver Mapa de Solicitudes'
   };
 
   function cacheOriginal(el) {
