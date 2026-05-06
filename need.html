@@ -1339,7 +1339,7 @@
         window.location.href = data.checkout_url;
       } catch(e) {
         btn.disabled = false; btn.textContent = 'Donate';
-        toast(e.message.includes('not configured') ? 'Donations coming soon!' : e.message, true);
+        toast(e.message || 'Unable to process donation. Please try again.', true);
       }
     }
 
