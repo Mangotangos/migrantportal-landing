@@ -1,0 +1,26 @@
+# Deploy scripts with credentials - NEVER commit
+deploy*.py
+upload*.py
+*.credentials
+*.env
+.env*
+
+# PHP utility scripts
+git_pull.php
+cleanup.php
+*.php
+
+# Claude Code / insaits session logs
+.insaits*
+.insaits_sessions/
+.insaits_history/
+*.jsonl
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
