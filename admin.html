@@ -1050,19 +1050,19 @@
       // Read previous values from sessionStorage for delta
       const prev = JSON.parse(sessionStorage.getItem('mp_kpi_prev') || 'null');
 
-      document.getElementById('sPending').textContent    = s.pending;
-      document.getElementById('sActive').textContent     = s.approved;
-      document.getElementById('sFulfilled').textContent  = s.fulfilled;
-      document.getElementById('sTotal').textContent      = s.total;
-      document.getElementById('sResponders').textContent = s.responders;
+      document.getElementById('sPending').textContent    = s.pending_count;
+      document.getElementById('sActive').textContent     = s.active_count;
+      document.getElementById('sFulfilled').textContent  = s.fulfilled_count;
+      document.getElementById('sTotal').textContent      = s.total_needs;
+      document.getElementById('sResponders').textContent = s.total_responders;
       document.getElementById('sRate').textContent       = s.fulfillment_rate + '%';
 
       if (prev) {
-        renderKpiDelta('dPending',   s.pending,          prev.pending,   true);
-        renderKpiDelta('dActive',    s.approved,         prev.approved,  false);
-        renderKpiDelta('dFulfilled', s.fulfilled,        prev.fulfilled, false);
-        renderKpiDelta('dTotal',     s.total,            prev.total,     false);
-        renderKpiDelta('dResponders',s.responders,       prev.responders,false);
+        renderKpiDelta('dPending',   s.pending_count,    prev.pending_count,   true);
+        renderKpiDelta('dActive',    s.active_count,     prev.active_count,    false);
+        renderKpiDelta('dFulfilled', s.fulfilled_count,  prev.fulfilled_count, false);
+        renderKpiDelta('dTotal',     s.total_needs,      prev.total_needs,     false);
+        renderKpiDelta('dResponders',s.total_responders, prev.total_responders,false);
         const rateDiff = s.fulfillment_rate - prev.fulfillment_rate;
         const rEl = document.getElementById('dRate');
         if (rEl && rateDiff !== 0) {
@@ -1073,13 +1073,13 @@
 
       // Save current as previous for next poll
       sessionStorage.setItem('mp_kpi_prev', JSON.stringify({
-        pending: s.pending, approved: s.approved, fulfilled: s.fulfilled,
-        total: s.total, responders: s.responders, fulfillment_rate: s.fulfillment_rate
+        pending_count: s.pending_count, active_count: s.active_count, fulfilled_count: s.fulfilled_count,
+        total_needs: s.total_needs, total_responders: s.total_responders, fulfillment_rate: s.fulfillment_rate
       }));
 
       const badge = document.getElementById('pendingBadge');
-      badge.textContent = s.pending;
-      badge.className = 'nav-badge' + (s.pending === 0 ? ' zero' : '');
+      badge.textContent = s.pending_count;
+      badge.className = 'nav-badge' + (s.pending_count === 0 ? ' zero' : '');
 
       // Update last-refreshed timestamp
       const stamp = document.getElementById('lastUpdatedStamp');
