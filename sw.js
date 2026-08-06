@@ -5,7 +5,7 @@
  * - Offline fallback page for navigations
  * Bump CACHE_NAME on every deploy.
  */
-const CACHE_NAME = 'migrantportal-v6';
+const CACHE_NAME = 'migrantportal-v7';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_URLS = [
@@ -81,9 +81,14 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       (async () => {
         try {
-          const fresh = await fetch(req);
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(req, fresh.clone()).catch(() => {});
+          // Fetch by URL string, not the captured navigate-mode Request —
+          // reusing `req` here throws "Failed to fetch" once Cloudflare's
+          // .html -> clean-URL 308 redirect is in the chain.
+          const fresh = await fetch(req.url, { redirect: 'follow' });
+          if (!fresh.redirected) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(req, fresh.clone()).catch(() => {});
+          }
           return fresh;
         } catch (_) {
           const cache = await caches.open(CACHE_NAME);
