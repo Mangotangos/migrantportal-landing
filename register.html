@@ -327,7 +327,7 @@
       <img src="logo.png" class="nav-logo-icon" alt="MigrantPortal" />
       <span><span style="color:#1a2e44">Migrant</span><span class="mp-p">Portal</span></span>
     </a>
-    <a href="/signup.html" class="nav-back">
+    <a href="/signup" class="nav-back">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Back to sign-up options
     </a>
@@ -596,8 +596,8 @@
           <input type="checkbox" id="agree" onchange="checkStep5()" />
           <label for="agree">
             I agree to the MigrantPortal
-            <a href="/terms.html"  target="_blank" rel="noopener noreferrer">Terms of Service</a> and
-            <a href="/privacy.html"  target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+            <a href="/terms"  target="_blank" rel="noopener noreferrer">Terms of Service</a> and
+            <a href="/privacy"  target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
           </label>
         </div>
         <div class="check-row" style="margin-bottom:24px;">
@@ -762,7 +762,7 @@
         </div>
         <div class="check-row" style="margin-bottom:12px">
           <input type="checkbox" id="org-agree" onchange="checkOrgAccount()" />
-          <label for="org-agree">I agree to the MigrantPortal <a href="/terms.html"  target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy.html"  target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</label>
+          <label for="org-agree">I agree to the MigrantPortal <a href="/terms"  target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy"  target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</label>
         </div>
         <div class="check-row" style="margin-bottom:24px">
           <input type="checkbox" id="org-agree-data" onchange="checkOrgAccount()" />
@@ -787,7 +787,7 @@
           <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:6px">📧 Check Your Email</div>
           <p style="font-size:13px;color:#1e40af;margin:0;line-height:1.5">We sent a verification link to your email address. Click it to verify your account — check your inbox and spam folder.</p>
         </div>
-        <a href="pending.html" class="btn-home">View Application Status</a>
+        <a href="pending" class="btn-home">View Application Status</a>
       </div>
 
     </div>
@@ -1004,10 +1004,10 @@
 
         // 3. Redirect to pending
         if (userData.user?.status === 'pending') {
-          window.location.href = '/pending.html';
+          window.location.href = '/pending';
         } else {
           saveSession(userData.access_token, userData.user);
-          setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+          setTimeout(() => { window.location.href = 'dashboard'; }, 1500);
         }
       } catch (ex) {
         btn.disabled = false;
@@ -1015,7 +1015,7 @@
         const msg = ex.message || 'Something went wrong. Please try again.';
         const isEmailTaken = msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists');
         errEl.innerHTML = isEmailTaken
-          ? `That email is already registered. <a href="/login.html" style="color:#dc2626;font-weight:600;text-decoration:underline">Sign in instead?</a>`
+          ? `That email is already registered. <a href="/login" style="color:#dc2626;font-weight:600;text-decoration:underline">Sign in instead?</a>`
           : msg;
         errEl.style.display = 'block';
       }
@@ -1237,10 +1237,10 @@
         goTo(6);
         if (data.user?.status === 'pending') {
           // Do NOT save session — pending users must wait for admin approval
-          window.location.href = '/pending.html';
+          window.location.href = '/pending';
         } else {
           saveSession(data.access_token, data.user);
-          const dest = role === 'navigator' ? 'org-dashboard.html' : 'dashboard.html';
+          const dest = role === 'navigator' ? 'org-dashboard' : 'dashboard';
           setTimeout(() => window.location.href = dest, 2000);
         }
       } catch (ex) {
@@ -1250,7 +1250,7 @@
         const msg = ex.message || 'Something went wrong. Please try again.';
         const isEmailTaken = msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists');
         errEl.innerHTML = isEmailTaken
-          ? `That email is already registered. <a href="/login.html" style="color:#dc2626;font-weight:600;text-decoration:underline;">Sign in instead?</a>`
+          ? `That email is already registered. <a href="/login" style="color:#dc2626;font-weight:600;text-decoration:underline;">Sign in instead?</a>`
           : msg;
         errEl.style.display = 'block';
       }

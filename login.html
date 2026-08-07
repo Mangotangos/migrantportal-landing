@@ -77,7 +77,7 @@
       <img src="logo.png" class="nav-logo-icon" alt="MigrantPortal" />
       <span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
     </a>
-    <a href="signup.html" style="font-size:14px;font-weight:600;color:var(--teal);">Create account →</a>
+    <a href="signup" style="font-size:14px;font-weight:600;color:var(--teal);">Create account →</a>
   </nav>
 
   <div class="page">
@@ -98,13 +98,13 @@
             <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
             <button type="button" class="pw-toggle" onclick="togglePw()">Show</button>
           </div>
-          <a href="forgot-password.html" class="forgot">Forgot password?</a>
+          <a href="forgot-password" class="forgot">Forgot password?</a>
         </div>
         <button type="submit" class="btn" id="loginBtn">Sign In</button>
       </form>
 
       <div class="divider">or</div>
-      <div class="signup-link">Don't have an account? <a href="signup.html">Sign up free</a></div>
+      <div class="signup-link">Don't have an account? <a href="signup">Sign up free</a></div>
     </div>
   </div>
 
@@ -115,9 +115,9 @@
     if (_existingUser) {
       try {
         const _role = JSON.parse(_existingUser)?.role;
-        window.location.href = _role === 'admin' ? 'admin.html' : _role === 'navigator' ? 'navigator.html' : 'dashboard.html';
+        window.location.href = _role === 'admin' ? 'admin' : _role === 'navigator' ? 'navigator' : 'dashboard';
       } catch (_) {
-        window.location.href = 'dashboard.html';
+        window.location.href = 'dashboard';
       }
     }
 
@@ -160,7 +160,7 @@
         saveSession(data.access_token, data.user);
         try { localStorage.removeItem('mp_lang'); } catch(_) {}
         const role = data.user?.role;
-        window.location.href = role === 'admin' ? 'admin.html' : role === 'navigator' ? 'navigator.html' : 'dashboard.html';
+        window.location.href = role === 'admin' ? 'admin' : role === 'navigator' ? 'navigator' : 'dashboard';
       } catch (ex) {
         const msg = ex.message || '';
         if (msg.startsWith('PENDING:')) {

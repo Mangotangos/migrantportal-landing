@@ -524,13 +524,13 @@
   (function() {
     const token = localStorage.getItem('mp_token');
     const _adminUser = (() => { try { return JSON.parse(localStorage.getItem('mp_user')); } catch { return null; } })();
-    if (!token || _adminUser?.role !== 'admin') { window.location.replace('/login.html'); }
+    if (!token || _adminUser?.role !== 'admin') { window.location.replace('/login'); }
   })();
 </script>
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <a href="dashboard.html" class="topbar-logo">
+  <a href="dashboard" class="topbar-logo">
     <img src="logo.png" alt="MigrantPortal" />
     Migrant<span class="brand-accent">Portal</span>
   </a>
@@ -803,7 +803,7 @@
           <div class="card" style="padding:0;overflow:hidden">
             <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:14px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
               <span>All Partner Nonprofits</span>
-              <a href="/find-help.html" target="_blank" rel="noopener" style="font-size:12px;color:var(--teal);text-decoration:none">View public page →</a>
+              <a href="/find-help" target="_blank" rel="noopener" style="font-size:12px;color:var(--teal);text-decoration:none">View public page →</a>
             </div>
             <div id="np-list" style="padding:16px 20px"><div class="loading">Loading…</div></div>
           </div>
@@ -963,7 +963,7 @@
 <script>
   const user = requireAuth();
   if (!user || user.role !== 'admin') {
-    window.location.replace('login.html');
+    window.location.replace('login');
     throw new Error('Unauthorized');
   }
   document.getElementById('adminName').textContent = user?.name || '';
@@ -1386,7 +1386,7 @@
       </div>
       <div style="display:flex;gap:8px;margin-top:20px">
         ${isPending ? `<button class="btn btn-approve" onclick="approveSingle('${n.id}');closeModal()">✓ Approve</button><button class="btn btn-reject" onclick="showReject('${n.id}');closeModal()">✗ Reject</button>` : ''}
-        <a href="need.html?id=${n.id}" class="btn" style="margin-left:auto;text-decoration:none">View Full Page →</a>
+        <a href="need?id=${n.id}" class="btn" style="margin-left:auto;text-decoration:none">View Full Page →</a>
         <button class="btn btn-delete" onclick="document.getElementById('modalOverlay').classList.remove('open')">Close</button>
       </div>
     `;
@@ -1430,7 +1430,7 @@
           <tbody>
             ${data.items.map(n => `
               <tr>
-                <td><a href="need.html?id=${escHtml(n.id)}" style="color:var(--text-3);font-family:monospace;font-size:12px">#${escHtml(n.case_number)}</a></td>
+                <td><a href="need?id=${escHtml(n.id)}" style="color:var(--text-3);font-family:monospace;font-size:12px">#${escHtml(n.case_number)}</a></td>
                 <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;cursor:pointer;color:var(--teal)" title="${escHtml(n.title)}" data-need-id="${escHtml(n.id)}" data-action="view-need">${escHtml(n.title)}</td>
                 <td style="color:var(--text-2)">${escHtml(CAT_EMOJI[n.category]||'')} ${escHtml(n.category)}</td>
                 <td><span class="urgency-dot ${escHtml(URGENCY_COLOR[n.urgency]||'')}"></span><span style="color:var(--text-2)">${escHtml(n.urgency)}</span></td>

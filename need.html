@@ -316,7 +316,7 @@
     <a href="/" style="font-size:13px;color:#009DA5;font-weight:600;text-decoration:none;">MigrantPortal</a>
     <span style="font-size:13px;color:#999;">/ Requests /</span>
     <span style="font-size:13px;color:#0D0D0D;font-weight:600;">Need #MP001</span>
-    <a href="dashboard.html" style="margin-left:auto;font-size:13px;font-weight:600;color:#009DA5;text-decoration:none;display:flex;align-items:center;gap:5px;">
+    <a href="dashboard" style="margin-left:auto;font-size:13px;font-weight:600;color:#009DA5;text-decoration:none;display:flex;align-items:center;gap:5px;">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Dashboard
     </a>
@@ -586,7 +586,7 @@
     const _params = new URLSearchParams(location.search);
     if (_params.get('donated') === '1') {
       // clean URL then show success toast after page loads
-      history.replaceState(null, '', needId ? `need.html?id=${needId}` : 'requests.html');
+      history.replaceState(null, '', needId ? `need?id=${needId}` : 'requests');
       window.addEventListener('load', () => toast('Thank you! Your donation was received. 🎉'));
     }
 
@@ -623,7 +623,7 @@
             <div style="font-size:32px;margin-bottom:10px">🤝</div>
             <div style="font-weight:700;font-size:14px;margin-bottom:6px">Want to Help?</div>
             <div style="color:var(--gray-600);font-size:13px;margin-bottom:16px">Log in to offer your support to this family.</div>
-            <a href="login.html" style="display:block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px;border-radius:8px;text-align:center;text-decoration:none;">Log In to Help</a>
+            <a href="login" style="display:block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px;border-radius:8px;text-align:center;text-decoration:none;">Log In to Help</a>
           </div>`;
         return;
       }
@@ -714,7 +714,7 @@
         return;
       }
 
-      panel.innerHTML = `<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests.html">open needs</a>.</div>`;
+      panel.innerHTML = `<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests">open needs</a>.</div>`;
     }
 
     // ── Render items grid
@@ -1331,7 +1331,7 @@
     }
 
     async function startDonation() {
-      if (!currentUser) { window.location.href = 'login.html'; return; }
+      if (!currentUser) { window.location.href = 'login'; return; }
       const btn = document.getElementById('donate-btn');
       btn.disabled = true; btn.textContent = 'Redirecting…';
       try {
@@ -1347,7 +1347,7 @@
     async function loadNeed() {
       if (!needId) {
         // No ?id= param — redirect to requests list; never show the demo record
-        window.location.replace('requests.html');
+        window.location.replace('requests');
         return;
       }
 
@@ -1417,12 +1417,12 @@
           renderPanel(need, alreadyResponded);
         } catch(panelErr) {
           const p = document.getElementById('panel-content');
-          if (p) p.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests.html">open needs</a>.</div>';
+          if (p) p.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests">open needs</a>.</div>';
         }
         // Safety: clear any lingering "Loading…" if renderPanel didn't set content
         const p = document.getElementById('panel-content');
         if (p && p.textContent.trim() === 'Loading…') {
-          p.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests.html">open needs</a>.</div>';
+          p.innerHTML = '<div style="color:var(--gray-400);font-size:12px;text-align:center;padding:10px 0">Browse other <a href="requests">open needs</a>.</div>';
         }
         initBookmarkState();
         // Load navigator funds panel and refresh donation progress bar
@@ -1507,23 +1507,23 @@
     }
   </style>
   <nav class="mob-nav">
-    <button class="mob-nav-btn" onclick="window.location.href='dashboard.html'">
+    <button class="mob-nav-btn" onclick="window.location.href='dashboard'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Dashboard
     </button>
-    <button class="mob-nav-btn active" onclick="window.location.href='requests.html'">
+    <button class="mob-nav-btn active" onclick="window.location.href='requests'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
       Needs
     </button>
-    <button class="mob-nav-btn" onclick="window.location.href='submit-need.html'">
+    <button class="mob-nav-btn" onclick="window.location.href='submit-need'">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6129" stroke-width="2.5"><circle cx="12" cy="12" r="10" fill="#fff5f0" stroke="#FF6129"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       Submit
     </button>
-    <button class="mob-nav-btn" onclick="window.location.href='org-dashboard.html'">
+    <button class="mob-nav-btn" onclick="window.location.href='org-dashboard'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
       Org
     </button>
-    <button class="mob-nav-btn" onclick="window.location.href='profile.html'">
+    <button class="mob-nav-btn" onclick="window.location.href='profile'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       Profile
     </button>

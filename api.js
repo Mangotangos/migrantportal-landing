@@ -6,7 +6,7 @@ function _handle401() {
   if (_isLogoutInProgress) return;
   localStorage.removeItem('mp_user');
   localStorage.removeItem('mp_token');
-  window.location.replace('/login.html');
+  window.location.replace('/login');
 }
 
 async function _fetchWithRetry(path, options) {
@@ -93,23 +93,23 @@ async function logout() {
   localStorage.removeItem('mp_user');
   localStorage.removeItem('mp_token');
   try { await fetch(API + '/auth/logout', { method: 'POST', headers: _authHeaders(), credentials: 'include' }); } catch(e) { console.error('Logout error:', e); }
-  window.location.replace('/login.html');
+  window.location.replace('/login');
 }
 
 function requireAuth() {
   if (!localStorage.getItem('mp_user')) {
-    window.location.replace('/login.html');
+    window.location.replace('/login');
     return null;
   }
   const user = getUser();
   if (user?.status === 'pending') {
-    window.location.replace('/pending.html');
+    window.location.replace('/pending');
     return null;
   }
   if (user?.status === 'rejected') {
     localStorage.removeItem('mp_user');
     localStorage.removeItem('mp_token');
-    window.location.replace('/login.html');
+    window.location.replace('/login');
     return null;
   }
   return user;

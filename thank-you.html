@@ -98,7 +98,7 @@
       </div>
 
       <div class="cta-row">
-        <a class="btn-primary" id="primary-cta" href="/requests.html" data-i18n="Donate again">Donate again</a>
+        <a class="btn-primary" id="primary-cta" href="/requests" data-i18n="Donate again">Donate again</a>
         <a class="btn-secondary" href="/" data-i18n="Back to Homepage">Back to homepage</a>
       </div>
 
@@ -126,7 +126,7 @@
         document.getElementById('amount-need').textContent = 'toward: ' + needTitle;
       }
       if (needId) {
-        document.getElementById('primary-cta').href = '/need.html?id=' + encodeURIComponent(needId);
+        document.getElementById('primary-cta').href = '/need?id=' + encodeURIComponent(needId);
       }
 
       // Share link setup

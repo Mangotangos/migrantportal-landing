@@ -114,7 +114,7 @@
       if (user.name) document.getElementById('user-name').textContent = user.name.split(' ')[0];
       if (user.email) document.getElementById('user-email').textContent = user.email;
       if (user.status === 'approved') {
-        window.location.href = user.role === 'navigator' ? '/navigator.html' : '/dashboard.html';
+        window.location.href = user.role === 'navigator' ? '/navigator' : '/dashboard';
       }
     }
   </script>

@@ -387,7 +387,7 @@
     <button style="background:none;border:none;cursor:pointer;color:var(--gray-600);padding:4px;">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <a href="dashboard.html" class="topbar-logo">
+    <a href="dashboard" class="topbar-logo">
       <div class="logo-icon"><picture><source srcset="logo.webp" type="image/webp" /><img src="logo.png" alt="MigrantPortal" loading="lazy" /></picture></div>
       <span style="display:inline-flex;gap:0"><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
     </a>
@@ -404,17 +404,17 @@
           <div class="user-role">Responder ▾</div>
         </div>
       </div>
-      <a id="loginBtn" href="/login.html" style="display:none;height:34px;padding:0 16px;background:var(--teal);color:white;border-radius:6px;font-size:13px;font-weight:600;align-items:center;gap:8px;text-decoration:none;">Log In</a>
+      <a id="loginBtn" href="/login" style="display:none;height:34px;padding:0 16px;background:var(--teal);color:white;border-radius:6px;font-size:13px;font-weight:600;align-items:center;gap:8px;text-decoration:none;">Log In</a>
     </div>
   </div>
 
   <!-- PAGE NAV -->
   <nav class="page-nav">
-    <a href="dashboard.html">Home</a>
-    <a href="requests.html" class="active">Requests</a>
-    <a href="submit-need.html">Submit Need</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="profile.html">Profile</a>
+    <a href="dashboard">Home</a>
+    <a href="requests" class="active">Requests</a>
+    <a href="submit-need">Submit Need</a>
+    <a href="dashboard">Dashboard</a>
+    <a href="profile">Profile</a>
   </nav>
 
   <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Open Requests</h1>
@@ -502,7 +502,7 @@
         <div class="panel-header-right">
           <button class="sort-opt active" data-sort="urgency" onclick="setSort('urgency')">🔴 Urgent</button>
           <button class="sort-opt" data-sort="recent" onclick="setSort('recent')">🕐 Recent</button>
-          <button class="close-panel" onclick="window.location.href='dashboard.html'">×</button>
+          <button class="close-panel" onclick="window.location.href='dashboard'">×</button>
         </div>
       </div>
 
@@ -548,7 +548,7 @@
       // Unsigned user — show limited preview
       document.body.classList.add('unsigned');
       document.getElementById('signup-banner').classList.add('show');
-      document.getElementById('signup-banner-btn').onclick = () => window.location.href = '/signup.html';
+      document.getElementById('signup-banner-btn').onclick = () => window.location.href = '/signup';
       document.getElementById('userChip').style.display = 'none';
       document.getElementById('loginBtn').style.display = 'flex';
     }
@@ -587,7 +587,7 @@
       const children = need.family_children || 0;
       const urgencyLabel = need.urgency ? need.urgency.charAt(0).toUpperCase() + need.urgency.slice(1) : '';
       return `
-        <a class="req-card" href="need.html?id=${need.id}" onclick="selectCard(this, ${idx}); event.preventDefault();" data-id="${need.id}" data-urgency="${need.urgency || ''}" style="text-decoration:none;color:inherit;display:block;">
+        <a class="req-card" href="need?id=${need.id}" onclick="selectCard(this, ${idx}); event.preventDefault();" data-id="${need.id}" data-urgency="${need.urgency || ''}" style="text-decoration:none;color:inherit;display:block;">
           <div class="card-img" style="background:${bg};">
             <span class="card-img-illus">${emoji}</span>
             ${urgencyLabel ? `<span class="urgency-chip" data-urgency="${need.urgency}">${urgencyLabel}</span>` : ''}
@@ -633,7 +633,7 @@
           <div class="popup-title">${need.title}</div>
           <div class="popup-loc">${loc}</div>
           <div style="margin-top:8px">
-            <a href="need.html?id=${need.id}" style="color:#009DA5;font-size:12px;font-weight:600;">View Details →</a>
+            <a href="need?id=${need.id}" style="color:#009DA5;font-size:12px;font-weight:600;">View Details →</a>
           </div>
         `);
       m.on('click', () => {
@@ -738,7 +738,7 @@
         markers[idx].openPopup();
       }
       const needId = el.dataset.id;
-      const href = needId ? `need.html?id=${needId}` : 'need.html';
+      const href = needId ? `need?id=${needId}` : 'need';
       setTimeout(() => { window.location.href = href; }, 300);
     }
 
@@ -833,7 +833,7 @@
         const r = await apiGet(`/search?q=${encodeURIComponent(q)}&type=needs`);
         if (!r.total) { dd.innerHTML = '<div style="padding:12px 16px;font-size:13px;color:#999">No results found.</div>'; return; }
         dd.innerHTML = r.needs.map(n => `
-          <a href="need.html?id=${n.id}" style="display:block;padding:10px 16px;border-bottom:1px solid #f3f4f6;text-decoration:none;color:#0D0D0D" onclick="document.getElementById('search-dropdown').style.display='none'">
+          <a href="need?id=${n.id}" style="display:block;padding:10px 16px;border-bottom:1px solid #f3f4f6;text-decoration:none;color:#0D0D0D" onclick="document.getElementById('search-dropdown').style.display='none'">
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:16px">${SEARCH_EMOJI[n.category]||'📦'}</span>
               <div>
@@ -897,23 +897,23 @@
   </button>
 
   <nav class="mob-nav">
-    <button class="mob-nav-btn" onclick="window.location.href='dashboard.html'">
+    <button class="mob-nav-btn" onclick="window.location.href='dashboard'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Dashboard
     </button>
-    <button class="mob-nav-btn active" onclick="window.location.href='requests.html'">
+    <button class="mob-nav-btn active" onclick="window.location.href='requests'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
       Needs
     </button>
-    <button class="mob-nav-btn" onclick="window.location.href='submit-need.html'">
+    <button class="mob-nav-btn" onclick="window.location.href='submit-need'">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6129" stroke-width="2.5"><circle cx="12" cy="12" r="10" fill="#fff5f0" stroke="#FF6129"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       Submit
     </button>
-    <button class="mob-nav-btn" onclick="window.location.href='org-dashboard.html'">
+    <button class="mob-nav-btn" onclick="window.location.href='org-dashboard'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 22H6a2 2 0 01-2-2V7l4-4h8l4 4v13a2 2 0 01-2 2z"/><path d="M12 3v4"/><path d="M9 11h6"/></svg>
       Org
     </button>
-    <button class="mob-nav-btn" onclick="window.location.href='profile.html'">
+    <button class="mob-nav-btn" onclick="window.location.href='profile'">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       Profile
     </button>

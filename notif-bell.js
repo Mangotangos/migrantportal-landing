@@ -123,7 +123,7 @@
 
   // ── Type → link
   function notifLink(n) {
-    if (n.need_id) return `need.html?id=${n.need_id}`;
+    if (n.need_id) return `need?id=${n.need_id}`;
     return null;
   }
 

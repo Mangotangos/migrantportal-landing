@@ -196,10 +196,10 @@
       MigrantPortal
     </a>
     <div class="nav-links">
-      <a href="requests.html">Browse Needs</a>
-      <a href="how-migrantportal-works.html">How It Works</a>
-      <a href="faq.html">FAQ</a>
-      <a href="dashboard.html" class="nav-btn">Dashboard</a>
+      <a href="requests">Browse Needs</a>
+      <a href="how-migrantportal-works">How It Works</a>
+      <a href="faq">FAQ</a>
+      <a href="dashboard" class="nav-btn">Dashboard</a>
     </div>
   </nav>
 
@@ -208,7 +208,7 @@
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Back
     </button>
-    <span class="breadcrumb"><a href="dashboard.html">Dashboard</a> / Submit a Need</span>
+    <span class="breadcrumb"><a href="dashboard">Dashboard</a> / Submit a Need</span>
   </div>
 
   <div class="page">
@@ -227,7 +227,7 @@
       </div>
       <h2 id="authGateTitle" style="font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--navy);margin-bottom:10px;">Login Required</h2>
       <p id="authGateMsg" style="font-size:14px;color:var(--gray-600);margin-bottom:28px;line-height:1.6;">You must be logged in with an approved account to submit a family need.</p>
-      <a id="authGateBtn" href="login.html?next=submit-need.html" style="display:inline-block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px 32px;border-radius:8px;text-decoration:none;">Log In to Continue</a>
+      <a id="authGateBtn" href="login?next=submit-need.html" style="display:inline-block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px 32px;border-radius:8px;text-decoration:none;">Log In to Continue</a>
     </div>
 
     <div id="formSection" style="display:none;">
@@ -353,8 +353,8 @@
       <h2>Need Submitted!</h2>
       <p>The need has been posted to MigrantPortal. Local helpers and faith communities will be notified and can begin responding.</p>
       <div class="success-btns">
-        <a href="requests.html" class="btn-primary" style="text-decoration:none;">View All Needs</a>
-        <a href="dashboard.html" class="btn-secondary" style="text-decoration:none;">Back to Dashboard</a>
+        <a href="requests" class="btn-primary" style="text-decoration:none;">View All Needs</a>
+        <a href="dashboard" class="btn-secondary" style="text-decoration:none;">Back to Dashboard</a>
       </div>
     </div>
 
@@ -377,7 +377,7 @@
         document.getElementById('authGateTitle').textContent = 'Account Pending Approval';
         document.getElementById('authGateMsg').textContent = 'Your account is awaiting admin approval. You will be able to submit needs once approved.';
         document.getElementById('authGateBtn').textContent = 'Go to Dashboard';
-        document.getElementById('authGateBtn').href = 'pending.html';
+        document.getElementById('authGateBtn').href = 'pending';
         document.getElementById('authGate').style.display = 'block';
         return;
       }
@@ -397,7 +397,7 @@
         document.getElementById('authGateTitle').textContent = 'Connector Account Required';
         document.getElementById('authGateMsg').textContent = 'Only Connector accounts can submit family needs. If you believe this is an error, contact your administrator.';
         document.getElementById('authGateBtn').textContent = 'Back to Dashboard';
-        document.getElementById('authGateBtn').href = 'dashboard.html';
+        document.getElementById('authGateBtn').href = 'dashboard';
         document.getElementById('authGate').style.display = 'block';
         return;
       }

@@ -163,7 +163,7 @@
 <body>
 
 <div class="topbar">
-  <a href="index.html" class="topbar-logo"><img src="logo.png" alt="" />MigrantPortal</a>
+  <a href="/" class="topbar-logo"><img src="logo.png" alt="" />MigrantPortal</a>
   <div class="topbar-right">
     <span class="role-badge">NAVIGATOR</span>
     <span id="user-name-top" style="font-size:13px;color:var(--gray-600)"></span>
@@ -172,10 +172,10 @@
 </div>
 
 <nav class="top-nav">
-  <a class="tab active" href="navigator.html">Overview</a>
-  <a class="tab" href="submit-need.html">Submit Need</a>
-  <a class="tab" href="requests.html?mine=1">My Submissions</a>
-  <a class="tab" href="impact.html">Impact</a>
+  <a class="tab active" href="navigator">Overview</a>
+  <a class="tab" href="submit-need">Submit Need</a>
+  <a class="tab" href="requests?mine=1">My Submissions</a>
+  <a class="tab" href="impact">Impact</a>
 </nav>
 
 <div class="page">
@@ -185,7 +185,7 @@
       <div class="user-name" id="user-full-name">Loading…</div>
       <div class="user-sub" id="user-org"></div>
     </div>
-    <a class="btn-submit" href="submit-need.html">+ Submit Need</a>
+    <a class="btn-submit" href="submit-need">+ Submit Need</a>
   </div>
 
   <!-- Stats -->
@@ -225,19 +225,19 @@
 
     <!-- Quick Actions -->
     <div class="quick-actions">
-      <a class="quick-action" href="submit-need.html">
+      <a class="quick-action" href="submit-need">
         <div class="qa-icon" style="background:#e0f0ff">➕</div>
         <div class="qa-label">Submit Need</div>
       </a>
-      <a class="quick-action" href="requests.html?mine=1">
+      <a class="quick-action" href="requests?mine=1">
         <div class="qa-icon" style="background:#e6f7f8">📋</div>
         <div class="qa-label">My Submissions</div>
       </a>
-      <a class="quick-action" href="impact.html">
+      <a class="quick-action" href="impact">
         <div class="qa-icon" style="background:#dcfce7">📊</div>
         <div class="qa-label">View Impact</div>
       </a>
-      <a class="quick-action" href="requests.html">
+      <a class="quick-action" href="requests">
         <div class="qa-icon" style="background:#fef3c7">🔍</div>
         <div class="qa-label">Browse All Needs</div>
       </a>
@@ -246,10 +246,10 @@
     <!-- Recent Submissions -->
     <div class="section-header">
       <div class="section-title">Recent Submissions</div>
-      <a class="see-all" href="requests.html?mine=1">See all →</a>
+      <a class="see-all" href="requests?mine=1">See all →</a>
     </div>
     <div id="needs-list">
-      <div class="empty">No submissions yet. <a href="submit-need.html">Submit your first need →</a></div>
+      <div class="empty">No submissions yet. <a href="submit-need">Submit your first need →</a></div>
     </div>
 
   </div>
@@ -280,10 +280,10 @@
 <script>
   // ── Auth guard ──────────────────────────────────────────
   const user = getUser();
-  if (!user) { window.location.href = 'login.html'; }
-  if (user && user.role !== 'navigator') { window.location.href = 'dashboard.html'; }
+  if (!user) { window.location.href = 'login'; }
+  if (user && user.role !== 'navigator') { window.location.href = 'dashboard'; }
 
-  function signOut() { fetch('https://migrant-portal-production-3826.up.railway.app/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {}); localStorage.removeItem('mp_user'); localStorage.removeItem('mp_token'); window.location.href = 'login.html'; }
+  function signOut() { fetch('https://migrant-portal-production-3826.up.railway.app/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {}); localStorage.removeItem('mp_user'); localStorage.removeItem('mp_token'); window.location.href = 'login'; }
 
   // ── Populate header ─────────────────────────────────────
   const initials = (user?.name || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
@@ -322,7 +322,7 @@
               <div class="alert-row-title">${n.title}</div>
               <div class="alert-row-sub">#${n.case_number} · ${n.days_left ?? '?'} days left · ${n.city}, ${n.state}</div>
             </div>
-            <a href="need.html?id=${n.id}" class="btn-sm btn-view">View</a>
+            <a href="need?id=${n.id}" class="btn-sm btn-view">View</a>
             <button class="btn-renew" onclick="handleRenew('${n.id}', this)">Renew</button>
           </div>`).join('');
       }
@@ -355,7 +355,7 @@
   function renderNeeds(needs) {
     if (!needs || !needs.length) {
       document.getElementById('needs-list').innerHTML =
-        '<div class="empty">No submissions yet. <a href="submit-need.html">Submit your first need →</a></div>';
+        '<div class="empty">No submissions yet. <a href="submit-need">Submit your first need →</a></div>';
       return;
     }
     document.getElementById('needs-list').innerHTML = needs.map(n => {
@@ -381,7 +381,7 @@
               </div>
             </div>
             <div class="need-actions">
-              <a href="need.html?id=${n.id}" class="btn-sm btn-view">View</a>
+              <a href="need?id=${n.id}" class="btn-sm btn-view">View</a>
               ${n.response_count > 0 ? `<span class="response-pill">👥 ${n.response_count} response${n.response_count!==1?'s':''}</span>` : ''}
               ${n.status === 'active' && n.days_left != null && n.days_left < 15 ? `<button class="btn-sm" style="background:#fef3c7;color:var(--yellow)" onclick="handleRenewCard('${n.id}', this)">🔄 Renew</button>` : ''}
               ${n.status === 'active' ? `<button class="btn-sm btn-fulfill" onclick="openFollowupModal('${n.id}')">🔔 Set Follow-up</button>` : ''}
