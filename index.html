@@ -1138,7 +1138,7 @@
   <!-- Live needs rotator -->
   <script>
   (function() {
-    const API = 'https://migrant-portal-production-3826.up.railway.app/needs?page=1';
+    const API = 'https://migrant-portal-production-3826.up.railway.app/needs/public';
     const INTERVAL = 4000;
     const dotColors = ['var(--orange)', 'var(--teal)', '#8b5cf6', '#10b981', '#f59e0b'];
 
@@ -1178,7 +1178,7 @@
     fetch(API)
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        var items = (data.items || []).filter(function(n) { return n.title && n.city; });
+        var items = (Array.isArray(data) ? data : (data.items || [])).filter(function(n) { return n.title && n.city; });
         if (items.length < 2) return;
         var idx = 0;
         renderNeeds(items, idx);

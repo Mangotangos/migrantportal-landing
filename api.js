@@ -6,7 +6,9 @@ function _handle401() {
   if (_isLogoutInProgress) return;
   localStorage.removeItem('mp_user');
   localStorage.removeItem('mp_token');
-  window.location.replace('/login');
+  if (!window.location.pathname.endsWith('login')) {
+    window.location.replace('/login');
+  }
 }
 
 async function _fetchWithRetry(path, options) {
@@ -29,8 +31,8 @@ async function apiPost(path, body) {
     credentials: 'include',
     body: JSON.stringify(body),
   });
-  if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
-  const data = await r.json();
+  const data = await r.json().catch(() => ({}));
+  if (r.status === 401) { _handle401(); throw new Error(_extractDetail(data.detail) || 'Session expired'); }
   if (!r.ok) throw new Error(_extractDetail(data.detail));
   return data;
 }
@@ -67,7 +69,7 @@ async function apiDelete(path) {
   const r = await _fetchWithRetry(path, { method: 'DELETE', headers: _authHeaders(), credentials: 'include' });
   if (r.status === 401) { _handle401(); throw new Error('Session expired'); }
   if (!r.ok) { const data = await r.json().catch(() => ({})); throw new Error(data.detail || 'Request failed'); }
-  return r.status === 204 ? null : r.json();
+  return r.status === 204 ? null : await r.json();
 }
 
 function saveSession(tokenOrUser, user) {
