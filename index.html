@@ -972,7 +972,7 @@
           <p id="eo-msg" style="font-size:13px;margin-top:4px;display:none;"></p>
         </form>
         <script>
-          function eoSubscribe(e) {
+          async function eoSubscribe(e) {
             e.preventDefault();
             if (e.target.querySelector('[name="hp_name"]').value) return;
             const email = document.getElementById('eo-email').value;
@@ -985,16 +985,26 @@
               return;
             }
             btn.disabled = true; btn.textContent = 'Subscribing…';
-            // no-cors returns an opaque response — status is unreadable, fire-and-forget
-            fetch('https://emailoctopus.com/lists/2e646492-2bee-11f1-bc0c-4794b1b22e22/members/embedded/1.3/add', {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: new URLSearchParams({ 'field_0': email, 'successRedirectUrl': '' })
-            }).catch(function() {});
-            msg.style.color = '#90e0c8';
-            msg.textContent = 'Thanks for subscribing!';
-            document.getElementById('eo-email').value = '';
+            try {
+              const fd = new FormData();
+              fd.set('field_0', email);
+              fd.set('hpc4b27b6e-eb38-11e9-be00-06b4694bee2a', '');
+              const r = await fetch('https://eomail5.com/form/2e646492-2bee-11f1-bc0c-4794b1b22e22', {
+                method: 'POST', mode: 'cors', cache: 'no-cache', body: fd
+              });
+              const data = await r.json().catch(() => ({}));
+              if (data.success) {
+                msg.style.color = '#90e0c8';
+                msg.textContent = 'Thanks for subscribing!';
+                document.getElementById('eo-email').value = '';
+              } else {
+                msg.style.color = '#f9a8a8';
+                msg.textContent = 'Something went wrong. Please try again.';
+              }
+            } catch (_) {
+              msg.style.color = '#f9a8a8';
+              msg.textContent = 'Network error. Please try again.';
+            }
             btn.disabled = false; btn.textContent = 'Subscribe';
           }
         </script>
