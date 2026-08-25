@@ -1625,7 +1625,10 @@
                 <td style="color:var(--text-2)">${u.email}</td>
                 <td><span class="status-pill s-pending">${u.role}</span></td>
                 <td style="color:var(--text-3);font-size:12px">${u.deleted_at || '—'}</td>
-                <td><button class="btn btn-approve" onclick="restoreUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Restore</button></td>
+                <td style="display:flex;gap:6px">
+                  <button class="btn btn-approve" onclick="restoreUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Restore</button>
+                  <button class="btn btn-reject" onclick="permanentlyDeleteUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Delete Permanently</button>
+                </td>
               </tr>`).join('')}
           </tbody>
         </table>`;
@@ -1640,6 +1643,15 @@
       loadUsers();
       loadDeletedUsers();
     } catch(e) { toast(e.message || 'Failed to restore user.', true); }
+  }
+
+  async function permanentlyDeleteUser(id, name) {
+    if (!await showConfirmModal({ title: 'Delete Permanently', message: `Permanently delete "${name}"? This cannot be undone — there is no restore after this.`, confirmText: 'Delete Forever', danger: true })) return;
+    try {
+      await apiDelete(`/admin/users/${id}/permanent`);
+      toast(`${name} permanently deleted.`);
+      loadDeletedUsers();
+    } catch(e) { toast(e.message || 'Failed to permanently delete user.', true); }
   }
 
   async function exportUsersCSV() {
