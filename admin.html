@@ -1510,7 +1510,7 @@
             ${u.registration_notes?`<div style="margin-top:6px;font-size:13px;color:var(--text);background:var(--surface-2);border:1px solid rgba(240,180,41,0.2);border-radius:6px;padding:7px 10px"><b>Why joining:</b> ${u.registration_notes}</div>`:''}
           </div>
           <div style="display:flex;gap:8px;flex-shrink:0;margin-top:2px">
-            <a class="btn" style="background:var(--surface-2);color:var(--text-2);border-color:var(--border);text-decoration:none;display:inline-flex;align-items:center" href="${esc(`mailto:${encodeURIComponent(u.email)}?subject=${encodeURIComponent('MigrantPortal application - a quick question')}&body=${encodeURIComponent(`Hi ${u.name},\n\nThanks for applying to MigrantPortal. Before we can approve your account, could you share a bit more detail about how you'd like to help?\n\n`)}`)}">✉ Email</a>
+            <a class="btn" style="background:var(--surface-2);color:var(--text-2);border-color:var(--border);text-decoration:none;display:inline-flex;align-items:center" target="_blank" rel="noopener" href="${esc(`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(u.email)}&su=${encodeURIComponent('MigrantPortal application - a quick question')}&body=${encodeURIComponent(`Hi ${u.name},\n\nThanks for applying to MigrantPortal. Before we can approve your account, could you share a bit more detail about how you'd like to help?\n\n`)}`)}">✉ Email</a>
             <button class="btn btn-approve" onclick="approveUser('${u.id}')">✓ Approve</button>
             <button class="btn btn-reject" onclick="rejectUser('${u.id}')">✗ Reject</button>
           </div>
