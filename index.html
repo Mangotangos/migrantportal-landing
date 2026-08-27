@@ -81,6 +81,14 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet" /></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
     .skip-link:focus { top: 0; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
@@ -106,6 +114,9 @@
     body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.65; overflow-x: clip; width: 100%; }
     a { text-decoration: none; }
     img { display: block; max-width: 100%; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid #0973A7; outline-offset: 2px; border-radius: 4px;
+    }
 
     /* ─── ANNOUNCEMENT BAR ─────────────────────── */
 
@@ -183,8 +194,9 @@
     .hero-text { flex: 1.1; padding-bottom: 48px; padding-top: 16px; }
     .hero h1 {
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(34px, 5.5vw, 54px);
-      font-weight: 800; line-height: 1.1;
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.5px;
       color: var(--text);
       margin-bottom: 20px;
     }
@@ -249,18 +261,19 @@
     }
     /* Desktop mockup */
     .mockup-desktop {
-      background: #f0f0f0; border-radius: 12px;
-      border: 3px solid #d0d0d0;
+      background: #f0f0f0; border-radius: 14px;
+      border: none;
       padding: 12px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      box-shadow: 0 24px 64px rgba(13,45,60,0.22), 0 6px 18px rgba(13,45,60,0.10);
       animation: desktopFloat 4s ease-in-out infinite;
       will-change: transform;
     }
     .mockup-desktop-bar {
-      background: var(--teal); border-radius: 8px 8px 0 0;
+      background: linear-gradient(135deg, var(--teal), var(--teal-d));
+      border-radius: 8px 8px 0 0;
       padding: 6px 12px; font-size: 11px; color: white; font-weight: 600;
       display: flex; align-items: center; gap: 8px; margin: -12px -12px 0;
-      border-radius: 9px 9px 0 0;
+      border-radius: 10px 10px 0 0;
     }
     .mockup-desktop-dots { display: flex; gap: 5px; }
     .mockup-desktop-dots span { width: 8px; height: 8px; border-radius: 50%; }
@@ -293,7 +306,7 @@
       width: 100px;
       background: #1a1a1a; border-radius: 16px;
       padding: 6px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.38), 0 4px 12px rgba(0,0,0,0.18);
       animation: phoneFloat 3.2s ease-in-out infinite 0.6s;
       will-change: transform;
     }
@@ -314,18 +327,19 @@
 
     /* ─── SECTION BASE ──────────────────────────── */
     /* BUG-001: removed any implicit min-height that caused blank space */
-    .section { padding: 72px 40px; }
+    .section { padding: 104px 40px; }
     .section-inner { max-width: 1120px; margin: 0 auto; }
-    .two-col { display: flex; gap: 64px; align-items: center; flex-wrap: wrap; }
+    .two-col { display: flex; gap: 72px; align-items: center; flex-wrap: wrap; }
     .two-col-reverse { flex-direction: row-reverse; }
     .col-text { flex: 1; min-width: 260px; }
     .col-visual { flex: 1; min-width: 280px; }
 
     .section h2 {
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(26px, 3.5vw, 38px);
+      font-size: clamp(28px, 3.8vw, 42px);
       font-weight: 800; color: var(--text);
-      line-height: 1.2; margin-bottom: 16px;
+      letter-spacing: -0.3px;
+      line-height: 1.15; margin-bottom: 16px;
     }
     .section p {
       font-size: 15px; color: var(--gray-500); line-height: 1.7; max-width: 520px; margin-left: auto; margin-right: auto;
@@ -435,7 +449,7 @@
     }
     .newsletter-form input::placeholder { color: #aaa; }
     .newsletter-submit {
-      background: var(--orange); color: white;
+      background: var(--orange); color: var(--text);
       font-size: 14px; font-weight: 700;
       padding: 14px; border-radius: 8px;
       border: none; cursor: pointer;
@@ -446,7 +460,7 @@
     .newsletter-submit:hover { background: var(--orange-d); }
 
     /* ─── FOOTER ───────────────────────────────── */
-    .footer { background: #2e8fa8; }
+    .footer { background: var(--teal-bg); }
     .footer-trusted {
       border-top: 1px solid rgba(255,255,255,0.1);
       padding: 56px 48px;
@@ -541,7 +555,7 @@
       .hero-inner { flex-direction: column; }
       .hero-visual { display: none; }
       .hero-actions { gap: 24px; }
-      .section { padding: 48px 20px; }
+      .section { padding: 64px 20px; }
       .two-col, .two-col-reverse { flex-direction: column; }
       .section-newsletter { padding: 48px 20px; }
       .newsletter-inner { flex-direction: column; gap: 32px; }
@@ -561,23 +575,85 @@
   <style>
     /* ── Feature Strip ── */
     .feature-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; margin-top: 8px; text-align: left; }
-    .feature-card { background: var(--gray-100); border-radius: 16px; padding: 32px 28px; display: flex; flex-direction: column; gap: 12px; }
-    .feature-icon { font-size: 36px; line-height: 1; display: flex; align-items: center; }
-    .feature-icon ion-icon { width: 40px; height: 40px; color: var(--teal-bg); }
+    .feature-card {
+      background: var(--gray-100); border-radius: 16px; padding: 32px 28px;
+      display: flex; flex-direction: column; gap: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .feature-card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(13,45,60,0.10); background: #fff; }
+    .feature-icon {
+      font-size: 36px; line-height: 1; display: flex; align-items: center; justify-content: center;
+      width: 56px; height: 56px; border-radius: 14px; background: rgba(0,157,165,0.12);
+    }
+    .feature-icon ion-icon { width: 28px; height: 28px; color: var(--teal-bg); }
     .feature-card h3 { font-family: 'Montserrat',sans-serif; font-size: 18px; font-weight: 700; color: var(--text); margin: 0; }
     .feature-card p { font-size: 14px; color: var(--gray-500); line-height: 1.6; margin: 0; flex: 1; }
+    .feature-card .text-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; color: var(--teal-bg); font-weight: 700;
+      border: none; padding: 10px 18px; border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(13,45,60,0.08);
+      width: fit-content;
+      transition: box-shadow 0.15s ease, color 0.15s ease, gap 0.15s ease;
+    }
+    .feature-card .text-cta::after { content: '\2192'; transition: transform 0.15s ease; }
+    .feature-card .text-cta:hover { color: var(--teal-d); box-shadow: 0 6px 16px rgba(13,45,60,0.14); }
+    .feature-card .text-cta:hover::after { transform: translateX(3px); }
+    .feature-card:hover .feature-icon { background: rgba(0,157,165,0.18); }
     @media(max-width:768px){ .feature-strip { grid-template-columns: 1fr; } }
 
     /* ── Live Impact Stats ── */
-    .live-stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 40px; }
-    .live-stat-card { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 16px; padding: 28px 20px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,.05); }
-    .live-stat-num { font-family: 'Montserrat',sans-serif; font-size: 40px; font-weight: 800; color: var(--teal-d); line-height: 1; }
+    .live-stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 28px; margin-top: 48px; }
+    .live-stat-card {
+      background: var(--cream); border: 1.5px solid #EDE3CE; border-radius: 18px;
+      padding: 32px 20px; text-align: center;
+      box-shadow: 0 4px 20px rgba(13,45,60,.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .live-stat-card:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(13,45,60,.10); }
+    .live-stat-icon {
+      width: 44px; height: 44px; margin: 0 auto 14px;
+      border-radius: 50%; background: rgba(0,157,165,0.14);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .live-stat-icon ion-icon { width: 22px; height: 22px; color: var(--teal-d); }
+    .live-stat-num { font-family: 'Montserrat',sans-serif; font-size: 40px; font-weight: 800; color: var(--teal-d); line-height: 1; min-height: 40px; display: flex; align-items: center; justify-content: center; }
     .live-stat-label { font-size: 13px; color: var(--gray-500); margin-top: 8px; font-weight: 500; }
+    .stat-skel { display: inline-block; width: 52px; height: 34px; border-radius: 8px; background: #d8e9ea; animation: statPulse 1.3s ease-in-out infinite; }
+    @keyframes statPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+    /* ── Network Visualization (needs <-> helpers) ── */
+    .network-viz { max-width: 860px; margin: 0 auto 8px; }
+    .network-viz svg { width: 100%; height: auto; display: block; }
+    .network-viz-caption { font-size: 12px; color: var(--gray-500); letter-spacing: 0.04em; margin-top: 4px; }
+    .nv-line { fill: none; stroke: #DCEEEF; stroke-width: 2; }
+    .nv-pulse {
+      fill: none; stroke: var(--orange); stroke-width: 3; stroke-linecap: round;
+      stroke-dasharray: 26 400; stroke-dashoffset: 200; opacity: 0.85;
+      animation: nvDash 3.2s linear infinite;
+    }
+    @keyframes nvDash { from { stroke-dashoffset: 200; } to { stroke-dashoffset: -200; } }
+    .nv-need .nv-dot { fill: var(--orange); }
+    .nv-helper .nv-dot { fill: var(--teal); }
+    .nv-ring {
+      fill: none; stroke-width: 2; opacity: 0.55;
+      transform-box: fill-box; transform-origin: center;
+      animation: nvRing 2.6s ease-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+    .nv-need .nv-ring { stroke: var(--orange); }
+    .nv-helper .nv-ring { stroke: var(--teal); }
+    @keyframes nvRing {
+      0%   { transform: scale(1);   opacity: 0.6; }
+      70%  { transform: scale(2.2); opacity: 0; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    @media (max-width: 800px) { .network-viz { display: none; } }
 
     /* ── Partner Logos ── */
-    .partner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; text-align: left; }
-    .partner-card { background: #fff; border-radius: 16px; padding: 24px 20px; border: 1.5px solid var(--gray-200); transition: box-shadow 0.2s, transform 0.2s; }
-    .partner-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .partner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 48px; text-align: left; }
+    .partner-card { background: #fff; border-radius: 16px; padding: 28px 24px; border: 1.5px solid var(--gray-200); transition: box-shadow 0.2s, transform 0.2s; }
+    .partner-card:hover { box-shadow: 0 16px 36px rgba(13,45,60,0.10); transform: translateY(-4px); }
     .partner-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
     .partner-icon ion-icon { width: 24px; height: 24px; }
     .partner-card h3 { font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 6px; }
@@ -586,8 +662,9 @@
     .partner-cta a { color: var(--teal-bg); font-weight: 600; font-size: 15px; }
 
     /* ── Volunteer CTA ── */
-    .vol-cards { display: flex; gap: 24px; margin-top: 40px; max-width: 1080px; margin-left: auto; margin-right: auto; }
-    .vol-card { flex: 1; border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column; gap: 12px; }
+    .vol-cards { display: flex; gap: 28px; margin-top: 48px; max-width: 1080px; margin-left: auto; margin-right: auto; }
+    .vol-card { flex: 1; border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .vol-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(13,45,60,0.12); }
     .vol-card.card-teal { background: #e6f5f6; color: #0D7A8A; border: 1.5px solid #b2dde1; }
     .vol-card.card-orange { background: #fdf0ec; color: #b83d10; border: 1.5px solid #f5c4b0; }
     .vol-card h3 { font-family: 'Montserrat',sans-serif; font-size: 22px; font-weight: 800; margin: 0; }
@@ -602,8 +679,8 @@
 
     /* ── App Badges ── */
     .app-badges { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 32px; justify-content: center; }
-    .badge-btn { display: flex; align-items: center; gap: 10px; background: #0D0D0D; color: #fff; border-radius: 12px; padding: 12px 20px; text-decoration: none; transition: opacity .15s; }
-    .badge-btn:hover { opacity: .8; }
+    .badge-btn { display: flex; align-items: center; gap: 10px; background: #0D0D0D; color: #fff; border-radius: 12px; padding: 12px 20px; text-decoration: none; transition: opacity .15s, transform .15s, box-shadow .15s; }
+    .badge-btn:hover { opacity: .88; transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
     .badge-btn svg { width: 24px; height: 24px; flex-shrink: 0; }
     .badge-text { display: flex; flex-direction: column; }
     .badge-sub { font-size: 10px; opacity: .7; }
@@ -844,22 +921,58 @@
   <section class="section section-white" aria-labelledby="impact-h">
     <div class="section-inner" style="text-align:center;">
       <h2 id="impact-h" style="margin-bottom:8px;">Real Impact, Right Now</h2>
-      <p style="color:#6B6B6B;margin-bottom:32px;">Updated live from our network</p>
+      <p style="color:#6B6B6B;margin-bottom:8px;">Updated live from our network</p>
+      <div class="network-viz" aria-hidden="true">
+        <svg viewBox="0 0 900 120" preserveAspectRatio="xMidYMid meet" role="presentation">
+          <path class="nv-line" d="M60,80 Q110,30 160,30" />
+          <path class="nv-line" d="M160,30 Q210,80 260,80" />
+          <path class="nv-line" d="M260,80 Q310,30 360,30" />
+          <path class="nv-line" d="M360,30 Q410,80 460,80" />
+          <path class="nv-line" d="M460,80 Q510,30 560,30" />
+          <path class="nv-line" d="M560,30 Q610,80 660,80" />
+          <path class="nv-line" d="M660,80 Q710,30 760,30" />
+          <path class="nv-line" d="M760,30 Q810,80 860,80" />
+
+          <path class="nv-pulse" style="animation-delay:0s"    d="M60,80 Q110,30 160,30" />
+          <path class="nv-pulse" style="animation-delay:0.35s" d="M160,30 Q210,80 260,80" />
+          <path class="nv-pulse" style="animation-delay:0.7s"  d="M260,80 Q310,30 360,30" />
+          <path class="nv-pulse" style="animation-delay:1.05s" d="M360,30 Q410,80 460,80" />
+          <path class="nv-pulse" style="animation-delay:1.4s"  d="M460,80 Q510,30 560,30" />
+          <path class="nv-pulse" style="animation-delay:1.75s" d="M560,30 Q610,80 660,80" />
+          <path class="nv-pulse" style="animation-delay:2.1s"  d="M660,80 Q710,30 760,30" />
+          <path class="nv-pulse" style="animation-delay:2.45s" d="M760,30 Q810,80 860,80" />
+
+          <g class="nv-node nv-need"   style="--delay:0s"><circle class="nv-ring" cx="60" cy="80" r="7"/><circle class="nv-dot" cx="60" cy="80" r="6"/></g>
+          <g class="nv-node nv-helper" style="--delay:0.35s"><circle class="nv-ring" cx="160" cy="30" r="9"/><circle class="nv-dot" cx="160" cy="30" r="8"/></g>
+          <g class="nv-node nv-need"   style="--delay:0.7s"><circle class="nv-ring" cx="260" cy="80" r="7"/><circle class="nv-dot" cx="260" cy="80" r="6"/></g>
+          <g class="nv-node nv-helper" style="--delay:1.05s"><circle class="nv-ring" cx="360" cy="30" r="9"/><circle class="nv-dot" cx="360" cy="30" r="8"/></g>
+          <g class="nv-node nv-need"   style="--delay:1.4s"><circle class="nv-ring" cx="460" cy="80" r="7"/><circle class="nv-dot" cx="460" cy="80" r="6"/></g>
+          <g class="nv-node nv-helper" style="--delay:1.75s"><circle class="nv-ring" cx="560" cy="30" r="9"/><circle class="nv-dot" cx="560" cy="30" r="8"/></g>
+          <g class="nv-node nv-need"   style="--delay:2.1s"><circle class="nv-ring" cx="660" cy="80" r="7"/><circle class="nv-dot" cx="660" cy="80" r="6"/></g>
+          <g class="nv-node nv-helper" style="--delay:2.45s"><circle class="nv-ring" cx="760" cy="30" r="9"/><circle class="nv-dot" cx="760" cy="30" r="8"/></g>
+          <g class="nv-node nv-need"   style="--delay:2.8s"><circle class="nv-ring" cx="860" cy="80" r="7"/><circle class="nv-dot" cx="860" cy="80" r="6"/></g>
+        </svg>
+      </div>
+      <p class="network-viz-caption" style="margin-bottom:24px;">Families &amp; navigators <span style="color:var(--orange);font-weight:700;">●</span> connecting with responders &amp; partners <span style="color:var(--teal);font-weight:700;">●</span></p>
       <div class="live-stats-grid">
         <div class="live-stat-card">
-          <div class="live-stat-num" id="stat-needs">0</div>
+          <div class="live-stat-icon" aria-hidden="true"><ion-icon name="flag-outline"></ion-icon></div>
+          <div class="live-stat-num" id="stat-needs"><span class="stat-skel" aria-hidden="true"></span><span class="sr-only">Loading…</span></div>
           <div class="live-stat-label">Needs Submitted</div>
         </div>
         <div class="live-stat-card">
-          <div class="live-stat-num" id="stat-responses">0</div>
+          <div class="live-stat-icon" aria-hidden="true"><ion-icon name="hand-left-outline"></ion-icon></div>
+          <div class="live-stat-num" id="stat-responses"><span class="stat-skel" aria-hidden="true"></span><span class="sr-only">Loading…</span></div>
           <div class="live-stat-label">Responses Given</div>
         </div>
         <div class="live-stat-card">
-          <div class="live-stat-num" id="stat-families">0</div>
+          <div class="live-stat-icon" aria-hidden="true"><ion-icon name="people-outline"></ion-icon></div>
+          <div class="live-stat-num" id="stat-families"><span class="stat-skel" aria-hidden="true"></span><span class="sr-only">Loading…</span></div>
           <div class="live-stat-label">Families Served</div>
         </div>
         <div class="live-stat-card">
-          <div class="live-stat-num" id="stat-orgs">0</div>
+          <div class="live-stat-icon" aria-hidden="true"><ion-icon name="business-outline"></ion-icon></div>
+          <div class="live-stat-num" id="stat-orgs"><span class="stat-skel" aria-hidden="true"></span><span class="sr-only">Loading…</span></div>
           <div class="live-stat-label">Partner Orgs</div>
         </div>
       </div>
