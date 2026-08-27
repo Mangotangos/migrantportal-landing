@@ -104,7 +104,10 @@
       display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;
       font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all .15s;user-select:none;
       border-left:3px solid transparent;
+      width:100%;background:none;border-top:none;border-right:none;border-bottom:none;
+      font-family:inherit;text-align:left;
     }
+    .nav-item:focus-visible { outline:2px solid var(--teal);outline-offset:-2px; }
     .nav-item:hover { background:var(--surface-2);color:var(--text); }
     .nav-item.active { background:var(--teal-glow);color:var(--teal);font-weight:600;border-left-color:var(--teal); }
     .nav-item.active:hover { background:var(--teal-glow);color:var(--teal); }
@@ -555,43 +558,43 @@
   <!-- SIDEBAR -->
   <nav class="sidebar">
     <div class="sidebar-section">Overview</div>
-    <div class="nav-item active" onclick="switchTab('pending')">
+    <button type="button" class="nav-item active" onclick="switchTab('pending')">
       <span class="nav-icon">⏳</span> Pending Queue
       <span class="nav-badge zero" id="pendingBadge">0</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('all')">
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('all')">
       <span class="nav-icon">📋</span> All Needs
-    </div>
-    <div class="nav-item" onclick="switchTab('reports')">
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('reports')">
       <span class="nav-icon">📊</span> Reports
-    </div>
+    </button>
 
     <div class="sidebar-section">Moderation</div>
-    <div class="nav-item" onclick="switchTab('flagged')">
+    <button type="button" class="nav-item" onclick="switchTab('flagged')">
       <span class="nav-icon">⚑</span> Flagged
       <span class="nav-badge zero" id="flaggedBadge">0</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('disbursements')">
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('disbursements')">
       <span class="nav-icon">💰</span> Disbursements
       <span class="nav-badge zero" id="disbBadge">0</span>
-    </div>
+    </button>
 
     <div class="sidebar-section">Management</div>
-    <div class="nav-item" onclick="switchTab('users')">
+    <button type="button" class="nav-item" onclick="switchTab('users')">
       <span class="nav-icon">👥</span> Users
-    </div>
-    <div class="nav-item" onclick="switchTab('orgs')">
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('orgs')">
       <span class="nav-icon">🏢</span> Organizations
-    </div>
-    <div class="nav-item" onclick="switchTab('resources')">
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('resources')">
       <span class="nav-icon">📚</span> Resources
-    </div>
-    <div class="nav-item" onclick="switchTab('announcements')">
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('announcements')">
       <span class="nav-icon">📢</span> Announcements
-    </div>
-    <div class="nav-item" onclick="switchTab('nonprofits')">
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('nonprofits')">
       <span class="nav-icon">🏛️</span> Nonprofits
-    </div>
+    </button>
 
     <div class="sidebar-footer">
       MigrantPortal &middot; <span style="color:var(--teal)">Admin v2</span>
@@ -977,7 +980,10 @@
   function switchTab(name) {
     document.querySelectorAll('.nav-item').forEach(el => {
       const m = (el.getAttribute('onclick') || '').match(/switchTab\('(\w+)'\)/);
-      el.classList.toggle('active', !!m && m[1] === name);
+      const isActive = !!m && m[1] === name;
+      el.classList.toggle('active', isActive);
+      if (isActive) el.setAttribute('aria-current', 'page');
+      else el.removeAttribute('aria-current');
     });
     ALL_TABS.forEach(t => { document.getElementById('tab-' + t).style.display = t === name ? '' : 'none'; });
     activeTab = name;

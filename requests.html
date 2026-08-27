@@ -5,13 +5,13 @@
   <meta name="description" content="Browse active help requests on MigrantPortal and respond to your neighbors.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Open Migrant Requests — MigrantPortal</title>
-  <link rel="canonical" href="https://migrantportal.com/requests.html" />
-  <link rel="alternate" hreflang="en" href="https://migrantportal.com/requests.html" />
-  <link rel="alternate" hreflang="es" href="https://migrantportal.com/requests.html?lang=es" />
-  <link rel="alternate" hreflang="x-default" href="https://migrantportal.com/requests.html" />
+  <link rel="canonical" href="https://migrantportal.com/requests" />
+  <link rel="alternate" hreflang="en" href="https://migrantportal.com/requests" />
+  <link rel="alternate" hreflang="es" href="https://migrantportal.com/requests?lang=es" />
+  <link rel="alternate" hreflang="x-default" href="https://migrantportal.com/requests" />
   <meta property="og:title" content="Open Migrant Requests — MigrantPortal" />
   <meta property="og:description" content="Browse active help requests from migrant families and respond to your neighbors." />
-  <meta property="og:url" content="https://migrantportal.com/requests.html" />
+  <meta property="og:url" content="https://migrantportal.com/requests" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://migrantportal.com/community.png" />
   <link rel="icon" type="image/png" href="logo.png" />
@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -250,7 +250,7 @@
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
     .card-desc { font-size: 12px; color: var(--gray-600); margin-bottom: 8px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .card-loc { font-size: 11px; color: var(--gray-600); margin-bottom: 2px; }
-    .card-faith community { font-size: 11px; color: var(--gray-500); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+    .card-faith-community { font-size: 11px; color: var(--gray-500); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
 
     .card-amount {
       display: flex; align-items: center; gap: 6px; margin-bottom: 5px;
@@ -629,7 +629,7 @@
 
   </div><!-- /workspace -->
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/vendor/leaflet/leaflet.js"></script>
   <script src="api.js"></script>
   <script src="notif-bell.js"></script>
   <script>
@@ -648,14 +648,28 @@
       document.getElementById('loginBtn').style.display = 'flex';
     }
 
-    // ── Map setup
-    const map = L.map('map', { zoomControl: true }).setView([38.9, -94.79], 9);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 18
-    }).addTo(map);
-    setTimeout(() => map.invalidateSize(), 200);
-    setTimeout(() => map.invalidateSize(), 800);
+    // ── Map setup (degrade gracefully if Leaflet fails to load)
+    let map = null;
+    let mapReady = false;
+    try {
+      if (typeof L === 'undefined') throw new Error('Leaflet not loaded');
+      map = L.map('map', { zoomControl: true }).setView([38.9, -94.79], 9);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18
+      }).addTo(map);
+      setTimeout(() => map.invalidateSize(), 200);
+      setTimeout(() => map.invalidateSize(), 800);
+      mapReady = true;
+    } catch (err) {
+      console.warn('[MP] Map disabled:', err.message);
+      const mc = document.querySelector('.map-container');
+      if (mc) mc.style.display = 'none';
+      const mvb = document.getElementById('mapViewBtn');
+      if (mvb) mvb.style.display = 'none';
+      const mf = document.getElementById('mapFab');
+      if (mf) mf.style.display = 'none';
+    }
 
     const markers = [];
     let allNeeds = [];
@@ -713,7 +727,7 @@
     }
 
     function addMarker(need, idx) {
-      if (!need.lat || !need.lng) { markers.push(null); return; }
+      if (!mapReady || !need.lat || !need.lng) { markers.push(null); return; }
       const urgent = need.urgency === 'urgent';
       const loc    = [need.city, need.state].filter(Boolean).join(', ');
       const icon = L.divIcon({
@@ -757,7 +771,7 @@
           const needs = await res.json();
           if (!needs || needs.length === 0) throw new Error('no public needs');
           document.querySelectorAll('.static-card').forEach(c => c.remove());
-          markers.forEach(m => m && map.removeLayer(m));
+          markers.forEach(m => m && map && map.removeLayer(m));
           markers.length = 0;
           document.getElementById('countLabel').textContent = needs.length;
           const list = document.getElementById('cardsList');
@@ -777,7 +791,7 @@
 
       // Clear existing dynamic cards and map markers
       document.querySelectorAll('.req-card:not(.static-card)').forEach(c => c.remove());
-      markers.forEach(m => m && map.removeLayer(m));
+      markers.forEach(m => m && map && map.removeLayer(m));
       markers.length = 0;
 
       // Build query params from current filter state
@@ -828,7 +842,7 @@
       }
       document.querySelectorAll('.req-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
-      if (markers[idx]) {
+      if (mapReady && markers[idx]) {
         map.flyTo(markers[idx].getLatLng(), 12, { duration: 0.8 });
         markers[idx].openPopup();
       }
@@ -868,8 +882,10 @@
           ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> List View'
           : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Map View';
       }
-      setTimeout(() => { map.invalidateSize(); }, 50);
-      setTimeout(() => { map.invalidateSize(); }, 350);
+      if (mapReady) {
+        setTimeout(() => { map.invalidateSize(); }, 50);
+        setTimeout(() => { map.invalidateSize(); }, 350);
+      }
     }
 
     // ── Filters → server reload
@@ -950,6 +966,12 @@
   <style>
     .mob-nav { display: none; }
     @media (max-width: 768px) {
+      /* ── Collapse desktop chrome: bottom nav + hamburger cover navigation ── */
+      html, body { overflow-x: hidden; }
+      .page-nav { display: none; }
+      .topbar-search { display: none; }
+      .user-chip .user-name, .user-chip .user-role { display: none; }
+      .topbar { gap: 8px; }
       /* ── Mobile list/map toggle ── */
       .panel { width: 100%; }
       /* Keep map in DOM so Leaflet tiles load — just hide visually */
@@ -1069,9 +1091,9 @@
           <ul>
             <li><a href="/how-migrantportal-works">How It Works</a></li>
             <li><a href="/vision">Our Vision</a></li>
-            <li><a href="#impact">Impact</a></li>
-            <li><a href="#about">Our Solution</a></li>
-            <li><a href="/contact">Contact Us</a><div style="font-size:11px;color:#595959;margin-top:2px">Response within 24 hours</div></li>
+            <li><a href="/#impact">Impact</a></li>
+            <li><a href="/#about">Our Solution</a></li>
+            <li><a href="/contact">Contact Us</a><div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px">Response within 24 hours</div></li>
           </ul>
         </div>
 
