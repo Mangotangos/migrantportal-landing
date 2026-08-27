@@ -316,7 +316,7 @@
     <span style="color:#E8E8E8;">|</span>
     <a href="/" style="font-size:13px;color:#009DA5;font-weight:600;text-decoration:none;">MigrantPortal</a>
     <span style="font-size:13px;color:#999;">/ Requests /</span>
-    <span style="font-size:13px;color:#0D0D0D;font-weight:600;">Need #MP001</span>
+    <span id="crumb-case" style="font-size:13px;color:#0D0D0D;font-weight:600;">Need</span>
     <a href="dashboard" style="margin-left:auto;font-size:13px;font-weight:600;color:#009DA5;text-decoration:none;display:flex;align-items:center;gap:5px;">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Dashboard
@@ -1374,8 +1374,8 @@
         if (titleEl) titleEl.textContent = need.title || '';
 
         // Breadcrumb
-        const crumb = document.querySelector('[style*="Need #MP"]');
-        if (crumb) crumb.textContent = 'Need #' + need.case_number;
+        const crumb = document.getElementById('crumb-case');
+        if (crumb) crumb.textContent = need.case_number ? 'Need #' + need.case_number : 'Need';
 
         // Illustration
         const illus = document.querySelector('.req-illustration');
