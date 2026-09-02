@@ -1,5 +1,9 @@
+# Force the apex host — anyone hitting www gets sent to the canonical origin.
+https://www.migrantportal.com/* https://migrantportal.com/:splat 301
+
 # Canonicalize: strip .html and redirect the /index alias to root (301).
 /index.html / 301
+/donate.html /donate 301
 /admin.html /admin 301
 /child-safety.html /child-safety 301
 /contact.html /contact 301

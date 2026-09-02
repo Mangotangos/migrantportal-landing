@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Give — MigrantPortal</title>
+  <link rel="canonical" href="https://migrantportal.com/donate" />
+  <meta name="description" content="Every gift on MigrantPortal funds one specific, navigator-verified need for a migrant family — housing, food, legal help, medical care. No general fund, no overhead skimming." />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #009DA5;
+      --teal-d:  #0D7A8A;
+      --teal-lt: #e6f7f8;
+      --orange:  #FF6129;
+      --navy:    #172936;
+      --cream:   #FAF7F0;
+      --text:    #0D0D0D;
+      --gray-600:#555;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+    }
+    html { scroll-behavior: smooth; overflow-x: clip; max-width: 100vw; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.7; overflow-x: clip; }
+    a { text-decoration: none; color: var(--teal); }
+
+    /* ── NAV ── */
+    .announce { background: var(--teal-d); color: white; text-align: center; padding: 10px 20px; font-size: 13px; }
+    .announce a { color: #ffe08a; font-weight: 600; }
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px;
+      color: var(--text);
+    }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { font-size: 14px; color: var(--gray-600); font-weight: 500; }
+    .nav-links a:hover, .nav-links a.active { color: var(--teal); }
+    .nav-cta {
+      background: #0973A7; color: white; padding: 9px 20px;
+      border-radius: 6px; font-size: 14px; font-weight: 600;
+    }
+    .nav-cta:hover { background: #075d8a; color: white; }
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy); color: white;
+      padding: 80px 40px 72px; text-align: center;
+    }
+    .hero-label {
+      font-size: 12px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif; font-size: 48px; font-weight: 800;
+      line-height: 1.15; margin-bottom: 20px; max-width: 720px; margin-inline: auto;
+    }
+    .hero h1 em { color: var(--teal); font-style: normal; }
+    .hero .tagline {
+      font-size: 20px; color: rgba(255,255,255,0.75); max-width: 560px;
+      margin: 0 auto 32px;
+    }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--teal); color: white; padding: 13px 28px;
+      border-radius: 8px; font-weight: 600; font-size: 15px;
+      transition: background .15s;
+    }
+    .btn-primary:hover { background: var(--teal-d); color: white; }
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.4); color: white; padding: 13px 28px;
+      border-radius: 8px; font-weight: 600; font-size: 15px;
+      transition: border-color .15s;
+    }
+    .btn-outline:hover { border-color: white; color: white; }
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 32px; }
+      .hero { padding: 60px 24px; }
+    }
+
+    /* ── CONTENT ── */
+    .section { padding: 72px 40px; max-width: 860px; margin: 0 auto; }
+    .section-sm { padding: 60px 40px; max-width: 760px; margin: 0 auto; }
+    .label {
+      font-size: 12px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+    }
+    h2 {
+      font-family: 'Montserrat', sans-serif; font-size: 34px; font-weight: 800;
+      color: var(--navy); line-height: 1.2; margin-bottom: 20px;
+    }
+    h3 {
+      font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700;
+      color: var(--navy); margin-bottom: 10px;
+    }
+    p { color: var(--gray-600); font-size: 16px; margin-bottom: 16px; line-height: 1.8; }
+    p:last-child { margin-bottom: 0; }
+
+    .pullquote {
+      border-left: 4px solid var(--teal); margin: 36px 0;
+      padding: 20px 28px; background: var(--teal-lt); border-radius: 0 10px 10px 0;
+    }
+    .pullquote p {
+      font-size: 20px; font-style: italic; color: var(--navy);
+      font-weight: 500; line-height: 1.5; margin: 0;
+    }
+
+    .pillars {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 44px;
+    }
+    .pillar {
+      border-left: 4px solid var(--teal); padding-left: 20px;
+    }
+    .pillar .step {
+      font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800;
+      color: var(--teal); letter-spacing: .08em; margin-bottom: 6px;
+    }
+    .pillar h3 { font-size: 17px; margin-bottom: 8px; }
+    .pillar p { font-size: 14px; color: var(--gray-600); margin: 0; }
+    @media (max-width: 700px) {
+      .pillars { grid-template-columns: 1fr; }
+    }
+
+    /* ── PRINCIPLE BAND ── */
+    .values-band { background: var(--teal-lt); padding: 72px 40px; }
+    .values-inner { max-width: 860px; margin: 0 auto; }
+    .values-inner .label, .values-inner h2 { text-align: center; }
+    .values-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px;
+    }
+    .value-card {
+      background: white; border-radius: 14px; padding: 32px 24px;
+      border: 1px solid var(--gray-200); text-align: center;
+    }
+    .value-icon { font-size: 40px; margin-bottom: 16px; }
+    .value-card h3 { font-size: 18px; margin-bottom: 10px; }
+    .value-card p { font-size: 14px; color: var(--gray-600); margin: 0; }
+    @media (max-width: 700px) {
+      .values-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── DISCLOSURE ── */
+    .disclosure {
+      max-width: 760px; margin: 0 auto; padding: 0 40px 72px;
+    }
+    .disclosure-box {
+      border: 1px solid var(--gray-200); background: var(--gray-100);
+      border-radius: 12px; padding: 28px 32px;
+    }
+    .disclosure-box h3 { font-size: 16px; margin-bottom: 10px; }
+    .disclosure-box p { font-size: 14px; margin-bottom: 10px; }
+
+    /* ── CTA ── */
+    .cta-band { background: var(--navy); padding: 72px 40px; text-align: center; }
+    .cta-inner { max-width: 600px; margin: 0 auto; }
+    .cta-band h2 { color: white; margin-bottom: 12px; }
+    .cta-band p { color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white {
+      background: white; color: var(--navy); padding: 13px 28px;
+      border-radius: 8px; font-weight: 700; font-size: 15px;
+      transition: opacity .15s;
+    }
+    .btn-white:hover { opacity: .9; color: var(--navy); }
+
+    @media print {
+      .announce, nav, .cta-band, footer { display: none; }
+      .hero { padding: 40px 0; background: white; color: var(--navy); }
+      .hero h1 em, .hero-label { color: var(--teal-d); }
+      .hero .tagline { color: var(--gray-600); }
+      .hero-actions { display: none; }
+      .section, .section-sm { padding: 40px 0; }
+      .values-band { background: var(--teal-lt); }
+      body { font-size: 14px; }
+    }
+
+    /* ─── SYNCED FOOTER (from homepage) ───────────── */
+    .footer { background: #0D7A8A; display: block; }
+    .footer-trusted { border-top: 1px solid rgba(255,255,255,0.1); padding: 56px 48px; }
+    .footer-trusted-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
+    .footer-trusted h3 { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; font-variant: small-caps; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
+    .trusted-logos { display: flex; gap: 32px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .trusted-logo { padding: 10px 24px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.06); font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); letter-spacing: 0.04em; }
+    .footer-main { border-top: 1px solid rgba(255,255,255,0.1); padding: 56px 48px; }
+    .footer-main-inner { max-width: 1120px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; justify-content: space-between; }
+    .footer-brand { max-width: 240px; }
+    .footer-brand-logo { display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 17px; color: white; margin-bottom: 12px; }
+    .footer-brand-logo .mp-p { color: #F59E0B; }
+    .footer-brand-logo-icon { width: 30px; height: 30px; border-radius: 6px; object-fit: contain; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; margin: 0; }
+    .footer-stats { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+    .footer-stat-num { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; color: white; }
+    .footer-stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+    .footer-col { min-width: 140px; }
+    .footer-col-title { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-variant: small-caps; color: #F59E0B; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; }
+    .footer-col ul li { margin: 0; padding: 0; }
+    .footer-col ul li a { font-size: 14px; color: rgba(255,255,255,0.6); transition: color 0.15s; margin: 0; }
+    .footer-col ul li a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding: 22px 48px; background: transparent; }
+    .footer-bottom-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-social { display: flex; gap: 10px; background: transparent !important; margin: 0; padding: 0; }
+    .footer-social a { width: 34px; height: 34px; border-radius: 7px; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; color: #fff; transition: background 0.15s, color 0.15s; margin: 0; }
+    .footer-social a:hover { background: #F59E0B; color: white; }
+    .footer-legal { display: flex; gap: 16px; margin: 0; padding: 0; }
+    .footer-legal a { font-size: 12px; color: rgba(255,255,255,0.45); margin: 0; }
+    .footer-legal a:hover { color: white; }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); margin: 0; }
+    .footer a { margin: 0; }
+    @media (max-width: 800px) {
+      .footer-trusted { padding: 32px 20px; }
+      .footer-main { padding: 32px 20px; }
+      .footer-bottom { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="announce">
+  501(c)(3) nonprofit in formation &mdash; <a href="/signup">Join our network today</a>
+</div>
+
+<nav aria-label="Main navigation">
+  <a href="/" class="nav-logo" aria-label="MigrantPortal home">
+    <img src="logo.png" alt="" class="nav-logo-icon" />
+    <span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/how-migrantportal-works">How It Works</a>
+    <a href="/requests">Browse Requests</a>
+    <a href="/faq">FAQ</a>
+    <a href="/contact">Contact</a>
+    <a href="/press-kit">Press</a>
+    <a href="/login" class="nav-cta">Sign In</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-label">Give</p>
+  <h1>Fund a family's <em>real</em> need</h1>
+  <p class="tagline">Every gift goes to one specific, navigator-verified request &mdash; not a general pool.</p>
+  <div class="hero-actions">
+    <a href="/requests" class="btn-primary">Browse open needs</a>
+    <a href="/how-migrantportal-works" class="btn-outline">How it works</a>
+  </div>
+</section>
+
+<!-- HOW GIVING WORKS -->
+<div class="section">
+  <p class="label">The Model</p>
+  <h2>You choose exactly who your gift helps.</h2>
+  <p>
+    MigrantPortal doesn't ask you to donate to an organization and trust it to allocate the money. Instead, trained navigators work directly with migrant families, verify a concrete need, and post it. You pick the one you want to cover.
+  </p>
+
+  <div class="pillars">
+    <div class="pillar">
+      <div class="step">STEP 1</div>
+      <h3>Browse verified needs</h3>
+      <p>Real requests submitted by navigators who have met the family &mdash; rent for a month, a medical bill, a car repair, legal filing fees.</p>
+    </div>
+    <div class="pillar">
+      <div class="step">STEP 2</div>
+      <h3>Fund one directly</h3>
+      <p>Give the full amount or a share of it through secure checkout. You see precisely what the money is for before you give.</p>
+    </div>
+    <div class="pillar">
+      <div class="step">STEP 3</div>
+      <h3>Follow the outcome</h3>
+      <p>The navigator purchases or disburses the item and marks the need fulfilled. Funds are tracked need-by-need, not lumped together.</p>
+    </div>
+  </div>
+</div>
+
+<!-- WHY NO GENERAL FUND -->
+<div class="values-band">
+  <div class="values-inner">
+    <p class="label">Why It Works This Way</p>
+    <h2>Dignity over charity</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">🎯</div>
+        <h3>Every dollar is tied to a need</h3>
+        <p>No general fund means no guessing where your money went. It covers the request you chose.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">✅</div>
+        <h3>Navigator-verified</h3>
+        <p>A person who has met the family submitted the request. Needs aren't self-posted or anonymous.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔎</div>
+        <h3>Traceable</h3>
+        <p>Each need shows how much has been raised, disbursed, and what's left &mdash; visible to anyone.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DISCLOSURE -->
+<div class="disclosure">
+  <div class="disclosure-box">
+    <h3>About tax-deductibility</h3>
+    <p>
+      MigrantPortal Inc. is in the process of registering as a 501(c)(3) nonprofit. Until that status is granted, gifts made through the platform fund family needs directly and are <strong>not yet tax-deductible</strong>. The platform is operated by Samru LLC dba MigrantPortal.
+    </p>
+    <p>
+      Questions about giving, receipts, or larger gifts? <a href="/contact">Contact us</a> and we'll walk you through it.
+    </p>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-band">
+  <div class="cta-inner">
+    <h2>See who needs help right now</h2>
+    <p>Open requests update as navigators verify new needs. Pick one and cover it today.</p>
+    <div class="cta-actions">
+      <a href="/requests" class="btn-white">Browse open needs</a>
+      <a href="/contact" class="btn-outline" style="border-color:rgba(255,255,255,0.4); color:white;">Get in touch</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer" aria-label="Site footer">
+
+  <div class="footer-trusted">
+    <div class="footer-trusted-inner">
+      <h3>Trusted By Teams Across:</h3>
+      <div class="trusted-logos">
+        <div class="trusted-logo">Kansas City, MO</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-main">
+    <div class="footer-main-inner">
+
+      <div>
+        <div class="footer-brand">
+          <div class="footer-brand-logo">
+            <picture><source srcset="logo.webp" type="image/webp" /><img src="logo.png" class="footer-brand-logo-icon" alt="MigrantPortal" loading="lazy" /></picture>
+            <span style="font-family:'Montserrat',sans-serif;font-weight:800;letter-spacing:-0.3px;color:#fff">Migrant<span style="color:#F59E0B">Portal</span></span>
+          </div>
+          <p>Connecting migrant families with faith communities, volunteers, and donors — one need at a time.</p>
+        </div>
+        <div class="footer-stats" style="margin-top:24px;">
+          <div class="footer-stat">
+            <div class="footer-stat-num">24h</div>
+            <div class="footer-stat-label">Avg. Response Time</div>
+          </div>
+          <div class="footer-stat">
+            <div class="footer-stat-num">1</div>
+            <div class="footer-stat-label">Launch City</div>
+          </div>
+          <div class="footer-stat">
+            <div class="footer-stat-num">Free</div>
+            <div class="footer-stat-label">For Helpers</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">About</div>
+        <ul>
+          <li><a href="/how-migrantportal-works">How It Works</a></li>
+          <li><a href="/vision">Our Vision</a></li>
+          <li><a href="/#impact">Impact</a></li>
+          <li><a href="/#about">Our Solution</a></li>
+          <li><a href="/contact">Contact Us</a><div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px">Response within 24 hours</div></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Get Involved</div>
+        <ul>
+          <li><a href="/#download-h">Download App</a></li>
+          <li><a href="/submit-need">Submit a Need</a></li>
+          <li><a href="/requests">Meet a Need</a></li>
+          <li><a href="/donate">Give</a></li>
+          <li><a href="/register">Launch a Network</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Resources</div>
+        <ul>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/faq">Help Center</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <nav class="footer-social" aria-label="Social media links">
+        <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@migrantportal" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.908 4.908 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428.05 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 0 1-1.153 1.772 4.915 4.915 0 0 1-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.05-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.904 4.904 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 0 1 1.153-1.772A4.897 4.897 0 0 1 5.45 2.525c.638-.248 1.363-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 1.802c-2.67 0-2.986.01-4.04.059-.976.045-1.505.207-1.858.344-.466.181-.8.398-1.15.748-.35.35-.566.684-.747 1.15-.137.353-.3.882-.344 1.857-.05 1.055-.06 1.37-.06 4.04 0 2.67.01 2.986.06 4.04.045.976.207 1.505.344 1.858.181.466.398.8.748 1.15.35.35.683.566 1.15.747.352.137.881.3 1.857.344 1.054.05 1.37.06 4.04.06 2.67 0 2.987-.01 4.04-.06.976-.045 1.505-.207 1.858-.344.466-.181.8-.398 1.15-.748.35-.35.566-.683.747-1.15.137-.352.3-.881.344-1.857.05-1.054.06-1.37.06-4.04 0-2.67-.01-2.986-.06-4.04-.045-.976-.207-1.505-.344-1.858a3.09 3.09 0 0 0-.748-1.15 3.098 3.098 0 0 0-1.15-.747c-.352-.137-.881-.3-1.857-.344-1.054-.05-1.37-.06-4.04-.06zm0 4.594a5.604 5.604 0 1 1 0 11.208A5.604 5.604 0 0 1 12 8.396zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm7.146-9.404a1.31 1.31 0 1 1-2.62 0 1.31 1.31 0 0 1 2.62 0z"/></svg>
+        </a>
+      </nav>
+      <div class="footer-legal">
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="/contact">Contact</a>
+      </div>
+      <p class="footer-copy">MigrantPortal © 2026 · Built with compassion</p>
+    </div>
+  </div>
+
+</footer>
+
+<script>
+  window.onerror = function(msg, src, line, col, err) {
+    console.error('[MigrantPortal]', msg, src + ':' + line);
+  };
+  window.addEventListener('unhandledrejection', function(e) {
+    console.error('[MigrantPortal] Unhandled promise rejection:', e.reason);
+  });
+</script>
+</body>
+</html>
