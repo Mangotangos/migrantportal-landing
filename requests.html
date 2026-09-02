@@ -593,7 +593,7 @@
     <!-- LEFT PANEL -->
     <div class="panel">
       <div class="panel-header">
-        <span class="panel-title">Open Requests (<span id="countLabel">5</span>)</span>
+        <span class="panel-title">Open Requests (<span id="countLabel">0</span>)</span>
         <div class="panel-header-right">
           <button class="sort-opt active" data-sort="urgency" onclick="setSort('urgency')">🔴 Urgent</button>
           <button class="sort-opt" data-sort="recent" onclick="setSort('recent')">🕐 Recent</button>
@@ -782,6 +782,7 @@
           if (window.mpReapplyI18n) window.mpReapplyI18n();
         } catch {
           document.getElementById('cardsEmpty').style.display = 'block';
+          document.getElementById('countLabel').textContent = '0';
         }
         return;
       }
