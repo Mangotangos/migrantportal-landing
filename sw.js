@@ -5,7 +5,7 @@
  * - Offline fallback page for navigations
  * Bump CACHE_NAME on every deploy.
  */
-const CACHE_NAME = 'migrantportal-v10';
+const CACHE_NAME = 'migrantportal-v11';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_URLS = [
@@ -101,6 +101,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Cross-origin GETs (web fonts, map tiles, CDN scripts, RUM beacons): do NOT
+  // intercept. Letting the browser fetch them natively means a transient failure
+  // stays transient. Intercepting and having our internal fetch() reject would
+  // resolve respondWith() with undefined -> a permanent net::ERR_FAILED for that
+  // resource on every controlled page load.
+  if (new URL(url).origin !== self.location.origin) return;
+
   // Static assets: cache-first
   event.respondWith(
     caches.match(req).then((hit) => {
@@ -110,7 +117,7 @@ self.addEventListener('fetch', (event) => {
         const copy = resp.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(req, copy)).catch(() => {});
         return resp;
-      }).catch(() => hit);
+      }).catch(() => hit || fetch(req));
     })
   );
 });
