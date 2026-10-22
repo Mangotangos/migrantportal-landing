@@ -323,7 +323,7 @@
       </div>
       <h2 id="authGateTitle" style="font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--navy);margin-bottom:10px;">Login Required</h2>
       <p id="authGateMsg" style="font-size:14px;color:var(--gray-600);margin-bottom:28px;line-height:1.6;">You must be logged in with an approved account to submit a family need.</p>
-      <a id="authGateBtn" href="login?next=submit-need.html" style="display:inline-block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px 32px;border-radius:8px;text-decoration:none;">Log In to Continue</a>
+      <a id="authGateBtn" href="login?next=submit-need" style="display:inline-block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px 32px;border-radius:8px;text-decoration:none;">Log In to Continue</a>
     </div>
 
     <div id="formSection" style="display:none;">
@@ -548,9 +548,9 @@
       }
       list.innerHTML = items.map(item => `
         <div class="item-row">
-          <input type="text" id="item-name-${item.id}" placeholder="Item name (e.g. Winter jacket, size M)"
+          <input type="text" id="item-name-${item.id}" aria-label="Item name" placeholder="Item name (e.g. Winter jacket, size M)"
             value="${item.name}" oninput="updateItem(${item.id}, 'name', this.value)" />
-          <input type="number" id="item-qty-${item.id}" placeholder="Qty" min="1" max="999"
+          <input type="number" id="item-qty-${item.id}" aria-label="Quantity" placeholder="Qty" min="1" max="999"
             value="${item.quantity}" oninput="updateItem(${item.id}, 'qty', this.value)"
             style="text-align:center;" />
           <button class="remove-btn" onclick="removeItem(${item.id})">×</button>
