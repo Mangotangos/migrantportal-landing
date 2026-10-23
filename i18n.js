@@ -330,8 +330,8 @@
     'Free to download. Free to use. Built for community.': 'Gratis para descargar. Gratis para usar. Hecho para la comunidad.',
     'Get it on': 'Disponible en',
     'Google Play': 'Google Play',
-    'Notify me for iOS': 'Notificarme para iOS',
-    'App': 'App',
+    'Download on': 'Disponible en',
+    'App Store': 'App Store',
 
     // ── Newsletter
     "Don't miss out!": '¡No te lo pierdas!',
