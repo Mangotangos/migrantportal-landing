@@ -1920,7 +1920,56 @@
         </div>`;
       // Append leaderboard card (full-width, separate row)
       await appendLeaderboard();
+      await appendFulfillmentFunnel();
     } catch(e) { document.getElementById('reportsGrid').innerHTML = '<div class="empty">Failed to load reports.</div>'; }
+  }
+
+  async function appendFulfillmentFunnel() {
+    const grid = document.getElementById('reportsGrid');
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'grid-column:1/-1';
+    wrapper.className = 'report-card';
+    wrapper.innerHTML = `<div class="report-title">Fulfillment Funnel by Category</div><div class="loading">Loading</div>`;
+    grid.appendChild(wrapper);
+    try {
+      const data = await apiGet('/admin/needs?page=1&per_page=5000');
+      const items = data.items || [];
+      if (!items.length) { wrapper.innerHTML = '<div class="report-title">Fulfillment Funnel by Category</div><div style="color:var(--text-3);font-size:12px;padding-top:6px">No needs yet.</div>'; return; }
+      const STATUS_ORDER = ['pending','active','fulfilled','closed'];
+      const STATUS_COLOR = { pending:'var(--yellow)', active:'var(--teal)', fulfilled:'var(--green)', closed:'var(--text-3)' };
+      const byCat = {};
+      items.forEach(n => {
+        const cat = n.category || 'other';
+        byCat[cat] = byCat[cat] || { pending:0, active:0, fulfilled:0, closed:0, total:0 };
+        if (byCat[cat][n.status] !== undefined) byCat[cat][n.status]++;
+        byCat[cat].total++;
+      });
+      const cats = Object.keys(byCat).sort((a,b) => byCat[b].total - byCat[a].total);
+      const maxTotal = Math.max(...cats.map(c => byCat[c].total), 1);
+      wrapper.innerHTML = `
+        <div class="report-title">Fulfillment Funnel by Category <span style="font-size:10px;color:var(--text-3);font-weight:500;letter-spacing:0;text-transform:none;margin-left:6px">pending &rarr; active &rarr; fulfilled</span></div>
+        <div style="display:flex;gap:14px;margin:10px 0 14px;font-size:11px;color:var(--text-2)">
+          ${STATUS_ORDER.map(s => `<span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:2px;background:${STATUS_COLOR[s]};display:inline-block"></span>${s}</span>`).join('')}
+        </div>
+        ${cats.map(cat => {
+          const c = byCat[cat];
+          const widthPct = s => Math.round(c[s] / maxTotal * 100);
+          const resolvedPct = c.total ? Math.round(c.fulfilled / c.total * 100) : 0;
+          return `
+          <div class="bar-row" style="align-items:flex-start;margin-bottom:12px">
+            <div class="bar-label" style="width:120px;padding-top:2px">${CAT_EMOJI[cat]||''} ${escHtml(cat)}</div>
+            <div style="flex:1">
+              <div style="display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--surface-2)">
+                ${STATUS_ORDER.map(s => c[s] ? `<div style="width:${widthPct(s)}%;background:${STATUS_COLOR[s]}" title="${s}: ${c[s]}"></div>` : '').join('')}
+              </div>
+              <div style="font-size:10px;color:var(--text-3);margin-top:4px">${c.fulfilled} fulfilled of ${c.total} submitted &middot; ${resolvedPct}% resolved</div>
+            </div>
+            <div class="bar-count" style="width:32px">${c.total}</div>
+          </div>`;
+        }).join('')}`;
+    } catch(e) {
+      wrapper.innerHTML = `<div class="report-title">Fulfillment Funnel by Category</div><div style="color:var(--text-3);font-size:12px;padding-top:6px">Failed to load.</div>`;
+    }
   }
 
   async function appendLeaderboard() {
