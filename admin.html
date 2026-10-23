@@ -158,6 +158,20 @@
     /* ── CARD ── */
     .card { background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px; }
     .card-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:18px; }
+
+    /* ── HOME TAB ── */
+    .home-action-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:14px; }
+    .home-action-card {
+      background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;
+      display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s,background .2s;
+    }
+    .home-action-card:hover { border-color:var(--border-2);background:var(--surface-2); }
+    .home-action-icon {
+      width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+      font-size:18px;flex-shrink:0;
+    }
+    .home-action-value { font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1.1; }
+    .home-action-label { font-size:11px;color:var(--text-3);font-weight:600;margin-top:2px; }
     .card-title { font-size:15px;font-weight:700;letter-spacing:-0.3px; }
 
     /* ── TOOLBAR ── */
@@ -558,7 +572,10 @@
   <!-- SIDEBAR -->
   <nav class="sidebar">
     <div class="sidebar-section">Overview</div>
-    <button type="button" class="nav-item active" aria-current="page" onclick="switchTab('pending')">
+    <button type="button" class="nav-item active" aria-current="page" onclick="switchTab('home')">
+      <span class="nav-icon">🏠</span> Home
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('pending')">
       <span class="nav-icon">⏳</span> Pending Queue
       <span class="nav-badge zero" id="pendingBadge">0</span>
     </button>
@@ -595,6 +612,9 @@
     <button type="button" class="nav-item" onclick="switchTab('nonprofits')">
       <span class="nav-icon">🏛️</span> Nonprofits
     </button>
+    <button type="button" class="nav-item" onclick="switchTab('audit')">
+      <span class="nav-icon">📜</span> Audit Log
+    </button>
 
     <div class="sidebar-footer">
       MigrantPortal &middot; <span style="color:var(--teal)">Admin v2</span>
@@ -619,8 +639,43 @@
       <div class="stat-card c-teal"><div class="stat-label">Fulfillment %</div><div class="stat-value v-teal" id="sRate">—</div><div class="kpi-delta" id="dRate"></div></div>
     </div>
 
+    <!-- HOME TAB -->
+    <div id="tab-home">
+      <div class="page-header">
+        <div class="page-title">Home</div>
+        <div class="page-subtitle">What needs your attention right now</div>
+      </div>
+
+      <div class="home-action-grid" id="homeActionGrid">
+        <div class="home-action-card" onclick="switchTab('pending')">
+          <div class="home-action-icon" style="background:var(--orange);color:#fff">⏳</div>
+          <div><div class="home-action-value" id="haPending">—</div><div class="home-action-label">Pending Needs</div></div>
+        </div>
+        <div class="home-action-card" onclick="switchTab('flagged')">
+          <div class="home-action-icon" style="background:var(--red);color:#fff">⚑</div>
+          <div><div class="home-action-value" id="haFlagged">—</div><div class="home-action-label">Flagged Needs</div></div>
+        </div>
+        <div class="home-action-card" onclick="switchTab('disbursements')">
+          <div class="home-action-icon" style="background:var(--teal);color:#fff">💰</div>
+          <div><div class="home-action-value" id="haDisb">—</div><div class="home-action-label">Disbursement Requests</div></div>
+        </div>
+        <div class="home-action-card" onclick="switchTab('users')">
+          <div class="home-action-icon" style="background:var(--green);color:#fff">👥</div>
+          <div><div class="home-action-value" id="haUsers">—</div><div class="home-action-label">User Approvals</div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <span class="card-title">Recent Activity</span>
+          <button class="btn-export" onclick="switchTab('audit')">View full log →</button>
+        </div>
+        <div id="homeActivityContent"><div class="loading">Loading</div></div>
+      </div>
+    </div>
+
     <!-- PENDING TAB -->
-    <div id="tab-pending">
+    <div id="tab-pending" style="display:none">
       <div class="page-header">
         <div class="page-title">Pending Queue</div>
         <div class="page-subtitle">Review and approve submitted needs &nbsp;·&nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">J/K</kbd> navigate &nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">A</kbd> approve &nbsp; <kbd style="background:var(--surface-2);border:1px solid var(--border-2);border-radius:3px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-3)">R</kbd> reject &nbsp;·&nbsp; <span id="lastUpdatedStamp" style="font-size:11px;color:var(--text-3);font-style:italic"></span></div>
@@ -974,8 +1029,8 @@
   /* ═══════════════════════════════════════════
      TAB SWITCHING
   ═══════════════════════════════════════════ */
-  let activeTab = 'pending';
-  const ALL_TABS = ['pending','all','users','reports','flagged','announcements','orgs','resources','disbursements','nonprofits','audit'];
+  let activeTab = 'home';
+  const ALL_TABS = ['home','pending','all','users','reports','flagged','announcements','orgs','resources','disbursements','nonprofits','audit'];
 
   function switchTab(name) {
     document.querySelectorAll('.nav-item').forEach(el => {
@@ -987,6 +1042,7 @@
     });
     ALL_TABS.forEach(t => { document.getElementById('tab-' + t).style.display = t === name ? '' : 'none'; });
     activeTab = name;
+    if (name === 'home')          loadHome();
     if (name === 'all')           loadAllNeeds();
     if (name === 'users')         { loadPendingUsers(); loadUsers(); loadDeletedUsers(); }
     if (name === 'reports')       loadReports();
@@ -1097,9 +1153,72 @@
     } catch(e) { console.error('loadStats failed:', e); }
   }
 
+  async function loadHome() {
+    document.getElementById('haPending').textContent = '—';
+    document.getElementById('haFlagged').textContent = '—';
+    document.getElementById('haDisb').textContent = '—';
+    document.getElementById('haUsers').textContent = '—';
+    document.getElementById('homeActivityContent').innerHTML = '<div class="loading">Loading</div>';
+
+    const [statsRes, flaggedRes, disbRes, usersRes, activityRes] = await Promise.allSettled([
+      apiGet('/admin/stats'),
+      apiGet('/admin/needs/flagged'),
+      apiGet('/admin/disbursements?status=requested'),
+      apiGet('/admin/users/pending'),
+      apiGet('/admin/audit-log?page=1&per_page=15'),
+    ]);
+
+    if (statsRes.status === 'fulfilled') {
+      document.getElementById('haPending').textContent = statsRes.value.pending_count;
+    }
+    if (flaggedRes.status === 'fulfilled') {
+      const items = Array.isArray(flaggedRes.value) ? flaggedRes.value : [];
+      document.getElementById('haFlagged').textContent = items.length;
+    }
+    if (disbRes.status === 'fulfilled') {
+      const items = Array.isArray(disbRes.value) ? disbRes.value : [];
+      document.getElementById('haDisb').textContent = items.length;
+    }
+    if (usersRes.status === 'fulfilled') {
+      const items = Array.isArray(usersRes.value) ? usersRes.value : [];
+      document.getElementById('haUsers').textContent = items.length;
+    }
+
+    const activityEl = document.getElementById('homeActivityContent');
+    if (activityRes.status !== 'fulfilled') {
+      activityEl.innerHTML = '<div class="empty"><div class="empty-icon">📜</div>No recent activity.</div>';
+      return;
+    }
+    const data = activityRes.value;
+    const items = Array.isArray(data) ? data : (data.items || []);
+    if (!items.length) {
+      activityEl.innerHTML = '<div class="empty"><div class="empty-icon">📜</div>No recent activity.</div>';
+      return;
+    }
+    activityEl.innerHTML = `
+      <table class="need-table audit-row">
+        <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Entity</th><th>Detail</th></tr></thead>
+        <tbody>
+          ${items.map(e => {
+            const actKey = (e.action || '').split('_')[0];
+            const cls = ACTION_CLASS[e.action] || ACTION_CLASS[actKey] || 'act-other';
+            const ts = e.created_at ? new Date(e.created_at).toLocaleString() : '—';
+            return `<tr>
+              <td style="color:var(--text-3);white-space:nowrap">${ts}</td>
+              <td style="font-weight:600">${e.admin_name || e.actor || '—'}</td>
+              <td><span class="audit-action ${cls}">${(e.action || '').replace(/_/g, ' ')}</span></td>
+              <td style="font-family:monospace;font-size:11px;color:var(--text-2)">${e.entity_type || '—'} ${e.entity_id ? `<span title="${e.entity_id}" style="cursor:default">#${e.entity_id.slice(0, 8)}…</span>` : ''}</td>
+              <td style="color:var(--text-2);max-width:260px;font-size:12px">${e.detail || e.reason || '—'}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  }
+
   // Auto-refresh every 30s; re-renders visible tab data and timestamps
   setInterval(async () => {
     await loadStats();
+    if (activeTab === 'home') loadHome();
     if (activeTab === 'pending') {
       try {
         const data = await apiGet('/admin/needs/pending?page=1');
@@ -2195,6 +2314,7 @@
      COMMAND PALETTE
   ═══════════════════════════════════════════ */
   const CMD_ITEMS = [
+    { icon:'🏠', label:'Home',             tab:'home' },
     { icon:'⏳', label:'Pending Queue',    tab:'pending' },
     { icon:'📋', label:'All Needs',        tab:'all' },
     { icon:'📊', label:'Reports',          tab:'reports' },
@@ -2204,6 +2324,8 @@
     { icon:'🏢', label:'Organizations',    tab:'orgs' },
     { icon:'📚', label:'Resources',        tab:'resources' },
     { icon:'📢', label:'Announcements',    tab:'announcements' },
+    { icon:'🏛️', label:'Nonprofits',       tab:'nonprofits' },
+    { icon:'📜', label:'Audit Log',        tab:'audit' },
   ];
   let cmdIdx = 0;
 
@@ -2353,6 +2475,7 @@
   ═══════════════════════════════════════════ */
   loadStats();
   loadPending();
+  loadHome();
 </script>
 
   <!-- ── REJECTION MODAL ── -->
