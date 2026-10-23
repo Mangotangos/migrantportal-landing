@@ -1204,11 +1204,11 @@
             const cls = ACTION_CLASS[e.action] || ACTION_CLASS[actKey] || 'act-other';
             const ts = e.created_at ? new Date(e.created_at).toLocaleString() : '—';
             return `<tr>
-              <td style="color:var(--text-3);white-space:nowrap">${ts}</td>
-              <td style="font-weight:600">${e.admin_name || e.actor || '—'}</td>
-              <td><span class="audit-action ${cls}">${(e.action || '').replace(/_/g, ' ')}</span></td>
-              <td style="font-family:monospace;font-size:11px;color:var(--text-2)">${e.entity_type || '—'} ${e.entity_id ? `<span title="${e.entity_id}" style="cursor:default">#${e.entity_id.slice(0, 8)}…</span>` : ''}</td>
-              <td style="color:var(--text-2);max-width:260px;font-size:12px">${e.detail || e.reason || '—'}</td>
+              <td style="color:var(--text-3);white-space:nowrap">${esc(ts)}</td>
+              <td style="font-weight:600">${esc(e.admin_name || e.actor || '—')}</td>
+              <td><span class="audit-action ${cls}">${esc((e.action || '').replace(/_/g, ' '))}</span></td>
+              <td style="font-family:monospace;font-size:11px;color:var(--text-2)">${esc(e.entity_type || '—')} ${e.entity_id ? `<span title="${esc(e.entity_id)}" style="cursor:default">#${esc(e.entity_id.slice(0, 8))}…</span>` : ''}</td>
+              <td style="color:var(--text-2);max-width:260px;font-size:12px">${esc(e.detail || e.reason || '—')}</td>
             </tr>`;
           }).join('')}
         </tbody>
