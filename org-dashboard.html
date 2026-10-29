@@ -422,20 +422,21 @@
             <div class="page-title">Team Members</div>
             <div class="page-sub">Volunteers and staff in your organization</div>
           </div>
-          <div class="header-actions">
-            <button class="btn-primary">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Invite Member
-            </button>
-          </div>
         </div>
+
+        <!-- INVITE CODE CARD -->
+        <div class="quick-card" style="margin-bottom:20px;" id="inviteCard">
+          <div class="quick-title">Invite Code</div>
+          <div id="inviteCardBody" style="font-size:13px;color:var(--text-sub);">Loading…</div>
+        </div>
+
         <div class="table-card">
           <table>
             <thead>
-              <tr><th>Member</th><th>Role</th><th>Status</th><th>Joined</th><th></th></tr>
+              <tr><th>Member</th><th>Email</th><th>Type</th></tr>
             </thead>
             <tbody id="membersBody">
-              <tr><td colspan="5" style="text-align:center;color:var(--text-sub);padding:28px;">No team members yet. Invite your first member above.</td></tr>
+              <tr><td colspan="3" style="text-align:center;color:var(--text-sub);padding:28px;">Loading…</td></tr>
             </tbody>
           </table>
         </div>
@@ -545,7 +546,12 @@
 
       const org     = orgRes.status     === 'fulfilled' ? orgRes.value     : null;
       const stats   = statsRes.status   === 'fulfilled' ? statsRes.value   : null;
-      const members = membersRes.status === 'fulfilled' ? membersRes.value : [];
+      const members = membersRes.status === 'fulfilled'
+        ? (Array.isArray(membersRes.value) ? membersRes.value : (membersRes.value.items || membersRes.value.members || []))
+        : [];
+
+      renderInviteCard(org, orgRes.status === 'fulfilled');
+      renderMembersTable(members, membersRes.status === 'fulfilled');
 
       // Org name
       if (org) document.getElementById('orgName').textContent = org.name;
@@ -610,6 +616,61 @@
       const html = items || '<div style="padding:20px;text-align:center;color:var(--text-sub);font-size:13px;">No activity yet.</div>';
       document.getElementById('activityFeed').innerHTML = html;
       document.getElementById('activityFeedFull').innerHTML = html;
+    }
+
+    function renderInviteCard(org, ok) {
+      const el = document.getElementById('inviteCardBody');
+      if (!ok) {
+        el.innerHTML = `<div style="color:var(--text-sub);">Couldn't load your invite code right now. <a href="#" onclick="loadData();return false;" style="color:var(--teal);font-weight:600;">Try again</a></div>`;
+        return;
+      }
+      const code = org && org.invite_code;
+      if (!code) {
+        el.innerHTML = `<div style="color:var(--text-sub);">No invite code is set up for this organization yet.</div>`;
+        return;
+      }
+      el.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+          <code id="inviteCodeText" style="background:var(--gray-100);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:15px;font-weight:700;letter-spacing:.04em;color:var(--text);">${esc(code)}</code>
+          <button class="btn-outline" id="copyInviteBtn" onclick="copyInviteCode('${esc(code)}')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy code
+          </button>
+        </div>
+        <div style="color:var(--text-sub);">A teammate can enter this code at <strong>migrantportal.com/register?invite=${esc(code)}</strong> to join your org as a connector with needs-submission access.</div>`;
+    }
+
+    function copyInviteCode(code) {
+      const btn = document.getElementById('copyInviteBtn');
+      navigator.clipboard.writeText(code).then(() => {
+        if (!btn) return;
+        const original = btn.innerHTML;
+        btn.innerHTML = 'Copied!';
+        setTimeout(() => { btn.innerHTML = original; }, 1500);
+      }).catch(() => {
+        if (btn) btn.innerHTML = 'Copy failed';
+      });
+    }
+
+    function renderMembersTable(members, ok) {
+      const body = document.getElementById('membersBody');
+      if (!ok) {
+        body.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-sub);padding:28px;">Couldn\'t load team members right now. <a href="#" onclick="loadData();return false;" style="color:var(--teal);font-weight:600;">Try again</a></td></tr>';
+        return;
+      }
+      if (!members.length) {
+        body.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-sub);padding:28px;">No team members yet. Share your invite code above to bring your team on.</td></tr>';
+        return;
+      }
+      body.innerHTML = members.map(m => {
+        const name = m.name || m.email || 'Unknown';
+        const youTag = m.id === user.id ? ' <span style="color:var(--gray-400);font-weight:500;">(You)</span>' : '';
+        return `<tr>
+          <td style="font-weight:600;">${esc(name)}${youTag}</td>
+          <td style="color:var(--text-sub);">${esc(m.email || '—')}</td>
+          <td>${esc(cap(m.responder_type) || '—')}</td>
+        </tr>`;
+      }).join('');
     }
 
     // Section switching
