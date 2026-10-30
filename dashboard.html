@@ -785,6 +785,9 @@
 
     /* ── Auth + personalize ─────────────── */
     const user = requireAuth();
+    if (user && user.role === 'responder' && user.org_id) {
+      window.location.replace('org-dashboard');
+    }
     if (user) document.body.style.visibility = 'visible';
     const name = user ? user.name : 'there';
     const initials = name !== 'there' ? name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?';
