@@ -120,12 +120,19 @@
       return /^[a-z0-9-]+$/i.test(stripped) ? stripped : null;
     }
 
+    // Org-linked responders land on the org dashboard, not the individual one
+    function homeFor(user) {
+      if (user?.role === 'admin') return 'admin';
+      if (user?.role === 'navigator') return 'navigator';
+      if (user?.role === 'responder' && user?.org_id) return 'org-dashboard';
+      return 'dashboard';
+    }
+
     // Redirect if already logged in — role-aware
     const _existingUser = localStorage.getItem('mp_user');
     if (_existingUser) {
       try {
-        const _role = JSON.parse(_existingUser)?.role;
-        window.location.href = getSafeNextPath() || (_role === 'admin' ? 'admin' : _role === 'navigator' ? 'navigator' : 'dashboard');
+        window.location.href = getSafeNextPath() || homeFor(JSON.parse(_existingUser));
       } catch (_) {
         window.location.href = getSafeNextPath() || 'dashboard';
       }
@@ -169,8 +176,7 @@
         });
         saveSession(data.access_token, data.user);
         try { localStorage.removeItem('mp_lang'); } catch(_) {}
-        const role = data.user?.role;
-        window.location.href = getSafeNextPath() || (role === 'admin' ? 'admin' : role === 'navigator' ? 'navigator' : 'dashboard');
+        window.location.href = getSafeNextPath() || homeFor(data.user);
       } catch (ex) {
         const msg = ex.message || '';
         if (msg.startsWith('PENDING:')) {
