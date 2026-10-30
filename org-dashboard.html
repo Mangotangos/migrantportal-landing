@@ -281,6 +281,20 @@
           </div>
         </div>
 
+        <!-- FIRST-RUN NUDGE — shown only while this org has submitted zero needs -->
+        <div id="firstNeedNudge" class="quick-card" style="display:none;margin-bottom:20px;background:var(--primary-lt);border-color:var(--primary);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:14px;">Your team hasn't submitted a need yet</div>
+              <div style="font-size:12.5px;color:var(--text-sub);margin-top:2px;">Post a real case from your caseload and get matched with a local responder in minutes.</div>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="window.location.href='submit-need'" style="flex-shrink:0;">Submit Your First Need</button>
+        </div>
+
         <!-- STATS -->
         <div class="stats-grid">
           <div class="stat-card">
@@ -555,6 +569,9 @@
 
       // Org name
       if (org) document.getElementById('orgName').textContent = org.name;
+
+      // First-run nudge — only while nothing has ever been submitted
+      document.getElementById('firstNeedNudge').style.display = allNeeds.length ? 'none' : 'flex';
 
       // Stats
       document.getElementById('statTotal').textContent    = allNeeds.length || '0';
