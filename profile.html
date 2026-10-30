@@ -534,7 +534,7 @@
               <th style="text-align:left;padding:10px 12px;font-size:13px;font-weight:600;color:var(--gray-600);">Org. Status</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="roles-body">
             <tr style="border-bottom:1px solid var(--gray-100);">
               <td style="padding:14px 12px;font-size:13px;color:var(--teal);font-weight:600;">Community Responder</td>
               <td style="padding:14px 12px;font-size:13px;color:var(--teal);">MigrantPortal Community</td>
@@ -543,7 +543,7 @@
           </tbody>
         </table>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;font-size:13px;color:var(--gray-600);">
-          <span>Showing 1 result</span>
+          <span id="roles-count">Showing 1 result</span>
           <div style="display:flex;align-items:center;gap:8px;">
             Per page
             <select style="border:1px solid var(--gray-200);border-radius:4px;padding:3px 8px;font-size:13px;">
@@ -580,8 +580,36 @@
     if (_tok) {
       fetch(API + '/auth/me', { headers: { 'Authorization': 'Bearer ' + _tok } })
         .then(r => r.ok ? r.json() : Promise.reject())
-        .then(u => { prefill(u); localStorage.setItem('mp_user', JSON.stringify(u)); setAvailUI(u.is_available !== false); })
+        .then(u => { prefill(u); localStorage.setItem('mp_user', JSON.stringify(u)); setAvailUI(u.is_available !== false); loadOrgRole(u); })
         .catch(() => {/* use stored */});
+    }
+
+    // Add the user's organization membership (if any) to the My Roles table.
+    function loadOrgRole(u) {
+      if (!u.org_id) return;
+      fetch(API + '/orgs/mine', { headers: { 'Authorization': 'Bearer ' + _tok } })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(org => {
+          const isOwner = org.owner_id === u.id;
+          const active = u.status === 'approved';
+          const row = document.createElement('tr');
+          row.style.borderBottom = '1px solid var(--gray-100)';
+          const cells = [
+            [isOwner ? 'Organization Admin' : 'Organization Member', 'var(--teal)', 600],
+            [org.name, 'var(--teal)', 400],
+            [active ? 'Active' : 'Pending', active ? '#22c55e' : '#d97706', 600],
+          ];
+          cells.forEach(([text, color, weight]) => {
+            const td = document.createElement('td');
+            td.style.cssText = `padding:14px 12px;font-size:13px;color:${color};font-weight:${weight};`;
+            td.textContent = text;
+            row.appendChild(td);
+          });
+          document.getElementById('roles-body').appendChild(row);
+          const n = document.getElementById('roles-body').rows.length;
+          document.getElementById('roles-count').textContent = `Showing ${n} result${n === 1 ? '' : 's'}`;
+        })
+        .catch(() => {/* org row is optional */});
     }
 
     function setAvailUI(isAvail) {
