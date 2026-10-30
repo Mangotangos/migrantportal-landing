@@ -1126,12 +1126,15 @@
 
         // 2. Submit nonprofit directory listing — only orgs that respond need
         // a public listing; pure "submit" orgs skip it.
+        let nonprofitId = null;
         if (orgUsageChoice !== 'submit') {
-          await apiPost('/nonprofits/apply', orgPayload);
+          const npData = await apiPost('/nonprofits/apply', orgPayload);
+          nonprofitId = npData.id || null;
         }
 
         // 3. "Both": create the Organization now so we have an invite code to
         // hand the org a second, connector-role login for submitting needs.
+        // Pass nonprofit_id so admin can see which account owns which listing.
         if (orgUsageChoice === 'both' && userData.access_token) {
           try {
             const org = await apiPostWithToken('/orgs', {
@@ -1140,6 +1143,7 @@
               website: orgPayload.website,
               city: orgPayload.city,
               state: orgPayload.state,
+              nonprofit_id: nonprofitId,
             }, userData.access_token);
             orgInviteCode = org.invite_code || '';
           } catch (orgEx) {

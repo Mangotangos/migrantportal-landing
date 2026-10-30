@@ -5,7 +5,7 @@
  * - Offline fallback page for navigations
  * Bump CACHE_NAME on every deploy.
  */
-const CACHE_NAME = 'migrantportal-v14';
+const CACHE_NAME = 'migrantportal-v15';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_URLS = [
