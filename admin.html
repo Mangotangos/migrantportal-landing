@@ -1878,6 +1878,8 @@
                     <option value="connector" ${u.role==='connector'?'selected':''}>connector</option>
                     <option value="responder" ${u.role==='responder'?'selected':''}>responder</option>
                   </select>
+                  ${u.role==='responder' ? `<label style="display:block;margin-top:6px;font-size:12px;color:var(--text-2);cursor:pointer">
+                    <input type="checkbox" ${u.can_submit_needs?'checked':''} onchange="changeCanSubmit('${u.id}',this)"> Can submit needs</label>` : ''}
                 </td>
                 <td>
                   ${u.id !== user.id && u.role !== 'admin' ? `<button class="btn btn-delete" onclick="deleteUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Delete</button>` : ''}
@@ -1900,6 +1902,17 @@
     if (!role) return;
     try { await apiPatch(`/admin/users/${userId}/role`, { role }); toast(`Role changed to ${role}.`); }
     catch(e) { toast(e.message, true); }
+  }
+
+  async function changeCanSubmit(userId, checkbox) {
+    const canSubmit = checkbox.checked;
+    try {
+      await apiPatch(`/admin/users/${userId}/can-submit-needs`, { can_submit_needs: canSubmit });
+      toast(canSubmit ? 'Can now submit needs.' : 'Submit-needs access removed.');
+    } catch(e) {
+      checkbox.checked = !canSubmit;
+      toast(e.message, true);
+    }
   }
 
   async function deleteUser(id, name) {

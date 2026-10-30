@@ -184,6 +184,8 @@
       .page-header { flex-direction: column; }
       .header-actions { width: 100%; }
     }
+    /* Responder accounts without can_submit_needs can't use the submit form — hide every entry point */
+    body.no-submit [onclick*="submit-need"], body.no-submit a[href="submit-need"] { display: none !important; }
   </style>
 <script>
   (function() {
@@ -498,6 +500,14 @@
   <script>
     requireAuth();
     const user = getUser() || {};
+    const canSubmitNeeds = u => u.role !== 'responder' || u.can_submit_needs === true;
+    document.body.classList.toggle('no-submit', !canSubmitNeeds(user));
+    // Refresh the cached profile so an admin grant takes effect without re-login
+    apiGet('/auth/me').then(me => {
+      if (!me) return;
+      localStorage.setItem('mp_user', JSON.stringify(me));
+      document.body.classList.toggle('no-submit', !canSubmitNeeds(me));
+    }).catch(() => {});
     const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
     document.getElementById('topAvatar').textContent = initials;
     document.getElementById('topName').textContent = user.name || user.email || 'User';
