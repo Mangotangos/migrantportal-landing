@@ -488,10 +488,12 @@
         return;
       }
 
-      // Wrong role — only connectors and admins can submit needs
-      if (user.role !== 'connector' && user.role !== 'admin') {
+      // Wrong role — only connectors, admins, and responders granted can_submit_needs
+      const canSubmit = user.role === 'connector' || user.role === 'admin' ||
+        (user.role === 'responder' && user.can_submit_needs === true);
+      if (!canSubmit) {
         document.getElementById('authGateTitle').textContent = 'Connector Account Required';
-        document.getElementById('authGateMsg').textContent = 'Only Connector accounts can submit family needs. If you believe this is an error, contact your administrator.';
+        document.getElementById('authGateMsg').textContent = 'Only Connector accounts, or organizations approved to submit needs, can submit family needs. If you believe this is an error, contact your administrator.';
         document.getElementById('authGateBtn').textContent = 'Back to Dashboard';
         document.getElementById('authGateBtn').href = 'dashboard';
         document.getElementById('authGate').style.display = 'block';
