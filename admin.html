@@ -655,6 +655,7 @@
     <div class="sidebar-section">Management</div>
     <button type="button" class="nav-item" onclick="switchTab('users')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-users"/></svg></span> Users
+      <span class="nav-badge zero" id="usersBadge">0</span>
     </button>
     <button type="button" class="nav-item" onclick="switchTab('orgs')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-building"/></svg></span> Organizations
@@ -667,6 +668,7 @@
     </button>
     <button type="button" class="nav-item" onclick="switchTab('nonprofits')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-landmark"/></svg></span> Nonprofits
+      <span class="nav-badge zero" id="nonprofitsBadge">0</span>
     </button>
     <button type="button" class="nav-item" onclick="switchTab('audit')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-scroll"/></svg></span> Audit Log
@@ -1207,6 +1209,29 @@
       const stamp = document.getElementById('lastUpdatedStamp');
       if (stamp) stamp.textContent = 'Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     } catch(e) { console.error('loadStats failed:', e); }
+
+    loadSidebarBadges();
+  }
+
+  // Users and Nonprofits have no KPI tile on the home dashboard, so their
+  // pending counts only ever showed up if you clicked into the tab — this
+  // keeps the sidebar badge live the same way pendingBadge/flaggedBadge are.
+  async function loadSidebarBadges() {
+    try {
+      const pendingUsers = await apiGet('/admin/users/pending');
+      const n = Array.isArray(pendingUsers) ? pendingUsers.length : 0;
+      const badge = document.getElementById('usersBadge');
+      badge.textContent = n;
+      badge.className = 'nav-badge' + (n === 0 ? ' zero' : '');
+    } catch(e) { console.error('loadSidebarBadges (users) failed:', e); }
+
+    try {
+      const nonprofits = await apiGet('/nonprofits/admin/all');
+      const n = Array.isArray(nonprofits) ? nonprofits.filter(np => !np.is_active).length : 0;
+      const badge = document.getElementById('nonprofitsBadge');
+      badge.textContent = n;
+      badge.className = 'nav-badge' + (n === 0 ? ' zero' : '');
+    } catch(e) { console.error('loadSidebarBadges (nonprofits) failed:', e); }
   }
 
   async function loadHome() {
