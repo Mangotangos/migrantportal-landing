@@ -5,7 +5,7 @@
  * - Offline fallback page for navigations
  * Bump CACHE_NAME on every deploy.
  */
-const CACHE_NAME = 'migrantportal-v22';
+const CACHE_NAME = 'migrantportal-v23';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_URLS = [
@@ -86,10 +86,11 @@ self.addEventListener('fetch', (event) => {
           // cache:'no-cache' revalidates with the server (304 if unchanged) so the
           // 1h max-age in _headers can't pin returning users to a stale page.
           const fresh = await fetch(req.url, { redirect: 'follow', cache: 'no-cache' });
-          if (!fresh.redirected) {
-            const cache = await caches.open(CACHE_NAME);
-            cache.put(req, fresh.clone()).catch(() => {});
-          }
+          // Chrome rejects a redirected response for a navigation (ERR_FAILED),
+          // so hand the redirect back to the browser to follow itself.
+          if (fresh.redirected) return Response.redirect(fresh.url, 302);
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(req, fresh.clone()).catch(() => {});
           return fresh;
         } catch (_) {
           const cache = await caches.open(CACHE_NAME);

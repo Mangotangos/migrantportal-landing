@@ -476,8 +476,8 @@
       'border-radius:6px',
       'cursor:pointer',
       'margin-right:6px',
-      'min-height:32px',
-      'min-width:36px',
+      'min-height:44px',
+      'min-width:44px',
       'letter-spacing:0.5px'
     ].join(';');
     btn.addEventListener('click', function () {
