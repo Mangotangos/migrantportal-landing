@@ -294,7 +294,10 @@
               <div style="font-size:12.5px;color:var(--text-sub);margin-top:2px;">Post a real case from your caseload and get matched with a local responder in minutes.</div>
             </div>
           </div>
-          <button class="btn-primary" onclick="window.location.href='submit-need'" style="flex-shrink:0;">Submit Your First Need</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;">
+            <button class="btn-outline" onclick="window.location.href='requests'">Help a Family Nearby</button>
+            <button class="btn-primary" onclick="window.location.href='submit-need'">Submit Your First Need</button>
+          </div>
         </div>
 
         <!-- STATS -->
@@ -310,15 +313,31 @@
             <div class="stat-delta up" id="statOpenDelta">Active</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Families Helped</div>
-            <div class="stat-value" id="statFamilies">—</div>
-            <div class="stat-delta neutral">Unique families</div>
+            <div class="stat-label">Open Near You</div>
+            <div class="stat-value" id="statNearby">—</div>
+            <div class="stat-delta neutral" id="statNearbyDelta">Within 25 mi</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Team Members</div>
             <div class="stat-value" id="statMembers">—</div>
             <div class="stat-delta neutral">Active volunteers</div>
           </div>
+        </div>
+
+        <!-- NEEDS NEAR YOU -->
+        <div class="section-row">
+          <div class="section-heading">Needs Near You</div>
+          <a class="see-all" href="requests">See all →</a>
+        </div>
+        <div class="table-card" style="margin-bottom:24px;">
+          <table>
+            <thead>
+              <tr><th>Need</th><th>Category</th><th>Urgency</th><th>Location</th><th>Distance</th><th></th></tr>
+            </thead>
+            <tbody id="nearbyNeedsBody">
+              <tr><td colspan="6" style="text-align:center;color:var(--text-sub);padding:28px;">Loading…</td></tr>
+            </tbody>
+          </table>
         </div>
 
         <!-- RECENT NEEDS TABLE -->
@@ -556,6 +575,86 @@
 
     let allNeeds = [];
 
+    // ── Needs near you ───────────────────────────────────────────────────────
+    const NEARBY_RADIUS_MI = 25;
+    const NEARBY_MAX_ROWS = 5;
+    const URGENCY_RANK = { urgent: 3, high: 2, medium: 1, low: 0 };
+
+    function distanceMiles(a, b) {
+      const rad = d => d * Math.PI / 180;
+      const h = Math.sin(rad(b.lat - a.lat) / 2) ** 2 +
+        Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lng - a.lng) / 2) ** 2;
+      return 3958.8 * 2 * Math.asin(Math.sqrt(h));
+    }
+
+    async function geocodeOrg(org) {
+      if (!org || !org.city || !org.state) return null;
+      const key = `mp_org_geo_${org.city}_${org.state}`.toLowerCase();
+      const cached = localStorage.getItem(key);
+      if (cached) return JSON.parse(cached);
+      try {
+        const q = encodeURIComponent(`${org.city}, ${org.state}, USA`);
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${q}`);
+        const hits = res.ok ? await res.json() : [];
+        if (!hits.length) return null;
+        const point = { lat: parseFloat(hits[0].lat), lng: parseFloat(hits[0].lon) };
+        localStorage.setItem(key, JSON.stringify(point));
+        return point;
+      } catch (err) {
+        console.warn('Org geocode failed', err);
+        return null;
+      }
+    }
+
+    function nearbyRow(n) {
+      const urg = n.urgency || 'low';
+      const loc = [n.city, n.state].filter(Boolean).join(', ');
+      const dist = n.distance == null ? '—' : `${Math.round(n.distance)} mi`;
+      return `
+        <tr>
+          <td><a href="need?id=${esc(n.id)}" style="font-weight:600;color:var(--teal);">${esc(n.title)}</a></td>
+          <td>${CAT_EMOJI[n.category] || ''} ${cap(n.category)}</td>
+          <td><span class="badge ${URGENCY_BADGE[urg]}"><span class="dot"></span>${cap(urg)}</span></td>
+          <td>${esc(loc)}</td>
+          <td>${dist}</td>
+          <td><a href="need?id=${esc(n.id)}" style="font-size:12px;color:var(--teal);font-weight:600;">Respond →</a></td>
+        </tr>`;
+    }
+
+    async function loadNearbyNeeds(org) {
+      const body = document.getElementById('nearbyNeedsBody');
+      const tile = document.getElementById('statNearby');
+      const tileDelta = document.getElementById('statNearbyDelta');
+      const emptyRow = msg => `<tr><td colspan="6" style="text-align:center;color:var(--text-sub);padding:28px;">${msg}</td></tr>`;
+      try {
+        const [res, origin] = await Promise.all([fetch(`${API}/needs/public`), geocodeOrg(org)]);
+        if (!res.ok) throw new Error(`needs/public ${res.status}`);
+        const needs = await res.json();
+
+        const withDistance = needs.map(n => ({
+          ...n,
+          distance: origin && n.lat != null && n.lng != null ? distanceMiles(origin, n) : null,
+        }));
+        const nearby = origin
+          ? withDistance.filter(n => n.distance != null && n.distance <= NEARBY_RADIUS_MI)
+          : withDistance.filter(n => org && org.state && n.state === org.state);
+
+        nearby.sort((a, b) =>
+          (URGENCY_RANK[b.urgency] || 0) - (URGENCY_RANK[a.urgency] || 0) ||
+          (a.distance ?? Infinity) - (b.distance ?? Infinity));
+
+        tile.textContent = nearby.length;
+        tileDelta.textContent = origin ? `Within ${NEARBY_RADIUS_MI} mi` : 'In your state';
+        body.innerHTML = nearby.length
+          ? nearby.slice(0, NEARBY_MAX_ROWS).map(nearbyRow).join('')
+          : emptyRow(`No open needs ${origin ? `within ${NEARBY_RADIUS_MI} mi` : 'near you'} right now. New needs are posted by navigators every week. <a href="requests">Browse all needs →</a> or <a href="submit-need">submit one from your caseload →</a>`);
+      } catch (err) {
+        console.error('Nearby needs failed', err);
+        tile.textContent = '—';
+        body.innerHTML = emptyRow('Could not load nearby needs. <a href="requests">Browse all needs →</a>');
+      }
+    }
+
     async function loadData() {
       const [needsRes, orgRes, statsRes, membersRes] = await Promise.allSettled([
         apiGet('/needs?limit=100'),
@@ -586,7 +685,7 @@
       // Stats
       document.getElementById('statTotal').textContent    = allNeeds.length || '0';
       document.getElementById('statOpen').textContent     = allNeeds.filter(n => n.status !== 'closed').length || '0';
-      document.getElementById('statFamilies').textContent = stats ? stats.needs_fulfilled : allNeeds.filter(n => n.status === 'fulfilled').length || '0';
+      loadNearbyNeeds(org);
       document.getElementById('statMembers').textContent  = stats ? stats.member_count : (members.length || '1');
       document.getElementById('needsBadge').textContent   = allNeeds.filter(n => n.status !== 'closed').length || '0';
 
