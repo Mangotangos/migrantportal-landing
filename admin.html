@@ -666,6 +666,9 @@
     <button type="button" class="nav-item" onclick="switchTab('announcements')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-megaphone"/></svg></span> Announcements
     </button>
+    <button type="button" class="nav-item" onclick="switchTab('email')">
+      <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-send"/></svg></span> Email
+    </button>
     <button type="button" class="nav-item" onclick="switchTab('nonprofits')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-landmark"/></svg></span> Nonprofits
       <span class="nav-badge zero" id="nonprofitsBadge">0</span>
@@ -963,6 +966,66 @@
       </div>
     </div>
 
+    <!-- EMAIL TAB -->
+    <div id="tab-email" style="display:none">
+      <div class="page-header">
+        <div class="page-title">Email</div>
+        <div class="page-subtitle">Send a one-off email to a user, organization, or custom address</div>
+      </div>
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div class="card" style="width:300px;flex-shrink:0">
+          <div class="card-header"><span class="card-title">Compose Email</span></div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <label class="form-label">Send to</label>
+              <select class="form-select" id="email-recipient-type" onchange="onEmailRecipientTypeChange()">
+                <option value="user">Single user</option>
+                <option value="org">Single organization</option>
+                <option value="custom">Custom email address</option>
+              </select>
+            </div>
+
+            <div id="email-user-picker">
+              <label class="form-label">User</label>
+              <input class="form-input" id="email-user-search" type="text" placeholder="Search name or email…" autocomplete="off" oninput="filterEmailUsers()" />
+              <input type="hidden" id="email-user-id" />
+              <input type="hidden" id="email-user-email" />
+              <div id="email-user-results" style="margin-top:6px;max-height:160px;overflow-y:auto;border:1px solid var(--border-2);border-radius:8px;display:none"></div>
+            </div>
+
+            <div id="email-org-picker" style="display:none">
+              <label class="form-label">Organization</label>
+              <select class="form-select" id="email-org-select" onchange="onEmailOrgSelectChange()">
+                <option value="">Select an organization…</option>
+              </select>
+            </div>
+
+            <div id="email-custom-picker" style="display:none">
+              <label class="form-label">Email address</label>
+              <input class="form-input" id="email-custom-address" type="email" placeholder="name@example.com" oninput="updateLastSentWarning(this.value)" />
+            </div>
+
+            <div id="email-last-sent-warning" style="display:none;font-size:11px;color:#9A6B00;background:#FFF8E6;border-left:3px solid #D9A400;padding:6px 8px;border-radius:0 6px 6px 0"></div>
+
+            <div><label class="form-label">Subject *</label><input class="form-input" id="email-subject" type="text" placeholder="Brief subject line…" /></div>
+            <div><label class="form-label">Body *</label><textarea class="form-textarea" id="email-body" rows="6" placeholder="Message content…"></textarea></div>
+
+            <div style="font-size:11px;color:var(--text-3);background:var(--surface-2);border-radius:6px;padding:8px 10px;line-height:1.5">
+              A CAN-SPAM footer (Samru LLC mailing address + reply-to-unsubscribe note) is appended automatically — it isn't shown here and can't be edited.
+            </div>
+
+            <button onclick="composeSendEmail()" class="btn btn-primary" style="height:40px;font-size:13px;border-radius:8px;width:100%">Send Email</button>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="card" style="padding:0;overflow:hidden">
+            <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:14px;font-weight:700">Sent Emails</div>
+            <div id="email-sent-list" style="padding:16px 20px"><div class="loading">Loading</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- AUDIT LOG TAB -->
     <div id="tab-audit" style="display:none">
       <div class="page-header">
@@ -1088,7 +1151,7 @@
      TAB SWITCHING
   ═══════════════════════════════════════════ */
   let activeTab = 'home';
-  const ALL_TABS = ['home','pending','all','users','reports','flagged','announcements','orgs','resources','disbursements','nonprofits','audit'];
+  const ALL_TABS = ['home','pending','all','users','reports','flagged','announcements','email','orgs','resources','disbursements','nonprofits','audit'];
 
   function switchTab(name) {
     document.querySelectorAll('.nav-item').forEach(el => {
@@ -1106,6 +1169,7 @@
     if (name === 'reports')       loadReports();
     if (name === 'flagged')       loadFlagged();
     if (name === 'announcements') loadAnnouncements();
+    if (name === 'email')         loadSentEmails();
     if (name === 'orgs')          loadOrgs();
     if (name === 'resources')     loadResources();
     if (name === 'nonprofits')    loadNonprofits();
@@ -2121,6 +2185,151 @@
   }
 
   /* ═══════════════════════════════════════════
+     EMAIL
+  ═══════════════════════════════════════════ */
+  let emailUsersCache = null;
+  let emailOrgsCache = null;
+  let emailSentCache = [];
+
+  function onEmailRecipientTypeChange() {
+    const type = document.getElementById('email-recipient-type').value;
+    document.getElementById('email-user-picker').style.display   = type === 'user'   ? '' : 'none';
+    document.getElementById('email-org-picker').style.display    = type === 'org'    ? '' : 'none';
+    document.getElementById('email-custom-picker').style.display = type === 'custom' ? '' : 'none';
+    document.getElementById('email-last-sent-warning').style.display = 'none';
+
+    if (type === 'user' && !emailUsersCache) {
+      apiGet('/admin/users?page=1').then(data => { emailUsersCache = data.items || []; }).catch(() => { emailUsersCache = []; });
+    }
+    if (type === 'org' && !emailOrgsCache) {
+      apiGet('/admin/orgs').then(orgs => {
+        emailOrgsCache = orgs || [];
+        const sel = document.getElementById('email-org-select');
+        sel.innerHTML = '<option value="">Select an organization…</option>' + emailOrgsCache.map(o =>
+          `<option value="${escHtml(o.id)}" data-owner-email="${escHtml(o.owner_email || '')}">${escHtml(o.name)} — ${escHtml(o.owner_email || 'no owner email')}</option>`
+        ).join('');
+      }).catch(() => { emailOrgsCache = []; });
+    }
+  }
+
+  function filterEmailUsers() {
+    const q = document.getElementById('email-user-search').value.trim().toLowerCase();
+    const results = document.getElementById('email-user-results');
+    document.getElementById('email-user-id').value = '';
+    document.getElementById('email-user-email').value = '';
+    if (!q || !emailUsersCache) { results.style.display = 'none'; return; }
+    const matches = emailUsersCache.filter(u =>
+      (u.name || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q)
+    ).slice(0, 8);
+    if (!matches.length) { results.innerHTML = '<div style="padding:8px 10px;font-size:12px;color:var(--text-3)">No match</div>'; results.style.display = ''; return; }
+    results.innerHTML = matches.map(u => `
+      <div onclick="pickEmailUser('${escHtml(u.id)}','${escHtml(u.email)}','${escHtml(u.name)}')"
+           style="padding:8px 10px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--border)">
+        <div style="font-weight:600">${escHtml(u.name)}</div>
+        <div style="color:var(--text-3)">${escHtml(u.email)}</div>
+      </div>`).join('');
+    results.style.display = '';
+  }
+
+  function pickEmailUser(id, email, name) {
+    document.getElementById('email-user-id').value = id;
+    document.getElementById('email-user-email').value = email;
+    document.getElementById('email-user-search').value = `${name} <${email}>`;
+    document.getElementById('email-user-results').style.display = 'none';
+    updateLastSentWarning(email);
+  }
+
+  function onEmailOrgSelectChange() {
+    const sel = document.getElementById('email-org-select');
+    const opt = sel.options[sel.selectedIndex];
+    const ownerEmail = opt ? opt.getAttribute('data-owner-email') : '';
+    updateLastSentWarning(ownerEmail || '');
+  }
+
+  function updateLastSentWarning(email) {
+    const el = document.getElementById('email-last-sent-warning');
+    if (!email) { el.style.display = 'none'; return; }
+    const prior = emailSentCache
+      .filter(s => (s.to_email || '').toLowerCase() === email.toLowerCase())
+      .sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at))[0];
+    if (!prior) { el.style.display = 'none'; return; }
+    const days = Math.round((Date.now() - new Date(prior.sent_at)) / 86400000);
+    el.textContent = `Last emailed: ${days === 0 ? 'today' : days === 1 ? '1 day ago' : days + ' days ago'}`;
+    el.style.display = '';
+  }
+
+  async function loadSentEmails() {
+    const el = document.getElementById('email-sent-list');
+    try {
+      const data = await apiGet('/admin/email/sent?page=1');
+      emailSentCache = data.items || [];
+      if (!emailSentCache.length) { el.innerHTML = '<div style="color:var(--text-3);font-size:13px">No emails sent yet.</div>'; return; }
+      el.innerHTML = `
+        <table class="need-table">
+          <thead><tr><th>To</th><th>Subject</th><th>Sent At</th><th>Sent By</th></tr></thead>
+          <tbody>
+            ${emailSentCache.map(s => `
+              <tr>
+                <td>${escHtml(s.to_email)}</td>
+                <td>${escHtml(s.subject)}</td>
+                <td style="color:var(--text-3)">${s.sent_at ? new Date(s.sent_at).toLocaleString() : '—'}</td>
+                <td style="color:var(--text-3)">${escHtml(s.sent_by_admin_name || 'Unknown')}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+    } catch(e) { el.innerHTML = '<div style="color:var(--text-3);font-size:13px">Failed to load.</div>'; }
+  }
+
+  async function composeSendEmail() {
+    const type = document.getElementById('email-recipient-type').value;
+    let to_email = '', to_user_id = null;
+
+    if (type === 'user') {
+      to_email = document.getElementById('email-user-email').value;
+      to_user_id = document.getElementById('email-user-id').value || null;
+      if (!to_email) { toast('Pick a user to email.', true); return; }
+    } else if (type === 'org') {
+      const sel = document.getElementById('email-org-select');
+      const opt = sel.options[sel.selectedIndex];
+      to_email = opt ? opt.getAttribute('data-owner-email') : '';
+      if (!sel.value || !to_email) { toast('Pick an organization with a known owner email.', true); return; }
+    } else {
+      to_email = document.getElementById('email-custom-address').value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to_email)) { toast('Enter a valid email address.', true); return; }
+    }
+
+    const subjectEl = document.getElementById('email-subject');
+    const bodyEl = document.getElementById('email-body');
+    const subject = subjectEl.value.trim();
+    const body = bodyEl.value.trim();
+    if (!subject || !body) {
+      if (!subject) subjectEl.style.borderColor = 'var(--red)';
+      if (!body) bodyEl.style.borderColor = 'var(--red)';
+      toast('Subject and body are required.', true);
+      return;
+    }
+    subjectEl.style.borderColor = '';
+    bodyEl.style.borderColor = '';
+
+    if (!await showConfirmModal({
+      title: 'Send Email',
+      message: `Send this email to ${to_email}? This goes to a real inbox and cannot be undone.`,
+      confirmText: 'Send',
+      danger: false,
+    })) return;
+
+    const body_html = escHtml(body).replace(/\n/g, '<br>');
+    try {
+      await apiPost('/admin/email/send', { to_email, to_user_id, subject, body_html });
+      toast('✓ Email sent.');
+      subjectEl.value = '';
+      bodyEl.value = '';
+      document.getElementById('email-last-sent-warning').style.display = 'none';
+      loadSentEmails();
+    } catch(e) { toast(e.message || 'Send failed.', true); }
+  }
+
+  /* ═══════════════════════════════════════════
      ORGS
   ═══════════════════════════════════════════ */
   async function loadOrgs() {
@@ -2479,6 +2688,7 @@
     { icon:cmdIc('i-building'),  label:'Organizations',    tab:'orgs' },
     { icon:cmdIc('i-book'),      label:'Resources',        tab:'resources' },
     { icon:cmdIc('i-megaphone'), label:'Announcements',    tab:'announcements' },
+    { icon:cmdIc('i-send'),      label:'Email',            tab:'email' },
     { icon:cmdIc('i-landmark'),  label:'Nonprofits',       tab:'nonprofits' },
     { icon:cmdIc('i-scroll'),    label:'Audit Log',        tab:'audit' },
   ];
