@@ -157,8 +157,10 @@
 
     /* ── LAYOUT ── */
     .workspace {
-      flex: 1; display: flex; overflow: hidden;
+      /* shrink 0: the footer shares body's flex column and must not squash the map/list to 0 height */
+      flex: 1 0 600px; display: flex; overflow: hidden;
     }
+    .footer { flex-shrink: 0; }
 
     /* ── LEFT PANEL ── */
     .panel {
