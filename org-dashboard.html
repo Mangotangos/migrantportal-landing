@@ -775,6 +775,14 @@
       if (btn) btn.classList.add('active');
     }
 
+    // Deep link from other pages' sidebars, e.g. org-dashboard#members
+    const _hashSection = location.hash.slice(1);
+    if (sections.includes(_hashSection)) {
+      const _item = [...document.querySelectorAll('.sidebar-item')]
+        .find(i => (i.getAttribute('onclick') || '').includes("'" + _hashSection + "'"));
+      showSection(_hashSection, _item);
+    }
+
     loadData();
   </script>
 </body>
