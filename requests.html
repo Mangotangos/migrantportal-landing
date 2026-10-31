@@ -238,7 +238,7 @@
       overflow: hidden; position: relative;
     }
     .card-img-illus {
-      font-size: 56px; line-height: 1; user-select: none;
+      display: flex; color: var(--teal); line-height: 1; user-select: none;
     }
     .card-badge {
       position: absolute; top: 8px; right: 8px;
@@ -299,6 +299,7 @@
     .cat-chips::-webkit-scrollbar { display:none; }
     .cat-chip { flex-shrink:0; font-size:12px; font-weight:600; padding:5px 12px; border-radius:20px; border:1.5px solid var(--gray-200); background:white; color:var(--gray-600); cursor:pointer; white-space:nowrap; }
     .cat-chip.active { background:var(--teal); color:white; border-color:var(--teal); }
+    .cat-chip svg { vertical-align:-2px; margin-right:5px; }
     .cat-chip:hover:not(.active) { border-color:var(--teal); color:var(--teal); }
 
     /* ── SORT OPTS ── */
@@ -508,6 +509,8 @@
       .rail-link, .rail-cat { display: flex; justify-content: space-between; align-items: center; width: 100%; text-align: left; border: none; background: none; padding: 8px 10px; border-radius: 8px; font-size: 13px; color: var(--gray-600); margin-bottom: 2px; }
       .rail-link:hover, .rail-cat:hover { background: var(--gray-100); color: var(--teal); }
       .rail-link.active, .rail-cat.active { background: #E0F4F5; color: #006a72; font-weight: 700; }
+      .rail-cat { justify-content: flex-start; gap: 8px; }
+      .rail-cat svg { flex-shrink: 0; }
       .rail select { width: 100%; padding: 9px 10px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 13px; background: white; }
       .rail input[type=range] { width: 100%; accent-color: var(--teal); }
       .rail-ticks { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-400); }
@@ -637,16 +640,16 @@
   <!-- CATEGORY CHIPS -->
   <div class="cat-chips">
     <button class="cat-chip active" data-cat="" onclick="setCategoryChip('')">All</button>
-    <button class="cat-chip" data-cat="housing" onclick="setCategoryChip('housing')">🏠 Housing</button>
-    <button class="cat-chip" data-cat="food" onclick="setCategoryChip('food')">🍽️ Food</button>
-    <button class="cat-chip" data-cat="employment" onclick="setCategoryChip('employment')">💼 Jobs</button>
-    <button class="cat-chip" data-cat="legal" onclick="setCategoryChip('legal')">⚖️ Legal</button>
-    <button class="cat-chip" data-cat="medical" onclick="setCategoryChip('medical')">🏥 Medical</button>
-    <button class="cat-chip" data-cat="education" onclick="setCategoryChip('education')">📚 Education</button>
-    <button class="cat-chip" data-cat="transportation" onclick="setCategoryChip('transportation')">🚗 Transport</button>
-    <button class="cat-chip" data-cat="translation" onclick="setCategoryChip('translation')">🌐 Language</button>
-    <button class="cat-chip" data-cat="clothing" onclick="setCategoryChip('clothing')">👗 Clothing</button>
-    <button class="cat-chip" data-cat="other" onclick="setCategoryChip('other')">📦 Other</button>
+    <button class="cat-chip" data-cat="housing" onclick="setCategoryChip('housing')">Housing</button>
+    <button class="cat-chip" data-cat="food" onclick="setCategoryChip('food')">Food</button>
+    <button class="cat-chip" data-cat="employment" onclick="setCategoryChip('employment')">Jobs</button>
+    <button class="cat-chip" data-cat="legal" onclick="setCategoryChip('legal')">Legal</button>
+    <button class="cat-chip" data-cat="medical" onclick="setCategoryChip('medical')">Medical</button>
+    <button class="cat-chip" data-cat="education" onclick="setCategoryChip('education')">Education</button>
+    <button class="cat-chip" data-cat="transportation" onclick="setCategoryChip('transportation')">Transport</button>
+    <button class="cat-chip" data-cat="translation" onclick="setCategoryChip('translation')">Language</button>
+    <button class="cat-chip" data-cat="clothing" onclick="setCategoryChip('clothing')">Clothing</button>
+    <button class="cat-chip" data-cat="other" onclick="setCategoryChip('other')">Other</button>
   </div>
 
   <!-- WORKSPACE -->
@@ -663,16 +666,16 @@
       </div>
       <div class="rail-label">Category</div>
       <button class="rail-cat active" data-cat="" onclick="setCategoryChip('')">All</button>
-      <button class="rail-cat" data-cat="housing" onclick="setCategoryChip('housing')">🏠 Housing</button>
-      <button class="rail-cat" data-cat="food" onclick="setCategoryChip('food')">🍽️ Food</button>
-      <button class="rail-cat" data-cat="employment" onclick="setCategoryChip('employment')">💼 Jobs</button>
-      <button class="rail-cat" data-cat="legal" onclick="setCategoryChip('legal')">⚖️ Legal</button>
-      <button class="rail-cat" data-cat="medical" onclick="setCategoryChip('medical')">🏥 Medical</button>
-      <button class="rail-cat" data-cat="education" onclick="setCategoryChip('education')">📚 Education</button>
-      <button class="rail-cat" data-cat="transportation" onclick="setCategoryChip('transportation')">🚗 Transport</button>
-      <button class="rail-cat" data-cat="translation" onclick="setCategoryChip('translation')">🌐 Language</button>
-      <button class="rail-cat" data-cat="clothing" onclick="setCategoryChip('clothing')">👗 Clothing</button>
-      <button class="rail-cat" data-cat="other" onclick="setCategoryChip('other')">📦 Other</button>
+      <button class="rail-cat" data-cat="housing" onclick="setCategoryChip('housing')">Housing</button>
+      <button class="rail-cat" data-cat="food" onclick="setCategoryChip('food')">Food</button>
+      <button class="rail-cat" data-cat="employment" onclick="setCategoryChip('employment')">Jobs</button>
+      <button class="rail-cat" data-cat="legal" onclick="setCategoryChip('legal')">Legal</button>
+      <button class="rail-cat" data-cat="medical" onclick="setCategoryChip('medical')">Medical</button>
+      <button class="rail-cat" data-cat="education" onclick="setCategoryChip('education')">Education</button>
+      <button class="rail-cat" data-cat="transportation" onclick="setCategoryChip('transportation')">Transport</button>
+      <button class="rail-cat" data-cat="translation" onclick="setCategoryChip('translation')">Language</button>
+      <button class="rail-cat" data-cat="clothing" onclick="setCategoryChip('clothing')">Clothing</button>
+      <button class="rail-cat" data-cat="other" onclick="setCategoryChip('other')">Other</button>
       <div class="rail-label">Urgency</div>
       <select id="railUrgency" aria-label="Urgency" onchange="document.getElementById('filt-urgency').value=this.value;applyFilters()">
         <option value="">All urgency</option>
@@ -719,7 +722,7 @@
           <div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line sm"></div><div class="skel-line lg"></div><div class="skel-line md"></div></div></div>
         </div>
         <div id="cardsEmpty" class="empty-state" style="display:none">
-          <div class="empty-ic">📍</div>
+          <div class="empty-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
           <h3 id="emptyTitle" data-no-i18n>No open needs found</h3>
           <p id="emptyMsg" data-no-i18n></p>
           <button class="empty-cta" id="emptyCta" data-no-i18n style="display:none"></button>
@@ -786,8 +789,25 @@
     let allNeeds = [];
 
     // ── Category display helpers
-    const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
-    const CATEGORY_BG    = { housing:'#e8f4fd', food:'#edf8f0', clothing:'#f0eaf8', furniture:'#fdf3e7', transportation:'#e8f4fd', employment:'#fef9ec', legal:'#fdf3e7', medical:'#fdf2f2', education:'#fff3e6', translation:'#e8f4fd', other:'#f4f4f4' };
+    // ── Category icons (Lucide-style line SVGs; color comes from CSS currentColor)
+    const CATEGORY_ICON_PATHS = {
+      housing: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+      food: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+      clothing: '<path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>',
+      furniture: '<path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z"/><path d="M4 18v2"/><path d="M20 18v2"/>',
+      transportation: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+      employment: '<rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+      legal: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+      medical: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>',
+      education: '<path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+      translation: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+      other: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+    };
+    const CARD_ICON_BG = '#e6f4f6';
+    function categoryIcon(cat, size, strokeWidth) {
+      const body = CATEGORY_ICON_PATHS[cat] || CATEGORY_ICON_PATHS.other;
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${body}</svg>`;
+    }
     const URGENCY_DOT    = { urgent:'#dc2626', high:'#ea580c', medium:'#ca8a04', low:'#16a34a' };
 
     function timeAgo(dateStr) {
@@ -798,8 +818,8 @@
     }
 
     function buildCard(need, idx) {
-      const emoji = CATEGORY_EMOJI[need.category] || '📦';
-      const bg    = CATEGORY_BG[need.category]    || '#f4f4f4';
+      const icon  = categoryIcon(need.category, 56, 1.5);
+      const bg    = CARD_ICON_BG;
       const dot   = URGENCY_DOT[need.urgency]     || '#999';
       const age   = need.created_at ? timeAgo(need.created_at) : '';
       const loc   = [need.city, need.state, need.zip].filter(Boolean).join(', ');
@@ -809,7 +829,7 @@
       return `
         <a class="req-card" href="need?id=${need.id}" onclick="selectCard(this, ${idx}); event.preventDefault();" data-id="${need.id}" data-urgency="${need.urgency || ''}" style="text-decoration:none;color:inherit;display:block;">
           <div class="card-img" style="background:${bg};">
-            <span class="card-img-illus">${emoji}</span>
+            <span class="card-img-illus">${icon}</span>
             ${urgencyLabel ? `<span class="urgency-chip" data-urgency="${need.urgency}">${urgencyLabel}</span>` : ''}
             <div class="card-badge" style="background:${dot};width:8px;height:8px;border-radius:50%;position:absolute;top:8px;right:8px;"></div>
           </div>
@@ -843,7 +863,7 @@
       const urgent = need.urgency === 'urgent';
       const loc    = [need.city, need.state].filter(Boolean).join(', ');
       const icon = L.divIcon({
-        html: `<div class="map-pin${urgent ? ' urgent' : ''}">${urgent ? '🔴 ' : '📍 '}Need</div>`,
+        html: `<div class="map-pin${urgent ? ' urgent' : ''}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-1px;margin-right:3px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Need</div>`,
         className: '',
         iconAnchor: [28, 12]
       });
@@ -1131,7 +1151,10 @@
       loadNeeds();
     }
 
-    // ── Category chips
+    // ── Category chips + sidebar list: prepend a line icon to each labelled button
+    document.querySelectorAll('.cat-chip[data-cat], .rail-cat[data-cat]').forEach(btn => {
+      if (btn.dataset.cat) btn.insertAdjacentHTML('afterbegin', categoryIcon(btn.dataset.cat, 14, 2));
+    });
     function setCategoryChip(val) {
       activeCategory = val;
       document.querySelectorAll('.cat-chip').forEach(c => {
@@ -1157,7 +1180,6 @@
     }
 
     // ── Topbar search (hits backend /search endpoint)
-    const SEARCH_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
     let _searchTimer;
     function debounceTopSearch(q) {
       clearTimeout(_searchTimer);
@@ -1176,7 +1198,7 @@
         dd.innerHTML = r.needs.map(n => `
           <a href="need?id=${n.id}" style="display:block;padding:10px 16px;border-bottom:1px solid #f3f4f6;text-decoration:none;color:#0D0D0D" onclick="document.getElementById('search-dropdown').style.display='none'">
             <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:16px">${SEARCH_EMOJI[n.category]||'📦'}</span>
+              <span style="display:flex;color:var(--teal)">${categoryIcon(n.category, 16, 2)}</span>
               <div>
                 <div style="font-size:13px;font-weight:600">${n.title}</div>
                 <div style="font-size:11px;color:#999">#${n.case_number} · ${n.status} · ${[n.city,n.state].filter(Boolean).join(', ')||'—'}</div>
