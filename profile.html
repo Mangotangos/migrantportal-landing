@@ -94,7 +94,7 @@
     .tab-panel.active { display: block; }
 
     /* ── FORM LAYOUT ── */
-    .profile-body { display: grid; grid-template-columns: 1fr 260px; gap: 28px; align-items: start; }
+    .profile-body { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
     .profile-form-card {
       background: white; border-radius: 12px; border: 1px solid var(--gray-200);
       padding: 28px;
@@ -102,39 +102,59 @@
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .form-row.single { grid-template-columns: 1fr; }
     .form-row.triple { grid-template-columns: 1fr 80px 1fr; }
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-    .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+    .form-row.three { grid-template-columns: 1.4fr 1fr 1fr; }
+    .form-row.phone { grid-template-columns: 1fr 120px; margin-bottom: 0; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .form-group label { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+    .form-group .opt { font-weight: 400; color: var(--gray-400); }
     .form-group input, .form-group select {
-      height: 40px; border: 1px solid var(--gray-200); border-radius: 6px;
+      width: 100%; height: 42px; border: 1px solid #d0d5dd; border-radius: 8px;
       padding: 0 12px; font-size: 14px; font-family: 'Inter', sans-serif;
       color: var(--text); outline: none; background: white;
       transition: border-color .15s;
     }
-    .form-group input:focus, .form-group select:focus { border-color: var(--teal); }
+    .form-group input:focus, .form-group select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,124,132,.15); }
     .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
 
     .save-btn {
-      margin-top: 8px; background: var(--orange); color: white;
-      border: none; padding: 11px 28px; border-radius: 6px;
+      margin-top: 8px; background: var(--teal); color: white;
+      border: none; padding: 11px 28px; border-radius: 8px;
       font-size: 14px; font-weight: 700; transition: background .15s;
     }
-    .save-btn:hover { background: var(--orange-d); }
+    .save-btn:hover { background: #005f66; }
+    .save-btn:disabled { opacity: .45; cursor: not-allowed; }
     .save-success {
       display: none; margin-top: 12px; padding: 10px 14px;
       background: #ecfdf5; border: 1px solid #6ee7b7; border-radius: 6px;
       font-size: 13px; color: #065f46; font-weight: 500;
     }
+    .form-flush { padding: 0; overflow: hidden; }
+    .form-sect { padding: 24px 28px; border-bottom: 1px solid var(--gray-200); }
+    .form-sect h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .form-sect p { font-size: 13px; color: var(--gray-400); margin-bottom: 18px; }
+    .savebar { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 16px 28px; background: #fcfcfd; }
+    .savebar .save-btn { margin-top: 0; }
+    .savebar .save-success { margin: 0; padding: 6px 12px; }
+    .save-hint { margin-right: auto; font-size: 13px; color: var(--gray-400); }
 
     /* ── RIGHT SIDEBAR ── */
     .profile-side { display: flex; flex-direction: column; gap: 16px; }
+    .profile-side { position: sticky; top: 80px; }
     .avatar-card {
       background: white; border: 1px solid var(--gray-200); border-radius: 12px;
-      padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 14px;
+      padding: 28px 22px 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;
     }
+    .avatar-email { font-size: 13px; color: var(--gray-400); word-break: break-all; }
+    .avail-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      width: 100%; margin-top: 10px; padding-top: 18px; border-top: 1px solid var(--gray-200); text-align: left;
+    }
+    .avail-title { font-size: 14px; font-weight: 700; }
+    .avail-sub { font-size: 12.5px; color: var(--gray-600); margin-top: 3px; }
     .avatar-circle {
-      width: 100px; height: 100px; border-radius: 50%;
-      background: var(--gray-200); display: flex; align-items: center; justify-content: center;
-      font-size: 32px; font-weight: 700; color: var(--gray-600); position: relative;
+      width: 96px; height: 96px; border-radius: 50%; margin-bottom: 4px;
+      background: #e6f4f5; display: flex; align-items: center; justify-content: center;
+      font-size: 32px; font-weight: 700; color: var(--teal); position: relative;
     }
     .avatar-edit {
       position: absolute; bottom: 2px; right: 2px;
@@ -143,7 +163,7 @@
       cursor: pointer; border: 2px solid white;
     }
     .avatar-name { font-size: 15px; font-weight: 700; }
-    .avatar-role { font-size: 12px; color: var(--teal); font-weight: 600; }
+    .avatar-role { font-size: 12px; color: var(--teal); font-weight: 600; background: #e6f4f5; padding: 3px 10px; border-radius: 999px; text-transform: capitalize; }
     .payment-btn {
       width: 100%; background: var(--orange); color: white;
       border: none; padding: 12px; border-radius: 6px;
@@ -194,7 +214,9 @@
 
     @media (max-width: 700px) {
       .profile-body { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
+      .profile-side { position: static; }
+      .form-row, .form-row.three, .form-row.phone { grid-template-columns: 1fr; }
+      .form-sect, .savebar { padding-left: 18px; padding-right: 18px; }
       .profile-tabs { overflow-x: auto; }
     }
   </style>
@@ -257,94 +279,8 @@
     <div class="tab-panel active" id="panel-personal">
       <div class="profile-body">
 
-        <!-- Availability toggle -->
-        <div class="profile-form-card" style="margin-bottom:16px">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <div>
-              <div style="font-size:15px;font-weight:700">Availability</div>
-              <div style="font-size:13px;color:var(--gray-600);margin-top:3px" id="avail-label">
-                You are <strong style="color:var(--teal)">available</strong> to respond to needs.
-              </div>
-            </div>
-            <button class="toggle on" id="avail-toggle" onclick="toggleAvailability()" title="Toggle availability"></button>
-          </div>
-        </div>
-
-        <div class="profile-form-card">
-          <div class="form-row">
-            <div class="form-group">
-              <label>First Name</label>
-              <input type="text" id="firstName" placeholder="First name" />
-            </div>
-            <div class="form-group">
-              <label>Last Name</label>
-              <input type="text" id="lastName" placeholder="Last name" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Address 1</label>
-              <input type="text" placeholder="Street address" />
-            </div>
-            <div class="form-group">
-              <label>Address 2</label>
-              <input type="text" placeholder="Apt, suite, unit (optional)" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>City</label>
-              <input type="text" placeholder="City" />
-            </div>
-            <div class="form-group">
-              <label>State / Province</label>
-              <select>
-                <option value="">Select a State/Province</option>
-                <option>Kansas</option>
-                <option>Missouri</option>
-                <option>Oklahoma</option>
-                <option>Nebraska</option>
-                <option>Colorado</option>
-                <option>Texas</option>
-                <option>Other</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Country</label>
-              <select>
-                <option value="">Select a Country</option>
-                <option selected>United States</option>
-                <option>Canada</option>
-                <option>Mexico</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Zip / Postal Code</label>
-              <input type="text" placeholder="Zip code" />
-            </div>
-          </div>
-          <div class="form-row triple">
-            <div class="form-group">
-              <label>Phone</label>
-              <input type="tel" placeholder="(555) 000-0000" />
-            </div>
-            <div class="form-group">
-              <label>Ext.</label>
-              <input type="text" placeholder="—" />
-            </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" id="emailField" placeholder="you@example.com" />
-            </div>
-          </div>
-          <button class="save-btn" onclick="saveProfile()">Save Profile</button>
-          <div class="save-success" id="saveSuccess">✓ Profile saved successfully!</div>
-        </div>
-
-        <!-- SIDEBAR -->
-        <div class="profile-side">
+        <!-- IDENTITY -->
+        <aside class="profile-side">
           <div class="avatar-card">
             <div class="avatar-circle" id="avatarCircle">
               <span id="avatarInitials">?</span>
@@ -353,7 +289,106 @@
               </div>
             </div>
             <div class="avatar-name" id="avatarName">—</div>
-            <div class="avatar-role">Responder</div>
+            <div class="avatar-role" id="avatarRole">Responder</div>
+            <div class="avatar-email" id="avatarEmail"></div>
+            <div class="avail-row">
+              <div>
+                <div class="avail-title">Availability</div>
+                <div class="avail-sub" id="avail-label">
+                  You are <strong style="color:var(--teal)">available</strong> to respond to needs.
+                </div>
+              </div>
+              <button class="toggle on" id="avail-toggle" onclick="toggleAvailability()" title="Toggle availability"></button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- FORM -->
+        <div class="profile-form-card form-flush" id="personalForm">
+          <section class="form-sect">
+            <h3>Contact</h3>
+            <p>How responders and your organization reach you.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="firstName" placeholder="First name" />
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="lastName" placeholder="Last name" />
+              </div>
+            </div>
+            <div class="form-row single">
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="emailField" placeholder="you@example.com" />
+              </div>
+            </div>
+            <div class="form-row phone">
+              <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" placeholder="(555) 000-0000" />
+              </div>
+              <div class="form-group">
+                <label>Ext. <span class="opt">(optional)</span></label>
+                <input type="text" placeholder="—" />
+              </div>
+            </div>
+          </section>
+
+          <section class="form-sect">
+            <h3>Address</h3>
+            <p>Helps match you with needs near you.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Address 1</label>
+                <input type="text" placeholder="Street address" />
+              </div>
+              <div class="form-group">
+                <label>Address 2 <span class="opt">(optional)</span></label>
+                <input type="text" placeholder="Apt, suite, unit" />
+              </div>
+            </div>
+            <div class="form-row three">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" placeholder="City" />
+              </div>
+              <div class="form-group">
+                <label>State / Province</label>
+                <select>
+                  <option value="">Select…</option>
+                  <option>Kansas</option>
+                  <option>Missouri</option>
+                  <option>Oklahoma</option>
+                  <option>Nebraska</option>
+                  <option>Colorado</option>
+                  <option>Texas</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Zip / Postal Code</label>
+                <input type="text" placeholder="Zip code" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Country</label>
+                <select>
+                  <option value="">Select a Country</option>
+                  <option selected>United States</option>
+                  <option>Canada</option>
+                  <option>Mexico</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <div class="savebar">
+            <span class="save-hint" id="saveHint">No changes yet</span>
+            <div class="save-success" id="saveSuccess">✓ Profile saved</div>
+            <button class="save-btn" id="saveBtn" onclick="saveProfile()" disabled>Save changes</button>
           </div>
         </div>
       </div>
@@ -570,6 +605,8 @@
       if (parts[0]) document.getElementById('firstName').value = parts[0];
       if (parts[1]) document.getElementById('lastName').value  = parts.slice(1).join(' ');
       if (u.email)  document.getElementById('emailField').value = u.email;
+      if (u.email)  document.getElementById('avatarEmail').textContent = u.email;
+      if (u.role)   document.getElementById('avatarRole').textContent = u.role;
       if (document.getElementById('topRole')) document.getElementById('topRole').textContent = u.role || '—';
       updateAvatar();
     }
@@ -685,6 +722,13 @@
       _mpToast('Notification preferences saved.');
     }
 
+    // ── Save button enables only once something changes
+    function setDirty(isDirty) {
+      document.getElementById('saveBtn').disabled = !isDirty;
+      document.getElementById('saveHint').textContent = isDirty ? 'You have unsaved changes' : 'No changes yet';
+    }
+    document.getElementById('personalForm').addEventListener('input', () => setDirty(true));
+
     // ── Save profile
     async function saveProfile() {
       const fn = document.getElementById('firstName').value.trim();
@@ -697,6 +741,7 @@
         });
         localStorage.setItem('mp_user', JSON.stringify(updated));
         updateAvatar();
+        setDirty(false);
         s.style.display = 'block';
         setTimeout(() => s.style.display = 'none', 3000);
       } catch (e) {
