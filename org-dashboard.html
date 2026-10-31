@@ -18,7 +18,7 @@
       --primary-d:  #005f66;
       --primary-lt: #E0F4F5;
       --teal: #007A82; --teal-d: #005f66; --teal-lt: #E0F4F5;
-      --coral:  #FF6129; --orange: #D13A06;
+      --coral:  #D13A06; --orange: #D13A06;
       --green:  #22C55E;
       --bg:     #F5F3EE;
       --surface:#FFFFFF;
@@ -26,7 +26,7 @@
       --text-sub:#6E6560;
       --border: #E5E0D8;
       --gray-bg:#F5F3EE; --gray-100:#F0EDE8; --gray-200:#E5E0D8;
-      --gray-400:#A09890; --gray-600:#6E6560; --gray-700:#3d3530;
+      --gray-400:#756E68; --gray-600:#6E6560; --gray-700:#3d3530;
       --navy: #1A1614;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
       --shadow-md: 0 4px 14px rgba(0,0,0,0.10);
@@ -71,7 +71,7 @@
     .sidebar-label { font-size: 10px; font-weight: 700; color: var(--gray-400); letter-spacing: .08em; text-transform: uppercase; padding: 10px 8px 4px; }
     .sidebar-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text-sub); cursor: pointer; transition: all .15s; }
     .sidebar-item:hover { background: var(--gray-100); color: var(--primary); }
-    .sidebar-item.active { background: var(--primary-lt); color: var(--primary); font-weight: 700; }
+    .sidebar-item.active { background: var(--primary-lt); color: #006a72; font-weight: 700; }
     .sidebar-item svg { flex-shrink: 0; }
     .sidebar-badge { margin-left: auto; background: var(--coral); color: white; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
     .org-chip {
@@ -101,7 +101,8 @@
     .stat-label { font-size: 12px; font-weight: 600; color: var(--text-sub); margin-bottom: 8px; }
     .stat-value { font-family: var(--font-head); font-size: 30px; font-weight: 800; color: var(--text); line-height: 1; }
     .stat-delta { font-size: 12px; margin-top: 6px; }
-    .stat-delta.up      { color: #16a34a; }
+    td[colspan] a { text-decoration: underline; }
+    .stat-delta.up      { color: #15803d; }
     .stat-delta.neutral { color: var(--gray-400); }
 
     /* SECTION HEADING */
@@ -268,7 +269,7 @@
       <div id="sec-overview">
         <div class="page-header">
           <div>
-            <div class="page-title">Organization Dashboard</div>
+            <h1 class="page-title" style="margin:0">Organization Dashboard</h1>
             <div class="page-sub">Manage your team's submitted needs and responses</div>
           </div>
           <div class="header-actions">
@@ -332,7 +333,7 @@
         <div class="table-card" style="margin-bottom:24px;">
           <table>
             <thead>
-              <tr><th>Need</th><th>Category</th><th>Urgency</th><th>Location</th><th>Distance</th><th></th></tr>
+              <tr><th>Need</th><th>Category</th><th>Urgency</th><th>Location</th><th>Distance</th><th aria-label="Actions"></th></tr>
             </thead>
             <tbody id="nearbyNeedsBody">
               <tr><td colspan="6" style="text-align:center;color:var(--text-sub);padding:28px;">Loading…</td></tr>
@@ -355,7 +356,7 @@
                 <th>Location</th>
                 <th>Family</th>
                 <th>Status</th>
-                <th></th>
+                <th aria-label="Actions"></th>
               </tr>
             </thead>
             <tbody id="recentNeedsBody">
@@ -407,7 +408,7 @@
                 <th>Family</th>
                 <th>Submitted</th>
                 <th>Status</th>
-                <th></th>
+                <th aria-label="Actions"></th>
               </tr>
             </thead>
             <tbody id="allNeedsBody">
