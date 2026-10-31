@@ -317,10 +317,10 @@
             <div class="stat-value" id="statNearby">—</div>
             <div class="stat-delta neutral" id="statNearbyDelta">Within 25 mi</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card" style="cursor:pointer;" onclick="openMembersSection()">
             <div class="stat-label">Team Members</div>
             <div class="stat-value" id="statMembers">—</div>
-            <div class="stat-delta neutral">Active volunteers</div>
+            <div class="stat-delta neutral" id="statMembersDelta">Active volunteers</div>
           </div>
         </div>
 
@@ -364,43 +364,10 @@
           </table>
         </div>
 
-        <!-- BOTTOM TWO COL -->
-        <div class="two-col">
-          <!-- Activity feed -->
-          <div>
-            <div class="section-row"><div class="section-heading">Recent Activity</div></div>
-            <div class="feed-card" id="activityFeed">
-              <div style="padding:28px;text-align:center;color:var(--text-sub);font-size:13px;">Loading activity…</div>
-            </div>
-          </div>
-
-          <!-- Quick actions + team -->
-          <div style="display:flex;flex-direction:column;gap:16px;">
-            <div class="quick-card">
-              <div class="quick-title">Quick Actions</div>
-              <button class="quick-btn" onclick="window.location.href='submit-need'">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Submit a New Need
-              </button>
-              <button class="quick-btn" onclick="window.location.href='requests'">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                Browse Open Requests
-              </button>
-              <button class="quick-btn" onclick="showSection('members', document.querySelectorAll('.sidebar-item')[2])">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-                Manage Team
-              </button>
-              <button class="quick-btn" onclick="window.location.href='profile'">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                Edit My Profile
-              </button>
-            </div>
-
-            <div class="quick-card">
-              <div class="quick-title">Team Members</div>
-              <div id="teamList" style="font-size:13px;color:var(--text-sub);">Loading…</div>
-            </div>
-          </div>
+        <!-- RECENT ACTIVITY -->
+        <div class="section-row"><div class="section-heading">Recent Activity</div></div>
+        <div class="feed-card" id="activityFeed">
+          <div style="padding:28px;text-align:center;color:var(--text-sub);font-size:13px;">Loading activity…</div>
         </div>
       </div><!-- /sec-overview -->
 
@@ -573,6 +540,10 @@
         </tr>`;
     }
 
+    function openMembersSection() {
+      showSection('members', document.querySelectorAll('.sidebar-item')[2]);
+    }
+
     let allNeeds = [];
 
     // ── Needs near you ───────────────────────────────────────────────────────
@@ -702,18 +673,11 @@
       // Activity feed
       renderActivity(allNeeds);
 
-      // Team members
-      const teamList = document.getElementById('teamList');
-      const memberRows = (members.length ? members : [{ id: user.id, name: user.name, email: user.email }])
-        .map(m => {
-          const ini = (m.name || m.email || '?').split(' ').map(p => p[0]).join('').toUpperCase().slice(0,2);
-          const label = m.id === user.id ? 'Admin (You)' : (m.responder_type || 'Member');
-          return `<div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
-            <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;">${esc(ini)}</div>
-            <div><div style="font-size:13px;font-weight:600;">${esc(m.name||m.email)}</div><div style="font-size:11px;color:var(--gray-400);">${esc(label)}</div></div>
-          </div>`;
-        }).join('');
-      teamList.innerHTML = memberRows + `<a href="#" onclick="event.preventDefault();showSection('members', document.querySelectorAll('.sidebar-item')[2])" style="font-size:12px;color:var(--teal);font-weight:600;display:block;margin-top:8px;">+ Invite a team member</a>`;
+      // Solo-team nudge — invite link only while the team is just the admin
+      const memberCount = stats ? stats.member_count : (members.length || 1);
+      document.getElementById('statMembersDelta').innerHTML = memberCount <= 1
+        ? 'Just you so far. <a href="#" onclick="event.stopPropagation();event.preventDefault();openMembersSection()" style="color:var(--teal);font-weight:600;">Invite a teammate →</a>'
+        : 'Active volunteers';
     }
 
     function renderAllNeeds(needs) {
