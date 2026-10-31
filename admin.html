@@ -244,6 +244,22 @@
     .need-table tr:hover td { background:var(--surface-2); }
 
     /* ── STATUS / URGENCY ── */
+    .pu-row { padding:14px 16px;border-bottom:1px solid rgba(240,180,41,0.1); }
+    .pu-top { display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap; }
+    .pu-main { flex:1;min-width:260px; }
+    .pu-chips { display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; }
+    .pu-chip { font-size:11.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;color:var(--text-2); }
+    .pu-chip b { color:var(--text);font-weight:600; }
+    .pu-ok { border-color:rgba(18,128,92,0.4);color:var(--green); }
+    .pu-warn { border-color:rgba(192,57,43,0.4);color:var(--red); }
+    .pu-why { margin-top:8px;font-size:13px;background:var(--surface-2);border:1px solid rgba(240,180,41,0.2);border-radius:6px;padding:7px 10px; }
+    .pu-why.pu-empty { color:var(--red);border-color:rgba(192,57,43,0.4); }
+    .pu-tog { margin-top:8px;font-size:12px;font-weight:600;background:none;border:0;padding:0;cursor:pointer;color:var(--accent,var(--text-2)); }
+    .pu-det { display:none;margin-top:10px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px; }
+    .pu-det.open { display:block; }
+    .pu-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px 18px; }
+    .pu-grid small { display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-2); }
+    .pu-grid span { font-size:13px;word-break:break-word; }
     .status-pill { display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600; }
     .s-pending   { background:var(--yellow-bg);color:var(--yellow); }
     .s-active    { background:var(--green-bg);color:var(--green); }
@@ -1797,23 +1813,83 @@
       card.style.display = users.length ? '' : 'none';
       document.getElementById('pending-users-count').textContent = users.length;
       if (!users.length) return;
-      document.getElementById('pendingUsersContent').innerHTML = users.map(u => `
-        <div id="pu-${u.id}" style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(240,180,41,0.1);flex-wrap:wrap">
-          <div style="flex:1;min-width:200px">
-            <div style="font-weight:700;font-size:14px">
-              ${u.name}
-              <span class="status-pill ${u.role==='navigator'?'s-active':'s-pending'}" style="margin-left:6px">${u.role}</span>
+      document.getElementById('pendingUsersContent').innerHTML = users.map(renderPendingUser).join('');
+    } catch(e) { console.error(e); }
+  }
+
+  const DISPOSABLE_EMAIL_DOMAINS = ['yopmail.com','mailinator.com','guerrillamail.com','10minutemail.com','tempmail.com','trashmail.com','sharklasers.com','getnada.com','maildrop.cc'];
+  const NOT_PROVIDED = '<span style="color:var(--text-2)">Not provided</span>';
+
+  function pendingChip(label, value) {
+    return `<span class="pu-chip"><b>${esc(label)}</b> ${value ? esc(value) : 'Not provided'}</span>`;
+  }
+
+  function pendingDetail(label, value) {
+    return `<div><small>${esc(label)}</small><span>${value ? esc(value) : NOT_PROVIDED}</span></div>`;
+  }
+
+  function pendingAgeLabel(createdAt) {
+    if (!createdAt) return '';
+    const d = new Date(createdAt.endsWith('Z') || /[+-]\d\d:\d\d$/.test(createdAt) ? createdAt : createdAt + 'Z');
+    return d.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+  }
+
+  function renderPendingUser(u) {
+    const domain = (u.email || '').split('@').pop().toLowerCase();
+    const location = [u.city, u.state].filter(Boolean).join(', ');
+    const isDisposable = DISPOSABLE_EMAIL_DOMAINS.includes(domain);
+    const org = u.org;
+    const sameDomain = u.same_domain_accounts || [];
+    const emailHref = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(u.email)}&su=${encodeURIComponent('MigrantPortal application - a quick question')}&body=${encodeURIComponent(`Hi ${u.name},\n\nThanks for applying to MigrantPortal. Before we can approve your account, could you share a bit more detail about how you'd like to help?\n\n`)}`;
+    const roleDetails = u.role === 'navigator'
+      ? pendingDetail('Org website', org && org.website) + pendingDetail('Legal name', org && org.legal_name) + pendingDetail('EIN', org && org.ein) + pendingDetail('Org description', org && org.description)
+      : pendingDetail('Responder type', u.responder_type) + pendingDetail('Can help with', (u.need_categories || []).join(', '));
+    return `
+      <div id="pu-${esc(u.id)}" class="pu-row">
+        <div class="pu-top">
+          <div class="pu-main">
+            <div style="font-weight:700;font-size:15px">
+              ${esc(u.name)}
+              <span class="status-pill ${u.role==='navigator'?'s-active':'s-pending'}" style="margin-left:6px">${esc(u.role)}</span>
             </div>
-            <div style="font-size:12px;color:var(--text-2);margin-top:2px">${u.email}${u.org_name?' · '+u.org_name:''}</div>
-            ${u.registration_notes?`<div style="margin-top:6px;font-size:13px;color:var(--text);background:var(--surface-2);border:1px solid rgba(240,180,41,0.2);border-radius:6px;padding:7px 10px"><b>Why joining:</b> ${u.registration_notes}</div>`:''}
+            <div style="font-size:12px;color:var(--text-2);margin-top:2px">${esc(u.email)}${u.org_name?' · '+esc(u.org_name):''}</div>
+            <div class="pu-chips">
+              <span class="pu-chip"><b>Signed up</b> ${esc(pendingAgeLabel(u.created_at))} ${timeInQueue(u.created_at)}</span>
+              ${pendingChip('Phone', u.phone)}
+              ${pendingChip('Location', location)}
+              ${pendingChip('Language', (u.preferred_language || '').toUpperCase())}
+              ${u.email_verified ? '<span class="pu-chip pu-ok">Email verified</span>' : '<span class="pu-chip pu-warn">Email not verified</span>'}
+              ${isDisposable ? `<span class="pu-chip pu-warn">Disposable email domain (${esc(domain)})</span>` : ''}
+            </div>
+            <div class="pu-why ${u.registration_notes ? '' : 'pu-empty'}"><b>Why joining:</b> ${u.registration_notes ? esc(u.registration_notes) : 'None provided'}</div>
+            <button class="pu-tog" onclick="togglePendingDetails('${esc(u.id)}', this)">▼ Details</button>
+            <div class="pu-det" id="pu-det-${esc(u.id)}">
+              <div class="pu-grid">
+                ${pendingDetail('Org name', (org && org.name) || u.org_name)}
+                ${roleDetails}
+                ${pendingDetail('Referral source', u.referral_source)}
+                ${pendingDetail('Can submit needs', u.can_submit_needs ? 'Yes' : 'No')}
+                ${pendingDetail('Country', u.country)}
+                ${pendingDetail('User ID', u.id)}
+              </div>
+              <div style="margin-top:10px;font-size:12px;color:var(--text-2)"><b>Other accounts at @${esc(domain)}:</b>
+                ${sameDomain.length ? sameDomain.map(o => `${esc(o.name)} (${esc(o.role)}, ${esc(o.status)})`).join('; ') : 'none'}
+              </div>
+            </div>
           </div>
           <div style="display:flex;gap:8px;flex-shrink:0;margin-top:2px">
-            <a class="btn" style="background:var(--surface-2);color:var(--text-2);border-color:var(--border);text-decoration:none;display:inline-flex;align-items:center" target="_blank" rel="noopener" href="${esc(`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(u.email)}&su=${encodeURIComponent('MigrantPortal application - a quick question')}&body=${encodeURIComponent(`Hi ${u.name},\n\nThanks for applying to MigrantPortal. Before we can approve your account, could you share a bit more detail about how you'd like to help?\n\n`)}`)}">✉ Email</a>
-            <button class="btn btn-approve" onclick="approveUser('${u.id}')">✓ Approve</button>
-            <button class="btn btn-reject" onclick="rejectUser('${u.id}')">✗ Reject</button>
+            <a class="btn" style="background:var(--surface-2);color:var(--text-2);border-color:var(--border);text-decoration:none;display:inline-flex;align-items:center" target="_blank" rel="noopener" href="${esc(emailHref)}">✉ Email</a>
+            <button class="btn btn-approve" onclick="approveUser('${esc(u.id)}')">✓ Approve</button>
+            <button class="btn btn-reject" onclick="rejectUser('${esc(u.id)}')">✗ Reject</button>
           </div>
-        </div>`).join('');
-    } catch(e) { console.error(e); }
+        </div>
+      </div>`;
+  }
+
+  function togglePendingDetails(id, btn) {
+    const panel = document.getElementById(`pu-det-${id}`);
+    const isOpen = panel.classList.toggle('open');
+    btn.textContent = isOpen ? '▲ Hide details' : '▼ Details';
   }
 
   async function approveUser(id) {
