@@ -160,6 +160,22 @@
     .savebar .save-btn { margin-top: 0; }
     .savebar .save-success { margin: 0; padding: 6px 12px; }
     .save-hint { margin-right: auto; font-size: 13px; color: var(--gray-400); }
+    .save-hint a { font-weight: 600; }
+    .form-group input[readonly] { background: var(--gray-100); color: var(--gray-600); cursor: not-allowed; }
+    .pill { display: inline-block; margin-left: 8px; padding: 2px 9px; border-radius: 999px; background: var(--gray-100); color: var(--gray-600); font-size: 11px; font-weight: 700; vertical-align: middle; }
+    .crit-note { color: #dc2626; font-weight: 600; }
+    .notif-head, .notif-row { display: grid; grid-template-columns: 1fr 64px 64px; gap: 8px; align-items: start; }
+    .notif-head { padding-bottom: 8px; border-bottom: 1px solid var(--gray-200); font-size: 12px; font-weight: 700; color: var(--gray-400); text-align: center; }
+    .notif-all { display: flex; align-items: center; gap: 6px; text-align: left; font-size: 12px; font-weight: 600; color: var(--gray-600); cursor: pointer; }
+    .notif-row { padding: 14px 0; border-bottom: 1px solid var(--gray-100); text-align: center; }
+    .notif-row:last-child { border-bottom: none; }
+    .notif-row .notif-label { text-align: left; font-size: 14px; font-weight: 600; }
+    .notif-row .notif-label.critical { color: var(--teal); }
+    .notif-row .notif-sub { text-align: left; font-size: 12.5px; color: var(--gray-600); margin-top: 2px; line-height: 1.5; font-weight: 400; }
+    .notif-row input[type=checkbox], .notif-head input[type=checkbox], .notif-opt input { width: 16px; height: 16px; accent-color: var(--teal); }
+    .notif-opt { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; margin-bottom: 10px; }
+    .notif-opt.danger { color: #dc2626; }
+    .notif-sms-note { font-size: 12.5px; color: var(--gray-400); margin-top: 6px; }
 
     /* ── RIGHT SIDEBAR ── */
     .profile-side { display: flex; flex-direction: column; gap: 16px; }
@@ -200,13 +216,6 @@
     .security-section { margin-bottom: 28px; }
 
     /* ── NOTIFICATIONS TAB ── */
-    .notif-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 0; border-bottom: 1px solid var(--gray-100);
-    }
-    .notif-row:last-child { border-bottom: none; }
-    .notif-label { font-size: 14px; font-weight: 500; }
-    .notif-sub { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
     .toggle {
       width: 42px; height: 24px; border-radius: 12px; background: var(--gray-200);
       position: relative; cursor: pointer; transition: background .2s; border: none; flex-shrink: 0;
@@ -307,9 +316,6 @@
           <div class="avatar-card">
             <div class="avatar-circle" id="avatarCircle">
               <span id="avatarInitials">?</span>
-              <div class="avatar-edit">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              </div>
             </div>
             <div class="avatar-name" id="avatarName">—</div>
             <div class="avatar-role" id="avatarRole">Responder</div>
@@ -344,17 +350,17 @@
             <div class="form-row single">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="emailField" placeholder="you@example.com" />
+                <input type="email" id="emailField" placeholder="you@example.com" readonly title="Email can't be changed here" />
               </div>
             </div>
             <div class="form-row phone">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="tel" placeholder="(555) 000-0000" />
+                <input type="tel" id="phone" maxlength="30" placeholder="(555) 000-0000" />
               </div>
               <div class="form-group">
                 <label>Ext. <span class="opt">(optional)</span></label>
-                <input type="text" placeholder="—" />
+                <input type="text" id="phoneExt" maxlength="10" inputmode="numeric" placeholder="—" />
               </div>
             </div>
           </section>
@@ -365,21 +371,21 @@
             <div class="form-row">
               <div class="form-group">
                 <label>Address 1</label>
-                <input type="text" placeholder="Street address" />
+                <input type="text" id="address1" maxlength="200" placeholder="Street address" />
               </div>
               <div class="form-group">
                 <label>Address 2 <span class="opt">(optional)</span></label>
-                <input type="text" placeholder="Apt, suite, unit" />
+                <input type="text" id="address2" maxlength="200" placeholder="Apt, suite, unit" />
               </div>
             </div>
             <div class="form-row three">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" placeholder="City" />
+                <input type="text" id="city" maxlength="100" placeholder="City" />
               </div>
               <div class="form-group">
                 <label>State / Province</label>
-                <select>
+                <select id="state">
                   <option value="">Select…</option>
                   <option>Kansas</option>
                   <option>Missouri</option>
@@ -392,13 +398,13 @@
               </div>
               <div class="form-group">
                 <label>Zip / Postal Code</label>
-                <input type="text" placeholder="Zip code" />
+                <input type="text" id="zip" maxlength="20" placeholder="Zip code" />
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label>Country</label>
-                <select>
+                <select id="country">
                   <option value="">Select a Country</option>
                   <option selected>United States</option>
                   <option>Canada</option>
@@ -419,151 +425,49 @@
 
     <!-- ── SECURITY ── -->
     <div class="tab-panel" id="panel-security">
-      <div class="profile-form-card" style="max-width:660px;">
-        <!-- 2FA Alert -->
-        <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px 16px;margin-bottom:24px;">
-          <p style="font-size:13px;color:#92400e;font-weight:600;margin-bottom:4px;">In an effort to enhance platform security and protect your data, Two-Factor Authentication (2FA) is required.</p>
-          <p style="font-size:13px;color:#78350f;line-height:1.6;">Two-factor authentication (2FA) enhances access security by requiring two methods (also referred to as factors) to verify your identity. Two-factor authentication protects against phishing, social engineering, and password brute force attacks, securing your logins from attackers exploiting weak or stolen credentials.</p>
-          <p style="font-size:13px;color:#78350f;margin-top:6px;">Please select a verification method (SMS/App) to continue.</p>
-        </div>
-        <!-- SMS 2FA -->
-        <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gray-200);border-radius:8px;padding:18px 20px;margin-bottom:12px;">
-          <div>
-            <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;">
-              Two-factor authentication using SMS texting
-              <span style="font-size:11px;background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:10px;font-weight:700;">Disabled</span>
-            </div>
-            <div style="font-size:13px;color:var(--gray-600);margin-top:4px;">Enter your mobile phone number to receive a two-factor security code via text.</div>
+      <div class="profile-form-card form-flush">
+        <section class="form-sect">
+          <h3>Change password</h3>
+          <p>Use at least 8 characters. You'll stay signed in on this device.</p>
+          <div class="form-row single">
+            <div class="form-group"><label>Current Password</label><input type="password" autocomplete="current-password" id="currentPw" placeholder="••••••••" /></div>
           </div>
-          <button style="background:#22c55e;color:white;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:700;white-space:nowrap;margin-left:16px;">Use SMS</button>
-        </div>
-        <!-- App 2FA -->
-        <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--gray-200);border-radius:8px;padding:18px 20px;margin-bottom:24px;">
-          <div>
-            <div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;">
-              Two-factor authentication using an app
-              <span style="font-size:11px;background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:10px;font-weight:700;">Disabled</span>
-            </div>
-            <div style="font-size:13px;color:var(--gray-600);margin-top:4px;">Use an app (such as Google Authenticator or Microsoft Authenticator) to authenticate by scanning a QR code to set it up, then enter a rotating code to authenticate.</div>
+          <div class="form-row" style="margin-bottom:0">
+            <div class="form-group"><label>New Password</label><input type="password" autocomplete="new-password" id="newPw" placeholder="••••••••" /></div>
+            <div class="form-group"><label>Confirm New Password</label><input type="password" autocomplete="new-password" id="confirmPw" placeholder="••••••••" /></div>
           </div>
-          <button style="background:#22c55e;color:white;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:700;white-space:nowrap;margin-left:16px;">Use Authenticator App</button>
+        </section>
+        <section class="form-sect">
+          <h3>Two-factor authentication <span class="pill">Coming soon</span></h3>
+          <p style="margin-bottom:0">Extra sign-in verification by text message or authenticator app isn't available yet. We'll let you know when it is.</p>
+        </section>
+        <div class="savebar">
+          <div class="save-success" id="pwSuccess">✓ Password updated</div>
+          <button class="save-btn" onclick="updatePassword()">Update password</button>
         </div>
-        <!-- Change Password -->
-        <h3 style="font-size:15px;font-weight:700;margin-bottom:14px;">Change Password</h3>
-        <div class="form-row single" style="margin-bottom:12px;">
-          <div class="form-group"><label>Current Password</label><input  type="password" autocomplete="current-password" id="currentPw" placeholder="••••••••" /></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>New Password</label><input  type="password" autocomplete="current-password" id="newPw" placeholder="••••••••" /></div>
-          <div class="form-group"><label>Confirm New Password</label><input  type="password" autocomplete="new-password" id="confirmPw" placeholder="••••••••" /></div>
-        </div>
-        <button class="save-btn" onclick="updatePassword()">Update Password</button>
-        <div class="save-success" id="pwSuccess">✓ Password updated successfully!</div>
       </div>
     </div>
 
     <!-- ── NOTIFICATIONS ── -->
     <div class="tab-panel" id="panel-notifications">
-      <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start;">
-        <!-- Left: Communication Preferences -->
-        <div class="profile-form-card">
-          <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">Communication <span style="color:var(--teal);">Preferences</span></h3>
-          <!-- Collapsible section -->
-          <div style="border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;">
-            <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.chevron').style.transform=this.querySelector('.chevron').style.transform==='rotate(180deg)'?'':'rotate(180deg)'" style="width:100%;background:var(--gray-100);border:none;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;letter-spacing:.05em;cursor:pointer;">
-              MIGRANTPORTAL
-              <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition:transform .2s;"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div style="padding:14px 16px;">
-              <p style="font-size:13px;color:var(--gray-600);margin-bottom:4px;"><strong>MigrantPortal</strong></p>
-              <p style="font-size:12px;color:var(--gray-600);margin-bottom:12px;line-height:1.6;">Check out the powerful impact and beautiful stories being written in homes, neighborhoods and communities across the United States. And it all starts with one simple connection.</p>
-              <p style="font-size:12px;color:#dc2626;margin-bottom:14px;">* <strong>Critical Notifications:</strong> These notifications are vital to using the MigrantPortal platform. MigrantPortal recommends always leaving critical notifications enabled.</p>
-              <!-- Table header -->
-              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;font-size:11px;font-weight:700;color:var(--gray-400);text-align:center;padding:0 0 8px;border-bottom:1px solid var(--gray-200);margin-bottom:4px;">
-                <div style="text-align:left;">
-                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--gray-600);">
-                    <input type="checkbox" checked onchange="document.querySelectorAll('.notif-check').forEach(c=>c.checked=this.checked)" /> Select all
-                  </label>
-                </div>
-                <div>App</div><div>Texts</div><div>Email</div>
-              </div>
-              <!-- Rows -->
-              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
-                <div><div style="font-size:12px;font-weight:600;color:var(--teal);">New Request Notifications (Critical)</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">These notifications alert you to new requests based on your location and settings.</div></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
-                <div><div style="font-size:12px;font-weight:600;color:var(--teal);">New Faith Community-Vetted Request Notifications (Critical)</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Alerts you to new requests entered by your own faith community or team.</div></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
-                <div><div style="font-size:12px;font-weight:600;color:var(--teal);">Active Community Notifications (Critical)</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Be among the first to know if another faith community in your community needs help meeting a request.</div></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
-                <div><div style="font-size:12px;font-weight:600;">Closed Request Notifications</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Get notified when a request you have submitted, responded to, followed, or committed to has been closed.</div></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;border-bottom:1px solid var(--gray-100);">
-                <div><div style="font-size:12px;font-weight:600;">Monthly Newsletter</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Updates on how communities are giving brighter futures to migrant families.</div></div>
-                <div style="text-align:center;padding-top:2px;"></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" /></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 52px 52px 52px;gap:4px;align-items:start;padding:10px 0;">
-                <div><div style="font-size:12px;font-weight:600;">User Feedback Opportunities</div><div style="font-size:11px;color:var(--gray-600);margin-top:2px;line-height:1.5;">Opt-in to give your feedback on existing and new MigrantPortal features.</div></div>
-                <div></div><div></div>
-                <div style="text-align:center;padding-top:2px;"><input type="checkbox" class="notif-check" checked /></div>
-              </div>
-            </div>
+      <div class="profile-form-card form-flush">
+        <section class="form-sect">
+          <h3>Communication preferences</h3>
+          <p>Choose how MigrantPortal contacts you. <span class="crit-note">Critical</span> notifications are needed to use the platform, so we recommend leaving them on.</p>
+          <div class="notif-head">
+            <label class="notif-all"><input type="checkbox" id="notifAll" onchange="setAllNotifs(this.checked)" /> Select all</label>
+            <div>App</div><div>Email</div>
           </div>
-          <!-- Footer options -->
-          <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" /> Opt into communication from local partners</label>
-            <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gray-600);">
-              Follow MigrantPortal on Social Media!
-              <a href="https://twitter.com/"  target="_blank" rel="noopener noreferrer" style="color:#1da1f2;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.731-8.836L2.25 2.25h6.895l4.258 5.624L18.244 2.25z"/></svg>
-              </a>
-              <a href="https://www.instagram.com/"  target="_blank" rel="noopener noreferrer" style="color:#e1306c;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-              </a>
-              <a href="https://www.facebook.com/migrantportalusa"  target="_blank" rel="noopener noreferrer" style="color:#1877f2;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-              </a>
-            </div>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;color:#dc2626;"><input type="checkbox" /> Unsubscribe from all MigrantPortal notifications.</label>
-          </div>
-          <button class="save-btn" style="margin-top:20px;" onclick="saveNotifPrefs()">Save communication preferences</button>
-        </div>
-        <!-- Right: SMS verification -->
-        <div class="profile-form-card">
-          <h3 style="font-size:14px;font-weight:700;margin-bottom:10px;">MigrantPortal Requests via Text</h3>
-          <p style="font-size:12px;color:var(--gray-600);line-height:1.6;margin-bottom:14px;">Enter your phone number to receive MigrantPortal requests via text message. Texts will only include urgent requests from your community that need to be fulfilled within 24 hours. In order to update your preferences, we need to verify this phone number belongs to you.</p>
-          <div class="form-group" style="margin-bottom:10px;">
-            <label>SMS Phone Number</label>
-            <input type="tel" id="smsPhone" placeholder="(555) 000-0000" />
-          </div>
-          <button onclick="document.getElementById('smsCode').style.display='block'" style="background:#22c55e;color:white;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:700;width:100%;margin-bottom:10px;">Send Code</button>
-          <div id="smsCode" style="display:none;margin-bottom:10px;">
-            <div class="form-group">
-              <label>Enter Verification Code</label>
-              <input type="text" placeholder="6-digit code" />
-            </div>
-            <button style="background:var(--teal);color:white;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:700;width:100%;margin-top:6px;">Verify</button>
-          </div>
-          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;margin-top:4px;">
-            <input type="checkbox" /> <strong>Opt-Out</strong>
-          </label>
-          <p style="font-size:11px;color:var(--gray-400);margin-top:6px;line-height:1.5;">Check Opt-Out if you would no longer like to receive text messages, once checked you will not receive ANY SMS messages from MigrantPortal for ANY reason.</p>
+          <div id="notifRows"></div>
+        </section>
+        <section class="form-sect">
+          <label class="notif-opt"><input type="checkbox" id="pref-partners" class="notif-flag" /> Opt into communication from local partners</label>
+          <label class="notif-opt danger"><input type="checkbox" id="pref-unsubscribe" class="notif-flag" /> Unsubscribe from all MigrantPortal notifications</label>
+          <div class="notif-sms-note">Text-message alerts aren't available yet.</div>
+        </section>
+        <div class="savebar">
+          <span class="save-hint">Follow us on <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener noreferrer">Facebook</a></span>
+          <button class="save-btn" id="notifSaveBtn" onclick="saveNotifPrefs()">Save preferences</button>
         </div>
       </div>
     </div>
@@ -630,10 +534,50 @@
       if (parts[1]) document.getElementById('lastName').value  = parts.slice(1).join(' ');
       if (u.email)  document.getElementById('emailField').value = u.email;
       if (u.email)  document.getElementById('avatarEmail').textContent = u.email;
+      setText('phone', u.phone); setText('phoneExt', u.phone_ext);
+      setText('address1', u.address_line1); setText('address2', u.address_line2);
+      setText('city', u.city); setText('zip', u.zip_code);
+      setSelect('state', u.state); setSelect('country', u.country);
+      applyNotifPrefs(u.notification_prefs);
       if (u.role)   document.getElementById('avatarRole').textContent = u.role;
       if (document.getElementById('topRole')) document.getElementById('topRole').textContent = u.role || '—';
       updateAvatar();
     }
+    function setText(id, value) { if (value) document.getElementById(id).value = value; }
+    // Select a value, adding it as an option first if the list lacks it (e.g. "KS" saved by the mobile app)
+    function setSelect(id, value) {
+      if (!value) return;
+      const sel = document.getElementById(id);
+      const find = () => [...sel.options].find(o => o.value === value || o.text === value);
+      if (!find()) sel.add(new Option(value, value));
+      sel.value = find().value;
+    }
+
+    // ── Notification preferences (single source of truth for the rows)
+    const NOTIFS = [
+      { key: 'new_request',  title: 'New Request Notifications', critical: true,  desc: 'Alerts you to new requests based on your location and settings.', channels: { app: true, email: true } },
+      { key: 'faith_vetted', title: 'New Faith Community-Vetted Request Notifications', critical: true,  desc: 'Alerts you to new requests entered by your own faith community or team.', channels: { app: true, email: true } },
+      { key: 'community',    title: 'Active Community Notifications', critical: true,  desc: 'Be among the first to know when another faith community nearby needs help meeting a request.', channels: { app: true, email: true } },
+      { key: 'closed',       title: 'Closed Request Notifications', critical: false, desc: 'Get notified when a request you submitted, responded to, followed, or committed to has been closed.', channels: { app: true, email: true } },
+      { key: 'newsletter',   title: 'Monthly Newsletter', critical: false, desc: 'Updates on how communities are giving brighter futures to migrant families.', channels: { email: false } },
+      { key: 'feedback',     title: 'User Feedback Opportunities', critical: false, desc: 'Opt in to give feedback on existing and new MigrantPortal features.', channels: { email: true } },
+    ];
+    const prefCell = (key, channel, on) => on === undefined
+      ? '<div></div>'
+      : `<div><input type="checkbox" class="notif-check" data-pref="${key}.${channel}" ${on ? 'checked' : ''}></div>`;
+    function renderNotifRows() {
+      document.getElementById('notifRows').innerHTML = NOTIFS.map(n =>
+        `<div class="notif-row"><div><div class="notif-label${n.critical ? ' critical' : ''}">${n.title}${n.critical ? ' <span class="crit-note">(Critical)</span>' : ''}</div><div class="notif-sub">${n.desc}</div></div>${prefCell(n.key, 'app', n.channels.app)}${prefCell(n.key, 'email', n.channels.email)}</div>`
+      ).join('');
+    }
+    function applyNotifPrefs(saved) {
+      if (!saved) return;
+      document.querySelectorAll('.notif-check').forEach(c => { if (c.dataset.pref in saved) c.checked = saved[c.dataset.pref]; });
+      document.querySelectorAll('.notif-flag').forEach(c => { const k = c.id.replace('pref-', ''); if (k in saved) c.checked = saved[k]; });
+    }
+    function setAllNotifs(on) { document.querySelectorAll('.notif-check').forEach(c => { c.checked = on; }); }
+    renderNotifRows();
+
     prefill(_stored);
 
     // ── Sidebar: org members get the org dashboard nav, everyone else the general nav
@@ -775,12 +719,22 @@
       }
     }
 
-    // ── Save notification preferences (stored locally; backend sync pending)
-    function saveNotifPrefs() {
+    // ── Save notification preferences to the account
+    async function saveNotifPrefs() {
       const prefs = {};
-      document.querySelectorAll('.notif-check').forEach((c, i) => { prefs['notif_' + i] = c.checked; });
-      localStorage.setItem('mp_notif_prefs', JSON.stringify(prefs));
-      _mpToast('Notification preferences saved.');
+      document.querySelectorAll('.notif-check').forEach(c => { prefs[c.dataset.pref] = c.checked; });
+      document.querySelectorAll('.notif-flag').forEach(c => { prefs[c.id.replace('pref-', '')] = c.checked; });
+      const btn = document.getElementById('notifSaveBtn');
+      btn.disabled = true;
+      try {
+        const updated = await apiPatch('/auth/profile', { notification_prefs: prefs });
+        localStorage.setItem('mp_user', JSON.stringify(updated));
+        _mpToast('Notification preferences saved.');
+      } catch (e) {
+        _mpToast('Save failed: ' + (e.message || 'Unknown error'), true);
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     // ── Save button enables only once something changes
@@ -797,8 +751,12 @@
       const s  = document.getElementById('saveSuccess');
       s.style.display = 'none';
       try {
+        const val = id => document.getElementById(id).value.trim();
         const updated = await apiPatch('/auth/profile', {
           name: [fn, ln].filter(Boolean).join(' '),
+          phone: val('phone'), phone_ext: val('phoneExt'),
+          address_line1: val('address1'), address_line2: val('address2'),
+          city: val('city'), state: val('state'), zip_code: val('zip'), country: val('country'),
         });
         localStorage.setItem('mp_user', JSON.stringify(updated));
         updateAvatar();
