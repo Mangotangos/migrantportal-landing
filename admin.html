@@ -1452,7 +1452,9 @@
 
   function timeInQueue(createdAt) {
     if (!createdAt) return '';
-    const mins = Math.floor((Date.now() - new Date(createdAt)) / 60000);
+    // API timestamps are naive UTC; without a Z the browser parses them as local time
+    const utc = createdAt.endsWith('Z') || /[+-]\d\d:\d\d$/.test(createdAt) ? createdAt : createdAt + 'Z';
+    const mins = Math.max(0, Math.floor((Date.now() - new Date(utc)) / 60000));
     if (mins < 60)  return `<span class="tiq tiq-hot" title="In queue ${mins} minute${mins !== 1 ? 's' : ''}">⏱ ${mins}m</span>`;
     const hrs = Math.floor(mins / 60);
     if (mins < 1440) return `<span class="tiq tiq-warn" title="In queue ${hrs} hour${hrs !== 1 ? 's' : ''}">${hrs}h in queue</span>`;
