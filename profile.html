@@ -415,9 +415,9 @@
           </section>
 
           <div class="savebar">
-            <span class="save-hint" id="saveHint">No changes yet</span>
+            <span class="save-hint" id="saveHint"></span>
             <div class="save-success" id="saveSuccess">✓ Profile saved</div>
-            <button class="save-btn" id="saveBtn" onclick="saveProfile()" disabled>Save changes</button>
+            <button class="save-btn" id="saveBtn" onclick="saveProfile()">Save changes</button>
           </div>
         </div>
       </div>
@@ -738,9 +738,8 @@
     }
 
     // ── Save button enables only once something changes
-    function setDirty(isDirty) {
-      document.getElementById('saveBtn').disabled = !isDirty;
-      document.getElementById('saveHint').textContent = isDirty ? 'You have unsaved changes' : 'No changes yet';
+    function setDirty(isDirty, justSaved = false) {
+      document.getElementById('saveHint').textContent = isDirty ? 'You have unsaved changes' : (justSaved ? '✓ All changes saved' : '');
     }
     document.getElementById('personalForm').addEventListener('input', () => setDirty(true));
 
@@ -760,7 +759,7 @@
         });
         localStorage.setItem('mp_user', JSON.stringify(updated));
         updateAvatar();
-        setDirty(false);
+        setDirty(false, true);
         s.style.display = 'block';
         setTimeout(() => s.style.display = 'none', 3000);
       } catch (e) {
