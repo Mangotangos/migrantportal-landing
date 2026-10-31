@@ -390,7 +390,7 @@
 
     // Auto-match on text content — leaf elements AND text nodes inside mixed content
     translatableElements().forEach(function (el) {
-      if (el.hasAttribute(DATA_ATTR)) return;
+      if (el.hasAttribute(DATA_ATTR) || el.hasAttribute('data-no-i18n')) return;
 
       if (el.children.length === 0) {
         // Pure text leaf — replace whole textContent
