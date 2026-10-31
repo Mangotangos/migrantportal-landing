@@ -161,6 +161,8 @@
       flex: 1 0 600px; display: flex; overflow: hidden;
     }
     .footer { flex-shrink: 0; }
+    /* floating map/list toggle is mobile-only; the 768px media query turns it back on */
+    .map-fab { display: none; }
 
     /* ── LEFT PANEL ── */
     .panel {
@@ -658,7 +660,8 @@
       map = L.map('map', { zoomControl: true }).setView([38.9, -94.79], 9);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19
+        maxZoom: 19,
+        alt: ''
       }).addTo(map);
       setTimeout(() => map.invalidateSize(), 200);
       setTimeout(() => map.invalidateSize(), 800);
