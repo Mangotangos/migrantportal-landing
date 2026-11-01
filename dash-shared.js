@@ -58,6 +58,8 @@ const DASH_ICONS = {
   heart: '<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>',
   search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
   plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  book: '<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>',
+  help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>',
   out: '<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>'
 };
@@ -91,8 +93,11 @@ function mountShell(user, cfg) {
   document.getElementById('shell-side').innerHTML = `
     <div class="org-chip"><div class="org-icon">${cfg.icon}</div><div><div class="org-name">${esc(user.name || 'My account')}</div><div class="org-role">${esc(cfg.roleLabel)}</div></div></div>
     <div class="sidebar-section"><div class="sidebar-label">Overview</div>${cfg.items.map((i, n) => item(i, n === 0)).join('')}</div>
+    <div class="sidebar-section" style="margin-top:16px"><div class="sidebar-label">Support</div>
+      <div class="sidebar-item" onclick="window.location.href='faq'"><span class="ico">${dashIcon('book')}</span>Resources</div>
+      <div class="sidebar-item" onclick="window.location.href='contact'"><span class="ico">${dashIcon('help')}</span>Help &amp; Support</div></div>
     <div class="sidebar-section" style="margin-top:16px"><div class="sidebar-label">Account</div>
-      <div class="sidebar-item" onclick="window.location.href='profile'"><span class="ico">${dashIcon('user')}</span>My Profile</div>
+      <div class="sidebar-item" onclick="window.location.href='profile'"><span class="ico">${dashIcon('user')}</span>Profile &amp; Settings</div>
       <div class="sidebar-item" onclick="logout()"><span class="ico">${dashIcon('out')}</span>Sign Out</div></div>`;
   document.getElementById('shell-mobile').innerHTML = cfg.mobile.map((i, n) => {
     const act = i.href ? `window.location.href='${i.href}'` : `showSection('${i.id}', this)`;

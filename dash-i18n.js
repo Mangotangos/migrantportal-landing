@@ -8,7 +8,7 @@
   const ES = {
     // chrome
     'Browse Needs': 'Ver Solicitudes', 'My Dashboard': 'Mi Panel', 'Dashboard': 'Panel', 'Overview': 'Resumen',
-    'Account': 'Cuenta', 'My Profile': 'Mi Perfil', 'Sign Out': 'Cerrar Sesión', 'Profile': 'Perfil',
+    'Account': 'Cuenta', 'My Profile': 'Mi Perfil', 'Profile & Settings': 'Perfil y Configuración', 'Support': 'Soporte', 'Resources': 'Recursos', 'Help & Support': 'Ayuda y Soporte', 'Sign Out': 'Cerrar Sesión', 'Profile': 'Perfil',
     'Navigator': 'Navegador', 'Responder': 'Ayudante', 'Volunteer': 'Voluntario', 'Donor': 'Donante',
     'Professional': 'Profesional', 'Church': 'Iglesia', 'can submit': 'puede enviar',
     'Actions': 'Acciones', 'Loading…': 'Cargando…', 'See all →': 'Ver todas →', 'View →': 'Ver →', 'Today': 'Hoy',
