@@ -749,6 +749,13 @@
         </div>
         <div id="homeActivityContent"><div class="loading">Loading</div></div>
       </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <span class="card-title">Signups by state and waitlist</span>
+        </div>
+        <div id="homeGeoContent"><div class="loading">Loading</div></div>
+      </div>
     </div>
 
     <!-- PENDING TAB -->
@@ -1329,7 +1336,25 @@
     } catch(e) { console.error('loadSidebarBadges (nonprofits) failed:', e); }
   }
 
+  async function loadGeography() {
+    const el = document.getElementById('homeGeoContent');
+    try {
+      const g = await apiGet('/admin/geography');
+      const states = g.signups_by_state.map(r =>
+        '<tr><td>' + esc(r.state) + '</td><td>' + r.count + '</td></tr>').join('');
+      const cities = g.top_waitlist_cities.map(r =>
+        '<tr><td>' + esc([r.city, r.state].filter(Boolean).join(', ') || 'Unknown') + '</td><td>' + esc(r.zip) + '</td><td>' + r.count + '</td></tr>').join('');
+      el.innerHTML =
+        '<table><thead><tr><th>State</th><th>Signups</th></tr></thead><tbody>' + (states || '<tr><td colspan="2">No signups yet</td></tr>') + '</tbody></table>' +
+        '<div style="margin:16px 0 6px;font-weight:600">Waitlist: ' + g.waitlist_total + ' total. Top cities</div>' +
+        '<table><thead><tr><th>City</th><th>ZIP</th><th>On list</th></tr></thead><tbody>' + (cities || '<tr><td colspan="3">No waitlist signups yet</td></tr>') + '</tbody></table>';
+    } catch (err) {
+      el.innerHTML = '<div class="loading">Could not load geography.</div>';
+    }
+  }
+
   async function loadHome() {
+    loadGeography();
     document.getElementById('haPending').textContent = '—';
     document.getElementById('haFlagged').textContent = '—';
     document.getElementById('haDisb').textContent = '—';
@@ -1426,7 +1451,7 @@
      HELPERS
   ═══════════════════════════════════════════ */
   const URGENCY_COLOR = { urgent:'urg-urgent', high:'urg-high', medium:'urg-medium', low:'urg-low' };
-  const CAT_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
+  const CAT_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', childcare:'👶', financial:'💰', other:'📦' };
   const STATUS_CLASS = { pending:'s-pending', active:'s-active', fulfilled:'s-fulfilled', closed:'s-closed' };
 
   function escHtml(str) {

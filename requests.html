@@ -284,6 +284,22 @@
       font-size: 11px; padding: 2px 8px; border-radius: 10px;
       background: #e6f7f8; color: var(--teal); font-weight: 500;
     }
+    .need-tag.remote { background: #e3f6ea; color: #166534; }
+    .area-banner { margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; background: #f1f8f8; color: var(--gray-600); font-size: 13px; line-height: 1.45; }
+    .remote-opt { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+    .remote-opt input { accent-color: var(--teal); }
+    .no-cover { border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px; margin-bottom: 12px; background: white; }
+    .no-cover h3 { margin: 0 0 6px; font-size: 16px; color: var(--navy); }
+    .no-cover p { margin: 0 0 10px; font-size: 13px; color: var(--gray-600); line-height: 1.45; }
+    .no-cover-msg { font-size: 12px; min-height: 1em; margin-bottom: 10px; }
+    .no-cover-actions { display: grid; gap: 8px; }
+    .no-cover-actions a, .no-cover-actions button { display: block; text-align: left; padding: 10px 12px; border: 1px solid var(--gray-200); border-radius: 10px; background: white; font: inherit; font-size: 13px; color: var(--navy); text-decoration: none; cursor: pointer; }
+    .no-cover-actions a:hover, .no-cover-actions button:hover { border-color: var(--teal); }
+    .no-cover-actions small { display: block; color: var(--gray-600); margin-top: 2px; }
+    .no-cover-sub { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-400); margin: 12px 0 6px; }
+    .nc-ok { color: #166534; }
+    .nc-err { color: #b91c1c; }
+    .nc-note { color: var(--gray-600); }
     .need-tag.met { background: #f0f0f0; color: var(--gray-400); text-decoration: line-through; }
 
     /* ── MAP ── */
@@ -613,6 +629,8 @@
         <option value="medical">Medical</option>
         <option value="education">Education</option>
         <option value="translation">Translation</option>
+        <option value="childcare">Childcare</option>
+        <option value="financial">Financial</option>
         <option value="other">Other</option>
       </select>
     </div>
@@ -660,6 +678,8 @@
     <button class="cat-chip" data-cat="transportation" onclick="setCategoryChip('transportation')">Transport</button>
     <button class="cat-chip" data-cat="translation" onclick="setCategoryChip('translation')">Language</button>
     <button class="cat-chip" data-cat="clothing" onclick="setCategoryChip('clothing')">Clothing</button>
+    <button class="cat-chip" data-cat="childcare" onclick="setCategoryChip('childcare')">Childcare</button>
+    <button class="cat-chip" data-cat="financial" onclick="setCategoryChip('financial')">Financial</button>
     <button class="cat-chip" data-cat="other" onclick="setCategoryChip('other')">Other</button>
   </div>
 
@@ -686,6 +706,8 @@
       <button class="rail-cat" data-cat="transportation" onclick="setCategoryChip('transportation')">Transport</button>
       <button class="rail-cat" data-cat="translation" onclick="setCategoryChip('translation')">Language</button>
       <button class="rail-cat" data-cat="clothing" onclick="setCategoryChip('clothing')">Clothing</button>
+      <button class="rail-cat" data-cat="childcare" onclick="setCategoryChip('childcare')">Childcare</button>
+      <button class="rail-cat" data-cat="financial" onclick="setCategoryChip('financial')">Financial</button>
       <button class="rail-cat" data-cat="other" onclick="setCategoryChip('other')">Other</button>
       <div class="rail-label">Urgency</div>
       <select id="railUrgency" aria-label="Urgency" onchange="document.getElementById('filt-urgency').value=this.value;applyFilters()">
@@ -695,6 +717,9 @@
         <option value="medium">Medium</option>
         <option value="low">Low</option>
       </select>
+      <div class="rail-label">Help type</div>
+      <label class="remote-opt"><input type="checkbox" id="railRemote" onchange="setRemote(this.checked)" /> Can help remotely</label>
+      <div class="rail-note">Donate, translate, tutor online, phone or video advice.</div>
       <div id="railDistance">
         <div class="rail-label">Distance · <span id="radiusText" data-no-i18n>Any</span></div>
         <input type="range" id="railRadius" min="0" max="4" step="1" value="4" aria-label="Distance" oninput="setRadius(RADIUS_STOPS[this.value])" />
@@ -726,7 +751,10 @@
         <button id="signup-banner-btn">Sign Up</button>
       </div>
 
+      <div class="area-banner" id="areaBanner">We started in Kansas City and are growing city by city. You can still help from anywhere: donate to a specific need, or help remotely.</div>
+
       <div class="cards-list" id="cardsList">
+        <div id="noCoverage" class="no-cover" style="display:none"></div>
         <!-- dynamically populated -->
         <div id="cardsLoading">
           <div class="skel-card"><div class="skel-img"></div><div class="skel-body"><div class="skel-line sm"></div><div class="skel-line lg"></div><div class="skel-line md"></div></div></div>
@@ -814,6 +842,8 @@
       medical: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>',
       education: '<path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
       translation: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+      childcare: '<path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/>',
+      financial: '<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
       other: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
     };
     const CARD_ICON_BG = '#e6f4f6';
@@ -870,6 +900,7 @@
             </div>
             <div class="card-needs">
               <span class="need-tag">${need.category ? need.category.charAt(0).toUpperCase() + need.category.slice(1) : ''}</span>
+              ${need.can_help_remotely ? '<span class="need-tag remote">Can help remotely</span>' : ''}
             </div>
           </div>
         </a>`;
@@ -957,6 +988,9 @@
     const DEFAULT_RADIUS = 0;   // revisit 25 once ~20+ open needs span several cities
     let originPoint = null;
     let originLabel = '';
+    let originInfo = null;   // { zip, city, state } used by the waitlist
+    let activeRemote = false;
+    const COVERAGE_MILES = 50;   // no open need within this far of the origin = not covered yet
     let lastFetched = [];
     let loaded = false;   // true once a /needs response has rendered; radius/origin changes re-render only then
     const storedRadius = localStorage.getItem('mp_radius');   // null when never chosen; Number(null) is 0, which means "any distance"
@@ -1003,12 +1037,13 @@
         _dist: originPoint && n.lat != null && n.lng != null ? distanceMiles(originPoint, { lat: n.lat, lng: n.lng }) : null
       }));
       const limited = !!originPoint && activeRadius > 0;
-      const needs = withDist.filter(n => !limited || n._dist === null || n._dist <= activeRadius);
+      const needs = withDist.filter(n => (!limited || n._dist === null || n._dist <= activeRadius) && (!activeRemote || n.can_help_remotely));
       const hidden = withDist.length - needs.length;
       if (activeSort === 'nearest') {
         needs.sort((a, b) => (a._dist ?? Infinity) - (b._dist ?? Infinity));   // stable: unknown distances keep API order, last
       }
       allNeeds = needs;
+      renderCoverage(withDist);
 
       document.querySelector('.map-container').classList.toggle('is-empty', needs.length === 0);
       document.getElementById('countLabel').textContent = needs.length;
@@ -1017,7 +1052,7 @@
       document.querySelector('.panel').classList.toggle('is-empty', needs.length === 0);
 
       if (needs.length === 0) {
-        const filtered = activeCategory || activeSearch.trim() || document.getElementById('filt-urgency').value;
+        const filtered = activeRemote || activeCategory || activeSearch.trim() || document.getElementById('filt-urgency').value;
         if (hidden > 0) {
           const canWiden = activeRadius < 50;
           setEmpty(`No open needs within ${activeRadius} miles`, `${hidden} open ${hidden === 1 ? 'need is' : 'needs are'} farther away.`,
@@ -1039,6 +1074,71 @@
       if (window.mpReapplyI18n) window.mpReapplyI18n();
     }
 
+    function setRemote(on) {
+      activeRemote = !!on;
+      document.getElementById('railRemote').checked = activeRemote;
+      if (loaded) showNeeds();
+    }
+
+    function showAllNeeds(remote) {
+      setRadius(0);
+      setRemote(remote);
+      const first = document.querySelector('.req-card:not(.static-card)');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function escapeHtml(v) {
+      return String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    // Shown when the visitor's ZIP has no open need within COVERAGE_MILES: explain, collect a waitlist email, offer three actions.
+    function renderCoverage(withDist) {
+      const box = document.getElementById('noCoverage');
+      const covered = !originPoint || !originInfo || withDist.some(n => n._dist !== null && n._dist <= COVERAGE_MILES);
+      if (covered) { box.style.display = 'none'; return; }
+      const city = escapeHtml(originInfo.city || 'your area');
+      const place = escapeHtml([originInfo.city, originInfo.state].filter(Boolean).join(', ') || 'ZIP ' + originInfo.zip);
+      const joined = localStorage.getItem('mp_waitlist_' + originInfo.zip);
+      const signup = joined
+        ? `<div class="no-cover-msg nc-ok" role="status">You're on the list for ${place}.</div>`
+        : `<form class="origin-form" onsubmit="return submitWaitlist(event)">
+          <div class="origin-row"><input id="waitEmail" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" aria-label="Email" required /><button type="submit">Notify me</button></div>
+          <div class="no-cover-msg" id="waitMsg" role="status"></div></form>`;
+      box.innerHTML = `<h3>We're not active in ${city} yet</h3>
+        <p>MigrantPortal is live in the Kansas City area. Tell us you're in ${place} and we'll email you when the first family or local helper joins near you. The more people who sign up, the sooner we open there.</p>
+        ${signup}
+        <div class="no-cover-sub">Meanwhile, you can still help</div>
+        <div class="no-cover-actions">
+          <button type="button" onclick="showAllNeeds(false)">Fund a need in Kansas City<small>Open needs accept donations from anywhere</small></button>
+          <button type="button" onclick="showAllNeeds(true)">Help online<small>Translation, tutoring, benefits and legal questions by phone or video</small></button>
+          <a href="register">Become a launch partner in ${city}<small>Know a church or nonprofit serving migrants there? Start a partner application.</small></a>
+        </div>`;
+      box.style.display = 'block';
+    }
+
+    async function submitWaitlist(e) {
+      e.preventDefault();
+      const msg = document.getElementById('waitMsg');
+      const email = document.getElementById('waitEmail').value.trim();
+      msg.className = 'no-cover-msg nc-note';
+      msg.textContent = 'Saving...';
+      try {
+        const res = await fetch(`${API}/waitlist`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, zip: originInfo.zip, city: originInfo.city || null, state: originInfo.state || null })
+        });
+        if (res.status === 429) throw new Error('Too many tries. Please try again later.');
+        if (!res.ok) throw new Error('Please check your email address.');
+        localStorage.setItem('mp_waitlist_' + originInfo.zip, '1');
+        showNeeds();
+      } catch (err) {
+        msg.className = 'no-cover-msg nc-err';
+        msg.textContent = err instanceof TypeError ? "Couldn't reach the server. Try again." : err.message;
+      }
+      return false;
+    }
+
     function setRadius(val) {
       activeRadius = RADIUS_STOPS.includes(Number(val)) ? Number(val) : DEFAULT_RADIUS;
       localStorage.setItem('mp_radius', String(activeRadius));
@@ -1053,7 +1153,7 @@
         const res = await fetch('https://api.zippopotam.us/us/' + encodeURIComponent(zip));
         if (!res.ok) return null;
         const place = (await res.json()).places[0];
-        return { zip, lat: parseFloat(place.latitude), lng: parseFloat(place.longitude), city: place['place name'] };
+        return { zip, lat: parseFloat(place.latitude), lng: parseFloat(place.longitude), city: place['place name'], state: place['state abbreviation'] };
       } catch { return null; }
     }
 
@@ -1075,6 +1175,7 @@
 
     function applyOrigin(origin, label) {
       originPoint = { lat: origin.lat, lng: origin.lng };
+      originInfo = { zip: origin.zip, city: origin.city || '', state: origin.state || '' };
       originLabel = label || 'ZIP ' + origin.zip;
       const note = document.getElementById('radiusNote');
       note.textContent = 'From ' + originLabel + '. Needs without a location still show. ';
@@ -1114,7 +1215,7 @@
       let zip = '';
       let fromProfile = false;
       try {
-        if (!(profile && profile.zip_code)) profile = await apiGet('/auth/me');
+        if (user && !(profile && profile.zip_code)) profile = await apiGet('/auth/me');
         zip = String((profile && profile.zip_code) || '').trim().slice(0, 5);
         fromProfile = !!zip;
       } catch { /* fall back to the ZIP saved in this browser */ }
@@ -1143,7 +1244,8 @@
     function initRail() {
       if (!user) {
         document.getElementById('railMenu').style.display = 'none';
-        document.getElementById('railDistance').style.display = 'none';
+        setRadius(activeRadius);
+        resolveOrigin();   // signed-out visitors use the ZIP saved in this browser, or enter one
         return;
       }
       const canSubmit = user.role === 'connector' || user.role === 'admin' ||
