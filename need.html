@@ -862,6 +862,14 @@
           } catch(e) { /* non-fatal */ }
         }
 
+        // Receipts recorded against accepted helpers (non-fatal)
+        const receiptsByResponse = {};
+        try {
+          (await apiGet(`/needs/${needId}/receipts`)).forEach(rc => {
+            (receiptsByResponse[rc.response_id] = receiptsByResponse[rc.response_id] || []).push(rc);
+          });
+        } catch(e) { /* non-fatal */ }
+
         // Service offers grouped at top
         const serviceOffers = list.filter(r => r.help_type === 'service');
         const serviceSection = serviceOffers.length ? `
@@ -895,7 +903,7 @@
             ${r.message ? `<div style="font-size:12px;color:var(--gray-700);margin-top:3px;font-style:italic">"${esc(r.message)}"</div>` : ''}
             ${r.response_id ? (r.status === 'offered'
               ? `<button onclick="acceptResponse('${esc(r.response_id)}')" style="margin-top:8px;background:#16a34a;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">Accept offer and open chat</button>`
-              : `<div style="margin-top:8px;font-size:11px;font-weight:700;color:#15803D">Accepted. Arrange details in the chat below.</div>`) : ''}
+              : `<div style="margin-top:8px;font-size:11px;font-weight:700;color:#15803D">${r.status === 'completed' ? 'Their part is complete.' : 'Accepted. Arrange details in the chat below.'}</div>${receiptBlock(r, receiptsByResponse[r.response_id] || [])}`) : ''}
             ${r.items && r.items.length ? `
               <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
                 ${r.items.map(ri => `
@@ -923,6 +931,45 @@
       } catch(e) {
         el.innerHTML = '<div style="font-size:12px;color:var(--gray-400)">Could not load responders.</div>';
       }
+    }
+
+    function receiptBlock(r, receipts) {
+      const rid = esc(r.response_id);
+      const rows = receipts.map(rc => {
+        const qty = rc.quantity != null ? ` (${esc(String(rc.quantity))}${rc.unit ? ' ' + esc(rc.unit) : ''})` : (rc.unit ? ` (${esc(rc.unit)})` : '');
+        const when = esc(String(rc.received_at).slice(0, 10));
+        return `<div style="font-size:12px;color:var(--gray-700);padding:3px 0">${when}: ${esc(rc.description)}${qty}</div>`;
+      }).join('');
+      const form = r.status === 'completed' ? '' : `
+        <div style="margin-top:8px;padding:8px 10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px">
+          <div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:5px">Record what arrived</div>
+          <input id="rc-desc-${rid}" maxlength="500" placeholder="What did you receive?" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit;margin-bottom:5px">
+          <div style="display:flex;gap:6px;margin-bottom:5px">
+            <input id="rc-qty-${rid}" type="number" min="0" step="any" placeholder="Quantity" style="width:50%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit">
+            <input id="rc-unit-${rid}" maxlength="40" placeholder="Unit (bags, hours, USD)" style="width:50%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit">
+          </div>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray-700);margin-bottom:6px"><input id="rc-done-${rid}" type="checkbox"> This completes their part</label>
+          <button onclick="submitReceipt('${rid}')" style="background:#16a34a;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">Save</button>
+        </div>`;
+      return (rows ? `<div style="margin-top:8px"><div style="font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em">Received</div>${rows}</div>` : '') + form;
+    }
+
+    async function submitReceipt(responseId) {
+      const description = document.getElementById(`rc-desc-${responseId}`).value.trim();
+      if (!description) { toast('Describe what arrived.', true); return; }
+      const qtyRaw = document.getElementById(`rc-qty-${responseId}`).value;
+      const unit = document.getElementById(`rc-unit-${responseId}`).value.trim();
+      const body = {
+        description,
+        quantity: qtyRaw === '' ? null : Number(qtyRaw),
+        unit: unit || null,
+        complete: document.getElementById(`rc-done-${responseId}`).checked,
+      };
+      try {
+        await apiPost(`/needs/${needId}/responses/${responseId}/receipts`, body);
+        toast('Recorded. The helper has been thanked.');
+        loadResponders();
+      } catch(e) { toast(e.message || 'Could not record', true); }
     }
 
     async function acceptResponse(responseId) {
