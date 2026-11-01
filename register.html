@@ -291,6 +291,9 @@
   }
   .need-chip:hover { border-color:var(--teal); background:#f0fbfb; }
   .need-chip.selected { border-color:var(--teal); background:#e6f7f8; color:var(--teal-d); }
+  .need-hint { font-size:13px; color:var(--gray-600,#666); margin:0 0 8px; }
+  .need-chips.err { border:2px solid #d63a06; background:#fff5f2; border-radius:12px; padding:8px; }
+  .need-error { color:#c03000; font-size:13px; font-weight:600; margin:6px 0 0; }
   .chip-toggle-link {
     font-size:12px; color:var(--teal); cursor:pointer; text-decoration:underline;
     background:none; border:none; font-family:'Inter',sans-serif; padding:0;
@@ -482,25 +485,28 @@
           </div>
 
           <div class="section-label">What types of needs can you help with?</div>
+          <p class="need-hint">Choose at least one. You'll only be notified about these.</p>
           <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
-            <button class="chip-toggle-link" onclick="toggleAllNeeds(this)">Clear All</button>
+            <button class="chip-toggle-link" onclick="toggleAllNeeds(this)">Select All</button>
           </div>
-          <div class="need-chips">
-            <button class="need-chip selected" data-cat="education" onclick="toggleNeedChip(this)">🎓 Education</button>
-            <button class="need-chip selected" data-cat="legal" onclick="toggleNeedChip(this)">📋 Legal Aid</button>
-            <button class="need-chip selected" data-cat="healthcare" onclick="toggleNeedChip(this)">🏥 Healthcare</button>
-            <button class="need-chip selected" data-cat="housing" onclick="toggleNeedChip(this)">🏠 Housing</button>
-            <button class="need-chip selected" data-cat="clothing" onclick="toggleNeedChip(this)">👕 Clothing</button>
-            <button class="need-chip selected" data-cat="food" onclick="toggleNeedChip(this)">🍎 Food</button>
-            <button class="need-chip selected" data-cat="employment" onclick="toggleNeedChip(this)">💼 Employment</button>
-            <button class="need-chip selected" data-cat="transportation" onclick="toggleNeedChip(this)">🚗 Transportation</button>
-            <button class="need-chip selected" data-cat="childcare" onclick="toggleNeedChip(this)">👶 Childcare</button>
-            <button class="need-chip selected" data-cat="financial" onclick="toggleNeedChip(this)">💰 Financial</button>
+          <div class="need-chips" id="need-chips">
+            <button class="need-chip" data-cat="education" onclick="toggleNeedChip(this)">🎓 Education</button>
+            <button class="need-chip" data-cat="legal" onclick="toggleNeedChip(this)">📋 Legal Aid</button>
+            <button class="need-chip" data-cat="healthcare" onclick="toggleNeedChip(this)">🏥 Healthcare</button>
+            <button class="need-chip" data-cat="housing" onclick="toggleNeedChip(this)">🏠 Housing</button>
+            <button class="need-chip" data-cat="clothing" onclick="toggleNeedChip(this)">👕 Clothing</button>
+            <button class="need-chip" data-cat="food" onclick="toggleNeedChip(this)">🍎 Food</button>
+            <button class="need-chip" data-cat="employment" onclick="toggleNeedChip(this)">💼 Employment</button>
+            <button class="need-chip" data-cat="transportation" onclick="toggleNeedChip(this)">🚗 Transportation</button>
+            <button class="need-chip" data-cat="childcare" onclick="toggleNeedChip(this)">👶 Childcare</button>
+            <button class="need-chip" data-cat="financial" onclick="toggleNeedChip(this)">💰 Financial</button>
+            <button class="need-chip" data-cat="other" onclick="toggleNeedChip(this)">➕ Other</button>
           </div>
+          <p class="need-error" id="need-error" role="alert" style="display:none">Please choose at least one type of need.</p>
         </div>
 
         <div class="btn-row" style="margin-top:24px">
-          <button class="btn-next" id="btn-2" disabled onclick="goTo(3)">Next</button>
+          <button class="btn-next" id="btn-2" disabled onclick="goFromStep2()">Next</button>
         </div>
       </div>
 
@@ -875,7 +881,8 @@
     const ZIP_API = 'https://api.zippopotam.us/us/';
     const US_STATES = 'AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC'.split(' ');
     let notificationRadius = 50;
-    let needCategories = ['education','legal','healthcare','housing','clothing','food','employment','transportation','childcare','financial'];
+    const ALL_NEED_CATEGORIES = ['education','legal','healthcare','housing','clothing','food','employment','transportation','childcare','financial','other'];
+    let needCategories = [];
     let referralSource = '';
 
     // ── Org flow (completely separate from navigator/responder) ──────────────
@@ -1404,19 +1411,38 @@
       }
       const toggleBtn = document.querySelector('.chip-toggle-link');
       if (toggleBtn) toggleBtn.textContent = needCategories.length === 0 ? 'Select All' : 'Clear All';
+      if (needCategories.length) clearNeedError();
     }
 
     function toggleAllNeeds(btn) {
       const chips = document.querySelectorAll('.need-chip');
-      if (btn.textContent === 'Clear All') {
+      if (needCategories.length > 0) {
         chips.forEach(c => c.classList.remove('selected'));
         needCategories = [];
         btn.textContent = 'Select All';
       } else {
         chips.forEach(c => c.classList.add('selected'));
-        needCategories = ['education','legal','healthcare','housing','clothing','food','employment','transportation','childcare','financial'];
+        needCategories = [...ALL_NEED_CATEGORIES];
         btn.textContent = 'Clear All';
+        clearNeedError();
       }
+    }
+
+    function clearNeedError() {
+      document.getElementById('need-chips').classList.remove('err');
+      document.getElementById('need-error').style.display = 'none';
+    }
+
+    function goFromStep2() {
+      const needsRequired = document.getElementById('responder-only-sections').style.display !== 'none';
+      if (needsRequired && needCategories.length === 0) {
+        const chips = document.getElementById('need-chips');
+        chips.classList.add('err');
+        document.getElementById('need-error').style.display = '';
+        chips.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      goTo(3);
     }
 
     /* ── Step 3b: Referral source ────────────── */
