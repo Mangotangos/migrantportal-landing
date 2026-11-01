@@ -892,6 +892,9 @@
               ${r.help_type ? `<span style="font-size:10px;font-weight:700;padding:2px 8px;background:#EFF6FF;color:#1D4ED8;border-radius:10px">${esc(HELP_LABEL[r.help_type]||r.help_type)}</span>` : ''}
             </div>
             ${r.message ? `<div style="font-size:12px;color:var(--gray-700);margin-top:3px;font-style:italic">"${esc(r.message)}"</div>` : ''}
+            ${r.response_id ? (r.status === 'offered'
+              ? `<button onclick="acceptResponse('${esc(r.response_id)}')" style="margin-top:8px;background:#16a34a;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">Accept offer and open chat</button>`
+              : `<div style="margin-top:8px;font-size:11px;font-weight:700;color:#15803D">Accepted. Arrange details in the chat below.</div>`) : ''}
             ${r.items && r.items.length ? `
               <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
                 ${r.items.map(ri => `
@@ -919,6 +922,15 @@
       } catch(e) {
         el.innerHTML = '<div style="font-size:12px;color:var(--gray-400)">Could not load responders.</div>';
       }
+    }
+
+    async function acceptResponse(responseId) {
+      try {
+        await apiPatch(`/needs/${needId}/responses/${responseId}/accept`, {});
+        toast('Offer accepted. The helper has been notified.');
+        loadResponders();
+        loadChat();
+      } catch(e) { toast(e.message || 'Could not accept offer', true); }
     }
 
     async function requestProvider(responderId) {
