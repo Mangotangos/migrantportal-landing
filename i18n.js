@@ -340,7 +340,7 @@
 
     // ── Footer
     'Trusted By Teams Across:': 'Con la Confianza de Equipos En:',
-    'Connecting migrant families with faith communities, volunteers, and donors — one need at a time.': 'Conectando familias migrantes con comunidades de fe, voluntarios y donantes — una necesidad a la vez.',
+    'Connecting migrant families with faith communities, volunteers, and donors, one need at a time.': 'Conectando familias migrantes con comunidades de fe, voluntarios y donantes, una necesidad a la vez.',
     'Avg. Response Time': 'Tiempo de Respuesta Prom.',
     'Launch Cities': 'Ciudades de Lanzamiento',
     'For Helpers': 'Para Ayudantes',
