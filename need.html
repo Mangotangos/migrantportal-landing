@@ -448,8 +448,9 @@
         <div class="card" id="chat-card" style="display:none">
           <div class="section-heading" style="margin-bottom:12px">
             Team Chat
-            <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:6px">Navigator + responders only</span>
+            <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:6px">Private to you and each helper</span>
           </div>
+          <select id="chat-thread" onchange="loadChat()" aria-label="Choose a helper to message" style="display:none;width:100%;height:34px;margin-bottom:10px;border:1px solid var(--gray-200);border-radius:7px;padding:0 8px;font-size:13px;font-family:Inter,sans-serif"></select>
           <div id="chat-messages" style="display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto;margin-bottom:12px;padding-right:4px"></div>
           <div style="display:flex;gap:8px">
             <input id="chat-input" type="text" placeholder="Type a message…"
@@ -929,7 +930,7 @@
         await apiPatch(`/needs/${needId}/responses/${responseId}/accept`, {});
         toast('Offer accepted. The helper has been notified.');
         loadResponders();
-        loadChat();
+        loadThreads().then(loadChat);
       } catch(e) { toast(e.message || 'Could not accept offer', true); }
     }
 
@@ -1181,10 +1182,32 @@
       if (msgs.length !== lastMsgCount) { el.scrollTop = el.scrollHeight; lastMsgCount = msgs.length; }
     }
 
+    // Submitter/admin: one chat thread per accepted helper
+    async function loadThreads() {
+      const sel = document.getElementById('chat-thread');
+      if (!sel || !currentUser || currentUser.role === 'responder') return;
+      try {
+        const list = await apiGet(`/needs/${needId}/responses`);
+        const accepted = list.filter(r => r.response_id && r.status && r.status !== 'offered');
+        const chosen = sel.value;
+        if (accepted.length < 2) { sel.style.display = 'none'; sel.innerHTML = ''; return; }
+        sel.innerHTML = '<option value="">Choose a helper…</option>' +
+          accepted.map(r => `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('');
+        sel.value = accepted.some(r => r.id === chosen) ? chosen : '';
+        sel.style.display = '';
+      } catch(e) { /* not staff for this need: keep the single shared view */ }
+    }
+
+    function selectedThread() {
+      const sel = document.getElementById('chat-thread');
+      return sel && sel.style.display !== 'none' ? sel.value : '';
+    }
+
     async function loadChat() {
       if (!needId || !currentUser) return;
       try {
-        const msgs = await apiGet(`/chat/${needId}`);
+        const thread = selectedThread();
+        const msgs = await apiGet(`/chat/${needId}${thread ? `?responder_id=${encodeURIComponent(thread)}` : ''}`);
         renderChat(msgs);
       } catch(e) { console.error('loadChat failed:', e); }
     }
@@ -1193,9 +1216,12 @@
       const input = document.getElementById('chat-input');
       const text = input.value.trim();
       if (!text) return;
+      const sel = document.getElementById('chat-thread');
+      const multi = sel && sel.style.display !== 'none';
+      if (multi && !sel.value) { toast('Choose which helper to message first.', true); return; }
       input.value = '';
       try {
-        await apiPost(`/chat/${needId}`, { text });
+        await apiPost(`/chat/${needId}`, multi ? { text, responder_id: sel.value } : { text });
         loadChat();
       } catch(e) { toast(e.message, true); input.value = text; }
     }
@@ -1204,7 +1230,7 @@
       const card = document.getElementById('chat-card');
       if (!isAuthorized || !needId) return;
       card.style.display = '';
-      loadChat();
+      loadThreads().then(loadChat);
       chatPollTimer = setInterval(loadChat, 10000);
     }
 

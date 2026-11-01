@@ -21,7 +21,8 @@
       ES_LC = {};
       Object.keys(ES).forEach(function (k) { ES_LC[k.toLowerCase()] = ES[k]; });
     }
-    return ES[key] || ES_LC[(key || '').toLowerCase()];
+    const clean = (key || '').replace(/\s+/g, ' ').trim();
+    return ES[clean] || ES_LC[clean.toLowerCase()];
   }
 
   const ES = {
@@ -62,6 +63,26 @@
     'The Immigrant Needs Network Connecting Families with Help': 'La red de necesidades de inmigrantes que conecta familias con ayuda',
     'MigrantPortal — Migrant Resource Platform & Immigrant Needs Network': 'MigrantPortal — Plataforma de recursos para migrantes y red de necesidades',
     'Where Help Meets Hope': 'Donde la Ayuda Se Encuentra con la Esperanza',
+    'MigrantPortal — Migrant Resource Platform & Needs Network': 'MigrantPortal — Plataforma de recursos para migrantes y red de necesidades',
+    'Connecting Migrant Families with the Help They Need': 'Conectamos a familias migrantes con la ayuda que necesitan',
+    'A free network for families, faith communities, and volunteers': 'Una red gratuita para familias, comunidades de fe y voluntarios',
+    'respond with practical help, close to home.': 'responden con ayuda práctica, cerca de casa.',
+    'Every need is reviewed by a navigator before it is published. We never sell personal information.': 'Un navegador revisa cada necesidad antes de publicarla. Nunca vendemos información personal.',
+    'Request help for a family': 'Solicita ayuda para una familia',
+    'Join as a partner': 'Únete como aliado',
+    'Bring your organization on board': 'Suma a tu organización',
+    'Explore vetted, urgent needs of migrant families, each one verified before they reach your community.': 'Explora necesidades urgentes de familias migrantes, cada una verificada antes de llegar a tu comunidad.',
+    'For churches and nonprofits': 'Para iglesias y organizaciones sin fines de lucro',
+    'Faith communities and nonprofits submit the needs of families they know, and MigrantPortal connects them with volunteers ready to help.': 'Las comunidades de fe y las organizaciones sin fines de lucro presentan las necesidades de las familias que conocen, y MigrantPortal las conecta con voluntarios dispuestos a ayudar.',
+    'Partner with us': 'Colabora con nosotros',
+    'Bring your church, nonprofit, or clinic onto one shared platform so your team and partners can coordinate support for families.': 'Suma a tu iglesia, organización o clínica a una plataforma compartida para que tu equipo y tus aliados coordinen el apoyo a las familias.',
+    "See how a family's need becomes real help, from navigator to neighbor.": 'Descubre cómo la necesidad de una familia se convierte en ayuda real, del navegador al vecino.',
+    'Post available beds, coordinate arrivals, and connect guests to the services they need.': 'Publica camas disponibles, coordina llegadas y conecta a los huéspedes con los servicios que necesitan.',
+    'Stay in the Loop': 'Mantente al tanto',
+    'Sign up for updates from MigrantPortal, featuring real stories of impact, new opportunities to meet needs, and inspiring ways people like you are seeing and serving migrant families across the country.': 'Regístrate para recibir actualizaciones de MigrantPortal con historias reales de impacto, nuevas oportunidades para cubrir necesidades y formas inspiradoras en que personas como tú ven y sirven a familias migrantes en todo el país.',
+    'Connecting migrant families with faith communities, volunteers, and donors, one need at a time.': 'Conectamos a familias migrantes con comunidades de fe, voluntarios y donantes, una necesidad a la vez.',
+    'Open to Post Needs': 'Abierto para publicar necesidades',
+    'Launch City': 'Ciudad de lanzamiento',
     'Meet a need': 'Conoce una necesidad',
     'Respond to an urgent need in minutes': 'Responde a una necesidad urgente en minutos',
     'Share a need': 'Comparte una necesidad',
@@ -414,7 +435,9 @@
           const original = (ORIG_CACHE.get(node) || '').trim();
           const translated = esLookup(original);
           if (toEs && translated) {
-            node.textContent = translated;
+            // Keep the spacing around inline elements (e.g. text after a link)
+            const src = ORIG_CACHE.get(node) || '';
+            node.textContent = (/^\s/.test(src) ? ' ' : '') + translated + (/\s$/.test(src) ? ' ' : '');
           } else {
             node.textContent = ORIG_CACHE.get(node);
           }
