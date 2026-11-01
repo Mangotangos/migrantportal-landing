@@ -174,6 +174,10 @@
     }
     .loc-chip:hover { border-color: var(--teal); background: #f0fbfb; }
     .loc-chip.selected { border-color: var(--teal); background: #e6f7f8; color: var(--teal-d); }
+    .loc-result { display: none; margin-top: 10px; padding: 10px 12px; border-radius: 8px; font-size: 14px; }
+    .loc-result.ok { display: block; background: #ecfdf5; color: #047857; }
+    .loc-result.bad { display: block; background: #fef2f2; color: #b91c1c; }
+    .loc-alt { font-size: 13px; margin: 10px 0 16px; }
 
     /* ─── FORM FIELDS ───────────────────────────── */
     .fields { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
@@ -432,34 +436,39 @@
 
       <!-- ── STEP 2: Where to meet requests ────── -->
       <div class="step" id="step-2">
-        <h2 class="step-heading">Where would you like to meet requests?</h2>
-        <p class="step-sub" style="text-align:left; margin-bottom:20px;">Select at least one county, city, or zip code you'd like to receive request notifications for.</p>
+        <h2 class="step-heading">Where are you located?</h2>
+        <p class="step-sub" style="text-align:left; margin-bottom:20px;">We use this to show you needs near you. Works anywhere in the US.</p>
 
-        <div class="loc-label">Search locations</div>
-        <div class="loc-search-box" id="loc-search-box" onclick="document.getElementById('loc-input').focus()">
-          <div id="loc-tags"></div>
-          <input type="text" id="loc-input" class="loc-search-input" placeholder="Search" oninput="filterChips(this.value)" />
-          <span class="loc-search-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          </span>
+        <div class="fields">
+          <div class="field">
+            <label for="loc-zip">ZIP code</label>
+            <input type="text" id="loc-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 66062" oninput="onZipInput(this)" />
+          </div>
+        </div>
+        <div class="loc-result" id="loc-result" role="status" aria-live="polite"></div>
+        <p class="loc-alt"><button type="button" class="chip-toggle-link" onclick="toggleManualLocation()">Enter city and state instead</button></p>
+
+        <div id="loc-manual" style="display:none">
+          <div class="field-row">
+            <div class="field">
+              <label for="loc-city">City</label>
+              <input type="text" id="loc-city" autocomplete="address-level2" placeholder="Austin" onchange="lookupCityState()" />
+            </div>
+            <div class="field" style="max-width:110px">
+              <label for="loc-state">State</label>
+              <select id="loc-state" autocomplete="address-level1" onchange="lookupCityState()"></select>
+            </div>
+          </div>
         </div>
 
-        <div class="vuln-heading">Most vulnerable communities</div>
-        <p class="vuln-desc">Geographic areas where migrant families face the greatest risk due to overlapping factors like poverty, limited resources, and high need density.</p>
-
+        <div class="vuln-heading" style="margin-top:20px">Quick pick</div>
+        <p class="vuln-desc">Kansas City area, our launch region.</p>
         <div class="loc-chips" id="loc-chips">
-          <button class="loc-chip" onclick="toggleChip(this)">Kansas City, KS</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Wyandotte, KS</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Kansas City, MO</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Jackson, MO</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Sedgwick, KS</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Johnson, KS</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Wichita, KS</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Tulsa, OK</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Saint Louis, MO</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Oklahoma City, OK</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Omaha, NE</button>
-          <button class="loc-chip" onclick="toggleChip(this)">Douglas, NE</button>
+          <button type="button" class="loc-chip" onclick="pickQuickZip('64106')">Kansas City, MO</button>
+          <button type="button" class="loc-chip" onclick="pickQuickZip('66101')">Kansas City, KS</button>
+          <button type="button" class="loc-chip" onclick="pickQuickZip('66204')">Overland Park, KS</button>
+          <button type="button" class="loc-chip" onclick="pickQuickZip('66061')">Olathe, KS</button>
+          <button type="button" class="loc-chip" onclick="pickQuickZip('64050')">Independence, MO</button>
         </div>
 
         <!-- Responder-only: radius + category -->
@@ -861,7 +870,9 @@
 
     const TOTAL = 5;
     let currentStep = 1;
-    const selectedLocations = new Set();
+    let selectedPlace = null; // { city, state, zip } once resolved
+    const ZIP_API = 'https://api.zippopotam.us/us/';
+    const US_STATES = 'AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC'.split(' ');
     let notificationRadius = 50;
     let needCategories = ['education','legal','healthcare','housing','clothing','food','employment','transportation','childcare','financial'];
     let referralSource = '';
@@ -1193,70 +1204,87 @@
     }
 
     /* ── Step 2: Location ────────────────────── */
-    function toggleChip(el) {
-      const loc = el.textContent.trim();
-      if (selectedLocations.has(loc)) {
-        selectedLocations.delete(loc);
-        el.classList.remove('selected');
-      } else {
-        selectedLocations.add(loc);
-        el.classList.add('selected');
-      }
-      renderTags();
-      updateLocBtn();
-    }
-
-    function removeTag(loc) {
-      selectedLocations.delete(loc);
-      // deselect chip if present
-      document.querySelectorAll('.loc-chip').forEach(c => {
-        if (c.textContent.trim() === loc) c.classList.remove('selected');
-      });
-      renderTags();
-      updateLocBtn();
-    }
-
-    function renderTags() {
-      const container = document.getElementById('loc-tags');
-      container.innerHTML = '';
-      selectedLocations.forEach(loc => {
-        const tag = document.createElement('div');
-        tag.className = 'loc-tag';
-        tag.textContent = loc + ' ';
-        const removeBtn = document.createElement('button');
-        removeBtn.setAttribute('aria-label', `Remove ${loc}`);
-        removeBtn.textContent = '×';
-        removeBtn.addEventListener('click', () => removeTag(loc));
-        tag.appendChild(removeBtn);
-        container.appendChild(tag);
-      });
+    function setLocationResult(kind, text) {
+      const el = document.getElementById('loc-result');
+      el.className = 'loc-result' + (kind ? ' ' + kind : '');
+      el.textContent = text;
     }
 
     function updateLocBtn() {
       const btn = document.getElementById('btn-2');
-      const ok = selectedLocations.size > 0;
-      btn.disabled = !ok;
-      btn.classList.toggle('ready', ok);
+      btn.disabled = !selectedPlace;
+      btn.classList.toggle('ready', !!selectedPlace);
     }
 
-    function filterChips(val) {
-      const q = val.toLowerCase();
-      document.querySelectorAll('.loc-chip').forEach(c => {
-        c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
-      });
-      // add custom location on Enter
+    function applyPlace(place) {
+      selectedPlace = place;
+      if (place) setLocationResult('ok', '✓ ' + place.city + ', ' + place.state + (place.zip ? ' ' + place.zip : ''));
+      updateLocBtn();
     }
 
-    document.getElementById('loc-input').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && this.value.trim()) {
-        const loc = this.value.trim();
-        selectedLocations.add(loc);
-        renderTags();
-        updateLocBtn();
-        this.value = '';
-        filterChips('');
+    async function fetchPlace(path) {
+      const res = await fetch(ZIP_API + path);
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.places && data.places[0] ? data : null;
+    }
+
+    async function lookupZip(zip) {
+      selectedPlace = null;
+      updateLocBtn();
+      if (!/^\d{5}$/.test(zip)) { setLocationResult('', ''); return; }
+      try {
+        const data = await fetchPlace(zip);
+        if (document.getElementById('loc-zip').value !== zip) return; // stale response
+        if (!data) {
+          setLocationResult('bad', "We couldn't find ZIP " + zip + '. Check it, or enter city and state instead.');
+          return;
+        }
+        const place = data.places[0];
+        applyPlace({ city: place['place name'], state: place['state abbreviation'], zip });
+      } catch (err) {
+        setLocationResult('bad', "We couldn't look up that ZIP right now. Try city and state instead.");
       }
-    });
+    }
+
+    function onZipInput(input) {
+      input.value = input.value.replace(/\D/g, '');
+      lookupZip(input.value);
+    }
+
+    function pickQuickZip(zip) {
+      document.getElementById('loc-zip').value = zip;
+      lookupZip(zip);
+    }
+
+    function toggleManualLocation() {
+      const box = document.getElementById('loc-manual');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function lookupCityState() {
+      const city = document.getElementById('loc-city').value.trim();
+      const state = document.getElementById('loc-state').value;
+      selectedPlace = null;
+      updateLocBtn();
+      if (!city || !state) return;
+      try {
+        const data = await fetchPlace(state.toLowerCase() + '/' + encodeURIComponent(city.toLowerCase()));
+        if (!data) {
+          setLocationResult('bad', 'We couldn’t find "' + city + ', ' + state + '". Check the spelling.');
+          return;
+        }
+        const titleCity = city.replace(/\b\w/g, c => c.toUpperCase());
+        applyPlace({ city: titleCity, state, zip: data.places[0]['post code'] });
+      } catch (err) {
+        setLocationResult('bad', "We couldn't look that up right now. Try a ZIP code instead.");
+      }
+    }
+
+    (function initStateSelect() {
+      const sel = document.getElementById('loc-state');
+      sel.innerHTML = '<option value="">--</option>' + US_STATES.map(s => '<option>' + s + '</option>').join('');
+    })();
 
     /* ── Step 3: Personal info ───────────────── */
     function checkStep3() {
@@ -1381,6 +1409,11 @@
         if (responderType && role === 'responder') payload.responder_type = responderType;
         if (referralSource) payload.referral_source = referralSource;
         if (_urlInviteCode) payload.invite_code = _urlInviteCode;
+        if (selectedPlace) {
+          payload.city = selectedPlace.city;
+          payload.state = selectedPlace.state;
+          if (selectedPlace.zip) payload.zip_code = selectedPlace.zip;
+        }
         if (role === 'responder') {
           payload.notification_radius = notificationRadius;
           payload.need_categories = needCategories;
