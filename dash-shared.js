@@ -51,11 +51,13 @@ function nudgeCard(id, title, body, actionsHtml) {
 // cfg: { icon, roleLabel, items:[{id,icon,label,badgeId?,href?}], mobile:[{id,icon,label,href?}] }
 function mountShell(user, cfg) {
   const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  document.getElementById('shell-top').innerHTML = `
+  const top = document.getElementById('shell-top');
+  if (!top.firstChild) top.innerHTML = `
     <a href="dashboard" class="topbar-logo"><div class="logo-icon"><img src="logo.png" alt="MigrantPortal" /></div>MigrantPortal</a>
     <div class="topbar-right">
       <a href="requests" class="nav-link">Browse Needs</a>
       <a href="dashboard" class="nav-link">My Dashboard</a>
+      <button type="button" class="mp-lang-toggle" onclick="toggleDashLang()" aria-label="Cambiar a español">ES</button>
       <div class="user-chip" onclick="window.location.href='profile'">
         <div class="user-avatar">${esc(initials)}</div><span class="user-name">${esc(user.name || user.email || 'User')}</span>
       </div>

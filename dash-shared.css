@@ -200,3 +200,7 @@ tbody tr:hover { background: var(--primary-lt); }
   .hide-sm { display: none; }
 }
 .table-card { position: relative; } /* contains the absolutely-positioned .sr-only header labels */
+
+/* EN/ES toggle in the topbar */
+.mp-lang-toggle { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); font-size: 12px; font-weight: 700; padding: 5px 9px; border-radius: 6px; letter-spacing: .5px; }
+.mp-lang-toggle:hover { background: var(--primary-lt); }
