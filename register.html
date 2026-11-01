@@ -725,19 +725,20 @@
             <label for="org-address">Street address</label>
             <input type="text" id="org-address" placeholder="123 Main St" oninput="checkOrgDetails()" />
           </div>
+          <div class="field">
+            <label for="org-zip">ZIP code <span style="color:#dc2626">*</span></label>
+            <input type="text" id="org-zip" placeholder="e.g. 66062" maxlength="5" inputmode="numeric" autocomplete="postal-code" oninput="onOrgZipInput(this)" />
+          </div>
+          <div class="loc-result" id="org-loc-result" role="status" aria-live="polite"></div>
           <div class="field-row">
             <div class="field">
               <label for="org-city">City</label>
-              <input type="text" id="org-city" placeholder="Kansas City" oninput="checkOrgDetails()" />
+              <input type="text" id="org-city" autocomplete="address-level2" placeholder="Filled in from ZIP" oninput="checkOrgDetails()" />
             </div>
-            <div class="field" style="max-width:80px">
+            <div class="field" style="max-width:110px">
               <label for="org-state">State</label>
-              <input type="text" id="org-state" placeholder="KS" maxlength="2" oninput="checkOrgDetails()" />
+              <select id="org-state" autocomplete="address-level1" onchange="checkOrgDetails()"></select>
             </div>
-          </div>
-          <div class="field">
-            <label for="org-zip">Zipcode <span style="color:#dc2626">*</span></label>
-            <input type="text" id="org-zip" placeholder="64108" maxlength="10" inputmode="numeric" oninput="checkOrgDetails()" />
           </div>
           <div class="field">
             <label for="org-phone">Phone number</label>
@@ -1039,10 +1040,44 @@
       setBtn('btn-org-3', any);
     }
 
+    let orgZipResolved = false;
+
     function checkOrgDetails() {
       const ok = document.getElementById('org-name').value.trim() &&
-                 document.getElementById('org-zip').value.trim().length >= 5;
+                 orgZipResolved &&
+                 document.getElementById('org-city').value.trim() &&
+                 document.getElementById('org-state').value;
       setBtn('btn-org-4', ok);
+    }
+
+    function setOrgLocationResult(kind, text) {
+      const el = document.getElementById('org-loc-result');
+      el.className = 'loc-result' + (kind ? ' ' + kind : '');
+      el.textContent = text;
+    }
+
+    async function onOrgZipInput(input) {
+      input.value = input.value.replace(/\D/g, '');
+      const zip = input.value;
+      orgZipResolved = false;
+      checkOrgDetails();
+      if (!/^\d{5}$/.test(zip)) { setOrgLocationResult('', ''); return; }
+      try {
+        const data = await fetchPlace(zip);
+        if (input.value !== zip) return; // stale response
+        if (!data) {
+          setOrgLocationResult('bad', "We couldn't find ZIP " + zip + '. Check it and try again.');
+          return;
+        }
+        const place = data.places[0];
+        document.getElementById('org-city').value = place['place name'];
+        document.getElementById('org-state').value = place['state abbreviation'];
+        orgZipResolved = true;
+        setOrgLocationResult('ok', '✓ ' + place['place name'] + ', ' + place['state abbreviation'] + ' ' + zip);
+      } catch (err) {
+        setOrgLocationResult('bad', "We couldn't look up that ZIP right now. Please try again in a moment.");
+      }
+      checkOrgDetails();
     }
 
     function checkOrgAccount() {
@@ -1129,6 +1164,9 @@
         role,
         responder_type: role === 'responder' ? 'church' : null,
         registration_notes: `Organization application (${orgUsageChoice}): ${orgPayload.org_name} (${orgType})`,
+        city: orgPayload.city,
+        state: orgPayload.state,
+        zip_code: orgPayload.zipcode,
       };
 
       try {
@@ -1281,9 +1319,9 @@
       }
     }
 
-    (function initStateSelect() {
-      const sel = document.getElementById('loc-state');
-      sel.innerHTML = '<option value="">--</option>' + US_STATES.map(s => '<option>' + s + '</option>').join('');
+    (function initStateSelects() {
+      const options = '<option value="">--</option>' + US_STATES.map(s => '<option>' + s + '</option>').join('');
+      ['loc-state', 'org-state'].forEach(id => { document.getElementById(id).innerHTML = options; });
     })();
 
     /* ── Step 3: Personal info ───────────────── */
