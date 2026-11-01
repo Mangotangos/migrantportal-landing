@@ -1482,7 +1482,9 @@
           payload.state = selectedPlace.state;
           if (selectedPlace.zip) payload.zip_code = selectedPlace.zip;
         }
-        if (role === 'responder') {
+        // Saved whenever step 2 showed the radius and need chips (individual helpers
+        // and faith community members), whatever role they end up with.
+        if (document.getElementById('responder-only-sections').style.display !== 'none') {
           payload.notification_radius = notificationRadius;
           payload.need_categories = needCategories;
         }
