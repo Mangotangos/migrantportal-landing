@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Manage your families and the needs you have submitted on MigrantPortal.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navigator Dashboard — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="dash-shared.css" />
+  <!-- marker: navigator-dashboard-v1 -->
+</head>
+<body>
+  <div class="topbar" id="shell-top"></div>
+  <div class="layout">
+    <aside class="sidebar" id="shell-side"></aside>
+    <main class="main">
+      <div class="err-banner" id="errBanner"></div>
+
+      <!-- OVERVIEW -->
+      <div id="sec-overview">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" style="margin:0">Navigator Dashboard</h1>
+            <div class="page-sub">Manage your families and the needs you've submitted</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn-outline" onclick="window.location.href='requests'">Browse Needs</button>
+            <button class="btn-primary" onclick="window.location.href='submit-need'">+ Submit a Need</button>
+          </div>
+        </div>
+
+        <div id="nudgeSlot"></div>
+
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="two-col">
+          <div>
+            <div id="recentSlot"></div>
+          </div>
+          <div>
+            <div class="section-row"><div class="section-heading">Recent Activity</div></div>
+            <div class="feed-card" id="activityFeed"><div class="empty">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY NEEDS -->
+      <div id="sec-needs" style="display:none;">
+        <div class="page-header">
+          <div><div class="page-title">My Needs</div><div class="page-sub">Every need you've submitted, with who has offered to help</div></div>
+          <div class="header-actions"><button class="btn-primary" onclick="window.location.href='submit-need'">+ Submit a Need</button></div>
+        </div>
+        <div class="table-card" id="needsCard">
+          <div class="table-toolbar">
+            <div class="search-wrap">
+              <input type="text" placeholder="Search needs…" oninput="filterNeeds(this.value)" />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>Need</th><th>Family</th><th>Category</th><th>Urgency</th><th>Location</th><th>Submitted</th><th>Responses</th><th><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody id="allNeedsBody"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FAMILIES -->
+      <div id="sec-families" style="display:none;">
+        <div class="page-header">
+          <div><div class="page-title">Families</div><div class="page-sub">Families on your caseload. Names are visible only to you.</div></div>
+          <div class="header-actions"><button class="btn-primary" onclick="toggleFamilyForm()">+ Add a Family</button></div>
+        </div>
+        <div class="quick-card" id="familyForm" style="display:none;margin-bottom:20px;">
+          <div class="quick-title">New family</div>
+          <form onsubmit="addFamily(event)" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+            <input name="name" required maxlength="80" placeholder="Family name" aria-label="Family name" style="height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font:inherit;background:var(--gray-100);color:var(--text);" />
+            <input name="origin_country" maxlength="60" placeholder="Country of origin" aria-label="Country of origin" style="height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font:inherit;background:var(--gray-100);color:var(--text);" />
+            <input name="language" maxlength="40" placeholder="Language" aria-label="Language" style="height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font:inherit;background:var(--gray-100);color:var(--text);" />
+            <input name="adults" type="number" min="1" max="20" value="1" aria-label="Adults" style="height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font:inherit;background:var(--gray-100);color:var(--text);" />
+            <input name="children" type="number" min="0" max="20" value="0" aria-label="Children" style="height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font:inherit;background:var(--gray-100);color:var(--text);" />
+            <button class="btn-primary" type="submit" id="familySave" style="justify-content:center;">Save family</button>
+          </form>
+        </div>
+        <div id="familiesSlot"></div>
+      </div>
+    </main>
+  </div>
+  <nav class="mobile-nav" id="shell-mobile"></nav>
+
+  <script src="api.js"></script>
+  <script src="dash-shared.js"></script>
+  <script src="notif-bell.js"></script>
+  <script>
+    const user = requireAuth() || {};
+    mountShell(user, {
+      icon: '🧭',
+      roleLabel: 'Navigator',
+      items: [
+        { id: 'overview', icon: '▦', label: 'Dashboard' },
+        { id: 'needs', icon: '📝', label: 'My Needs', badgeId: 'needsBadge' },
+        { id: 'families', icon: '👨‍👩‍👧', label: 'Families' },
+      ],
+      mobile: [
+        { id: 'overview', icon: '▦', label: 'Overview' },
+        { id: 'needs', icon: '📝', label: 'Needs' },
+        { href: 'submit-need', icon: '＋', label: 'Submit' },
+        { id: 'families', icon: '👨‍👩‍👧', label: 'Families' },
+        { href: 'profile', icon: '👤', label: 'Profile' },
+      ],
+    });
+    refreshUser();
+
+    let myNeeds = [];
+    let families = [];
+    const responseCache = {};
+
+    const isOpen = n => n.status === 'active';
+    const isAwaiting = n => isOpen(n) && !n.response_count;
+    const famCell = n => n.family_name ? esc(n.family_name) : '<span style="color:var(--gray-400)">—</span>';
+
+    function responsesBadge(n) {
+      if (n.status === 'fulfilled') return '<span class="badge badge-done">Fulfilled</span>';
+      if (n.status === 'closed') return '<span class="badge badge-closed">Closed</span>';
+      if (!isOpen(n)) return `<span class="badge badge-pending">${esc(cap(n.status))}</span>`;
+      if (!n.response_count) return '<span class="badge badge-wait">Awaiting response</span>';
+      const label = `${n.response_count} responder${n.response_count > 1 ? 's' : ''}`;
+      return `<button class="badge badge-open" style="border:none;cursor:pointer" onclick="toggleResponses('${esc(n.id)}')" aria-label="Show ${label}">${label} ▾</button>`;
+    }
+
+    function actionCell(n) {
+      return isOpen(n)
+        ? `<button class="btn-sm" id="ful-${esc(n.id)}" onclick="markFulfilled('${esc(n.id)}')">Mark fulfilled</button>`
+        : `<a class="act-link" href="need?id=${esc(n.id)}">View →</a>`;
+    }
+
+    function recentRow(n) {
+      return `<tr><td>${needLink(n)}</td><td>${famCell(n)}</td><td>${urgencyBadge(n.urgency)}</td><td>${responsesBadge(n)}</td><td>${actionCell(n)}</td></tr>
+        <tr class="resp-row" id="resp-${esc(n.id)}" style="display:none"><td colspan="5"></td></tr>`;
+    }
+
+    function fullRow(n) {
+      return `<tr data-q="${esc((n.title + ' ' + (n.family_name || '') + ' ' + n.category).toLowerCase())}">
+        <td>${needLink(n)}</td><td>${famCell(n)}</td><td>${catLabel(n.category)}</td><td>${urgencyBadge(n.urgency)}</td>
+        <td>${esc(fmtLoc(n))}</td><td style="color:var(--gray-400)">${n.created_at ? timeAgo(n.created_at) : '—'}</td>
+        <td>${responsesBadge(n)}</td><td>${actionCell(n)}</td></tr>
+        <tr class="resp-row" id="resp-full-${esc(n.id)}" style="display:none"><td colspan="8"></td></tr>`;
+    }
+
+    async function toggleResponses(id) {
+      const rows = [document.getElementById('resp-' + id), document.getElementById('resp-full-' + id)].filter(Boolean);
+      const open = rows.some(r => r.style.display !== 'none');
+      if (open) { rows.forEach(r => { r.style.display = 'none'; }); return; }
+      rows.forEach(r => { r.style.display = ''; r.firstElementChild.innerHTML = '<span style="color:var(--text-sub)">Loading…</span>'; });
+      try {
+        responseCache[id] = responseCache[id] || await apiGet(`/needs/${encodeURIComponent(id)}/responses`);
+        const html = responseCache[id].map(r => `<div style="padding:4px 0;font-size:13px"><b>${esc(r.name)}</b>${r.org_name ? ' · ' + esc(r.org_name) : ''}${r.responder_type ? ' · ' + esc(cap(r.responder_type)) : ''}${fmtLoc(r) ? ' · ' + esc(fmtLoc(r)) : ''}${r.message ? `<div style="color:var(--text-sub)">“${esc(r.message)}”</div>` : ''}</div>`).join('');
+        rows.forEach(r => { r.firstElementChild.innerHTML = html || 'No responders yet.'; });
+      } catch (err) {
+        console.error('Responses failed', err);
+        rows.forEach(r => { r.firstElementChild.innerHTML = 'Could not load responders. Try again.'; });
+      }
+    }
+
+    async function markFulfilled(id) {
+      if (!confirm('Mark this need as fulfilled? Responders who helped will be notified.')) return;
+      document.querySelectorAll(`[id="ful-${id}"]`).forEach(b => { b.disabled = true; b.textContent = 'Saving…'; });
+      try {
+        await apiPatch(`/needs/${encodeURIComponent(id)}/fulfill`, {});
+        myNeeds = myNeeds.map(n => n.id === id ? { ...n, status: 'fulfilled' } : n);
+        renderAll();
+      } catch (err) {
+        console.error('Fulfill failed', err);
+        showError('Could not mark that need fulfilled: ' + err.message);
+        renderAll();
+      }
+    }
+
+    function filterNeeds(q) {
+      const term = q.toLowerCase();
+      document.querySelectorAll('#allNeedsBody tr[data-q]').forEach(r => { r.style.display = r.dataset.q.includes(term) ? '' : 'none'; });
+    }
+
+    function renderStats() {
+      const open = myNeeds.filter(isOpen).length;
+      document.getElementById('statsGrid').innerHTML =
+        statCard('Families', 'statFamilies', 'Added by you') +
+        statCard('Open Needs', 'statOpen', 'Active now', 'up') +
+        statCard('Awaiting Response', 'statAwaiting', 'No responder yet') +
+        statCard('Fulfilled', 'statFulfilled', 'All time');
+      document.getElementById('statFamilies').textContent = families.length;
+      document.getElementById('statOpen').textContent = open;
+      document.getElementById('statAwaiting').textContent = myNeeds.filter(isAwaiting).length;
+      document.getElementById('statFulfilled').textContent = myNeeds.filter(n => n.status === 'fulfilled').length;
+      setBadge('needsBadge', open);
+    }
+
+    function renderAll() {
+      renderStats();
+      const noNeeds = !myNeeds.length;
+      document.getElementById('nudgeSlot').innerHTML = noNeeds
+        ? nudgeCard('nudge', "You haven't submitted a need yet", 'Add a family, post a real need from your caseload, and get matched with a local responder.',
+            `<button class="btn-outline" onclick="showSection('families');toggleFamilyForm(true)">Add a Family</button><button class="btn-primary" onclick="window.location.href='submit-need'">Submit Your First Need</button>`)
+        : '';
+      if (noNeeds) document.getElementById('nudge').style.display = 'flex';
+
+      document.getElementById('recentSlot').innerHTML = sectionRow('My Recent Needs', '<a class="see-all" href="#" onclick="showSection(\'needs\');return false;">See all →</a>') +
+        (noNeeds
+          ? emptyCard('No needs yet', 'Add a family, then post the first need from your caseload.')
+          : tableCard(['Need', 'Family', 'Urgency', 'Responses', ''], myNeeds.slice(0, 5).map(recentRow).join('')));
+
+      document.getElementById('allNeedsBody').innerHTML = noNeeds
+        ? '<tr><td colspan="8"><div class="empty"><b>No needs yet</b>Add a family, then post the first need from your caseload.</div></td></tr>'
+        : myNeeds.map(fullRow).join('');
+      renderFamilies();
+      renderActivity();
+    }
+
+    function renderFamilies() {
+      document.getElementById('familiesSlot').innerHTML = families.length
+        ? tableCard(['Family', 'Country', 'Language', 'Household'],
+            families.map(f => `<tr><td><b>${esc(f.name)}</b></td><td>${esc(f.origin_country || '—')}</td><td>${esc(f.language || '—')}</td><td>${f.adults}A ${f.children}C</td></tr>`).join(''))
+        : emptyCard('No families yet', 'Add a family to attach needs to it. Only you can see their names.');
+    }
+
+    function toggleFamilyForm(forceOpen) {
+      const f = document.getElementById('familyForm');
+      f.style.display = forceOpen === true || f.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function addFamily(e) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = {
+        name: fd.get('name').trim(),
+        origin_country: fd.get('origin_country').trim() || null,
+        language: fd.get('language').trim() || null,
+        adults: parseInt(fd.get('adults'), 10) || 1,
+        children: parseInt(fd.get('children'), 10) || 0,
+      };
+      const btn = document.getElementById('familySave');
+      btn.disabled = true;
+      try {
+        const created = await apiPost('/families', body);
+        families = [created, ...families];
+        e.target.reset();
+        toggleFamilyForm();
+        renderAll();
+      } catch (err) {
+        console.error('Add family failed', err);
+        showError('Could not save that family: ' + err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function renderActivity() {
+      const items = [];
+      myNeeds.slice(0, 8).forEach(n => {
+        if (n.status === 'fulfilled') items.push([n.created_at, feedItem('✅', `<b>${esc(n.title)}</b> marked fulfilled`, esc(fmtLoc(n)))]);
+        items.push([n.created_at, feedItem('📝', `You submitted <a href="need?id=${esc(n.id)}" style="font-weight:600">${esc(n.title)}</a>`, `${n.created_at ? timeAgo(n.created_at) : '—'} · ${esc(fmtLoc(n))}`)]);
+      });
+      const withResp = myNeeds.filter(n => isOpen(n) && n.response_count).slice(0, 3);
+      const resp = await Promise.allSettled(withResp.map(n => apiGet(`/needs/${encodeURIComponent(n.id)}/responses`)));
+      resp.forEach((r, i) => {
+        if (r.status !== 'fulfilled') return;
+        responseCache[withResp[i].id] = r.value;
+        r.value.slice(0, 2).forEach(x => items.push([x.responded_at, feedItem('🔔', `<b>${esc(x.name)}</b> offered to help with <b>${esc(withResp[i].title)}</b>`, x.responded_at ? timeAgo(x.responded_at) : '')]));
+      });
+      items.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+      renderFeed('activityFeed', items.slice(0, 8).map(x => x[1]).join(''));
+    }
+
+    async function loadData() {
+      const [needsRes, famRes] = await Promise.allSettled([apiGet('/needs/mine'), apiGet('/families/mine')]);
+      if (needsRes.status === 'fulfilled') myNeeds = needsRes.value;
+      else { console.error('needs/mine failed', needsRes.reason); showError('Could not load your needs. Please refresh.'); }
+      if (famRes.status === 'fulfilled') families = famRes.value;
+      else console.error('families/mine failed', famRes.reason);
+      renderAll();
+    }
+    loadData();
+  </script>
+</body>
+</html>

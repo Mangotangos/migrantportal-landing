@@ -785,10 +785,18 @@
 
     /* ── Auth + personalize ─────────────── */
     const user = requireAuth();
-    if (user && user.role === 'responder' && user.org_id) {
-      window.location.replace('org-dashboard');
+    // Role routing: org-linked responders -> org-dashboard; navigators ('connector' in the API)
+    // and other responders -> their role dashboard. Admin stays on this page.
+    const roleHome = !user ? null
+      : user.role === 'responder' && user.org_id ? 'org-dashboard'
+      : user.role === 'responder' ? 'responder-dashboard'
+      : (user.role === 'connector' || user.role === 'navigator') ? 'navigator-dashboard'
+      : null;
+    if (roleHome) {
+      window.location.replace(roleHome);
+    } else if (user) {
+      document.body.style.visibility = 'visible';
     }
-    if (user) document.body.style.visibility = 'visible';
     const name = user ? user.name : 'there';
     const initials = name !== 'there' ? name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '?';
     document.getElementById('user-greeting').textContent = 'Hi, ' + name.split(' ')[0] + '!';

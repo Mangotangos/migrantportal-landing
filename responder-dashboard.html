@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Find families nearby and follow the help you have offered on MigrantPortal.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responder Dashboard — MigrantPortal</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="dash-shared.css" />
+  <!-- marker: responder-dashboard-v1 -->
+</head>
+<body>
+  <div class="topbar" id="shell-top"></div>
+  <div class="layout">
+    <aside class="sidebar" id="shell-side"></aside>
+    <main class="main">
+      <div class="err-banner" id="errBanner"></div>
+
+      <!-- OVERVIEW -->
+      <div id="sec-overview">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" style="margin:0">Responder Dashboard</h1>
+            <div class="page-sub">Find families nearby and follow the help you have offered</div>
+          </div>
+          <div class="header-actions" id="headerActions"></div>
+        </div>
+        <div id="nudgeSlot"></div>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="two-col">
+          <div>
+            <div id="nearSlot"></div>
+            <div id="respSlot"></div>
+          </div>
+          <div>
+            <div class="section-row"><div class="section-heading">Recent Activity</div></div>
+            <div class="feed-card" id="activityFeed"><div class="empty">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEEDS NEAR YOU -->
+      <div id="sec-near" style="display:none;">
+        <div class="page-header"><div><div class="page-title">Needs Near You</div><div class="page-sub" id="nearSub"></div></div></div>
+        <div id="nearFullSlot"></div>
+      </div>
+
+      <!-- MY RESPONSES -->
+      <div id="sec-responses" style="display:none;">
+        <div class="page-header"><div><div class="page-title">My Responses</div><div class="page-sub">Every need you have offered to help with</div></div></div>
+        <div id="respFullSlot"></div>
+      </div>
+
+      <!-- can_submit_needs only -->
+      <div id="sec-families" style="display:none;">
+        <div class="page-header"><div><div class="page-title">Families</div><div class="page-sub">Families on your caseload. Names are visible only to you.</div></div></div>
+        <div id="familiesSlot"></div>
+      </div>
+      <div id="sec-submitted" style="display:none;">
+        <div class="page-header">
+          <div><div class="page-title">My Submitted Needs</div><div class="page-sub">Needs you submitted, with who has offered to help</div></div>
+          <div class="header-actions"><button class="btn-primary" onclick="window.location.href='submit-need'">+ Submit a Need</button></div>
+        </div>
+        <div id="submittedSlot"></div>
+      </div>
+    </main>
+  </div>
+  <nav class="mobile-nav" id="shell-mobile"></nav>
+
+  <script src="api.js"></script>
+  <script src="dash-shared.js"></script>
+  <script src="notif-bell.js"></script>
+  <script>
+    let user = requireAuth() || {};
+    const typeLabel = t => t ? ' · ' + cap(t) : '';
+    let nearby = [], responded = [], bookmarked = [], submitted = [], families = [];
+    let radius = DEFAULT_RADIUS_MI, hasOrigin = false;
+
+    // Gate on the flag, not the role: submit/families/submitted only for can_submit_needs.
+    const canSubmit = () => user.can_submit_needs === true;
+
+    function mount() {
+      const items = [
+        { id: 'overview', icon: '▦', label: 'Dashboard' },
+        { id: 'near', icon: '📍', label: 'Needs Near You', badgeId: 'nearBadge' },
+        { id: 'responses', icon: '💬', label: 'My Responses' },
+      ];
+      if (canSubmit()) items.push({ id: 'families', icon: '👨‍👩‍👧', label: 'Families' }, { id: 'submitted', icon: '📝', label: 'My Submitted Needs' });
+      items.push({ href: 'shifts', icon: '🗓️', label: 'Shifts' }, { href: 'donate', icon: '💝', label: 'Donations' });
+      const mobile = [
+        { id: 'overview', icon: '▦', label: 'Overview' },
+        { id: 'near', icon: '📍', label: 'Near You' },
+        { id: 'responses', icon: '💬', label: 'Responses' },
+        canSubmit() ? { id: 'submitted', icon: '📝', label: 'Submitted' } : { href: 'requests', icon: '🔎', label: 'Browse' },
+        { href: 'profile', icon: '👤', label: 'Profile' },
+      ];
+      const role = 'Responder' + typeLabel(user.responder_type) + (canSubmit() ? ' · can submit' : '');
+      mountShell(user, { icon: '🤝', roleLabel: role, items, mobile });
+      document.getElementById('headerActions').innerHTML =
+        `<button class="btn-outline" onclick="window.location.href='requests'">Browse All Needs</button>` +
+        (canSubmit() ? `<button class="btn-outline" onclick="window.location.href='submit-need'">+ Submit a Need</button>` : '') +
+        `<button class="btn-primary" onclick="showSection('near')">Help a Family Nearby</button>`;
+    }
+
+    const respStatus = n => {
+      if (n.status === 'fulfilled') return '<span class="badge badge-done">Fulfilled</span>';
+      if (n.my_response_status === 'completed') return '<span class="badge badge-done">Done, awaiting navigator</span>';
+      if (n.my_response_status === 'in_progress') return '<span class="badge badge-medium">In progress</span>';
+      return '<span class="badge badge-open">Offered</span>';
+    };
+
+    const nearRow = n => `<tr><td>${needLink(n)}</td><td>${n.distance == null ? '—' : Math.round(n.distance) + ' mi'}</td><td>${urgencyBadge(n.urgency)}</td><td>${catLabel(n.category)}</td><td><a class="act-link" href="need?id=${esc(n.id)}">Respond →</a></td></tr>`;
+    const respRow = n => `<tr><td>${needLink(n)}</td><td>${esc(fmtLoc(n))}</td><td>${respStatus(n)}</td></tr>`;
+
+    const NEAR_EMPTY = () => emptyCard('No open needs near you yet',
+      `We will notify you within ${radius} miles when a family needs help. <a href="profile">Change the distance in your profile</a>.`);
+    const RESP_EMPTY = emptyCard('No responses yet', 'Offers you make show up here so you can follow them to the end.');
+
+    function renderStats() {
+      document.getElementById('statsGrid').innerHTML =
+        statCard('Open Near You', 'statNear', hasOrigin ? `Within ${radius} mi` : 'In your state', nearby.length ? 'up' : '') +
+        statCard('My Responses', 'statResp', 'All time') +
+        statCard('Fulfilled', 'statFul', 'Families helped') +
+        statCard('Saved', 'statSaved', 'Bookmarked needs');
+      document.getElementById('statNear').textContent = nearby.length;
+      document.getElementById('statResp').textContent = responded.length;
+      document.getElementById('statFul').textContent = responded.filter(n => n.status === 'fulfilled').length;
+      document.getElementById('statSaved').textContent = bookmarked.length;
+      setBadge('nearBadge', nearby.length);
+    }
+
+    function renderNeeds() {
+      const nearHead = ['Need', 'Distance', 'Urgency', 'Category', ''];
+      const nearTable = rows => rows.length ? tableCard(nearHead, rows.map(nearRow).join('')) : NEAR_EMPTY();
+      document.getElementById('nearSlot').innerHTML = sectionRow('Needs Near You', '<a class="see-all" href="#" onclick="showSection(\'near\');return false;">See all →</a>') + nearTable(nearby.slice(0, NEARBY_MAX_ROWS));
+      document.getElementById('nearFullSlot').innerHTML = nearTable(nearby);
+      document.getElementById('nearSub').textContent = hasOrigin ? `Open needs within ${radius} miles of ${fmtLoc(user)}` : 'Open needs in your state';
+      const respHead = ['Need', 'Location', 'My offer'];
+      const respTable = rows => rows.length ? tableCard(respHead, rows.map(respRow).join('')) : RESP_EMPTY;
+      document.getElementById('respSlot').innerHTML = sectionRow('My Responses', '<a class="see-all" href="#" onclick="showSection(\'responses\');return false;">See all →</a>') + respTable(responded.slice(0, 5));
+      document.getElementById('respFullSlot').innerHTML = respTable(responded);
+    }
+
+    function renderNudge() {
+      document.getElementById('nudgeSlot').innerHTML = responded.length ? '' : nudgeCard('nudge',
+        "You haven't responded to a need yet",
+        'As soon as a family near you needs help, you will see it here and get a notification.',
+        `<button class="btn-outline" onclick="window.location.href='profile'">Set My Location</button><button class="btn-primary" onclick="window.location.href='requests'">Browse All Needs</button>`);
+      if (!responded.length) document.getElementById('nudge').style.display = 'flex';
+    }
+
+    function renderActivity() {
+      const items = [];
+      nearby.slice(0, 3).forEach(n => items.push([n.created_at, feedItem('📍', `New need posted${n.distance == null ? '' : ` <b>${Math.round(n.distance)} mi</b> from you`}: <a href="need?id=${esc(n.id)}" style="font-weight:600">${esc(n.title)}</a>`, n.created_at ? timeAgo(n.created_at) : '')]));
+      responded.slice(0, 5).forEach(n => items.push([n.created_at, feedItem(n.status === 'fulfilled' ? '✅' : '💬',
+        n.status === 'fulfilled' ? `<b>${esc(n.title)}</b> fulfilled, thank you` : `You offered to help with <b>${esc(n.title)}</b>`, esc(fmtLoc(n)))]));
+      items.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+      renderFeed('activityFeed', items.slice(0, 8).map(x => x[1]).join(''));
+    }
+
+    function renderSubmitter() {
+      if (!canSubmit()) return;
+      document.getElementById('familiesSlot').innerHTML = families.length
+        ? tableCard(['Family', 'Country', 'Language', 'Household'], families.map(f => `<tr><td><b>${esc(f.name)}</b></td><td>${esc(f.origin_country || '—')}</td><td>${esc(f.language || '—')}</td><td>${f.adults}A ${f.children}C</td></tr>`).join(''))
+        : emptyCard('No families yet', 'Families you add will appear here.');
+      const badge = n => n.status === 'fulfilled' ? '<span class="badge badge-done">Fulfilled</span>'
+        : n.status !== 'active' ? `<span class="badge badge-closed">${esc(cap(n.status))}</span>`
+        : n.response_count ? `<span class="badge badge-open">${n.response_count} responder${n.response_count > 1 ? 's' : ''}</span>` : '<span class="badge badge-wait">Awaiting response</span>';
+      document.getElementById('submittedSlot').innerHTML = submitted.length
+        ? tableCard(['Need', 'Family', 'Urgency', 'Responses', ''], submitted.map(n => `<tr><td>${needLink(n)}</td><td>${esc(n.family_name || '—')}</td><td>${urgencyBadge(n.urgency)}</td><td>${badge(n)}</td><td><a class="act-link" href="need?id=${esc(n.id)}">View →</a></td></tr>`).join(''))
+        : emptyCard('No submitted needs yet', 'Needs you submit will appear here.');
+    }
+
+    function renderAll() { renderStats(); renderNeeds(); renderNudge(); renderActivity(); renderSubmitter(); }
+
+    async function loadData() {
+      user = await refreshUser();
+      mount();
+      const wantSubmit = canSubmit();
+      const [nearRes, respRes, bookRes, subRes, famRes] = await Promise.allSettled([
+        fetchNearbyNeeds(user),
+        apiGet('/needs/responded'),
+        apiGet('/needs/bookmarked'),
+        wantSubmit ? apiGet('/needs/mine') : Promise.resolve([]),
+        wantSubmit ? apiGet('/families/mine') : Promise.resolve([]),
+      ]);
+      const ok = (r, label) => { if (r.status === 'fulfilled') return r.value; console.error(label + ' failed', r.reason); return null; };
+      const near = ok(nearRes, 'nearby');
+      if (near) ({ nearby, radius, hasOrigin } = near); else { radius = user.notification_radius || DEFAULT_RADIUS_MI; showError('Could not load needs near you. Browse all needs instead.'); }
+      responded = ok(respRes, 'responded') || [];
+      bookmarked = ok(bookRes, 'bookmarked') || [];
+      submitted = ok(subRes, 'mine') || [];
+      families = ok(famRes, 'families') || [];
+      renderAll();
+    }
+    loadData();
+  </script>
+</body>
+</html>
