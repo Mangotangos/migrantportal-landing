@@ -1,7 +1,7 @@
 /* Shared helpers for the role dashboards (navigator-dashboard, responder-dashboard).
    Requires api.js (API, apiGet, apiPatch, esc, getUser, logout). */
 
-const CAT_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
+const CAT_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', childcare:'👶', financial:'💰', other:'📦' };
 const URGENCY_BADGE = { urgent:'badge-urgent', high:'badge-high', medium:'badge-medium', low:'badge-low' };
 const URGENCY_RANK = { urgent: 3, high: 2, medium: 1, low: 0 };
 const DEFAULT_RADIUS_MI = 50;

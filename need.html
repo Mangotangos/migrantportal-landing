@@ -579,7 +579,7 @@
       el.classList.add('active');
     }
 
-    const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', other:'📦' };
+    const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', childcare:'👶', financial:'💰', other:'📦' };
 
     let currentNeed = null;
     const currentUser = getUser();
@@ -1565,6 +1565,8 @@
               <option value="transportation">Transportation</option><option value="employment">Employment</option>
               <option value="legal">Legal</option><option value="medical">Medical</option>
               <option value="education">Education</option><option value="translation">Translation</option>
+              <option value="childcare">Childcare</option>
+              <option value="financial">Financial</option>
               <option value="other">Other</option>
             </select>
           </div>
