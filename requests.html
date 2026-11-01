@@ -289,6 +289,12 @@
     /* ── MAP ── */
     .map-container { flex: 1; position: relative; min-height: 400px; }
     #map { width: 100%; height: 100%; min-height: 400px; }
+    .origin-link { background: none; border: none; padding: 0; color: var(--teal); font: inherit; text-decoration: underline; cursor: pointer; }
+    .origin-form label { display: block; margin-bottom: 6px; }
+    .origin-row { display: flex; gap: 6px; }
+    .origin-row input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 13px; }
+    .origin-row button { padding: 8px 14px; border: none; border-radius: 8px; background: var(--teal); color: white; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .origin-err { color: #b91c1c; margin-top: 4px; min-height: 1em; }
     .map-empty { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 500; background: white; border-radius: 10px; padding: 12px 18px; font-size: 13px; color: var(--gray-600); text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.2); pointer-events: none; }
     .map-empty b { display: block; color: var(--navy); margin-bottom: 2px; }
     .map-container.is-empty .map-empty { display: block; }
@@ -690,8 +696,8 @@
         <option value="low">Low</option>
       </select>
       <div id="railDistance">
-        <div class="rail-label">Distance · <span id="radiusText" data-no-i18n>25 mi</span></div>
-        <input type="range" id="railRadius" min="0" max="4" step="1" value="2" aria-label="Distance" oninput="setRadius(RADIUS_STOPS[this.value])" />
+        <div class="rail-label">Distance · <span id="radiusText" data-no-i18n>Any</span></div>
+        <input type="range" id="railRadius" min="0" max="4" step="1" value="4" aria-label="Distance" oninput="setRadius(RADIUS_STOPS[this.value])" />
         <div class="rail-ticks"><span>5</span><span>10</span><span>25</span><span>50</span><span>Any</span></div>
         <div class="rail-note" id="radiusNote">Locating you…</div>
       </div>
@@ -705,7 +711,8 @@
           <div class="panel-sub"><span id="countLabel" data-no-i18n>0</span> <span id="countText" data-no-i18n>needs</span></div>
         </div>
         <div class="panel-header-right">
-          <button class="sort-opt active" data-sort="urgency" onclick="setSort('urgency')">Most urgent</button>
+          <button class="sort-opt active" data-sort="nearest" onclick="setSort('nearest')">Nearest</button>
+          <button class="sort-opt" data-sort="urgency" onclick="setSort('urgency')">Most urgent</button>
           <button class="sort-opt" data-sort="recent" onclick="setSort('recent')">Newest</button>
           <div class="view-toggle" role="group" aria-label="View">
             <button id="viewList" class="active" onclick="setView(false)">List</button>
@@ -897,7 +904,7 @@
     }
 
     let activeCategory = '';
-    let activeSort = 'urgency';
+    let activeSort = 'nearest';   // client-side; the API is asked for urgency order and ties keep that order
     let activeSearch = '';
     let loadDebounce = null;
 
@@ -926,7 +933,7 @@
       clearRendered();
 
       // Build query params from current filter state
-      const params = new URLSearchParams({ sort: activeSort, status: 'active' });
+      const params = new URLSearchParams({ sort: activeSort === 'nearest' ? 'urgency' : activeSort, status: 'active' });
       if (activeCategory) params.set('category', activeCategory);
       if (activeSearch.trim()) params.set('search', activeSearch.trim());
       const cat = document.getElementById('filt-category')?.value;
@@ -947,11 +954,13 @@
     // ── Distance filter: client-side, measured from the user's profile ZIP.
     // Needs without coordinates are never hidden; they show as "distance unknown".
     const RADIUS_STOPS = [5, 10, 25, 50, 0];   // 0 = any distance
+    const DEFAULT_RADIUS = 0;   // revisit 25 once ~20+ open needs span several cities
     let originPoint = null;
     let originLabel = '';
     let lastFetched = [];
     let loaded = false;   // true once a /needs response has rendered; radius/origin changes re-render only then
-    let activeRadius = RADIUS_STOPS.includes(Number(localStorage.getItem('mp_radius'))) ? Number(localStorage.getItem('mp_radius')) : 25;
+    const storedRadius = localStorage.getItem('mp_radius');   // null when never chosen; Number(null) is 0, which means "any distance"
+    let activeRadius = storedRadius !== null && RADIUS_STOPS.includes(Number(storedRadius)) ? Number(storedRadius) : DEFAULT_RADIUS;
 
     function distanceMiles(a, b) {
       const R = 3958.8, rad = d => d * Math.PI / 180;
@@ -996,6 +1005,9 @@
       const limited = !!originPoint && activeRadius > 0;
       const needs = withDist.filter(n => !limited || n._dist === null || n._dist <= activeRadius);
       const hidden = withDist.length - needs.length;
+      if (activeSort === 'nearest') {
+        needs.sort((a, b) => (a._dist ?? Infinity) - (b._dist ?? Infinity));   // stable: unknown distances keep API order, last
+      }
       allNeeds = needs;
 
       document.querySelector('.map-container').classList.toggle('is-empty', needs.length === 0);
@@ -1015,6 +1027,7 @@
         } else {
           setEmpty('No open needs yet', 'New needs appear here as families and organizations post them.');
         }
+        recenterMap();
         return;
       }
       const list = document.getElementById('cardsList');
@@ -1022,11 +1035,12 @@
         list.insertAdjacentHTML('beforeend', buildCard(need, i));
         addMarker(need, i);
       });
+      recenterMap();
       if (window.mpReapplyI18n) window.mpReapplyI18n();
     }
 
     function setRadius(val) {
-      activeRadius = RADIUS_STOPS.includes(Number(val)) ? Number(val) : 25;
+      activeRadius = RADIUS_STOPS.includes(Number(val)) ? Number(val) : DEFAULT_RADIUS;
       localStorage.setItem('mp_radius', String(activeRadius));
       document.getElementById('railRadius').value = RADIUS_STOPS.indexOf(activeRadius);
       document.getElementById('filt-radius').value = String(activeRadius);
@@ -1034,34 +1048,95 @@
       if (loaded) showNeeds();
     }
 
+    async function lookupZippopotam(zip) {
+      try {
+        const res = await fetch('https://api.zippopotam.us/us/' + encodeURIComponent(zip));
+        if (!res.ok) return null;
+        const place = (await res.json()).places[0];
+        return { zip, lat: parseFloat(place.latitude), lng: parseFloat(place.longitude), city: place['place name'] };
+      } catch { return null; }
+    }
+
+    async function lookupNominatim(zip) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&postalcode=${encodeURIComponent(zip)}`);
+        const hit = res.ok ? (await res.json())[0] : null;
+        return hit ? { zip, lat: parseFloat(hit.lat), lng: parseFloat(hit.lon) } : null;
+      } catch { return null; }
+    }
+
     async function geocodeZip(zip) {
       const cached = JSON.parse(localStorage.getItem('mp_origin') || 'null');
       if (cached && cached.zip === zip) return cached;
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&postalcode=${encodeURIComponent(zip)}`);
-      const hit = res.ok ? (await res.json())[0] : null;
-      if (!hit) return null;
-      const origin = { zip, lat: parseFloat(hit.lat), lng: parseFloat(hit.lon) };
-      localStorage.setItem('mp_origin', JSON.stringify(origin));
+      const origin = (await lookupZippopotam(zip)) || (await lookupNominatim(zip));
+      if (origin) localStorage.setItem('mp_origin', JSON.stringify(origin));
       return origin;
     }
 
-    async function resolveOrigin() {
+    function applyOrigin(origin, label) {
+      originPoint = { lat: origin.lat, lng: origin.lng };
+      originLabel = label || 'ZIP ' + origin.zip;
       const note = document.getElementById('radiusNote');
+      note.textContent = 'From ' + originLabel + '. Needs without a location still show. ';
+      const change = document.createElement('button');
+      change.type = 'button';
+      change.className = 'origin-link';
+      change.textContent = 'Change';
+      change.onclick = showZipPrompt;
+      note.appendChild(change);
+      document.getElementById('railRadius').disabled = false;
+    }
+
+    function showZipPrompt() {
+      const note = document.getElementById('radiusNote');
+      note.innerHTML = '<form class="origin-form" onsubmit="return submitOriginZip(event)">' +
+        '<label for="originZip">Enter your ZIP to filter by distance</label>' +
+        '<div class="origin-row"><input id="originZip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 66062" />' +
+        '<button type="submit">Set</button></div><div class="origin-err" id="originErr" role="status"></div></form>';
+      if (!originPoint) document.getElementById('railRadius').disabled = true;
+    }
+
+    async function submitOriginZip(e) {
+      e.preventDefault();
+      const input = document.getElementById('originZip');
+      const err = document.getElementById('originErr');
+      const zip = input.value.replace(/\D/g, '');
+      if (zip.length !== 5) { err.textContent = 'Enter a 5-digit ZIP.'; return false; }
+      const origin = await geocodeZip(zip);
+      if (!origin) { err.textContent = "We couldn't find that ZIP."; return false; }
+      applyOrigin(origin, origin.city);
+      if (loaded) showNeeds();
+      return false;
+    }
+
+    async function resolveOrigin() {
       let profile = user;
+      let zip = '';
+      let fromProfile = false;
       try {
         if (!(profile && profile.zip_code)) profile = await apiGet('/auth/me');
-        const zip = String((profile && profile.zip_code) || '').trim().slice(0, 5);
-        const origin = zip ? await geocodeZip(zip) : null;
-        if (!origin) throw new Error('no origin');
-        originPoint = { lat: origin.lat, lng: origin.lng };
-        originLabel = profile.city || 'ZIP ' + zip;
-        note.textContent = 'From ' + originLabel + '. Needs without a location still show.';
-      } catch {
-        originPoint = null;
-        note.innerHTML = 'Add your ZIP in your <a href="profile">profile</a> to filter by distance.';
-        document.getElementById('railRadius').disabled = true;
+        zip = String((profile && profile.zip_code) || '').trim().slice(0, 5);
+        fromProfile = !!zip;
+      } catch { /* fall back to the ZIP saved in this browser */ }
+      if (!zip) {
+        const saved = JSON.parse(localStorage.getItem('mp_origin') || 'null');
+        zip = saved ? saved.zip : '';
       }
+      const origin = zip ? await geocodeZip(zip) : null;
+      if (origin) applyOrigin(origin, (fromProfile && profile.city) || origin.city);
+      else showZipPrompt();
       if (loaded) showNeeds();
+    }
+
+    // Fit the map to the loaded needs plus the user's origin; Kansas City is only the initial view.
+    function recenterMap() {
+      if (!mapReady) return;
+      const points = markers.filter(Boolean).map(m => m.getLatLng());
+      if (originPoint) points.push(L.latLng(originPoint.lat, originPoint.lng));
+      if (points.length === 0) return;
+      map.invalidateSize();
+      if (points.length === 1) { map.setView(points[0], 11); return; }
+      map.fitBounds(L.latLngBounds(points), { padding: [40, 40], maxZoom: 12 });
     }
 
     // ── Rail / role-based nav
@@ -1142,6 +1217,7 @@
       if (mapReady) {
         setTimeout(() => { map.invalidateSize(); }, 50);
         setTimeout(() => { map.invalidateSize(); }, 350);
+        setTimeout(recenterMap, 400);
       }
     }
 
