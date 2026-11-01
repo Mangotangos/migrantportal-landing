@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="dash-shared.css?v=42" />
+  <link rel="stylesheet" href="dash-shared.css?v=43" />
   <!-- marker: navigator-dashboard-v1 -->
 </head>
 <body>
@@ -93,7 +93,7 @@
   <nav class="mobile-nav" id="shell-mobile"></nav>
 
   <script src="api.js"></script>
-  <script src="dash-shared.js?v=41"></script>
+  <script src="dash-shared.js?v=43"></script>
   <script src="dash-i18n.js?v=41"></script>
   <script>
     const user = requireAuth() || {};
@@ -101,16 +101,16 @@
       icon: '🧭',
       roleLabel: 'Navigator',
       items: [
-        { id: 'overview', icon: '▦', label: 'Dashboard' },
-        { id: 'needs', icon: '📝', label: 'My Needs', badgeId: 'needsBadge' },
-        { id: 'families', icon: '👨‍👩‍👧', label: 'Families' },
+        { id: 'overview', icon: 'dash', label: 'Dashboard' },
+        { id: 'needs', icon: 'needs', label: 'My Needs', badgeId: 'needsBadge' },
+        { id: 'families', icon: 'families', label: 'Families' },
       ],
       mobile: [
-        { id: 'overview', icon: '▦', label: 'Overview' },
-        { id: 'needs', icon: '📝', label: 'Needs' },
-        { href: 'submit-need', icon: '＋', label: 'Submit' },
-        { id: 'families', icon: '👨‍👩‍👧', label: 'Families' },
-        { href: 'profile', icon: '👤', label: 'Profile' },
+        { id: 'overview', icon: 'dash', label: 'Overview' },
+        { id: 'needs', icon: 'needs', label: 'Needs' },
+        { href: 'submit-need', icon: 'plus', label: 'Submit' },
+        { id: 'families', icon: 'families', label: 'Families' },
+        { href: 'profile', icon: 'user', label: 'Profile' },
       ],
     });
     refreshUser();

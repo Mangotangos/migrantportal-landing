@@ -189,9 +189,10 @@ tbody tr:hover { background: var(--primary-lt); }
 .empty { padding: 30px 20px; text-align: center; color: var(--text-sub); font-size: 13px; line-height: 1.5; }
 .empty b { display: block; color: var(--text); font-size: 14px; margin-bottom: 4px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
-.sidebar-item .ico { width: 16px; text-align: center; flex-shrink: 0; }
+.sidebar-item .ico { width: 16px; text-align: center; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
+.sidebar-item .ico svg, .mob-nav-item .ico svg { display: block; }
 .err-banner { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
-@media (max-width: 768px) { .mob-nav-item .ico { font-size: 18px; } }
+@media (max-width: 768px) { .mob-nav-item .ico { font-size: 18px; display: inline-flex; } .mob-nav-item .ico svg { width: 20px; height: 20px; } }
 
 /* Mobile: let wide tables scroll inside their card instead of clipping the action column */
 .two-col > * { min-width: 0; }

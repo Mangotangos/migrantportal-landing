@@ -47,8 +47,29 @@ function nudgeCard(id, title, body, actionsHtml) {
   return `<div class="nudge" id="${id}" style="display:none"><div class="nudge-l"><div class="nudge-i">＋</div><div><b>${title}</b><p>${body}</p></div></div><div class="header-actions">${actionsHtml}</div></div>`;
 }
 
+/* ── Line icons (match org-dashboard.html; stroke follows currentColor) ── */
+const DASH_ICONS = {
+  dash: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>',
+  needs: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>',
+  families: '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>',
+  pin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>',
+  chat: '<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  heart: '<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>',
+  search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>',
+  out: '<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>'
+};
+// Known key -> SVG line icon; anything else (e.g. the chip emoji) passes through unchanged.
+function dashIcon(key) {
+  const d = DASH_ICONS[key];
+  return d ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>` : key;
+}
+
 /* ── Shell: topbar, sidebar, mobile nav ─────────────────────────────── */
 // cfg: { icon, roleLabel, items:[{id,icon,label,badgeId?,href?}], mobile:[{id,icon,label,href?}] }
+// item/mobile `icon` is a DASH_ICONS key (cfg.icon is the chip emoji, shown as-is)
 function mountShell(user, cfg) {
   const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   const top = document.getElementById('shell-top');
@@ -65,17 +86,17 @@ function mountShell(user, cfg) {
   const item = (i, first) => {
     const act = i.href ? `window.location.href='${i.href}'` : `showSection('${i.id}', this)`;
     const badge = i.badgeId ? `<span class="sidebar-badge" id="${i.badgeId}" style="display:none">0</span>` : '';
-    return `<div class="sidebar-item${first ? ' active' : ''}" data-sec="${i.id || ''}" onclick="${act}"><span class="ico">${i.icon}</span>${i.label}${badge}</div>`;
+    return `<div class="sidebar-item${first ? ' active' : ''}" data-sec="${i.id || ''}" onclick="${act}"><span class="ico">${dashIcon(i.icon)}</span>${i.label}${badge}</div>`;
   };
   document.getElementById('shell-side').innerHTML = `
     <div class="org-chip"><div class="org-icon">${cfg.icon}</div><div><div class="org-name">${esc(user.name || 'My account')}</div><div class="org-role">${esc(cfg.roleLabel)}</div></div></div>
     <div class="sidebar-section"><div class="sidebar-label">Overview</div>${cfg.items.map((i, n) => item(i, n === 0)).join('')}</div>
     <div class="sidebar-section" style="margin-top:16px"><div class="sidebar-label">Account</div>
-      <div class="sidebar-item" onclick="window.location.href='profile'"><span class="ico">👤</span>My Profile</div>
-      <div class="sidebar-item" onclick="logout()"><span class="ico">↪</span>Sign Out</div></div>`;
+      <div class="sidebar-item" onclick="window.location.href='profile'"><span class="ico">${dashIcon('user')}</span>My Profile</div>
+      <div class="sidebar-item" onclick="logout()"><span class="ico">${dashIcon('out')}</span>Sign Out</div></div>`;
   document.getElementById('shell-mobile').innerHTML = cfg.mobile.map((i, n) => {
     const act = i.href ? `window.location.href='${i.href}'` : `showSection('${i.id}', this)`;
-    return `<button class="mob-nav-item${n === 0 ? ' active' : ''}" data-sec="${i.id || ''}" onclick="${act}"><span class="ico">${i.icon}</span>${i.label}</button>`;
+    return `<button class="mob-nav-item${n === 0 ? ' active' : ''}" data-sec="${i.id || ''}" onclick="${act}"><span class="ico">${dashIcon(i.icon)}</span>${i.label}</button>`;
   }).join('');
 }
 
