@@ -204,3 +204,12 @@ tbody tr:hover { background: var(--primary-lt); }
 /* EN/ES toggle in the topbar */
 .mp-lang-toggle { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); font-size: 12px; font-weight: 700; padding: 5px 9px; border-radius: 6px; letter-spacing: .5px; }
 .mp-lang-toggle:hover { background: var(--primary-lt); }
+
+/* Narrow screens: bell + language toggle + user chip must fit in the topbar */
+@media (max-width: 480px) {
+  .topbar { gap: 8px; }
+  .topbar-logo { font-size: 15px; }
+  .topbar-right { gap: 6px; }
+  .user-chip { padding: 3px; }
+  .user-name { display: none; }
+}
