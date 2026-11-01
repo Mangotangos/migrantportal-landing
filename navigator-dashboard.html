@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="dash-shared.css" />
+  <link rel="stylesheet" href="dash-shared.css?v=40" />
   <!-- marker: navigator-dashboard-v1 -->
 </head>
 <body>
@@ -63,7 +63,7 @@
             </div>
           </div>
           <table>
-            <thead><tr><th>Need</th><th>Family</th><th>Category</th><th>Urgency</th><th>Location</th><th>Submitted</th><th>Responses</th><th><span class="sr-only">Actions</span></th></tr></thead>
+            <thead><tr><th>Need</th><th>Family</th><th class="hide-sm">Category</th><th>Urgency</th><th class="hide-sm">Location</th><th class="hide-sm">Submitted</th><th>Responses</th><th><span class="sr-only">Actions</span></th></tr></thead>
             <tbody id="allNeedsBody"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody>
           </table>
         </div>
@@ -93,7 +93,7 @@
   <nav class="mobile-nav" id="shell-mobile"></nav>
 
   <script src="api.js"></script>
-  <script src="dash-shared.js"></script>
+  <script src="dash-shared.js?v=40"></script>
   <script src="notif-bell.js"></script>
   <script>
     const user = requireAuth() || {};
@@ -145,8 +145,8 @@
 
     function fullRow(n) {
       return `<tr data-q="${esc((n.title + ' ' + (n.family_name || '') + ' ' + n.category).toLowerCase())}">
-        <td>${needLink(n)}</td><td>${famCell(n)}</td><td>${catLabel(n.category)}</td><td>${urgencyBadge(n.urgency)}</td>
-        <td>${esc(fmtLoc(n))}</td><td style="color:var(--gray-400)">${n.created_at ? timeAgo(n.created_at) : '—'}</td>
+        <td>${needLink(n)}</td><td>${famCell(n)}</td><td class="hide-sm">${catLabel(n.category)}</td><td>${urgencyBadge(n.urgency)}</td>
+        <td class="hide-sm">${esc(fmtLoc(n))}</td><td class="hide-sm" style="color:var(--gray-400)">${n.created_at ? timeAgo(n.created_at) : '—'}</td>
         <td>${responsesBadge(n)}</td><td>${actionCell(n)}</td></tr>
         <tr class="resp-row" id="resp-full-${esc(n.id)}" style="display:none"><td colspan="8"></td></tr>`;
     }

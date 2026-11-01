@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
-  <link rel="stylesheet" href="dash-shared.css" />
+  <link rel="stylesheet" href="dash-shared.css?v=40" />
   <!-- marker: responder-dashboard-v1 -->
 </head>
 <body>
@@ -73,7 +73,7 @@
   <nav class="mobile-nav" id="shell-mobile"></nav>
 
   <script src="api.js"></script>
-  <script src="dash-shared.js"></script>
+  <script src="dash-shared.js?v=40"></script>
   <script src="notif-bell.js"></script>
   <script>
     let user = requireAuth() || {};
@@ -114,16 +114,18 @@
       return '<span class="badge badge-open">Offered</span>';
     };
 
-    const nearRow = n => `<tr><td>${needLink(n)}</td><td>${n.distance == null ? '—' : Math.round(n.distance) + ' mi'}</td><td>${urgencyBadge(n.urgency)}</td><td>${catLabel(n.category)}</td><td><a class="act-link" href="need?id=${esc(n.id)}">Respond →</a></td></tr>`;
-    const respRow = n => `<tr><td>${needLink(n)}</td><td>${esc(fmtLoc(n))}</td><td>${respStatus(n)}</td></tr>`;
+    const nearRow = n => `<tr><td>${needLink(n)}</td><td>${fmtMiles(n.distance)}</td><td>${urgencyBadge(n.urgency)}</td><td class="hide-sm">${catLabel(n.category)}</td><td><a class="act-link" href="need?id=${esc(n.id)}">Respond →</a></td></tr>`;
+    const respRow = n => `<tr><td>${needLink(n)}</td><td class="hide-sm">${esc(fmtLoc(n))}</td><td>${respStatus(n)}</td></tr>`;
 
-    const NEAR_EMPTY = () => emptyCard('No open needs near you yet',
-      `We will notify you within ${radius} miles when a family needs help. <a href="profile">Change the distance in your profile</a>.`);
+    const hasLocation = () => !!(user.city && user.state);
+    const NEAR_EMPTY = () => hasLocation()
+      ? emptyCard('No open needs near you yet', `We will notify you within ${radius} miles when a family needs help. <a href="profile">Change the distance in your profile</a>.`)
+      : emptyCard('Add your city so we can find needs near you', 'We need your city and state to match you with families nearby and to notify you. <a href="profile">Set my location →</a>');
     const RESP_EMPTY = emptyCard('No responses yet', 'Offers you make show up here so you can follow them to the end.');
 
     function renderStats() {
       document.getElementById('statsGrid').innerHTML =
-        statCard('Open Near You', 'statNear', hasOrigin ? `Within ${radius} mi` : 'In your state', nearby.length ? 'up' : '') +
+        statCard('Open Near You', 'statNear', !hasLocation() ? 'Set your location' : hasOrigin ? `Within ${radius} mi` : 'In your state', nearby.length ? 'up' : '') +
         statCard('My Responses', 'statResp', 'All time') +
         statCard('Fulfilled', 'statFul', 'Families helped') +
         statCard('Saved', 'statSaved', 'Bookmarked needs');
@@ -135,12 +137,12 @@
     }
 
     function renderNeeds() {
-      const nearHead = ['Need', 'Distance', 'Urgency', 'Category', ''];
+      const nearHead = ['Need', 'Distance', 'Urgency', '~Category', ''];
       const nearTable = rows => rows.length ? tableCard(nearHead, rows.map(nearRow).join('')) : NEAR_EMPTY();
       document.getElementById('nearSlot').innerHTML = sectionRow('Needs Near You', '<a class="see-all" href="#" onclick="showSection(\'near\');return false;">See all →</a>') + nearTable(nearby.slice(0, NEARBY_MAX_ROWS));
       document.getElementById('nearFullSlot').innerHTML = nearTable(nearby);
-      document.getElementById('nearSub').textContent = hasOrigin ? `Open needs within ${radius} miles of ${fmtLoc(user)}` : 'Open needs in your state';
-      const respHead = ['Need', 'Location', 'My offer'];
+      document.getElementById('nearSub').textContent = !hasLocation() ? 'Add your city in your profile to see needs near you' : hasOrigin ? `Open needs within ${radius} miles of ${fmtLoc(user)}` : 'Open needs in your state';
+      const respHead = ['Need', '~Location', 'My offer'];
       const respTable = rows => rows.length ? tableCard(respHead, rows.map(respRow).join('')) : RESP_EMPTY;
       document.getElementById('respSlot').innerHTML = sectionRow('My Responses', '<a class="see-all" href="#" onclick="showSection(\'responses\');return false;">See all →</a>') + respTable(responded.slice(0, 5));
       document.getElementById('respFullSlot').innerHTML = respTable(responded);
@@ -156,7 +158,7 @@
 
     function renderActivity() {
       const items = [];
-      nearby.slice(0, 3).forEach(n => items.push([n.created_at, feedItem('📍', `New need posted${n.distance == null ? '' : ` <b>${Math.round(n.distance)} mi</b> from you`}: <a href="need?id=${esc(n.id)}" style="font-weight:600">${esc(n.title)}</a>`, n.created_at ? timeAgo(n.created_at) : '')]));
+      nearby.slice(0, 3).forEach(n => items.push([n.created_at, feedItem('📍', `New need posted${n.distance == null ? '' : ` <b>${fmtMiles(n.distance)}</b> from you`}: <a href="need?id=${esc(n.id)}" style="font-weight:600">${esc(n.title)}</a>`, n.created_at ? timeAgo(n.created_at) : '')]));
       responded.slice(0, 5).forEach(n => items.push([n.created_at, feedItem(n.status === 'fulfilled' ? '✅' : '💬',
         n.status === 'fulfilled' ? `<b>${esc(n.title)}</b> fulfilled, thank you` : `You offered to help with <b>${esc(n.title)}</b>`, esc(fmtLoc(n)))]));
       items.sort((a, b) => new Date(b[0]) - new Date(a[0]));
@@ -196,6 +198,9 @@
       bookmarked = ok(bookRes, 'bookmarked') || [];
       submitted = ok(subRes, 'mine') || [];
       families = ok(famRes, 'families') || [];
+      // Needs you already offered on, or submitted yourself, are not "near you" opportunities.
+      const taken = new Set([...responded, ...submitted].map(n => n.id));
+      nearby = nearby.filter(n => !taken.has(n.id));
       renderAll();
     }
     loadData();

@@ -8,6 +8,7 @@ const DEFAULT_RADIUS_MI = 50;
 const NEARBY_MAX_ROWS = 5;
 
 const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : '—';
+const fmtMiles = d => d == null ? '—' : d < 1 ? '< 1 mi' : `${Math.round(d)} mi`;
 const fmtLoc = o => [o.city, o.state].filter(Boolean).join(', ');
 
 function timeAgo(d) {
@@ -25,7 +26,8 @@ const catLabel = c => `${CAT_EMOJI[c] || ''} ${esc(cap(c))}`;
 const needLink = n => `<a class="row-link" href="need?id=${esc(n.id)}">${esc(n.title)}</a>`;
 
 function tableCard(head, rowsHtml, colspan) {
-  const ths = head.map(h => h ? `<th>${h}</th>` : '<th><span class="sr-only">Actions</span></th>').join('');
+  // A head label starting with '~' marks a column that is hidden on mobile (cells use class hide-sm).
+  const ths = head.map(h => !h ? '<th><span class="sr-only">Actions</span></th>' : h[0] === '~' ? `<th class="hide-sm">${h.slice(1)}</th>` : `<th>${h}</th>`).join('');
   return `<div class="table-card"><table><thead><tr>${ths}</tr></thead><tbody>${rowsHtml}</tbody></table></div>`;
 }
 

@@ -192,3 +192,11 @@ tbody tr:hover { background: var(--primary-lt); }
 .sidebar-item .ico { width: 16px; text-align: center; flex-shrink: 0; }
 .err-banner { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; display: none; }
 @media (max-width: 768px) { .mob-nav-item .ico { font-size: 18px; } }
+
+/* Mobile: let wide tables scroll inside their card instead of clipping the action column */
+.two-col > * { min-width: 0; }
+@media (max-width: 768px) {
+  .table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .hide-sm { display: none; }
+}
+.table-card { position: relative; } /* contains the absolutely-positioned .sr-only header labels */
