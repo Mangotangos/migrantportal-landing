@@ -509,7 +509,20 @@
         document.getElementById('sbOrgRole').textContent = org ? (org.owner_id === u.id ? 'Admin' : 'Member') : '';
         document.getElementById('crumbDash').href = 'org-dashboard';
       }
-      if (user && user.org_id) {
+      function renderNavigatorSidebar(u) {
+        document.getElementById('sidebar').innerHTML =
+          '<div class="org-chip"><div class="org-icon">🧭</div><div><div class="org-name" id="sbNavName"></div><div class="org-role">Navigator</div></div></div>' +
+          '<div class="sidebar-section"><div class="sidebar-label">Overview</div>' +
+            sbItem('navigator-dashboard#overview', 'grid', 'Dashboard') + sbItem('navigator-dashboard#needs', 'needs', 'My Needs') +
+            sbItem('navigator-dashboard#families', 'user', 'Families') + '</div>' +
+          '<div class="sidebar-section"><div class="sidebar-label">Account</div>' + sbItem('profile', 'me', 'My Profile') +
+            '<a class="sidebar-item" href="#" onclick="logout();return false;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + SB_ICON.out + '</svg>Sign Out</a></div>';
+        document.getElementById('sbNavName').textContent = u.name || 'My account';
+        document.getElementById('crumbDash').href = 'navigator-dashboard';
+      }
+      if (user && !user.org_id && (user.role === 'connector' || user.role === 'navigator')) {
+        renderNavigatorSidebar(user);
+      } else if (user && user.org_id) {
         renderOrgSidebar(user, null);
         var sbTok = localStorage.getItem('mp_token');
         if (sbTok) {

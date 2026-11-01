@@ -114,6 +114,8 @@
       ],
     });
     refreshUser();
+    const startSection = location.hash.slice(1);
+    if (['overview', 'needs', 'families'].includes(startSection)) showSection(startSection);
 
     let myNeeds = [];
     let families = [];
