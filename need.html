@@ -1870,7 +1870,7 @@
       if (!grid || !heading) return;
       const closed = need.status === 'fulfilled' || need.status === 'closed';
       const rows = need.items.map((item) => {
-        const pct = item.amount_needed > 0 ? Math.min(100, Math.round(item.amount_received / item.amount_needed * 100)) : 0;
+        const pct = need.status === 'fulfilled' ? 100 : item.amount_needed > 0 ? Math.min(100, Math.round(item.amount_received / item.amount_needed * 100)) : 0;
         const pill = need.status === 'fulfilled' ? { text: 'Delivered', cls: 'ok' } : itemStatus(pct >= 100, item.amount_received > 0, closed);
         const target = String(item.unit).toLowerCase() === 'usd'
           ? (isEs() ? `Meta: $${item.amount_needed}` : `Target: $${item.amount_needed} worth`)
@@ -1890,7 +1890,7 @@
         </div>`;
       }).join('');
       const n = need.items.length;
-      const delivered = need.items.filter(i => i.amount_needed > 0 && i.amount_received >= i.amount_needed).length;
+      const delivered = need.status === 'fulfilled' ? n : need.items.filter(i => i.amount_needed > 0 && i.amount_received >= i.amount_needed).length;
       const meta = isEs() ? `${n} ${n === 1 ? 'necesidad' : 'necesidades'} · ${delivered} de ${n} entregadas`
                           : `${n} ${n === 1 ? 'need' : 'needs'} · ${delivered} of ${n} delivered`;
       heading.innerHTML = `${esc(vt("What's needed"))} <span class="section-badge">${esc(meta)}</span>`;
