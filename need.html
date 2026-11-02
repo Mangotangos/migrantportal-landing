@@ -1301,7 +1301,7 @@
       el.innerHTML = msgs.map(m => {
         const mine = currentUser && m.sender_id === currentUser.id;
         return `<div class="chat-msg">
-          <div class="chat-meta ${mine?'mine':''}">${mine?'You':m.sender_name} · ${m.sender_role}</div>
+          <div class="chat-meta ${mine?'mine':''}">${mine?'You':m.sender_name} · ${m.sender_role === 'connector' ? 'navigator' : m.sender_role}</div>
           <div class="chat-bubble ${mine?'mine':'theirs'}">${m.text.replace(/</g,'&lt;')}</div>
           <div class="chat-meta ${mine?'mine':''}">${timeAgo(m.created_at)}</div>
         </div>`;

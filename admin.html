@@ -827,7 +827,7 @@
           <select id="roleFilter" onchange="goUsersPage(1)">
             <option value="">All roles</option>
             <option value="admin">Admin</option>
-            <option value="connector">Connector (Navigator)</option>
+            <option value="connector">Navigator</option>
             <option value="responder">Responder</option>
           </select>
         </div>
@@ -2000,7 +2000,7 @@
                   <select class="role-select" onchange="changeRole('${u.id}',this.value)" ${u.id===user.id?'disabled':''}>
                     <option value="">— set role —</option>
                     <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
-                    <option value="connector" ${isConnector(u)?'selected':''}>connector</option>
+                    <option value="connector" ${isConnector(u)?'selected':''}>navigator</option>
                     <option value="responder" ${u.role==='responder'?'selected':''}>responder</option>
                   </select>
                   ${u.role==='responder' ? `<label style="display:block;margin-top:6px;font-size:12px;color:var(--text-2);cursor:pointer">
