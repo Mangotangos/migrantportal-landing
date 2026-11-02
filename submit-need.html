@@ -576,7 +576,7 @@
       }
 
       // Wrong role — only connectors, admins, and responders granted can_submit_needs
-      const canSubmit = user.role === 'connector' || user.role === 'admin' ||
+      const canSubmit = user.role === 'connector' || user.role === 'navigator' || user.role === 'admin' ||
         (user.role === 'responder' && user.can_submit_needs === true);
       if (!canSubmit) {
         document.getElementById('authGateTitle').textContent = 'Connector Account Required';
