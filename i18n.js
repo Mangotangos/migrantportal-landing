@@ -536,14 +536,6 @@
     init();
   }
 
-  // Set dynamic text on a leaf element and make it the new "original", so a later
-  // mpReapplyI18n() doesn't restore the static placeholder text from first load.
-  window.mpSetText = function (el, text) {
-    if (!el) return;
-    el.textContent = text;
-    ORIG_CACHE.set(el, text);
-  };
-
   // Re-apply whenever dynamic content is rendered (requests/dashboard lists)
   window.mpReapplyI18n = function () {
     const current = (document.documentElement.lang || 'en').toLowerCase();
