@@ -158,6 +158,10 @@
     .req-chip { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: #f3f4f6; border: 1px solid var(--gray-200); color: var(--text); }
     .req-chip.urgent { background: #FEF3C7; border-color: #F6D98A; color: #B45309; font-weight: 700; }
     .req-chip.ok { background: #DCFCE7; border-color: #A7E3BB; color: #15803D; font-weight: 700; }
+    .dropoff-site { margin-top: 12px; padding: 10px 12px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 13px; }
+    .dropoff-site .dropoff-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); }
+    .dropoff-site .dropoff-name { font-weight: 700; margin-top: 2px; }
+    .dropoff-site .dropoff-line { color: var(--gray-600); margin-top: 2px; }
     .offer-card .offer-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); }
     .offer-badge { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: #FEF3C7; color: #B45309; }
     .offer-badge.ok { background: #DCFCE7; color: #15803D; }
@@ -499,6 +503,7 @@
             <button onclick="sendChat()" style="height:36px;padding:0 14px;background:var(--teal);color:white;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
           </div>
           <p class="chat-safety">For everyone's safety, arrange exchanges at an organization's site, not at a family's home.</p>
+          <div id="dropoff-site" class="dropoff-site" style="display:none"></div>
         </div>
 
         <!-- STORY -->
@@ -1597,6 +1602,32 @@
       } catch(e) { toast(e.message, true); input.value = text; }
     }
 
+    // Drop-off site = the submitting org. The API only answers for the submitter and the accepted responder.
+    async function loadDropoff() {
+      const box = document.getElementById('dropoff-site');
+      if (!box || !needId) return;
+      let site;
+      try {
+        site = await apiGet(`/needs/${needId}/dropoff`);
+      } catch (e) {
+        box.style.display = 'none'; // 403 until an offer is accepted
+        return;
+      }
+      if (!site.org_name) { box.style.display = 'none'; return; }
+      const place = [site.city, site.state].filter(Boolean).join(', ');
+      const where = site.address
+        ? esc(site.address)
+        : (place ? esc(place) + ' · ' : '') + 'Ask in the chat for the address.';
+      box.innerHTML = `
+        <div class="dropoff-label">Drop-off site</div>
+        <div class="dropoff-name">${esc(site.org_name)}</div>
+        <div class="dropoff-line">${where}</div>
+        ${site.hours ? `<div class="dropoff-line">${esc(site.hours)}</div>` : ''}
+        ${site.notes ? `<div class="dropoff-line">${esc(site.notes)}</div>` : ''}`;
+      box.style.display = '';
+      if (window.mpReapplyI18n) window.mpReapplyI18n();
+    }
+
     function initChat(isAuthorized) {
       const card = document.getElementById('chat-card');
       if (!isAuthorized || !needId) return;
@@ -1604,6 +1635,7 @@
       const open = currentNeed && currentNeed.status === 'active';
       card.classList.toggle('next-step', !!open);
       loadThreads().then(loadChat);
+      loadDropoff();
       chatPollTimer = setInterval(loadChat, 10000);
     }
 
