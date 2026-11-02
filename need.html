@@ -856,7 +856,7 @@
 
         // Fetch existing ratings (navigator/admin only, non-fatal)
         let existingRatings = {};
-        const canRate = user && (user.role === 'navigator' || user.role === 'admin');
+        const canRate = currentUser && (currentUser.role === 'navigator' || currentUser.role === 'admin');
         if (canRate) {
           try {
             const ratingsData = await apiGet(`/ratings/need/${needId}`);
@@ -905,7 +905,7 @@
             ${r.message ? `<div style="font-size:12px;color:var(--gray-700);margin-top:3px;font-style:italic">"${esc(r.message)}"</div>` : ''}
             ${r.response_id ? (r.status === 'offered'
               ? `<button onclick="acceptResponse('${esc(r.response_id)}')" style="margin-top:8px;background:#16a34a;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">Accept offer and open chat</button>`
-              : `<div style="margin-top:8px;font-size:11px;font-weight:700;color:#15803D">${r.status === 'completed' ? 'Their part is complete.' : 'Accepted. Arrange details in the chat below.'}</div>${receiptBlock(r, receiptsByResponse[r.response_id] || [])}`) : ''}
+              : `<span style="display:block;margin-top:8px;font-size:11px;font-weight:700;color:#15803D">${r.status === 'completed' ? 'Their part is complete.' : 'Accepted. Arrange details in the chat below.'}</span>${receiptBlock(r, receiptsByResponse[r.response_id] || [])}`) : ''}
             ${r.items && r.items.length ? `
               <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
                 ${r.items.map(ri => `
@@ -930,6 +930,7 @@
               </div>`;
             })() : ''}
           </div>`).join(''));
+        if (window.mpReapplyI18n) window.mpReapplyI18n();
       } catch(e) {
         el.innerHTML = '<div style="font-size:12px;color:var(--gray-400)">Could not load responders.</div>';
       }
@@ -949,7 +950,7 @@
       const rows = receiptRows(receipts, true);
       const form = r.status === 'completed' ? '' : `
         <div style="margin-top:8px;padding:8px 10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px">
-          <div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:5px">Record what arrived</div>
+          <span style="display:block;font-size:11px;font-weight:700;color:#15803D;margin-bottom:5px">Record what arrived</span>
           <input id="rc-desc-${rid}" maxlength="500" placeholder="What did you receive?" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit;margin-bottom:5px">
           <div style="display:flex;gap:6px;margin-bottom:5px">
             <input id="rc-qty-${rid}" type="number" min="0" step="any" placeholder="Quantity" style="width:50%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit">
@@ -958,7 +959,7 @@
           <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray-700);margin-bottom:6px"><input id="rc-done-${rid}" type="checkbox"> This completes their part</label>
           <button onclick="submitReceipt('${rid}')" style="background:#16a34a;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">Save</button>
         </div>`;
-      return (rows ? `<div style="margin-top:8px"><div style="font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em">Received</div>${rows}</div>` : '') + form;
+      return (rows ? `<div style="margin-top:8px"><span style="display:block;font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em">Received</span>${rows}</div>` : '') + form;
     }
 
     async function removeReceipt(receiptId) {
@@ -976,8 +977,9 @@
       try {
         const mine = await apiGet(`/needs/${needId}/receipts`);
         el.innerHTML = mine.length
-          ? `<div style="border:1px solid var(--gray-200);border-radius:10px;padding:12px;margin-bottom:12px"><div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:6px">Received</div>${receiptRows(mine, false)}</div>`
+          ? `<div style="border:1px solid var(--gray-200);border-radius:10px;padding:12px;margin-bottom:12px"><span style="display:block;font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:6px">Received</span>${receiptRows(mine, false)}</div>`
           : '';
+        if (window.mpReapplyI18n) window.mpReapplyI18n();
       } catch(e) { el.innerHTML = ''; /* not accepted yet: nothing to show */ }
     }
 
