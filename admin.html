@@ -265,6 +265,8 @@
     .s-active    { background:var(--green-bg);color:var(--green); }
     .s-fulfilled { background:var(--teal-glow);color:var(--teal); }
     .s-closed    { background:var(--surface-2);color:var(--text-3); }
+    .s-rejected  { background:var(--red-bg);color:var(--red); }
+    .s-test      { background:var(--teal-glow);color:var(--teal);margin-left:6px; }
     .urgency-dot { display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle; }
     .urg-urgent { background:var(--red);box-shadow:0 0 5px rgba(248,81,73,0.5); }
     .urg-high   { background:var(--orange); }
@@ -830,6 +832,14 @@
             <option value="navigator">Navigator</option>
             <option value="responder">Responder</option>
           </select>
+          <select id="statusFilter" onchange="goUsersPage(1)">
+            <option value="">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="all">Everything</option>
+          </select>
+          <label style="font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="showTestUsers" onchange="goUsersPage(1)"> Show test accounts</label>
+          <button class="btn btn-delete" style="margin-left:auto" onclick="purgeTestAccounts()">Purge test accounts</button>
         </div>
         <div id="usersContent"><div class="loading">Loading</div></div>
         <!-- Deleted Users -->
@@ -1868,7 +1878,10 @@
   }
 
   const DISPOSABLE_EMAIL_DOMAINS = ['yopmail.com','mailinator.com','guerrillamail.com','10minutemail.com','tempmail.com','trashmail.com','sharklasers.com','getnada.com','maildrop.cc'];
-  const NOT_PROVIDED = '<span style="color:var(--text-2)">Not provided</span>';
+  const TEST_EMAIL_DOMAINS = ['example.com','yopmail.com'];
+  const isTestEmail = email => TEST_EMAIL_DOMAINS.includes((email || '').split('@').pop().toLowerCase());
+  const TEST_PILL = '<span class="status-pill s-test">TEST</span>';
+  const NOT_PROVIDED ='<span style="color:var(--text-2)">Not provided</span>';
 
   function pendingChip(label, value) {
     return `<span class="pu-chip"><b>${esc(label)}</b> ${value ? esc(value) : 'Not provided'}</span>`;
@@ -1900,7 +1913,7 @@
           <div class="pu-main">
             <div style="font-weight:700;font-size:15px">
               ${esc(u.name)}
-              <span class="status-pill ${isConnector(u)?'s-active':'s-pending'}" style="margin-left:6px">${esc(u.role)}</span>
+              <span class="status-pill ${isConnector(u)?'s-active':'s-pending'}" style="margin-left:6px">${esc(u.role)}</span>${isTestEmail(u.email) ? TEST_PILL : ''}
             </div>
             <div style="font-size:12px;color:var(--text-2);margin-top:2px">${esc(u.email)}${u.org_name?' · '+esc(u.org_name):''}</div>
             <div class="pu-chips">
@@ -1963,7 +1976,8 @@
       const remaining = document.querySelectorAll('[id^="pu-"]').length;
       document.getElementById('pending-users-count').textContent = remaining;
       if (!remaining) document.getElementById('pending-users-card').style.display = 'none';
-      toast('User rejected.');
+      toast('User rejected. Find them under Users → Rejected.');
+      loadUsers();
     } catch(e) { toast(e.message, true); }
   }
 
@@ -1971,10 +1985,13 @@
     const role = document.getElementById('roleFilter').value;
     let url = `/admin/users?page=${usersPage}`;
     if (role) url += `&role=${role}`;
+    const status = document.getElementById('statusFilter').value;
+    if (status) url += `&status=${status}`;
+    const showTest = document.getElementById('showTestUsers').checked;
     document.getElementById('usersContent').innerHTML = '<div class="loading">Loading</div>';
     try {
       const data = await apiGet(url);
-      usersCache = data.items || [];
+      usersCache = (data.items || []).filter(u => showTest || !u.is_test);
       usersPages = data.pages || 1;
       usersTotal = data.total || 0;
       if (!usersCache.length) {
@@ -1985,19 +2002,22 @@
       document.getElementById('usersContent').innerHTML = `
         <table class="need-table">
           <thead><tr>
-            <th>Name</th><th>Email</th><th>Role</th><th>Org</th><th>Location</th><th>Joined</th><th>Change Role</th><th></th>
+            <th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Org</th><th>Location</th><th>Joined</th><th>Change Role</th><th></th>
           </tr></thead>
           <tbody>
             ${usersCache.map(u => `
               <tr>
-                <td style="font-weight:600">${u.name}</td>
+                <td style="font-weight:600">${u.name}${u.is_test ? TEST_PILL : ''}</td>
                 <td style="color:var(--text-2)">${u.email}</td>
                 <td><span class="status-pill ${u.role==='admin'?'s-fulfilled':isConnector(u)?'s-active':'s-pending'}">${u.role}</span></td>
+                <td>${u.status === 'rejected'
+                  ? `<span class="status-pill s-rejected">rejected</span><div style="font-size:11px;color:var(--text-3);margin-top:2px">${esc(u.rejection_reason || 'No reason')}${u.reviewed_at ? ' · ' + esc(u.reviewed_at) : ''}</div>`
+                  : '<span class="status-pill s-active">approved</span>'}</td>
                 <td style="color:var(--text-2)">${u.org_name||'—'}</td>
                 <td style="color:var(--text-2)">${[u.city,u.state].filter(Boolean).join(', ')||'—'}</td>
                 <td style="color:var(--text-3);font-size:12px">${u.created_at?u.created_at.slice(0,10):'—'}</td>
                 <td>
-                  <select class="role-select" onchange="changeRole('${u.id}',this.value)" ${u.id===user.id?'disabled':''}>
+                  <select class="role-select" onchange="changeRole('${u.id}',this.value)" ${u.id===user.id||u.status==='rejected'?'disabled':''}>
                     <option value="">— set role —</option>
                     <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
                     <option value="navigator" ${isConnector(u)?'selected':''}>navigator</option>
@@ -2006,7 +2026,8 @@
                   ${u.role==='responder' ? `<label style="display:block;margin-top:6px;font-size:12px;color:var(--text-2);cursor:pointer">
                     <input type="checkbox" ${u.can_submit_needs?'checked':''} onchange="changeCanSubmit('${u.id}',this)"> Can submit needs</label>` : ''}
                 </td>
-                <td>
+                <td style="white-space:nowrap">
+                  ${u.status === 'rejected' ? `<button class="btn btn-approve" onclick="reconsiderUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Reconsider</button> ` : ''}
                   ${u.id !== user.id && u.role !== 'admin' ? `<button class="btn btn-delete" onclick="deleteUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Delete</button>` : ''}
                 </td>
               </tr>`).join('')}
@@ -2021,6 +2042,37 @@
     } catch(e) {
       document.getElementById('usersContent').innerHTML = '<div class="empty">Failed to load users.</div>';
     }
+  }
+
+  async function reconsiderUser(id, name) {
+    try {
+      await apiPost(`/admin/users/${id}/reconsider`, {});
+      toast(`${name} moved back to Pending Approvals.`);
+      loadUsers();
+      loadPendingUsers();
+    } catch(e) { toast(e.message || 'Failed to reconsider user.', true); }
+  }
+
+  async function purgeTestAccounts() {
+    let pending, everyone;
+    try {
+      pending = await apiGet('/admin/users/pending');
+      const first = await apiGet('/admin/users?status=all&page=1');
+      const rest = await Promise.all(Array.from({ length: Math.max(0, (first.pages || 1) - 1) }, (_, i) => apiGet(`/admin/users?status=all&page=${i + 2}`)));
+      everyone = [first, ...rest].flatMap(p => p.items || []);
+    } catch(e) { toast('Could not load users to purge.', true); return; }
+    const targets = [...(Array.isArray(pending) ? pending : []), ...everyone].filter(u => isTestEmail(u.email) && u.role !== 'admin' && u.id !== user.id);
+    if (!targets.length) { toast('No test accounts found.'); return; }
+    if (!await showConfirmModal({ title: 'Purge Test Accounts', message: `Permanently delete ${targets.length} test account(s) (example.com / yopmail.com emails)? This cannot be undone.`, confirmText: 'Purge', danger: true })) return;
+    let failed = 0;
+    for (const u of targets) {
+      try {
+        await apiDelete(`/admin/users/${u.id}`);
+        await apiDelete(`/admin/users/${u.id}/permanent`);
+      } catch(e) { failed++; }
+    }
+    toast(failed ? `Purged ${targets.length - failed}; ${failed} failed.` : `✓ Purged ${targets.length} test accounts.`, failed > 0);
+    loadPendingUsers(); loadUsers(); loadDeletedUsers();
   }
 
   async function changeRole(userId, role) {
