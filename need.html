@@ -679,7 +679,7 @@
         const cls = i < now ? 'done' : i === now ? 'now' : '';
         const hint = i === now ? (hints[i] || '') : '';
         const posted = i === 0 && caseProgress.postedLabel ? `<span class="step-hint" data-no-i18n>${esc(caseProgress.postedLabel)}</span>` : '';
-        return `<li class="case-step ${cls}"${cls === 'now' ? ' aria-current="step"' : ''}>${name}${hint ? `<span class="step-hint">${hint}</span>` : posted}</li>`;
+        return `<li class="case-step ${cls}"${cls === 'now' ? ' aria-current="step"' : ''}>${currentUser ? name : vt(name)}${hint ? `<span class="step-hint"${currentUser ? '' : ' data-no-i18n'}>${currentUser ? hint : vt(hint)}</span>` : posted}</li>`;
       }).join('');
     }
 
@@ -1815,6 +1815,8 @@
       'Fulfilled': 'Completada', 'This need has been met': 'Esta necesidad fue cubierta',
       'Thanks to a volunteer and the navigator. Other families still need help.': 'Gracias a un voluntario y al navegador. Otras familias aún necesitan ayuda.',
       'Sign up to help': 'Regístrese para ayudar', 'Sign up to help others': 'Regístrese para ayudar a otros',
+      'Posted': 'Publicado', 'Responder responded': 'Un colaborador respondió', 'Offer accepted': 'Oferta aceptada', 'Delivery': 'Entrega',
+      'Waiting for a responder': 'Esperando a un colaborador', 'Delivery in progress': 'Entrega en curso',
       'Sign in': 'Iniciar sesión', 'Share': 'Compartir', 'Browse open needs': 'Ver necesidades abiertas',
       "What's needed": 'Lo que se necesita', 'Story': 'Historia', 'Case': 'Caso',
       'Needs a responder': 'Necesita un colaborador', 'Awaiting delivery': 'Esperando entrega',
