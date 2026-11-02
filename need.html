@@ -722,14 +722,14 @@
     function renderChips() {
       const meta = document.querySelector('.req-meta');
       const need = currentNeed;
-      if (!meta || !need) return;
+      if (!meta || !need || document.body.classList.contains('visitor')) return; // visitors get their own chips
       const urg = (need.urgency || '').toLowerCase();
       const loc = [need.city, need.state, chipsSeeZip ? need.zip : null].filter(Boolean).join(', ');
       const ad = need.family_adults || 1, ch = need.family_children || 0;
       const n = caseProgress.responseCount || 0;
       const closed = caseProgress.status === 'fulfilled' || caseProgress.status === 'closed';
       const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
-      meta.className = 'req-chips';
+      meta.classList.add('req-chips'); // keep .req-meta: the visitor view looks it up by that class
       meta.innerHTML = [
         need.category ? `<span class="req-chip">${esc(cap(need.category))}</span>` : '',
         urg ? `<span class="req-chip${urg === 'high' || urg === 'urgent' ? ' urgent' : ''}">${esc(cap(urg))} urgency</span>` : '',
