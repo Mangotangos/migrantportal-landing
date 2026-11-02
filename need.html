@@ -716,7 +716,7 @@
     function renderPanel(need, alreadyResponded) {
       const panel = document.getElementById('panel-content');
       const role = currentUser?.role;
-      const isNavigator = isConnector(currentUser) || role === 'admin';
+      const isNavigator = hasNavigatorRole(currentUser) || role === 'admin';
       const isOwner = isNavigator && (need.navigator_org || role === 'admin');
 
       if (!currentUser) {
@@ -982,7 +982,7 @@
 
         // Fetch existing ratings (navigator/admin only, non-fatal)
         let existingRatings = {};
-        const canRate = isConnector(currentUser) || currentUser?.role === 'admin';
+        const canRate = hasNavigatorRole(currentUser) || currentUser?.role === 'admin';
         if (canRate) {
           try {
             const ratingsData = await apiGet(`/ratings/need/${needId}`);
@@ -1058,7 +1058,7 @@
           </div>`).join(''));
         if (window.mpReapplyI18n) window.mpReapplyI18n();
       } catch(e) {
-        const notOwner = isConnector(currentUser) && currentNeed && currentNeed.navigator_id !== currentUser.id;
+        const notOwner = hasNavigatorRole(currentUser) && currentNeed && currentNeed.navigator_id !== currentUser.id;
         el.innerHTML = `<div style="font-size:12px;color:var(--gray-400)">${notOwner ? 'Only the navigator who posted this need can manage its responders.' : 'Could not load responders.'}</div>`;
       }
     }
@@ -1158,7 +1158,7 @@
       if (!el || !currentUser) return;
       try {
         const photos = await apiGet(`/needs/${needId}/photos`);
-        const isOwner = isConnector(currentUser) && need.navigator_id === currentUser.id;
+        const isOwner = hasNavigatorRole(currentUser) && need.navigator_id === currentUser.id;
         const canUpload = isOwner || currentUser.role === 'admin';
 
         const strip = photos.length ? `
@@ -1377,7 +1377,7 @@
       el.innerHTML = msgs.map(m => {
         const mine = currentUser && m.sender_id === currentUser.id;
         return `<div class="chat-msg">
-          <div class="chat-meta ${mine?'mine':''}">${mine?'You':m.sender_name} · ${m.sender_role === 'connector' ? 'navigator' : m.sender_role}</div>
+          <div class="chat-meta ${mine?'mine':''}">${mine?'You':m.sender_name} · ${isNavigatorRole(m.sender_role) ? 'navigator' : m.sender_role}</div>
           <div class="chat-bubble ${mine?'mine':'theirs'}">${m.text.replace(/</g,'&lt;')}</div>
           <div class="chat-meta ${mine?'mine':''}">${timeAgo(m.created_at)}</div>
         </div>`;
@@ -1639,7 +1639,7 @@
         const meta = document.querySelector('.req-meta');
         if (meta) {
           // ZIP is only shown to staff and responders who have responded
-          const seesZip = isConnector(currentUser) || currentUser?.role === 'admin' || alreadyResponded;
+          const seesZip = hasNavigatorRole(currentUser) || currentUser?.role === 'admin' || alreadyResponded;
           const loc = [need.city, need.state, seesZip ? need.zip : null].filter(Boolean).join(' · ');
           const urg = need.urgency ? need.urgency.charAt(0).toUpperCase() + need.urgency.slice(1) : '—';
           const statusColor = { active:'var(--green)', pending:'#f59e0b', fulfilled:'var(--teal)', closed:'var(--gray-400)' }[need.status] || 'var(--gray-400)';
@@ -1692,13 +1692,13 @@
         // Chat — visible to navigator + responders who responded
         const chatAuthorized = currentUser && (
           currentUser.role === 'admin' ||
-          isConnector(currentUser) ||
+          hasNavigatorRole(currentUser) ||
           alreadyResponded
         );
         initChat(chatAuthorized);
 
         // Donations sidebar card (active needs only, non-navigator)
-        if (need.status === 'active' && !isConnector(currentUser) && currentUser?.role !== 'admin') {
+        if (need.status === 'active' && !hasNavigatorRole(currentUser) && currentUser?.role !== 'admin') {
           document.getElementById('donate-card').style.display = '';
           document.querySelector('.amt-btn[onclick*="2500"]')?.classList.add('selected');
           loadDonationTotal();

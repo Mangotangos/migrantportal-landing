@@ -536,7 +536,7 @@
         document.getElementById('sbNavName').textContent = u.name || 'My account';
         document.getElementById('crumbDash').href = 'navigator-dashboard';
       }
-      if (user && !user.org_id && isConnector(user)) {
+      if (user && !user.org_id && hasNavigatorRole(user)) {
         renderNavigatorSidebar(user);
       } else if (user && user.org_id) {
         renderOrgSidebar(user, null);
@@ -578,8 +578,8 @@
       // Wrong role — only connectors, admins, and responders granted can_submit_needs
       const canSubmit = canSubmitNeeds(user);
       if (!canSubmit) {
-        document.getElementById('authGateTitle').textContent = 'Connector Account Required';
-        document.getElementById('authGateMsg').textContent = 'Only Connector accounts, or organizations approved to submit needs, can submit family needs. If you believe this is an error, contact your administrator.';
+        document.getElementById('authGateTitle').textContent = 'Navigator Account Required';
+        document.getElementById('authGateMsg').textContent = 'Only Navigator accounts, or organizations approved to submit needs, can submit family needs. If you believe this is an error, contact your administrator.';
         document.getElementById('authGateBtn').textContent = 'Back to Dashboard';
         document.getElementById('authGateBtn').href = 'dashboard';
         document.getElementById('authGate').style.display = 'block';

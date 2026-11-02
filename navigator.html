@@ -281,7 +281,7 @@
   // ── Auth guard ──────────────────────────────────────────
   const user = getUser();
   if (!user) { window.location.href = 'login'; }
-  if (user && !isConnector(user)) { window.location.href = 'dashboard'; }
+  if (user && !hasNavigatorRole(user)) { window.location.href = 'dashboard'; }
 
   function signOut() { fetch('https://migrant-portal-production-3826.up.railway.app/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {}); localStorage.removeItem('mp_user'); localStorage.removeItem('mp_token'); window.location.href = 'login'; }
 

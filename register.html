@@ -1167,7 +1167,7 @@
 
       // 'submit' orgs register as connector (needed to actually submit needs);
       // 'respond' and 'both' register as responder (public directory listing).
-      const role = orgUsageChoice === 'submit' ? 'connector' : 'responder';
+      const role = orgUsageChoice === 'submit' ? 'navigator' : 'responder';
       const userPayload = {
         name: fname + ' ' + lname,
         email: loginEmail,
@@ -1469,7 +1469,7 @@
 
       const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
       const isOrgSignup = serveChoice === 'church' || serveChoice === 'navigator';
-      const role = (serveChoice === 'connector' || isOrgSignup) ? 'connector' : 'responder';
+      const role = (serveChoice === 'connector' || isOrgSignup) ? 'navigator' : 'responder';
       const notes = document.getElementById('reg-notes')?.value.trim() || '';
 
       try {

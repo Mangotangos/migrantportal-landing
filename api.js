@@ -1,5 +1,16 @@
 const API = 'https://migrant-portal-production-3826.up.railway.app';
 
+// Opt in to the 'navigator' role name on every API call. Without this header the API keeps answering
+// 'connector' for older app builds. Wrapping fetch also covers pages that call the API directly.
+const _nativeFetch = window.fetch.bind(window);
+window.fetch = function (input, init = {}) {
+  const url = typeof input === 'string' ? input : input?.url || '';
+  if (!url.startsWith(API)) return _nativeFetch(input, init);
+  const headers = new Headers(init.headers || (typeof input === 'string' ? undefined : input.headers));
+  headers.set('X-Role-Format', 'navigator');
+  return _nativeFetch(input, { ...init, headers });
+};
+
 let _isLogoutInProgress = false;
 
 function _handle401() {
@@ -86,18 +97,24 @@ function _authHeaders(extra = {}) {
   return token ? { Authorization: `Bearer ${token}`, ...extra } : { ...extra };
 }
 
+// Sessions saved before the rename still carry role 'connector'; present them as 'navigator'.
 function getUser() {
-  try { return JSON.parse(localStorage.getItem('mp_user')); } catch { return null; }
+  let user;
+  try { user = JSON.parse(localStorage.getItem('mp_user')); } catch { return null; }
+  return user?.role === 'connector' ? { ...user, role: 'navigator' } : user;
 }
 
-// Role helpers. 'connector' is the canonical needs-submitter role; 'navigator' is a legacy alias
-// the API no longer returns, so every role check on the site goes through these instead of raw strings.
-function isConnector(user) {
-  return user?.role === 'connector' || user?.role === 'navigator';
+// Role helpers. 'navigator' is the needs-submitter role; 'connector' is its legacy name, still accepted
+// from older API responses and cached sessions. Every role check goes through these, not raw strings.
+function isNavigatorRole(role) {
+  return role === 'navigator' || role === 'connector';
+}
+function hasNavigatorRole(user) {
+  return isNavigatorRole(user?.role);
 }
 // Mirrors the API's can_submit_needs rule.
 function canSubmitNeeds(user) {
-  return isConnector(user) || user?.role === 'admin' || (user?.role === 'responder' && user?.can_submit_needs === true);
+  return hasNavigatorRole(user) || user?.role === 'admin' || (user?.role === 'responder' && user?.can_submit_needs === true);
 }
 
 async function logout() {
