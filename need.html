@@ -1068,17 +1068,24 @@
         const qty = rc.quantity != null ? ` (${esc(String(rc.quantity))}${rc.unit ? ' ' + esc(rc.unit) : ''})` : (rc.unit ? ` (${esc(rc.unit)})` : '');
         const when = esc(String(rc.received_at).slice(0, 10));
         const remove = canRemove ? ` <button onclick="removeReceipt('${esc(rc.id)}')" style="font-size:10px;color:#dc2626;background:none;border:none;cursor:pointer;text-decoration:underline">Remove</button>` : '';
-        return `<div style="font-size:12px;color:var(--gray-700);padding:3px 0">${when}: ${esc(rc.description)}${qty}${remove}</div>`;
+        const forItem = rc.item_label ? ` <span style="color:var(--gray-500)">for ${esc(rc.item_label)}</span>` : '';
+        return `<div style="font-size:12px;color:var(--gray-700);padding:3px 0">${when}: ${esc(rc.description)}${qty}${forItem}${remove}</div>`;
       }).join('');
     }
 
     function receiptBlock(r, receipts) {
       const rid = esc(r.response_id);
       const rows = receiptRows(receipts, true);
+      const items = (currentNeed && currentNeed.items) || [];
+      const itemPicker = items.length ? `
+          <select id="rc-item-${rid}" aria-label="For which need?" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit;margin-bottom:5px;background:#fff">
+            <option value="">For which need? (optional)</option>
+            ${items.map(i => `<option value="${esc(i.id)}">${esc(i.label)} (${esc(String(i.amount_received || 0))} of ${esc(String(i.amount_needed))} ${esc(i.unit || '')})</option>`).join('')}
+          </select>` : '';
       const form = r.status === 'completed' ? '' : `
         <div style="margin-top:8px;padding:8px 10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px">
           <span style="display:block;font-size:11px;font-weight:700;color:#15803D;margin-bottom:5px">Record what arrived</span>
-          <input id="rc-desc-${rid}" maxlength="500" placeholder="What did you receive?" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit;margin-bottom:5px">
+          <input id="rc-desc-${rid}" maxlength="500" placeholder="What did you receive?" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit;margin-bottom:5px">${itemPicker}
           <div style="display:flex;gap:6px;margin-bottom:5px">
             <input id="rc-qty-${rid}" type="number" min="0" step="any" placeholder="Quantity" style="width:50%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit">
             <input id="rc-unit-${rid}" maxlength="40" placeholder="Unit (bags, hours, USD)" style="width:50%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;font-family:inherit">
@@ -1089,12 +1096,21 @@
       return (rows ? `<div style="margin-top:8px"><span style="display:block;font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em">Received</span>${rows}</div>` : '') + form;
     }
 
+    async function refreshItems() {
+      try {
+        const need = await apiGet(`/needs/${needId}`);
+        currentNeed = { ...currentNeed, items: need.items };
+        renderItems(currentNeed);
+      } catch (e) { /* progress bars refresh on next page load */ }
+    }
+
     async function removeReceipt(receiptId) {
       if (!await showConfirmModal({ title: 'Remove Record', message: 'Remove this record of what arrived?', confirmText: 'Remove', danger: true })) return;
       try {
         await apiDelete(`/needs/${needId}/receipts/${receiptId}`);
         toast('Record removed.');
         loadResponders();
+        refreshItems();
       } catch(e) { toast(e.message || 'Could not remove', true); }
     }
 
@@ -1115,8 +1131,10 @@
       if (!description) { toast('Describe what arrived.', true); return; }
       const qtyRaw = document.getElementById(`rc-qty-${responseId}`).value;
       const unit = document.getElementById(`rc-unit-${responseId}`).value.trim();
+      const itemId = document.getElementById(`rc-item-${responseId}`)?.value || null;
       const body = {
         description,
+        item_id: itemId,
         quantity: qtyRaw === '' ? null : Number(qtyRaw),
         unit: unit || null,
         complete: document.getElementById(`rc-done-${responseId}`).checked,
@@ -1125,6 +1143,7 @@
         await apiPost(`/needs/${needId}/responses/${responseId}/receipts`, body);
         toast('Recorded. The responder has been thanked.');
         loadResponders();
+        refreshItems();
       } catch(e) { toast(e.message || 'Could not record', true); }
     }
 
