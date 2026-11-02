@@ -130,11 +130,18 @@
     .case-step.done::after { background: var(--teal); }
     .case-step.now { color: var(--teal); font-weight: 700; }
     .case-step.now::before { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(0,157,165,.15); }
-    .case-step small { display: block; font-weight: 400; color: var(--gray-600); }
-    @media (max-width: 640px) { .case-step small { display: none; } }
+    .case-step .step-hint { display: block; font-weight: 400; color: var(--gray-600); }
+    @media (max-width: 640px) { .case-step .step-hint { display: none; } }
+    /* EN | ES switch. The stock i18n.js button is injected into .nav-right but kept hidden; this drives it. */
+    .nav-right .mp-lang-toggle { display: none !important; }
+    .nav-right { padding-right: 48px; } /* clear the fixed notification bell */
+    .lang-seg { display: inline-flex; border: 1.5px solid var(--teal); border-radius: 8px; overflow: hidden; }
+    .lang-seg button { border: 0; background: #fff; color: var(--teal); font: 700 12px/1 inherit; padding: 7px 11px; min-width: 40px; min-height: 30px; cursor: pointer; }
+    .lang-seg button[aria-pressed="true"] { background: var(--teal); color: #fff; }
+    @media (max-width: 720px) { .bar-crumb, .bar-dash { display: none; } }
     /* Chat: next-step emphasis + quick replies */
     #chat-card.next-step { border: 2px solid var(--teal); }
-    .chat-safety { font-size: 12px; color: var(--gray-600); margin-top: 10px; }
+    .chat-safety { font-size: 12px; color: var(--gray-600); margin: 10px 0 0; }
     .chat-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
     .chat-quick button { border: 1px solid var(--gray-200); background: #fff; border-radius: 999px; padding: 4px 12px; font-size: 12px; cursor: pointer; font-family: inherit; }
     .chat-quick button:hover { border-color: var(--teal); }
@@ -147,7 +154,7 @@
     .done-row { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; padding: 7px 0; border-top: 1px solid var(--gray-200); }
     .done-row span:first-child { color: var(--gray-600); }
     .done-note { font-size: 12px; color: var(--gray-600); font-style: italic; margin-top: 10px; }
-    .waiting-note { text-align: center; padding: 6px 0; font-size: 12px; color: var(--gray-600); }
+    .waiting-note { text-align: center; padding: 6px 0; margin: 0; font-size: 12px; color: var(--gray-600); }
     .waiting-note button { margin: 10px 4px 0; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--teal); background: #fff; color: var(--teal); font-weight: 700; font-size: 12px; cursor: pointer; }
     .req-meta { font-size: 12px; color: var(--gray-600); line-height: 1.8; }
     .req-meta strong { color: var(--text); }
@@ -352,14 +359,20 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
       Back to Requests
     </a>
-    <span style="color:#E8E8E8;">|</span>
-    <a href="/" style="font-size:13px;color:#009DA5;font-weight:600;text-decoration:none;">MigrantPortal</a>
-    <span style="font-size:13px;color:#999;">/ Requests /</span>
+    <span class="bar-crumb" style="color:#E8E8E8;">|</span>
+    <a href="/" class="bar-crumb" style="font-size:13px;color:#009DA5;font-weight:600;text-decoration:none;">MigrantPortal</a>
+    <span class="bar-crumb" style="font-size:13px;color:#999;">/ Requests /</span>
     <span id="crumb-case" data-no-i18n style="font-size:13px;color:#0D0D0D;font-weight:600;">Need</span>
-    <a href="dashboard" style="margin-left:auto;font-size:13px;font-weight:600;color:#009DA5;text-decoration:none;display:flex;align-items:center;gap:5px;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Dashboard
-    </a>
+    <div class="nav-right" style="margin-left:auto;display:flex;align-items:center;gap:14px;">
+      <div class="lang-seg" role="group" aria-label="Language">
+        <button type="button" data-lang="en" data-no-i18n aria-pressed="true">EN</button>
+        <button type="button" data-lang="es" data-no-i18n aria-pressed="false">ES</button>
+      </div>
+      <a href="dashboard" style="font-size:13px;font-weight:600;color:#009DA5;text-decoration:none;display:flex;align-items:center;gap:5px;" aria-label="Dashboard">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span class="bar-dash">Dashboard</span>
+      </a>
+    </div>
   </div>
 
   <!-- TAB NAV -->
@@ -410,7 +423,7 @@
         <!-- CHAT (next step: sits right under the header) -->
         <div class="card" id="chat-card" style="display:none">
           <div class="section-heading" style="margin-bottom:12px">
-            Team Chat
+            <span>Team Chat</span>
             <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:6px">Private to you and each responder</span>
           </div>
           <select id="chat-thread" onchange="loadChat()" aria-label="Choose a responder to message" style="display:none;width:100%;height:34px;margin-bottom:10px;border:1px solid var(--gray-200);border-radius:7px;padding:0 8px;font-size:13px;font-family:Inter,sans-serif"></select>
@@ -426,7 +439,7 @@
               onkeydown="if(event.key==='Enter')sendChat()">
             <button onclick="sendChat()" style="height:36px;padding:0 14px;background:var(--teal);color:white;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
           </div>
-          <div class="chat-safety">For everyone's safety, arrange exchanges at an organization's site, not at a family's home.</div>
+          <p class="chat-safety">For everyone's safety, arrange exchanges at an organization's site, not at a family's home.</p>
         </div>
 
         <!-- STORY -->
@@ -629,7 +642,7 @@
       el.innerHTML = CASE_STEPS.map((name, i) => {
         const cls = i < now ? 'done' : i === now ? 'now' : '';
         const hint = i === now ? (hints[i] || '') : '';
-        return `<li class="case-step ${cls}"${cls === 'now' ? ' aria-current="step"' : ''}>${name}${hint ? `<small>${hint}</small>` : ''}</li>`;
+        return `<li class="case-step ${cls}"${cls === 'now' ? ' aria-current="step"' : ''}>${name}${hint ? `<span class="step-hint">${hint}</span>` : ''}</li>`;
       }).join('');
     }
 
@@ -643,6 +656,22 @@
         if (e && e.name !== 'AbortError') toast('Could not share. Copy the link from the address bar.', true);
       }
     }
+
+    // EN | ES switch: delegates to the toggle button i18n.js injects into .nav-right
+    function syncLangSeg() {
+      const isEs = (document.documentElement.lang || 'en').toLowerCase() === 'es';
+      document.querySelectorAll('.lang-seg button').forEach(b => {
+        b.setAttribute('aria-pressed', String((b.dataset.lang === 'es') === isEs));
+      });
+    }
+    document.querySelectorAll('.lang-seg button').forEach(b => {
+      b.addEventListener('click', () => {
+        const isEs = (document.documentElement.lang || 'en').toLowerCase() === 'es';
+        if ((b.dataset.lang === 'es') !== isEs) document.querySelector('.mp-lang-toggle')?.click();
+      });
+    });
+    new MutationObserver(syncLangSeg).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    window.addEventListener('load', syncLangSeg);
 
     function quickReply(text) {
       const input = document.getElementById('chat-input');
@@ -777,20 +806,20 @@
       // Navigator / admin: fulfill panel
       if (isNavigator) {
         panel.innerHTML = `
-          <div style="font-weight:700;font-size:14px;margin-bottom:10px">Manage this need</div>
+          <span style="display:block;font-weight:700;font-size:14px;margin-bottom:10px">Manage this need</span>
           <div style="font-size:12px;color:var(--gray-600);margin-bottom:10px">Response count: <strong>${need.response_count || 0}</strong></div>
 
-          <div style="font-weight:600;font-size:13px;margin-bottom:8px">Responders</div>
+          <span style="display:block;font-weight:600;font-size:13px;margin-bottom:8px">Responders</span>
           <div id="responders-list" style="margin-bottom:14px">
             <div style="font-size:12px;color:var(--gray-400)">Loading…</div>
           </div>
 
           <hr style="border:none;border-top:1px solid var(--gray-200);margin:12px 0">
-          <div style="font-weight:600;font-size:13px;margin-bottom:8px">Edit Need</div>
+          <span style="display:block;font-weight:600;font-size:13px;margin-bottom:8px">Edit Need</span>
           <button onclick="showEditModal()" style="width:100%;height:34px;background:white;border:1px solid var(--gray-200);border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray-700);margin-bottom:14px">✏️ Edit title and details</button>
 
           <hr style="border:none;border-top:1px solid var(--gray-200);margin:12px 0">
-          <div style="font-weight:600;font-size:13px;margin-bottom:8px">Close this case</div>
+          <span style="display:block;font-weight:600;font-size:13px;margin-bottom:8px">Close this case</span>
           <textarea id="outcome-note" placeholder="Outcome note (optional)…" style="width:100%;height:70px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
           <button onclick="fulfillNeed()" style="width:100%;background:var(--green);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer;">Mark fulfilled</button>`;
         loadResponders();
@@ -943,8 +972,8 @@
           accepted: list.some(r => r.response_id && r.status && r.status !== 'offered')
         });
         if (!list.length) {
-          el.innerHTML = `<div class="waiting-note">Waiting for responders. Share this need to reach more people.<br>
-            <button type="button" onclick="shareNeed()">Share this need</button><button type="button" onclick="showQrModal()">Print QR</button></div>`;
+          el.innerHTML = `<p class="waiting-note">Waiting for responders. Share this need to reach more people.<br>
+            <button type="button" onclick="shareNeed()">Share this need</button><button type="button" onclick="showQrModal()">Print QR</button></p>`;
           return;
         }
         const HELP_LABEL = { donate: '💰 Donated', goods: '📦 Goods', service: '⚖️ Service', volunteer: '⏰ Volunteer' };
