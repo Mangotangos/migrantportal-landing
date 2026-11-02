@@ -129,7 +129,6 @@
     // Org-linked responders land on the org dashboard, not the individual one
     function homeFor(user) {
       if (user?.role === 'admin') return 'admin';
-      if (user?.role === 'navigator') return 'navigator';
       if (user?.role === 'responder' && user?.org_id) return 'org-dashboard';
       return 'dashboard';
     }

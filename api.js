@@ -90,6 +90,16 @@ function getUser() {
   try { return JSON.parse(localStorage.getItem('mp_user')); } catch { return null; }
 }
 
+// Role helpers. 'connector' is the canonical needs-submitter role; 'navigator' is a legacy alias
+// the API no longer returns, so every role check on the site goes through these instead of raw strings.
+function isConnector(user) {
+  return user?.role === 'connector' || user?.role === 'navigator';
+}
+// Mirrors the API's can_submit_needs rule.
+function canSubmitNeeds(user) {
+  return isConnector(user) || user?.role === 'admin' || (user?.role === 'responder' && user?.can_submit_needs === true);
+}
+
 async function logout() {
   _isLogoutInProgress = true;
   localStorage.removeItem('mp_user');

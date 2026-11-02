@@ -1468,7 +1468,8 @@
       document.querySelectorAll('#step-5 input, #step-5 select, #step-5 textarea').forEach(el => { el.disabled = true; });
 
       const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
-      const role = serveChoice === 'connector' ? 'connector' : (serveChoice === 'church' || serveChoice === 'navigator') ? 'navigator' : 'responder';
+      const isOrgSignup = serveChoice === 'church' || serveChoice === 'navigator';
+      const role = (serveChoice === 'connector' || isOrgSignup) ? 'connector' : 'responder';
       const notes = document.getElementById('reg-notes')?.value.trim() || '';
 
       try {
@@ -1495,7 +1496,7 @@
           window.location.href = '/pending';
         } else {
           saveSession(data.access_token, data.user);
-          const dest = role === 'navigator' ? 'org-dashboard' : 'dashboard';
+          const dest = isOrgSignup ? 'org-dashboard' : 'dashboard';
           setTimeout(() => window.location.href = dest, 2000);
         }
       } catch (ex) {

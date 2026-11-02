@@ -1248,8 +1248,7 @@
         resolveOrigin();   // signed-out visitors use the ZIP saved in this browser, or enter one
         return;
       }
-      const canSubmit = user.role === 'connector' || user.role === 'admin' ||
-        (user.role === 'responder' && user.can_submit_needs === true);
+      const canSubmit = canSubmitNeeds(user);
       document.getElementById('railSubmit').style.display = canSubmit ? '' : 'none';
       document.getElementById('mobSubmit').style.display = canSubmit ? '' : 'none';
       if (user.org_id) document.getElementById('railDash').href = 'org-dashboard';
