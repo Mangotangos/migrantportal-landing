@@ -588,6 +588,13 @@
   <script src="api.js"></script>
   <script src="notif-bell.js"></script>
   <script>
+    // Swap in a fresh text node. Setting textContent on an element with a single
+    // text child reuses that node, and i18n.js restores its cached (static) text
+    // whenever mpReapplyI18n() runs, which wiped real data for responders.
+    function setText(el, text) {
+      if (el) el.replaceChildren(document.createTextNode(text));
+    }
+
     // ── Case progress stepper. Stage comes from need status, response count and
     // whether any offer is accepted (known to navigators via loadResponders).
     const CASE_STEPS = ['Posted', 'Responder responded', 'Offer accepted', 'Delivery', 'Fulfilled'];
@@ -600,7 +607,7 @@
       const { status, responseCount, accepted } = caseProgress;
       const closed = status === 'fulfilled' || status === 'closed';
       const now = closed ? CASE_STEPS.length : accepted ? 3 : responseCount > 0 ? 2 : 1;
-      const hints = { 1: 'Waiting', 2: 'Review offers', 3: 'Arrange in chat' };
+      const hints = { 1: 'Waiting', 2: currentUser?.role === 'responder' ? 'Waiting for acceptance' : 'Review offers', 3: 'Arrange in chat' };
       el.innerHTML = CASE_STEPS.map((name, i) => {
         const cls = i < now ? 'done' : i === now ? 'now' : '';
         const hint = i === now ? (hints[i] || '') : '';
@@ -771,7 +778,7 @@
       const grid = document.querySelector('.needs-grid');
       const badge = document.querySelector('.section-badge');
       if (!grid) return;
-      if (badge) badge.textContent = `${need.items.length} Need${need.items.length!==1?'s':''}`;
+      setText(badge, `${need.items.length} Need${need.items.length!==1?'s':''}`);
       if (!need.items.length) { grid.innerHTML = '<div style="color:var(--gray-400);font-size:13px">No items listed.</div>'; return; }
       grid.innerHTML = need.items.map((item, idx) => {
         const pct = item.amount_needed > 0 ? Math.round(item.amount_received / item.amount_needed * 100) : 0;
@@ -983,7 +990,8 @@
           </div>`).join(''));
         if (window.mpReapplyI18n) window.mpReapplyI18n();
       } catch(e) {
-        el.innerHTML = '<div style="font-size:12px;color:var(--gray-400)">Could not load responders.</div>';
+        const notOwner = isConnector(currentUser) && currentNeed && currentNeed.navigator_id !== currentUser.id;
+        el.innerHTML = `<div style="font-size:12px;color:var(--gray-400)">${notOwner ? 'Only the navigator who posted this need can manage its responders.' : 'Could not load responders.'}</div>`;
       }
     }
 
@@ -1549,11 +1557,11 @@
         // Title + page meta
         document.title = (need.title || 'Need Detail') + ' — MigrantPortal';
         const titleEl = document.querySelector('.req-title');
-        if (titleEl) titleEl.textContent = need.title || '';
+        setText(titleEl, need.title || '');
 
         // Breadcrumb
         const crumb = document.getElementById('crumb-case');
-        if (crumb) crumb.textContent = need.case_number ? 'Need #' + need.case_number : 'Need';
+        setText(crumb, need.case_number ? 'Need #' + need.case_number : 'Need');
 
         // Illustration
         const illus = document.querySelector('.req-illustration');
@@ -1584,7 +1592,7 @@
         const secMeta = document.querySelector('#story .section-meta');
         if (secMeta) {
           const ch = need.family_children || 0, ad = need.family_adults || 1;
-          secMeta.textContent = (ch > 0 ? `👶 ${ch} Child${ch!==1?'ren':''} ` : '') + `👤 ${ad} Adult${ad!==1?'s':''}`;
+          setText(secMeta, (ch > 0 ? `👶 ${ch} Child${ch!==1?'ren':''} ` : '') + `👤 ${ad} Adult${ad!==1?'s':''}`);
         }
 
         // Render items
