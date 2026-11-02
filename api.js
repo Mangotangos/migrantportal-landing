@@ -112,6 +112,11 @@ function isNavigatorRole(role) {
 function hasNavigatorRole(user) {
   return isNavigatorRole(user?.role);
 }
+// Pages call isConnector(): it exists in every api.js version, so a page and a cached api.js from
+// different deploys can never disagree on the name. Retire with the connector compat layer (Stage E).
+function isConnector(user) {
+  return hasNavigatorRole(user);
+}
 // Mirrors the API's can_submit_needs rule.
 function canSubmitNeeds(user) {
   return hasNavigatorRole(user) || user?.role === 'admin' || (user?.role === 'responder' && user?.can_submit_needs === true);

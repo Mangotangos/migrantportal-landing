@@ -536,7 +536,7 @@
         document.getElementById('sbNavName').textContent = u.name || 'My account';
         document.getElementById('crumbDash').href = 'navigator-dashboard';
       }
-      if (user && !user.org_id && hasNavigatorRole(user)) {
+      if (user && !user.org_id && isConnector(user)) {
         renderNavigatorSidebar(user);
       } else if (user && user.org_id) {
         renderOrgSidebar(user, null);

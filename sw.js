@@ -5,7 +5,7 @@
  * - Offline fallback page for navigations
  * Bump CACHE_NAME on every deploy.
  */
-const CACHE_NAME = 'migrantportal-v72';
+const CACHE_NAME = 'migrantportal-v73';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_URLS = [
@@ -24,7 +24,8 @@ const PRECACHE_URLS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE_URLS).catch(() => {
+      // cache:'reload' bypasses the HTTP cache so a new worker never precaches last deploy's files.
+      return cache.addAll(PRECACHE_URLS.map((url) => new Request(url, { cache: 'reload' }))).catch(() => {
         // Best-effort precache — don't fail install if one file is missing.
       });
     })

@@ -790,7 +790,7 @@
     const roleHome = !user ? null
       : user.role === 'responder' && user.org_id ? 'org-dashboard'
       : user.role === 'responder' ? 'responder-dashboard'
-      : hasNavigatorRole(user) ? 'navigator-dashboard'
+      : isConnector(user) ? 'navigator-dashboard'
       : null;
     if (roleHome) {
       window.location.replace(roleHome);
@@ -1038,8 +1038,8 @@
     (function initRoleTabs() {
       const role = user?.role;
       if (role==='responder') { document.getElementById('tab-responses').style.display=''; document.getElementById('mob-tab-responses').style.display=''; loadRoleStats('responder'); }
-      if (hasNavigatorRole(user)||role==='admin') { document.getElementById('add-resource-btn').style.display=''; }
-      if (hasNavigatorRole(user)) { document.getElementById('tab-families').style.display=''; document.getElementById('mob-tab-families').style.display=''; document.getElementById('navigator-sidebar').style.display=''; document.querySelector('#navigator-sidebar .nav-tools-title').textContent='Navigator Tools'; loadRoleStats('navigator'); }
+      if (isConnector(user)||role==='admin') { document.getElementById('add-resource-btn').style.display=''; }
+      if (isConnector(user)) { document.getElementById('tab-families').style.display=''; document.getElementById('mob-tab-families').style.display=''; document.getElementById('navigator-sidebar').style.display=''; document.querySelector('#navigator-sidebar .nav-tools-title').textContent='Navigator Tools'; loadRoleStats('navigator'); }
     })();
 
     /* ── Hash nav restore ───────────────── */
@@ -1054,10 +1054,10 @@
     }
     async function loadRoleStats(role) {
       try {
-        const statsPath = isNavigatorRole(role) ? '/needs/navigator/stats' : '/needs/responder/stats';
+        const statsPath = (role==='navigator'||role==='connector') ? '/needs/navigator/stats' : '/needs/responder/stats';
         const s=await apiGet(statsPath);
         const inner=document.getElementById('role-stats-inner');
-        inner.innerHTML = isNavigatorRole(role)
+        inner.innerHTML = (role==='navigator'||role==='connector')
           ? statCard('Families',s.families_count,'var(--primary)')+statCard('Active Needs',s.active_count,'var(--green)')+statCard('Pending',s.pending_count,'#f59e0b')+statCard('Fulfilled',s.fulfilled_count,'var(--primary)')+statCard('Responses',s.total_responses,'var(--coral)')
           : statCard('Responses',s.responses_made,'var(--primary)')+statCard('Active',s.active_responses,'var(--green)')+statCard('Helped Fulfill',s.fulfilled_helped,'var(--coral)')+statCard('Shifts',s.shifts_count,'#7c3aed')+statCard('Donations',s.donations_count,'#0973A7');
         document.getElementById('role-stats').style.display='';
