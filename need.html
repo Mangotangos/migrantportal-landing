@@ -336,6 +336,24 @@
       .network-layout { flex-direction: column; }
       .more-card { width: calc(50% - 6px); }
     }
+    /* ─── VISITOR (logged-out) VIEW ───────────── */
+    body.visitor #chat-card, body.visitor #network, body.visitor #more-requests, body.visitor #story,
+    body.visitor #donate-card, body.visitor #donor-impact-card, body.visitor #navigator-funds-card,
+    body.visitor #bookmark-btn, body.visitor #qr-btn, body.visitor #qr-modal, body.visitor .btn-help,
+    body.visitor .nav-right > a[href="dashboard"], body.visitor .bar-back, body.visitor .bar-requests { display: none !important; }
+    body.visitor.unavailable .col-side, body.visitor.unavailable #needs, body.visitor.unavailable #request-details { display: none !important; }
+    .visitor-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+    .visitor-cta { text-align: left; }
+    .visitor-cta h2 { font-size: 18px; line-height: 1.3; margin-bottom: 8px; }
+    .visitor-cta p { font-size: 13px; color: var(--gray-600); line-height: 1.55; }
+    .visitor-cta .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+    .visitor-cta .cta-primary { background: var(--orange); color: #fff; font-weight: 700; font-size: 14px; padding: 11px 18px; border-radius: 8px; text-decoration: none; }
+    .visitor-cta .cta-link { font-size: 13px; font-weight: 600; color: var(--teal); text-decoration: none; }
+    .visitor-privacy { display: flex; gap: 10px; margin-top: 14px; font-size: 12px; line-height: 1.55; color: var(--gray-600); }
+    .visitor-unavailable { text-align: center; padding: 36px 20px; }
+    .visitor-unavailable h1 { font-size: 20px; margin-bottom: 8px; }
+    .visitor-unavailable p { font-size: 14px; color: var(--gray-600); margin-bottom: 16px; }
+    body.visitor .req-meta { overflow-wrap: anywhere; }
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
   .skip-link:focus { top: 0; }
   </style>
@@ -355,13 +373,13 @@
 
   <!-- BACK BAR -->
   <div style="background:white;border-bottom:1px solid #E8E8E8;padding:0 20px;height:44px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:101;">
-    <a href="javascript:history.back()" style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#555;text-decoration:none;">
+    <a href="javascript:history.back()" class="bar-back" style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#555;text-decoration:none;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
       Back to Requests
     </a>
     <span class="bar-crumb" style="color:#E8E8E8;">|</span>
     <a href="/" class="bar-crumb" style="font-size:13px;color:#009DA5;font-weight:600;text-decoration:none;">MigrantPortal</a>
-    <span class="bar-crumb" style="font-size:13px;color:#999;">/ Requests /</span>
+    <span class="bar-crumb bar-requests" style="font-size:13px;color:#999;">/ Requests /</span>
     <span id="crumb-case" data-no-i18n style="font-size:13px;color:#0D0D0D;font-weight:600;">Need</span>
     <div class="nav-right" style="margin-left:auto;display:flex;align-items:center;gap:14px;">
       <div class="lang-seg" role="group" aria-label="Language">
@@ -638,7 +656,9 @@
       const { status, responseCount, accepted } = caseProgress;
       const closed = status === 'fulfilled' || status === 'closed';
       const now = closed ? CASE_STEPS.length : accepted ? 3 : responseCount > 0 ? 2 : 1;
-      const hints = { 1: 'Waiting', 2: currentUser?.role === 'responder' ? 'Waiting for acceptance' : 'Review offers', 3: 'Arrange in chat' };
+      const hints = !currentUser
+          ? { 1: 'Waiting for a responder', 3: 'Delivery in progress' }
+          : { 1: 'Waiting', 2: currentUser?.role === 'responder' ? 'Waiting for acceptance' : 'Review offers', 3: 'Arrange in chat' };
       el.innerHTML = CASE_STEPS.map((name, i) => {
         const cls = i < now ? 'done' : i === now ? 'now' : '';
         const hint = i === now ? (hints[i] || '') : '';
@@ -1764,8 +1784,96 @@
       } catch(e) { /* silent — not every user donated */ }
     }
 
-    loadNeed();
-    loadDonorImpact();
+    // ── Visitor (logged-out) view: read-only, whitelisted fields from GET /needs/{id}/public.
+    // Sign-in return path: login/register accept ?next=need%3Fid%3D<uuid> (see getSafeNextPath).
+    const VISITOR_COPY = {
+      open: { eyebrow: 'Help this family', title: 'Be the first to respond',
+              body: 'Sign up or sign in to send an offer. Family details stay private until your offer is accepted.', cta: 'Sign up to help' },
+      accepted: { eyebrow: 'In progress', title: 'A responder is already on this',
+                  body: 'An offer was accepted and delivery is being arranged. You can still help other families by signing up.', cta: 'Sign up to help' },
+      fulfilled: { eyebrow: 'Fulfilled', title: 'This need has been met',
+                   body: 'Thanks to a volunteer and the navigator. Other families still need help.', cta: 'Sign up to help others' },
+    };
+
+    function showVisitorUnavailable() {
+      document.body.classList.add('unavailable');
+      document.title = 'A family needs help | MigrantPortal';
+      if (document.getElementById('visitor-unavailable')) return;
+      const card = document.createElement('div');
+      card.className = 'card visitor-unavailable';
+      card.id = 'visitor-unavailable';
+      card.innerHTML = `<h1>This request isn't available</h1>
+        <p>It may have been completed or removed. Please check the link you were sent.</p>
+        <a href="/" style="background:var(--teal);color:#fff;font-weight:700;font-size:14px;padding:11px 18px;border-radius:8px;text-decoration:none;display:inline-block">Go to MigrantPortal home</a>`;
+      document.querySelector('.col-main').prepend(card);
+      if (window.mpReapplyI18n) window.mpReapplyI18n();
+    }
+
+    function renderVisitorMeta(need) {
+      const meta = document.querySelector('.req-meta');
+      if (!meta) return;
+      const cap = (v) => v ? v.charAt(0).toUpperCase() + v.slice(1) : '—';
+      const ad = need.family_adults || 0, ch = need.family_children || 0;
+      const place = [need.city, need.state].filter(Boolean).join(', ');
+      meta.innerHTML = `
+        <strong>Urgency:</strong> <span>${esc(cap(need.urgency))}</span> &nbsp;·&nbsp;
+        <strong>Category:</strong> <span>${esc(cap(need.category))}</span><br/>
+        <strong>Location:</strong> <span data-no-i18n>${esc(place || '—')}</span> &nbsp;·&nbsp;
+        <strong>Family:</strong> <span data-no-i18n>${ad} Adult${ad !== 1 ? 's' : ''}, ${ch} Child${ch !== 1 ? 'ren' : ''}</span>`;
+    }
+
+    function renderVisitorPanel(status) {
+      const copy = VISITOR_COPY[status] || VISITOR_COPY.open;
+      const next = encodeURIComponent('need?id=' + needId);
+      const panel = document.getElementById('panel-content');
+      if (!panel) return;
+      panel.removeAttribute('style');
+      panel.className = 'visitor-cta';
+      panel.innerHTML = `
+        <div class="visitor-eyebrow">${copy.eyebrow}</div>
+        <h2>${copy.title}</h2>
+        <p>${copy.body}</p>
+        <div class="cta-row">
+          <a class="cta-primary" href="register?next=${next}">${copy.cta}</a>
+          <a class="cta-link" href="login?next=${next}">Sign in</a>
+        </div>
+        <div class="visitor-privacy"><span aria-hidden="true">🔒</span><span>Family details and exact location are private. Only the navigator and the accepted responder can see them.</span></div>`;
+    }
+
+    async function loadVisitorNeed() {
+      document.body.classList.add('visitor');
+      document.title = 'A family needs help | MigrantPortal';
+      const robots = document.querySelector('meta[name="robots"]');
+      if (robots) robots.setAttribute('content', 'noindex');
+      if (!needId) { window.location.replace('requests'); return; }
+      try {
+        const r = await fetch(API + '/needs/' + encodeURIComponent(needId) + '/public', { headers: { Accept: 'application/json' } });
+        if (!r.ok) { showVisitorUnavailable(); return; }
+        const need = await r.json();
+        currentNeed = need;
+        const accepted = need.status === 'accepted';
+        renderStepper({ status: need.status === 'fulfilled' ? 'fulfilled' : 'active', responseCount: accepted ? 1 : 0, accepted });
+        setText(document.querySelector('.req-title'), need.title || '');
+        setText(document.getElementById('crumb-case'), 'Need');
+        const illus = document.querySelector('.req-illustration');
+        if (illus) illus.textContent = CATEGORY_EMOJI[need.category] || '📦';
+        renderVisitorMeta(need);
+        renderItems(need);
+        renderVisitorPanel(need.status);
+        if (window.mpReapplyI18n) window.mpReapplyI18n();
+      } catch (err) {
+        console.warn('Could not load public need:', err.message);
+        showVisitorUnavailable();
+      }
+    }
+
+    // Logged in: untouched behavior. Logged out: public read-only view (no login redirect).
+    if (currentUser) {
+      loadNeed();
+      loadDonorImpact();
+    } else {
+      loadVisitorNeed();
+    }
   </script>
 
   <!-- MOBILE BOTTOM NAV -->

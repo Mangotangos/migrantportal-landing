@@ -870,6 +870,13 @@
   <script src="api.js?v=2"></script>
   <script>
     // Read role from URL — skip step 1 if provided
+    // Same allowlist as login.html: a page slug or a single need link, never an external URL.
+    function getSafeNextPath() {
+      const next = new URLSearchParams(window.location.search).get('next');
+      if (!next) return null;
+      const stripped = next.replace(/\.html$/i, '');
+      return /^([a-z0-9-]+|need\?id=[0-9a-f-]{36})$/i.test(stripped) ? stripped : null;
+    }
     const _urlRole = new URLSearchParams(window.location.search).get('role');
     const _roleMap = { navigator: 'navigator', responder: 'responder' };
     const _preselectedRole = _urlRole ? (_roleMap[_urlRole] || null) : null;
@@ -1218,7 +1225,7 @@
           window.location.href = '/pending';
         } else {
           saveSession(userData.access_token, userData.user);
-          setTimeout(() => { window.location.href = 'dashboard'; }, 1500);
+          setTimeout(() => { window.location.href = getSafeNextPath() || 'dashboard'; }, 1500);
         }
       } catch (ex) {
         btn.disabled = false;
@@ -1496,7 +1503,7 @@
           window.location.href = '/pending';
         } else {
           saveSession(data.access_token, data.user);
-          const dest = isOrgSignup ? 'org-dashboard' : 'dashboard';
+          const dest = getSafeNextPath() || (isOrgSignup ? 'org-dashboard' : 'dashboard');
           setTimeout(() => window.location.href = dest, 2000);
         }
       } catch (ex) {

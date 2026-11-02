@@ -123,7 +123,8 @@
       const next = new URLSearchParams(window.location.search).get('next');
       if (!next) return null;
       const stripped = next.replace(/\.html$/i, '');
-      return /^[a-z0-9-]+$/i.test(stripped) ? stripped : null;
+      // Plain page slug, or a single need link (need?id=<uuid>) so shared links survive sign-in.
+      return /^([a-z0-9-]+|need\?id=[0-9a-f-]{36})$/i.test(stripped) ? stripped : null;
     }
 
     // Org-linked responders land on the org dashboard, not the individual one
