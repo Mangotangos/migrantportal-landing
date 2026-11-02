@@ -1851,7 +1851,8 @@
         <p>It may have been completed or removed. Please check the link you were sent.</p>
         <a href="/" style="background:var(--teal);color:#fff;font-weight:700;font-size:14px;padding:11px 18px;border-radius:8px;text-decoration:none;display:inline-block">Go to MigrantPortal home</a>`;
       document.querySelector('.col-main').prepend(card);
-      if (window.mpReapplyI18n) window.mpReapplyI18n();
+      // i18n.js is deferred: translate now if it's ready, otherwise as soon as the page has loaded
+      if (window.mpReapplyI18n) window.mpReapplyI18n(); else window.addEventListener('load', () => window.mpReapplyI18n && window.mpReapplyI18n());
     }
 
     function familyText(ad, ch) {
