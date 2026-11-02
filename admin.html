@@ -1332,7 +1332,7 @@
   async function loadSidebarBadges() {
     try {
       const pendingUsers = await apiGet('/admin/users/pending');
-      const n = Array.isArray(pendingUsers) ? pendingUsers.length : 0;
+      const n = Array.isArray(pendingUsers) ? pendingUsers.filter(u => !isTestEmail(u.email)).length : 0;
       const badge = document.getElementById('usersBadge');
       badge.textContent = n;
       badge.className = 'nav-badge' + (n === 0 ? ' zero' : '');
