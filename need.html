@@ -145,6 +145,25 @@
     .chat-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
     .chat-quick button { border: 1px solid var(--gray-200); background: #fff; border-radius: 999px; padding: 4px 12px; font-size: 12px; cursor: pointer; font-family: inherit; }
     .chat-quick button:hover { border-color: var(--teal); }
+    /* Next-step card + header chips + offer badge */
+    .next-card { border: 2px solid var(--teal); }
+    .next-card.calm { border: 1px solid var(--gray-200); }
+    .next-card .next-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); }
+    .next-card h2 { font-size: 18px; margin: 4px 0 4px; }
+    .next-card p { margin: 0; font-size: 13px; color: var(--gray-600); }
+    .next-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .next-actions button { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--teal); background: #fff; color: var(--teal); font: 700 13px inherit; cursor: pointer; }
+    .next-actions button.primary { background: var(--teal); color: #fff; }
+    .req-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .req-chip { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: #f3f4f6; border: 1px solid var(--gray-200); color: var(--text); }
+    .req-chip.urgent { background: #FEF3C7; border-color: #F6D98A; color: #B45309; font-weight: 700; }
+    .req-chip.ok { background: #DCFCE7; border-color: #A7E3BB; color: #15803D; font-weight: 700; }
+    .offer-card .offer-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); }
+    .offer-badge { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: #FEF3C7; color: #B45309; }
+    .offer-badge.ok { background: #DCFCE7; color: #15803D; }
+    .rate-locked .stars-off { display: flex; gap: 2px; margin: 4px 0; }
+    .rate-locked .stars-off span { font-size: 22px; color: #C4D0CE; line-height: 1; }
+    .rate-locked .hint { font-size: 11px; color: var(--gray-600); }
     .need-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: #FEF3C7; color: #B45309; }
     .need-pill.ok { background: #DCFCE7; color: #15803D; }
     .need-pill.muted { background: var(--gray-200); color: var(--gray-600); }
@@ -327,6 +346,7 @@
       .col-main { display: contents; }
       .col-main > * { order: 4; }
       .col-main > #request-details { order: 1; }
+      .col-main > #next-card { order: 2; }
       .col-main > #chat-card { order: 2; }
       .col-side { order: 3; }
       .req-title-row { flex-direction: column; gap: 8px; }
@@ -455,6 +475,9 @@
           <ol class="case-steps" id="case-steps" aria-label="Case progress"></ol>
         </div>
 
+        <!-- NEXT STEP: one headline for what this person should do now (driven by renderNextCard) -->
+        <div class="card next-card" id="next-card" style="display:none" aria-live="polite"></div>
+
         <!-- CHAT (next step: sits right under the header) -->
         <div class="card" id="chat-card" style="display:none">
           <div class="section-heading" style="margin-bottom:12px">
@@ -467,6 +490,7 @@
             <button type="button" onclick="quickReply('Can we do today?')">Today</button>
             <button type="button" onclick="quickReply('Can we do tomorrow?')">Tomorrow</button>
             <button type="button" onclick="quickReply('Can we do this weekend?')">This weekend</button>
+            <button type="button" onclick="suggestTime()">Suggest a time…</button>
           </div>
           <div style="display:flex;gap:8px">
             <input id="chat-input" type="text" placeholder="Type a message…"
@@ -541,8 +565,8 @@
 
         <!-- NETWORK -->
         <div class="card" id="network">
-          <div class="section-heading">Network</div>
-          <p class="network-desc">You can send a message by selecting a response team from the list below, or by clicking on an icon within the map.</p>
+          <div class="section-heading">Response teams nearby</div>
+          <p class="network-desc">Message a team from the list, or pick one on the map.</p>
           <div class="network-layout">
             <div class="network-list">
               <div class="network-group-title">Faith Community Response Teams (2)</div>
@@ -663,7 +687,8 @@
     // ── Case progress stepper. Stage comes from need status, response count and
     // whether any offer is accepted (known to navigators via loadResponders).
     const CASE_STEPS = ['Posted', 'Responder responded', 'Offer accepted', 'Delivery', 'Fulfilled'];
-    let caseProgress = { status: 'active', responseCount: 0, accepted: false };
+    let caseProgress = { status: 'active', responseCount: 0, accepted: false, acceptedName: '' };
+    let iResponded = false;
 
     function renderStepper(patch = {}) {
       caseProgress = { ...caseProgress, ...patch };
@@ -682,6 +707,75 @@
         const posted = i === 0 && caseProgress.postedLabel ? `<span class="step-hint" data-no-i18n>${esc(caseProgress.postedLabel)}</span>` : '';
         return `<li class="case-step ${cls}"${cls === 'now' ? ' aria-current="step"' : ''}>${currentUser ? name : vt(name)}${hint ? `<span class="step-hint"${currentUser ? '' : ' data-no-i18n'}>${currentUser ? hint : vt(hint)}</span>` : posted}</li>`;
       }).join('');
+      renderChips();
+      renderNextCard();
+      if (window.mpReapplyI18n) window.mpReapplyI18n();
+    }
+
+    // Header chips: category, urgency, place, household, response count, closed state
+    let chipsSeeZip = false;
+    function renderChips() {
+      const meta = document.querySelector('.req-meta');
+      const need = currentNeed;
+      if (!meta || !need) return;
+      const urg = (need.urgency || '').toLowerCase();
+      const loc = [need.city, need.state, chipsSeeZip ? need.zip : null].filter(Boolean).join(', ');
+      const ad = need.family_adults || 1, ch = need.family_children || 0;
+      const n = caseProgress.responseCount || 0;
+      const closed = caseProgress.status === 'fulfilled' || caseProgress.status === 'closed';
+      const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+      meta.className = 'req-chips';
+      meta.innerHTML = [
+        need.category ? `<span class="req-chip">${esc(cap(need.category))}</span>` : '',
+        urg ? `<span class="req-chip${urg === 'high' || urg === 'urgent' ? ' urgent' : ''}">${esc(cap(urg))} urgency</span>` : '',
+        loc ? `<span class="req-chip">${esc(loc)}</span>` : '',
+        `<span class="req-chip">${ad} adult${ad !== 1 ? 's' : ''}, ${ch} child${ch !== 1 ? 'ren' : ''}</span>`,
+        `<span class="req-chip">${n} response${n !== 1 ? 's' : ''}</span>`,
+        closed ? `<span class="req-chip ok">${caseProgress.status === 'fulfilled' ? 'Fulfilled' : 'Closed'}</span>` : ''
+      ].join('');
+    }
+
+    // "Your next step": one headline per role and stage. Logged-out visitors get no card here.
+    function nextCardCopy() {
+      const { status, responseCount, accepted, acceptedName } = caseProgress;
+      const role = currentUser?.role;
+      const staff = isConnector(currentUser) || role === 'admin';
+      const closed = status === 'fulfilled' || status === 'closed';
+      const share = `<div class="next-actions"><button type="button" class="primary" onclick="shareNeed()">Share this need</button><button type="button" onclick="showQrModal()">Print QR</button></div>`;
+      if (staff) {
+        if (closed) return { eyebrow: 'Case closed', title: status === 'fulfilled' ? 'This need was fulfilled' : 'This need is closed', text: 'Thank you to everyone who helped.', calm: true };
+        if (accepted) return { eyebrow: 'Your next step', title: 'Agree a drop-off time and place' + (acceptedName ? ' with ' + acceptedName : ''), text: 'Pick a time and an organization site in the chat below. Then record what arrived from the panel on the right.' };
+        if (responseCount > 0) return { eyebrow: 'Your next step', title: 'Review the offers', text: `${responseCount} responder${responseCount !== 1 ? 's have' : ' has'} offered to help. Accept one from the list on the right.` };
+        return { eyebrow: 'Waiting', title: 'Waiting for responders', text: 'No one has responded yet. Share this need to reach more people.', html: share, calm: true };
+      }
+      if (role === 'responder' && iResponded) {
+        if (closed) return { eyebrow: 'Thank you', title: status === 'fulfilled' ? 'Your delivery is recorded' : 'This need is closed', text: 'You helped a family. Thank you.', calm: true };
+        if (accepted) return { eyebrow: 'Your next step', title: 'Confirm the drop-off with the navigator', text: 'Your offer was accepted. Agree a time and place in the chat below, then keep your records in the panel on the right.' };
+        return { eyebrow: 'Offer sent', title: 'Waiting for the navigator to review your offer', text: 'Once your offer is accepted you can chat here to arrange the drop-off.', calm: true };
+      }
+      if (role === 'responder' && !closed) return { eyebrow: 'Offer to help', title: 'What can you give?', text: 'Choose how you want to help in the panel on the right. The navigator will review your offer and message you here.' };
+      return null;
+    }
+
+    function renderNextCard() {
+      const card = document.getElementById('next-card');
+      if (!card) return;
+      const copy = currentUser && currentNeed ? nextCardCopy() : null;
+      card.style.display = copy ? '' : 'none';
+      if (copy) {
+        card.classList.toggle('calm', !!copy.calm);
+        card.innerHTML = `<div class="next-eyebrow">${copy.eyebrow}</div><h2>${esc(copy.title)}</h2><p>${esc(copy.text)}</p>${copy.html || ''}`;
+      }
+      const closedNow = caseProgress.status === 'fulfilled' || caseProgress.status === 'closed';
+      // Response teams only matter while a need is open and the viewer is logged in
+      const net = document.getElementById('network');
+      if (net) net.style.display = currentUser && !closedNow ? '' : 'none';
+      // Responder's own offer badge
+      const badge = document.getElementById('offer-badge');
+      if (badge) {
+        badge.classList.toggle('ok', !!caseProgress.accepted);
+        badge.textContent = closedNow ? 'Delivered' : caseProgress.accepted ? 'Accepted' : 'Waiting for review';
+      }
     }
 
     async function shareNeed() {
@@ -716,6 +810,14 @@
       if (!input) return;
       input.value = text;
       input.focus();
+    }
+
+    function suggestTime() {
+      const input = document.getElementById('chat-input');
+      if (!input) return;
+      input.value = 'How about [day] at [time] at [organization site]?';
+      input.focus();
+      input.setSelectionRange(10, 15);
     }
 
     const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', childcare:'👶', financial:'💰', other:'📦' };
@@ -791,10 +893,11 @@
       if (role === 'responder') {
         if (alreadyResponded) {
           panel.innerHTML = `
-            <div style="text-align:center;margin-bottom:16px">
-              <div style="font-size:28px;margin-bottom:6px">🙌</div>
-              <div style="font-weight:700;font-size:14px;color:var(--green)">You're responding</div>
-              <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Thank you for offering your support.</div>
+            <div class="offer-card" style="border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:12px">
+              <div class="offer-eyebrow">Your offer</div>
+              <div style="font-weight:700;font-size:14px;margin-top:4px">You're responding</div>
+              <div style="font-size:12px;color:var(--gray-600);margin-top:2px">Thank you for offering your support.</div>
+              <span class="offer-badge${caseProgress.accepted ? ' ok' : ''}" id="offer-badge">${caseProgress.accepted ? 'Accepted' : 'Waiting for review'}</span>
             </div>
             <div style="border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:12px">
               <div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:10px">⏱ Log Volunteer Hours</div>
@@ -1008,7 +1111,8 @@
         const list = await apiGet(`/needs/${needId}/responses`);
         renderStepper({
           responseCount: list.length,
-          accepted: list.some(r => r.response_id && r.status && r.status !== 'offered')
+          accepted: list.some(r => r.response_id && r.status && r.status !== 'offered'),
+          acceptedName: (list.find(r => r.response_id && r.status && r.status !== 'offered') || {}).name || ''
         });
         if (!list.length) {
           el.innerHTML = `<p class="waiting-note">Waiting for responders. Share this need to reach more people.<br>
@@ -1093,7 +1197,12 @@
                 <textarea id="note-${esc(r.id)}" placeholder="Optional note about this responder…" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;resize:none;height:48px;font-family:inherit">${esc(rated?.note || '')}</textarea>
                 <button onclick="submitRating('${r.id}')" style="margin-top:6px;background:var(--teal);color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">${rated ? 'Update Rating' : 'Save Rating'}</button>
               </div>`;
-            })() : ''}
+            })() : canRate ? `
+              <div class="rate-locked" style="margin-top:10px;padding-top:10px;border-top:1px solid #F3F4F6">
+                <div style="font-size:11px;font-weight:700;color:var(--gray-600)">Rate this responder</div>
+                <div class="stars-off" aria-hidden="true"><span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span></div>
+                <div class="hint">Opens once you accept this offer.</div>
+              </div>` : ''}
           </div>`).join(''));
         if (window.mpReapplyI18n) window.mpReapplyI18n();
       } catch(e) {
@@ -1158,6 +1267,7 @@
       if (!el) return;
       try {
         const mine = await apiGet(`/needs/${needId}/receipts`);
+        renderStepper({ accepted: true }); // receipts only open once the offer is accepted
         el.innerHTML = mine.length
           ? `<div style="border:1px solid var(--gray-200);border-radius:10px;padding:12px;margin-bottom:12px"><span style="display:block;font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:6px">Received</span>${receiptRows(mine, false)}</div>`
           : '';
@@ -1693,22 +1803,11 @@
         const illus = document.querySelector('.req-illustration');
         if (illus) illus.textContent = CATEGORY_EMOJI[need.category] || '📦';
 
-        // Meta
-        const meta = document.querySelector('.req-meta');
-        if (meta) {
-          // ZIP is only shown to staff and responders who have responded
-          const seesZip = isConnector(currentUser) || currentUser?.role === 'admin' || alreadyResponded;
-          const loc = [need.city, need.state, seesZip ? need.zip : null].filter(Boolean).join(' · ');
-          const urg = need.urgency ? need.urgency.charAt(0).toUpperCase() + need.urgency.slice(1) : '—';
-          const statusColor = { active:'var(--green)', pending:'#f59e0b', fulfilled:'var(--teal)', closed:'var(--gray-400)' }[need.status] || 'var(--gray-400)';
-          meta.innerHTML = `
-            <strong>Case:</strong> #${need.case_number} &nbsp;·&nbsp;
-            <strong>Status:</strong> <span style="color:${statusColor};font-weight:700">${need.status}</span> &nbsp;·&nbsp;
-            <strong>Urgency:</strong> ${urg} &nbsp;·&nbsp; <strong>Category:</strong> ${need.category || '—'}<br/>
-            <strong>Location:</strong> ${loc || '—'}&nbsp;·&nbsp;
-            <strong>Family:</strong> ${need.family_adults||1} Adult${(need.family_adults||1)!==1?'s':''}, ${need.family_children||0} Child${(need.family_children||0)!==1?'ren':''}
-          `;
-        }
+        // Header chips (ZIP only for staff and responders who have responded)
+        iResponded = alreadyResponded;
+        chipsSeeZip = isConnector(currentUser) || currentUser?.role === 'admin' || alreadyResponded;
+        renderChips();
+        renderNextCard();
 
         // Description
         const storyText = document.querySelector('.story-text');
