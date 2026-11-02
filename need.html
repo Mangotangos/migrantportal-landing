@@ -119,6 +119,27 @@
     .req-amount-badge::before { content: '●'; font-size: 8px; }
     .prog-bar { flex: 1; height: 8px; background: var(--gray-200); border-radius: 999px; overflow: hidden; }
     .prog-fill { height: 100%; background: var(--teal); border-radius: 999px; }
+    /* Case progress stepper: a real sequence, driven by renderStepper() */
+    .case-steps { display: flex; list-style: none; margin: 14px 0 0; padding: 14px 0 0; border-top: 1px solid var(--gray-200); }
+    .case-step { flex: 1; position: relative; padding-top: 22px; font-size: 12px; color: var(--gray-600); }
+    .case-step::before { content: ''; position: absolute; top: 4px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid var(--gray-200); z-index: 1; }
+    .case-step::after { content: ''; position: absolute; top: 9px; left: 12px; right: 0; height: 2px; background: var(--gray-200); }
+    .case-step:last-child::after { display: none; }
+    .case-step.done { color: var(--text); }
+    .case-step.done::before { background: var(--teal); border-color: var(--teal); }
+    .case-step.done::after { background: var(--teal); }
+    .case-step.now { color: var(--teal); font-weight: 700; }
+    .case-step.now::before { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(0,157,165,.15); }
+    .case-step small { display: block; font-weight: 400; color: var(--gray-600); }
+    @media (max-width: 640px) { .case-step small { display: none; } }
+    /* Chat: next-step emphasis + quick replies */
+    #chat-card.next-step { border: 2px solid var(--teal); }
+    .chat-safety { font-size: 12px; color: var(--gray-600); margin-top: 10px; }
+    .chat-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .chat-quick button { border: 1px solid var(--gray-200); background: #fff; border-radius: 999px; padding: 4px 12px; font-size: 12px; cursor: pointer; font-family: inherit; }
+    .chat-quick button:hover { border-color: var(--teal); }
+    .waiting-note { text-align: center; padding: 6px 0; font-size: 12px; color: var(--gray-600); }
+    .waiting-note button { margin: 10px 4px 0; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--teal); background: #fff; color: var(--teal); font-weight: 700; font-size: 12px; cursor: pointer; }
     .req-meta { font-size: 12px; color: var(--gray-600); line-height: 1.8; }
     .req-meta strong { color: var(--text); }
     .req-meta a { color: var(--teal); }
@@ -324,17 +345,6 @@
   </div>
 
   <!-- TAB NAV -->
-  <nav class="top-nav" aria-label="Request sections" style="top:44px;">
-    <div class="tab-list">
-      <a href="#request-details" class="tab active" onclick="setTab(this)">Request Details</a>
-      <a href="#story"           class="tab"        onclick="setTab(this)">Story</a>
-      <a href="#needs"           class="tab"        onclick="setTab(this)">Needs</a>
-      <a href="#activity-feed"   class="tab"        onclick="setTab(this)">Activity Feed</a>
-      <a href="#network"         class="tab"        onclick="setTab(this)">Network</a>
-      <a href="#more-requests"   class="tab"        onclick="setTab(this)">More Requests</a>
-    </div>
-  </nav>
-
   <div class="page">
     <div class="two-col">
 
@@ -353,7 +363,7 @@
                     <svg id="bookmark-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                     <span id="bookmark-label">Bookmark</span>
                   </button>
-                  <button class="req-action">
+                  <button class="req-action" id="share-btn" onclick="shareNeed()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3l-7 3.5a3 3 0 1 0 0 5L15 18a3 3 0 1 0 .7-1.4L8.1 13a3.1 3.1 0 0 0 0-2L15.3 7.4A3 3 0 1 0 18 3z"/></svg>
                     Share
                   </button>
@@ -362,10 +372,6 @@
                     Print QR
                   </button>
                 </div>
-              </div>
-              <div class="req-amount-row">
-                <div class="req-amount-badge">$0.00 still needed</div>
-                <div class="prog-bar"><div class="prog-fill" style="width:0%"></div></div>
               </div>
               <div class="req-meta">
                 <strong>Verified Request:</strong> #MP001 &nbsp;·&nbsp;
@@ -380,6 +386,29 @@
               </div>
             </div>
           </div>
+          <ol class="case-steps" id="case-steps" aria-label="Case progress"></ol>
+        </div>
+
+        <!-- CHAT (next step: sits right under the header) -->
+        <div class="card" id="chat-card" style="display:none">
+          <div class="section-heading" style="margin-bottom:12px">
+            Team Chat
+            <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:6px">Private to you and each responder</span>
+          </div>
+          <select id="chat-thread" onchange="loadChat()" aria-label="Choose a responder to message" style="display:none;width:100%;height:34px;margin-bottom:10px;border:1px solid var(--gray-200);border-radius:7px;padding:0 8px;font-size:13px;font-family:Inter,sans-serif"></select>
+          <div id="chat-messages" style="display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto;margin-bottom:12px;padding-right:4px"></div>
+          <div class="chat-quick" role="group" aria-label="Suggest a time">
+            <button type="button" onclick="quickReply('Can we do today?')">Today</button>
+            <button type="button" onclick="quickReply('Can we do tomorrow?')">Tomorrow</button>
+            <button type="button" onclick="quickReply('Can we do this weekend?')">This weekend</button>
+          </div>
+          <div style="display:flex;gap:8px">
+            <input id="chat-input" type="text" placeholder="Type a message…"
+              style="flex:1;height:36px;border:1px solid var(--gray-200);border-radius:7px;padding:0 10px;font-size:13px;font-family:Inter,sans-serif"
+              onkeydown="if(event.key==='Enter')sendChat()">
+            <button onclick="sendChat()" style="height:36px;padding:0 14px;background:var(--teal);color:white;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
+          </div>
+          <div class="chat-safety">For everyone's safety, arrange exchanges at an organization's site, not at a family's home.</div>
         </div>
 
         <!-- STORY -->
@@ -441,22 +470,6 @@
                 <div class="need-price">$75.00 or donated items</div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- CHAT -->
-        <div class="card" id="chat-card" style="display:none">
-          <div class="section-heading" style="margin-bottom:12px">
-            Team Chat
-            <span style="font-size:11px;font-weight:500;color:var(--gray-400);margin-left:6px">Private to you and each helper</span>
-          </div>
-          <select id="chat-thread" onchange="loadChat()" aria-label="Choose a helper to message" style="display:none;width:100%;height:34px;margin-bottom:10px;border:1px solid var(--gray-200);border-radius:7px;padding:0 8px;font-size:13px;font-family:Inter,sans-serif"></select>
-          <div id="chat-messages" style="display:flex;flex-direction:column;gap:10px;max-height:320px;overflow-y:auto;margin-bottom:12px;padding-right:4px"></div>
-          <div style="display:flex;gap:8px">
-            <input id="chat-input" type="text" placeholder="Type a message…"
-              style="flex:1;height:36px;border:1px solid var(--gray-200);border-radius:7px;padding:0 10px;font-size:13px;font-family:Inter,sans-serif"
-              onkeydown="if(event.key==='Enter')sendChat()">
-            <button onclick="sendChat()" style="height:36px;padding:0 14px;background:var(--teal);color:white;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer">Send</button>
           </div>
         </div>
 
@@ -575,9 +588,42 @@
   <script src="api.js"></script>
   <script src="notif-bell.js"></script>
   <script>
-    function setTab(el) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
+    // ── Case progress stepper. Stage comes from need status, response count and
+    // whether any offer is accepted (known to navigators via loadResponders).
+    const CASE_STEPS = ['Posted', 'Responder responded', 'Offer accepted', 'Delivery', 'Fulfilled'];
+    let caseProgress = { status: 'active', responseCount: 0, accepted: false };
+
+    function renderStepper(patch = {}) {
+      caseProgress = { ...caseProgress, ...patch };
+      const el = document.getElementById('case-steps');
+      if (!el) return;
+      const { status, responseCount, accepted } = caseProgress;
+      const closed = status === 'fulfilled' || status === 'closed';
+      const now = closed ? CASE_STEPS.length : accepted ? 3 : responseCount > 0 ? 2 : 1;
+      const hints = { 1: 'Waiting', 2: 'Review offers', 3: 'Arrange in chat' };
+      el.innerHTML = CASE_STEPS.map((name, i) => {
+        const cls = i < now ? 'done' : i === now ? 'now' : '';
+        const hint = i === now ? (hints[i] || '') : '';
+        return `<li class="case-step ${cls}"${cls === 'now' ? ' aria-current="step"' : ''}>${name}${hint ? `<small>${hint}</small>` : ''}</li>`;
+      }).join('');
+    }
+
+    async function shareNeed() {
+      const url = location.href;
+      try {
+        if (navigator.share) { await navigator.share({ title: document.title, url }); return; }
+        await navigator.clipboard.writeText(url);
+        toast('Link copied.');
+      } catch (e) {
+        if (e && e.name !== 'AbortError') toast('Could not share. Copy the link from the address bar.', true);
+      }
+    }
+
+    function quickReply(text) {
+      const input = document.getElementById('chat-input');
+      if (!input) return;
+      input.value = text;
+      input.focus();
     }
 
     const CATEGORY_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', childcare:'👶', financial:'💰', other:'📦' };
@@ -623,9 +669,9 @@
         panel.innerHTML = `
           <div style="text-align:center;padding:10px 0">
             <div style="font-size:32px;margin-bottom:10px">🤝</div>
-            <div style="font-weight:700;font-size:14px;margin-bottom:6px">Want to Help?</div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:6px">Want to respond?</div>
             <div style="color:var(--gray-600);font-size:13px;margin-bottom:16px">Log in to offer your support to this family.</div>
-            <a href="login" style="display:block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px;border-radius:8px;text-align:center;text-decoration:none;">Log In to Help</a>
+            <a href="login" style="display:block;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:12px;border-radius:8px;text-align:center;text-decoration:none;">Log in to respond</a>
           </div>`;
         return;
       }
@@ -646,7 +692,7 @@
           panel.innerHTML = `
             <div style="text-align:center;margin-bottom:16px">
               <div style="font-size:28px;margin-bottom:6px">🙌</div>
-              <div style="font-weight:700;font-size:14px;color:var(--green)">You're Helping!</div>
+              <div style="font-weight:700;font-size:14px;color:var(--green)">You're responding</div>
               <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Thank you for offering your support.</div>
             </div>
             <div style="border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:12px">
@@ -697,22 +743,22 @@
       // Navigator / admin: fulfill panel
       if (isNavigator) {
         panel.innerHTML = `
-          <div style="font-weight:700;font-size:14px;margin-bottom:10px">Navigator Actions</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:10px">Manage this need</div>
           <div style="font-size:12px;color:var(--gray-600);margin-bottom:10px">Response count: <strong>${need.response_count || 0}</strong></div>
 
-          <div style="font-weight:600;font-size:13px;margin-bottom:8px">Who Responded</div>
+          <div style="font-weight:600;font-size:13px;margin-bottom:8px">Responders</div>
           <div id="responders-list" style="margin-bottom:14px">
             <div style="font-size:12px;color:var(--gray-400)">Loading…</div>
           </div>
 
           <hr style="border:none;border-top:1px solid var(--gray-200);margin:12px 0">
           <div style="font-weight:600;font-size:13px;margin-bottom:8px">Edit Need</div>
-          <button onclick="showEditModal()" style="width:100%;height:34px;background:white;border:1px solid var(--gray-200);border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray-700);margin-bottom:14px">✏️ Edit Title / Details</button>
+          <button onclick="showEditModal()" style="width:100%;height:34px;background:white;border:1px solid var(--gray-200);border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray-700);margin-bottom:14px">✏️ Edit title and details</button>
 
           <hr style="border:none;border-top:1px solid var(--gray-200);margin:12px 0">
-          <div style="font-weight:600;font-size:13px;margin-bottom:8px">Mark as Fulfilled</div>
+          <div style="font-weight:600;font-size:13px;margin-bottom:8px">Close this case</div>
           <textarea id="outcome-note" placeholder="Outcome note (optional)…" style="width:100%;height:70px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
-          <button onclick="fulfillNeed()" style="width:100%;background:var(--green);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer;">✅ Mark Fulfilled</button>`;
+          <button onclick="fulfillNeed()" style="width:100%;background:var(--green);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer;">Mark fulfilled</button>`;
         loadResponders();
         return;
       }
@@ -846,8 +892,13 @@
       if (!el) return;
       try {
         const list = await apiGet(`/needs/${needId}/responses`);
+        renderStepper({
+          responseCount: list.length,
+          accepted: list.some(r => r.response_id && r.status && r.status !== 'offered')
+        });
         if (!list.length) {
-          el.innerHTML = '<div style="font-size:12px;color:var(--gray-400)">No responses yet.</div>';
+          el.innerHTML = `<div class="waiting-note">Waiting for responders. Share this need to reach more people.<br>
+            <button type="button" onclick="shareNeed()">Share this need</button><button type="button" onclick="showQrModal()">Print QR</button></div>`;
           return;
         }
         const HELP_LABEL = { donate: '💰 Donated', goods: '📦 Goods', service: '⚖️ Service', volunteer: '⏰ Volunteer' };
@@ -864,7 +915,7 @@
           } catch(e) { /* non-fatal */ }
         }
 
-        // Receipts recorded against accepted helpers (non-fatal)
+        // Receipts recorded against accepted responders (non-fatal)
         const receiptsByResponse = {};
         try {
           (await apiGet(`/needs/${needId}/receipts`)).forEach(rc => {
@@ -916,16 +967,16 @@
                     ${ri.delivery_status === 'delivered' ? `<button onclick="confirmItemReceipt('${ri.response_item_id}')" style="font-size:10px;font-weight:700;padding:3px 9px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer">✓ Confirm</button>` : ''}
                   </div>`).join('')}
               </div>` : ''}
-            ${canRate ? (() => {
+            ${canRate && r.response_id && r.status && r.status !== 'offered' ? (() => {
               const rated = existingRatings[r.id];
               const currentStars = rated ? rated.stars : 0;
               return `
               <div style="margin-top:10px;padding-top:10px;border-top:1px solid #F3F4F6">
-                <div style="font-size:11px;font-weight:700;color:var(--gray-600);margin-bottom:5px">${rated ? '⭐ Your rating' : 'Rate this helper'}</div>
+                <div style="font-size:11px;font-weight:700;color:var(--gray-600);margin-bottom:5px">${rated ? '⭐ Your rating' : 'Rate this responder'}</div>
                 <div style="display:flex;gap:2px;margin-bottom:6px">
                   ${[1,2,3,4,5].map(n => `<button onclick="setRatingStar('${r.id}',${n})" id="star-${r.id}-${n}" style="background:none;border:none;cursor:pointer;font-size:22px;padding:0;line-height:1">${currentStars >= n ? '⭐' : '☆'}</button>`).join('')}
                 </div>
-                <textarea id="note-${esc(r.id)}" placeholder="Optional note about this helper…" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;resize:none;height:48px;font-family:inherit">${esc(rated?.note || '')}</textarea>
+                <textarea id="note-${esc(r.id)}" placeholder="Optional note about this responder…" style="width:100%;font-size:12px;padding:6px 8px;border:1px solid var(--gray-200);border-radius:7px;resize:none;height:48px;font-family:inherit">${esc(rated?.note || '')}</textarea>
                 <button onclick="submitRating('${r.id}')" style="margin-top:6px;background:var(--teal);color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">${rated ? 'Update Rating' : 'Save Rating'}</button>
               </div>`;
             })() : ''}
@@ -996,7 +1047,7 @@
       };
       try {
         await apiPost(`/needs/${needId}/responses/${responseId}/receipts`, body);
-        toast('Recorded. The helper has been thanked.');
+        toast('Recorded. The responder has been thanked.');
         loadResponders();
       } catch(e) { toast(e.message || 'Could not record', true); }
     }
@@ -1004,7 +1055,7 @@
     async function acceptResponse(responseId) {
       try {
         await apiPatch(`/needs/${needId}/responses/${responseId}/accept`, {});
-        toast('Offer accepted. The helper has been notified.');
+        toast('Offer accepted. The responder has been notified.');
         loadResponders();
         loadThreads().then(loadChat);
       } catch(e) { toast(e.message || 'Could not accept offer', true); }
@@ -1258,7 +1309,7 @@
       if (msgs.length !== lastMsgCount) { el.scrollTop = el.scrollHeight; lastMsgCount = msgs.length; }
     }
 
-    // Submitter/admin: one chat thread per accepted helper
+    // Submitter/admin: one chat thread per accepted responder
     async function loadThreads() {
       const sel = document.getElementById('chat-thread');
       if (!sel || !currentUser || currentUser.role === 'responder') return;
@@ -1267,7 +1318,7 @@
         const accepted = list.filter(r => r.response_id && r.status && r.status !== 'offered');
         const chosen = sel.value;
         if (accepted.length < 2) { sel.style.display = 'none'; sel.innerHTML = ''; return; }
-        sel.innerHTML = '<option value="">Choose a helper…</option>' +
+        sel.innerHTML = '<option value="">Choose a responder…</option>' +
           accepted.map(r => `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('');
         sel.value = accepted.some(r => r.id === chosen) ? chosen : '';
         sel.style.display = '';
@@ -1294,7 +1345,7 @@
       if (!text) return;
       const sel = document.getElementById('chat-thread');
       const multi = sel && sel.style.display !== 'none';
-      if (multi && !sel.value) { toast('Choose which helper to message first.', true); return; }
+      if (multi && !sel.value) { toast('Choose which responder to message first.', true); return; }
       input.value = '';
       try {
         await apiPost(`/chat/${needId}`, multi ? { text, responder_id: sel.value } : { text });
@@ -1306,6 +1357,8 @@
       const card = document.getElementById('chat-card');
       if (!isAuthorized || !needId) return;
       card.style.display = '';
+      const open = currentNeed && currentNeed.status === 'active';
+      card.classList.toggle('next-step', !!open);
       loadThreads().then(loadChat);
       chatPollTimer = setInterval(loadChat, 10000);
     }
@@ -1482,6 +1535,17 @@
         const need = await apiGet('/needs/' + needId);
         currentNeed = need;
 
+        // Check if already responded (responders only)
+        let alreadyResponded = false;
+        if (currentUser?.role === 'responder') {
+          try {
+            const responded = await apiGet('/needs/responded');
+            alreadyResponded = responded.some(n => n.id === needId);
+          } catch(e) { console.error('loadResponded check failed:', e); }
+        }
+
+        renderStepper({ status: need.status, responseCount: need.response_count || 0 });
+
         // Title + page meta
         document.title = (need.title || 'Need Detail') + ' — MigrantPortal';
         const titleEl = document.querySelector('.req-title');
@@ -1498,7 +1562,9 @@
         // Meta
         const meta = document.querySelector('.req-meta');
         if (meta) {
-          const loc = [need.city, need.state, need.zip].filter(Boolean).join(' · ');
+          // ZIP is only shown to staff and responders who have responded
+          const seesZip = isConnector(currentUser) || currentUser?.role === 'admin' || alreadyResponded;
+          const loc = [need.city, need.state, seesZip ? need.zip : null].filter(Boolean).join(' · ');
           const urg = need.urgency ? need.urgency.charAt(0).toUpperCase() + need.urgency.slice(1) : '—';
           const statusColor = { active:'var(--green)', pending:'#f59e0b', fulfilled:'var(--teal)', closed:'var(--gray-400)' }[need.status] || 'var(--gray-400)';
           meta.innerHTML = `
@@ -1529,15 +1595,6 @@
         // Hide "Yes I Can Help" header button — sidebar handles it now
         const helpBtn = document.querySelector('.btn-help');
         if (helpBtn) helpBtn.style.display = 'none';
-
-        // Check if already responded (responders only)
-        let alreadyResponded = false;
-        if (currentUser?.role === 'responder') {
-          try {
-            const responded = await apiGet('/needs/responded');
-            alreadyResponded = responded.some(n => n.id === needId);
-          } catch(e) { console.error('loadResponded check failed:', e); }
-        }
 
         // Render sidebar
         try {
