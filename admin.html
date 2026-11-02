@@ -822,7 +822,7 @@
       </div>
       <div class="card">
         <div class="card-header">
-          <span class="card-title">All Users</span>
+          <span class="card-title">All Users <span id="usersCount" style="font-weight:500;color:var(--text-2)"></span></span>
           <button class="btn-export" onclick="exportUsersCSV()">⬇ Export CSV</button>
         </div>
         <div class="toolbar">
@@ -1981,6 +1981,21 @@
     } catch(e) { toast(e.message, true); }
   }
 
+  function updateUsersCount(items, shown, total) {
+    const hiddenTest = items.length - shown.length;
+    const parts = [`${shown.length} shown`];
+    if (total > items.length) parts.push(`${total} total`);
+    if (hiddenTest > 0) parts.push(`${hiddenTest} test account${hiddenTest === 1 ? '' : 's'} hidden`);
+    if (total <= items.length && shown.length) {
+      const byRole = shown.reduce((acc, u) => {
+        const key = u.role === 'connector' ? 'navigator' : u.role;
+        return { ...acc, [key]: (acc[key] || 0) + 1 };
+      }, {});
+      parts.push(Object.entries(byRole).map(([r, n]) => `${n} ${r}`).join(', '));
+    }
+    document.getElementById('usersCount').textContent = `· ${parts.join(' · ')}`;
+  }
+
   async function loadUsers() {
     const role = document.getElementById('roleFilter').value;
     let url = `/admin/users?page=${usersPage}`;
@@ -1994,6 +2009,7 @@
       usersCache = (data.items || []).filter(u => showTest || !u.is_test);
       usersPages = data.pages || 1;
       usersTotal = data.total || 0;
+      updateUsersCount(data.items || [], usersCache, usersTotal);
       if (!usersCache.length) {
         document.getElementById('usersContent').innerHTML = '<div class="empty">No users found.</div>';
         document.getElementById('usersPagination').style.display = 'none';
@@ -2040,6 +2056,7 @@
       document.getElementById('usersPrev').disabled = usersPage <= 1;
       document.getElementById('usersNext').disabled = usersPage >= usersPages;
     } catch(e) {
+      document.getElementById('usersCount').textContent = '';
       document.getElementById('usersContent').innerHTML = '<div class="empty">Failed to load users.</div>';
     }
   }
