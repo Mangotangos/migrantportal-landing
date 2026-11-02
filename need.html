@@ -588,11 +588,13 @@
   <script src="api.js"></script>
   <script src="notif-bell.js"></script>
   <script>
-    // Swap in a fresh text node. Setting textContent on an element with a single
-    // text child reuses that node, and i18n.js restores its cached (static) text
-    // whenever mpReapplyI18n() runs, which wiped real data for responders.
+    // i18n.js caches each leaf element's first-seen text and restores it whenever
+    // mpReapplyI18n() runs, which wiped real data for responders. mpSetText updates
+    // that cache along with the text.
     function setText(el, text) {
-      if (el) el.replaceChildren(document.createTextNode(text));
+      if (!el) return;
+      if (window.mpSetText) window.mpSetText(el, text);
+      else el.textContent = text;
     }
 
     // ── Case progress stepper. Stage comes from need status, response count and
