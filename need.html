@@ -337,22 +337,37 @@
       .more-card { width: calc(50% - 6px); }
     }
     /* ─── VISITOR (logged-out) VIEW ───────────── */
-    body.visitor #chat-card, body.visitor #network, body.visitor #more-requests, body.visitor #story,
+    body.visitor #chat-card, body.visitor #network, body.visitor #more-requests,
     body.visitor #donate-card, body.visitor #donor-impact-card, body.visitor #navigator-funds-card,
-    body.visitor #bookmark-btn, body.visitor #qr-btn, body.visitor #qr-modal, body.visitor .btn-help,
-    body.visitor .nav-right > a[href="dashboard"], body.visitor .mob-nav, body.visitor .bar-back, body.visitor .bar-requests { display: none !important; }
-    body.visitor.unavailable .col-side, body.visitor.unavailable #needs, body.visitor.unavailable #request-details { display: none !important; }
+    body.visitor #bookmark-btn, body.visitor #qr-btn, body.visitor #qr-modal, body.visitor .btn-help, body.visitor .needs-header .btn-help,
+    body.visitor .nav-right > a[href="dashboard"], body.visitor .mob-nav, body.visitor .bar-back { display: none !important; }
+    body.visitor.unavailable .col-side, body.visitor.unavailable #needs, body.visitor.unavailable #story, body.visitor.unavailable #request-details, body.visitor.unavailable #visitor-next { display: none !important; }
     .visitor-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
-    .visitor-cta { text-align: left; }
     .visitor-cta h2 { font-size: 18px; line-height: 1.3; margin-bottom: 8px; }
     .visitor-cta p { font-size: 13px; color: var(--gray-600); line-height: 1.55; }
     .visitor-cta .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
     .visitor-cta .cta-primary { background: var(--orange); color: #fff; font-weight: 700; font-size: 14px; padding: 11px 18px; border-radius: 8px; text-decoration: none; }
+    .visitor-cta .cta-secondary { background: #fff; color: var(--teal); border: 1.5px solid var(--teal); font: 700 14px inherit; font-family: inherit; padding: 9.5px 16px; border-radius: 8px; text-decoration: none; cursor: pointer; }
     .visitor-cta .cta-link { font-size: 13px; font-weight: 600; color: var(--teal); text-decoration: none; }
-    .visitor-privacy { display: flex; gap: 10px; margin-top: 14px; font-size: 12px; line-height: 1.55; color: var(--gray-600); }
+    .visitor-chip { display: inline-block; font-size: 12px; padding: 4px 11px; border-radius: 999px; background: var(--gray-100, #f1f3f4); border: 1px solid var(--gray-200); margin: 0 6px 6px 0; color: var(--gray-700); }
+    .visitor-chip.warn { background: #FEF3C7; border-color: #FCD34D; color: #92400E; font-weight: 600; }
+    .visitor-chip.ok { background: var(--green-lt); border-color: #86EFAC; color: #15803D; font-weight: 600; }
+    body.visitor .req-meta { line-height: 1.4; }
+    body.visitor .needs-grid { grid-template-columns: 1fr; }
+    body.visitor .needs-grid .need-item { display: flex; align-items: center; gap: 12px; }
+    body.visitor .needs-grid .need-body { flex: 1; min-width: 0; }
+    body.visitor .needs-grid .need-pill { flex-shrink: 0; }
+    .visitor-privacy { display: flex; gap: 10px; font-size: 12px; line-height: 1.55; color: var(--gray-600); text-align: left; padding: 0; }
+    body.visitor .col-side .card { padding: 16px; }
     .visitor-unavailable { text-align: center; padding: 36px 20px; }
     .visitor-unavailable h1 { font-size: 20px; margin-bottom: 8px; }
     .visitor-unavailable p { font-size: 14px; color: var(--gray-600); margin-bottom: 16px; }
+    @media (max-width: 720px) {
+      body.visitor .col-main > #visitor-next { order: 2; }
+      body.visitor .col-main > #needs { order: 3; }
+      body.visitor .col-side { order: 5; }
+      body.visitor .needs-grid .need-item { flex-wrap: wrap; }
+    }
     body.visitor { padding-bottom: 0; }
     body.visitor .req-meta { overflow-wrap: anywhere; }
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
@@ -663,7 +678,8 @@
       el.innerHTML = CASE_STEPS.map((name, i) => {
         const cls = i < now ? 'done' : i === now ? 'now' : '';
         const hint = i === now ? (hints[i] || '') : '';
-        return `<li class="case-step ${cls}"${cls === 'now' ? ' aria-current="step"' : ''}>${name}${hint ? `<span class="step-hint">${hint}</span>` : ''}</li>`;
+        const posted = i === 0 && caseProgress.postedLabel ? `<span class="step-hint" data-no-i18n>${esc(caseProgress.postedLabel)}</span>` : '';
+        return `<li class="case-step ${cls}"${cls === 'now' ? ' aria-current="step"' : ''}>${name}${hint ? `<span class="step-hint">${hint}</span>` : posted}</li>`;
       }).join('');
     }
 
@@ -862,6 +878,7 @@
     }
 
     function renderItems(need) {
+      if (!currentUser) { renderVisitorItems(need); return; }
       const grid = document.querySelector('.needs-grid');
       const badge = document.querySelector('.section-badge');
       if (!grid) return;
@@ -1786,14 +1803,39 @@
     }
 
     // ── Visitor (logged-out) view: read-only, whitelisted fields from GET /needs/{id}/public.
+    // Everything here is rendered through vt() and re-rendered on EN|ES switch, because the
+    // strings are composed from data (counts, amounts) that the i18n.js dictionary can't key on.
     // Sign-in return path: login/register accept ?next=need%3Fid%3D<uuid> (see getSafeNextPath).
+    const isEs = () => (document.documentElement.lang || 'en').toLowerCase() === 'es';
+    const VT_ES = {
+      'Help this family': 'Ayude a esta familia', 'Be the first to respond': 'Sea el primero en responder',
+      'Sign up or sign in to send an offer. Family details stay private until your offer is accepted.': 'Regístrese o inicie sesión para enviar una oferta. Los datos de la familia siguen siendo privados hasta que se acepte su oferta.',
+      'In progress': 'En curso', 'A responder is already on this': 'Un colaborador ya está atendiendo esto',
+      'An offer was accepted and delivery is being arranged. You can still help other families by signing up.': 'Se aceptó una oferta y se está organizando la entrega. Aún puede ayudar a otras familias registrándose.',
+      'Fulfilled': 'Completada', 'This need has been met': 'Esta necesidad fue cubierta',
+      'Thanks to a volunteer and the navigator. Other families still need help.': 'Gracias a un voluntario y al navegador. Otras familias aún necesitan ayuda.',
+      'Sign up to help': 'Regístrese para ayudar', 'Sign up to help others': 'Regístrese para ayudar a otros',
+      'Sign in': 'Iniciar sesión', 'Share': 'Compartir', 'Browse open needs': 'Ver necesidades abiertas',
+      "What's needed": 'Lo que se necesita', 'Story': 'Historia', 'Case': 'Caso',
+      'Needs a responder': 'Necesita un colaborador', 'Awaiting delivery': 'Esperando entrega',
+      'Partly delivered': 'Entrega parcial', 'Delivered': 'Entregado', 'Closed': 'Cerrada',
+      'Family details and exact location are private. Only the navigator and the accepted responder can see them.': 'Los datos de la familia y la ubicación exacta son privados. Solo el navegador y el colaborador aceptado pueden verlos.',
+      urgent: 'Urgente', high: 'Alta', medium: 'Media', low: 'Baja',
+      housing: 'Vivienda', food: 'Alimentos', clothing: 'Ropa', furniture: 'Muebles', transportation: 'Transporte',
+      employment: 'Empleo', legal: 'Legal', medical: 'Médico', education: 'Educación', translation: 'Traducción',
+      childcare: 'Cuidado de niños', financial: 'Financiero', other: 'Otro',
+    };
+    const vt = (en) => (isEs() && VT_ES[en]) || en;
+    const cap = (v) => v ? v.charAt(0).toUpperCase() + v.slice(1) : '';
+    const plural = (n, one, many, oneEs, manyEs) => isEs() ? (n === 1 ? oneEs : manyEs) : (n === 1 ? one : many);
+
     const VISITOR_COPY = {
       open: { eyebrow: 'Help this family', title: 'Be the first to respond',
-              body: 'Sign up or sign in to send an offer. Family details stay private until your offer is accepted.', cta: 'Sign up to help' },
+              body: 'Sign up or sign in to send an offer. Family details stay private until your offer is accepted.', cta: 'Sign up to help', browse: false },
       accepted: { eyebrow: 'In progress', title: 'A responder is already on this',
-                  body: 'An offer was accepted and delivery is being arranged. You can still help other families by signing up.', cta: 'Sign up to help' },
+                  body: 'An offer was accepted and delivery is being arranged. You can still help other families by signing up.', cta: 'Sign up to help', browse: true },
       fulfilled: { eyebrow: 'Fulfilled', title: 'This need has been met',
-                   body: 'Thanks to a volunteer and the navigator. Other families still need help.', cta: 'Sign up to help others' },
+                   body: 'Thanks to a volunteer and the navigator. Other families still need help.', cta: 'Sign up to help others', browse: true },
     };
 
     function showVisitorUnavailable() {
@@ -1810,35 +1852,125 @@
       if (window.mpReapplyI18n) window.mpReapplyI18n();
     }
 
-    function renderVisitorMeta(need) {
-      const meta = document.querySelector('.req-meta');
-      if (!meta) return;
-      const cap = (v) => v ? v.charAt(0).toUpperCase() + v.slice(1) : '—';
-      const ad = need.family_adults || 0, ch = need.family_children || 0;
-      const place = [need.city, need.state].filter(Boolean).join(', ');
-      meta.innerHTML = `
-        <strong>Urgency:</strong> <span>${esc(cap(need.urgency))}</span> &nbsp;·&nbsp;
-        <strong>Category:</strong> <span>${esc(cap(need.category))}</span><br/>
-        <strong>Location:</strong> <span data-no-i18n>${esc(place || '—')}</span> &nbsp;·&nbsp;
-        <strong>Family:</strong> <span data-no-i18n>${ad} Adult${ad !== 1 ? 's' : ''}, ${ch} Child${ch !== 1 ? 'ren' : ''}</span>`;
+    function familyText(ad, ch) {
+      return `${ad} ${plural(ad, 'adult', 'adults', 'adulto', 'adultos')}, ${ch} ${plural(ch, 'child', 'children', 'niño', 'niños')}`;
     }
 
-    function renderVisitorPanel(status) {
-      const copy = VISITOR_COPY[status] || VISITOR_COPY.open;
+    function itemAmount(item, n) {
+      return String(item.unit).toLowerCase() === 'usd' ? `$${n}` : `${n} ${item.unit}`;
+    }
+
+    function renderVisitorItems(need) {
+      const grid = document.querySelector('.needs-grid');
+      const heading = document.querySelector('#needs .section-heading');
+      if (!grid || !heading) return;
+      const closed = need.status === 'fulfilled' || need.status === 'closed';
+      const rows = need.items.map((item) => {
+        const pct = item.amount_needed > 0 ? Math.min(100, Math.round(item.amount_received / item.amount_needed * 100)) : 0;
+        const pill = itemStatus(pct >= 100, item.amount_received > 0, closed);
+        const target = String(item.unit).toLowerCase() === 'usd'
+          ? (isEs() ? `Meta: $${item.amount_needed}` : `Target: $${item.amount_needed} worth`)
+          : (isEs() ? `Meta: ${item.amount_needed} ${item.unit}` : `Target: ${item.amount_needed} ${item.unit}`);
+        const got = item.amount_received > 0
+          ? (isEs() ? `${itemAmount(item, item.amount_received)} recibido` : `${itemAmount(item, item.amount_received)} received`)
+          : (isEs() ? '0 recibido hasta ahora' : '0 received so far');
+        return `<div class="need-item" style="${pct >= 100 ? 'opacity:.7' : ''}">
+          <div class="need-icon">${CATEGORY_EMOJI[need.category] || '📦'}</div>
+          <div class="need-body">
+            <div class="need-name">${esc(item.label)}</div>
+            <div style="font-size:12px;color:var(--gray-600);margin-top:2px">${esc(target)} · ${esc(got)}</div>
+            <div style="margin-top:6px;background:var(--gray-200);border-radius:3px;height:5px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${pct >= 100 ? 'var(--green)' : 'var(--teal)'};border-radius:3px"></div></div>
+          </div>
+          <span class="need-pill ${pill.cls}">${esc(vt(pill.text))}</span>
+        </div>`;
+      }).join('');
+      const n = need.items.length;
+      const delivered = need.items.filter(i => i.amount_needed > 0 && i.amount_received >= i.amount_needed).length;
+      const meta = isEs() ? `${n} ${n === 1 ? 'necesidad' : 'necesidades'} · ${delivered} de ${n} entregadas`
+                          : `${n} ${n === 1 ? 'need' : 'needs'} · ${delivered} of ${n} delivered`;
+      heading.innerHTML = `${esc(vt("What's needed"))} <span class="section-badge">${esc(meta)}</span>`;
+      grid.innerHTML = rows || '<div style="color:var(--gray-400);font-size:13px">—</div>';
+      heading.querySelectorAll('*').forEach(e => e.setAttribute('data-no-i18n', ''));
+      grid.querySelectorAll('*').forEach(e => e.setAttribute('data-no-i18n', ''));
+    }
+
+    function renderVisitor(need) {
+      const status = need.status;
+      const ad = need.family_adults || 0, ch = need.family_children || 0;
+      const place = [need.city, need.state].filter(Boolean).join(', ');
       const next = encodeURIComponent('need?id=' + needId);
-      const panel = document.getElementById('panel-content');
-      if (!panel) return;
-      panel.removeAttribute('style');
-      panel.className = 'visitor-cta';
-      panel.innerHTML = `
-        <div class="visitor-eyebrow">${copy.eyebrow}</div>
-        <h2>${copy.title}</h2>
-        <p>${copy.body}</p>
+      const copy = VISITOR_COPY[status] || VISITOR_COPY.open;
+      const accepted = status === 'accepted';
+      const posted = new Date(String(need.created_at).replace(' ', 'T') + 'Z');
+      const postedLabel = isNaN(posted) ? '' : posted.toLocaleDateString(isEs() ? 'es' : 'en', { month: 'short', day: 'numeric' });
+
+      renderStepper({ status: status === 'fulfilled' ? 'fulfilled' : 'active', responseCount: accepted ? 1 : 0, accepted, postedLabel });
+      document.querySelector('.req-illustration')?.setAttribute('hidden', '');
+      const body = document.querySelector('.req-header-body');
+      let eyebrow = document.getElementById('visitor-header-eyebrow');
+      if (!eyebrow) {
+        eyebrow = document.createElement('div');
+        eyebrow.id = 'visitor-header-eyebrow';
+        eyebrow.className = 'visitor-eyebrow';
+        eyebrow.setAttribute('data-no-i18n', '');
+        body.prepend(eyebrow);
+      }
+      eyebrow.textContent = `${vt(need.category)} · ${vt('Case')} #${need.case_number}`.toUpperCase();
+      setText(document.querySelector('.req-title'), need.title || '');
+      setText(document.getElementById('crumb-case'), `Need #${need.case_number}`);
+
+      const responses = need.response_count || 0;
+      const urgencyText = isEs() ? `Urgencia ${vt(need.urgency).toLowerCase()}` : `${cap(need.urgency)} urgency`;
+      const chip = (t, cls = '') => `<span class="visitor-chip ${cls}" data-no-i18n>${esc(t)}</span>`;
+      document.querySelector('.req-meta').innerHTML =
+        chip(urgencyText, need.urgency === 'urgent' || need.urgency === 'high' ? 'warn' : '') + chip(place) + chip(familyText(ad, ch)) +
+        chip(`${responses} ${plural(responses, 'response', 'responses', 'respuesta', 'respuestas')}`) +
+        (status === 'fulfilled' ? chip(vt('Fulfilled'), 'ok') : '');
+
+      // Next-step card, between the header and "What's needed" (mockup order)
+      let card = document.getElementById('visitor-next');
+      if (!card) {
+        card = document.createElement('div');
+        card.className = 'card visitor-cta';
+        card.id = 'visitor-next';
+        document.getElementById('request-details').after(card);
+      }
+      card.innerHTML = `
+        <div class="visitor-eyebrow">${esc(vt(copy.eyebrow))}</div>
+        <h2>${esc(vt(copy.title))}</h2>
+        <p>${esc(vt(copy.body))}</p>
         <div class="cta-row">
-          <a class="cta-primary" href="register?next=${next}">${copy.cta}</a>
-          <a class="cta-link" href="login?next=${next}">Sign in</a>
-        </div>
-        <div class="visitor-privacy"><span aria-hidden="true">🔒</span><span>Family details and exact location are private. Only the navigator and the accepted responder can see them.</span></div>`;
+          <a class="cta-primary" href="register?next=${next}">${esc(vt(copy.cta))}</a>
+          <a class="cta-secondary" href="login?next=${next}">${esc(vt('Sign in'))}</a>
+          <button type="button" class="cta-secondary" onclick="shareNeed()">${esc(vt('Share'))}</button>
+          ${copy.browse ? `<a class="cta-link" href="requests">${esc(vt('Browse open needs'))}</a>` : ''}
+        </div>`;
+      card.querySelectorAll('*').forEach(e => e.setAttribute('data-no-i18n', ''));
+
+      // What's needed before Story, as in the mockup
+      const needs = document.getElementById('needs'), story = document.getElementById('story');
+      if (needs && story && needs.nextElementSibling !== null && story.compareDocumentPosition(needs) & Node.DOCUMENT_POSITION_FOLLOWING) story.before(needs);
+      renderVisitorItems(need);
+
+      // Story card: a summary built only from the whitelisted counts and item labels, never the written story
+      const heading = story.querySelector('.section-heading');
+      heading.innerHTML = esc(vt('Story'));
+      heading.setAttribute('data-no-i18n', '');
+      const labels = need.items.map(i => i.label).join(', ');
+      const total = ad + ch;
+      const summary = isEs()
+        ? `Una familia de ${total} (${familyText(ad, ch)}) necesita ${labels || 'ayuda'}.`
+        : `A family of ${total} (${familyText(ad, ch)}) needs ${labels || 'help'}.`;
+      const storyEl = story.querySelector('.story-text');
+      storyEl.textContent = summary;
+      storyEl.setAttribute('data-no-i18n', '');
+      story.querySelector('.section-meta')?.remove();
+
+      // Side rail: privacy card only
+      const panel = document.getElementById('panel-content');
+      panel.removeAttribute('style');
+      panel.className = 'visitor-privacy';
+      panel.innerHTML = `<span aria-hidden="true">🔒</span><span>${esc(vt('Family details and exact location are private. Only the navigator and the accepted responder can see them.'))}</span>`;
     }
 
     async function loadVisitorNeed() {
@@ -1850,18 +1982,9 @@
       try {
         const r = await fetch(API + '/needs/' + encodeURIComponent(needId) + '/public', { headers: { Accept: 'application/json' } });
         if (!r.ok) { showVisitorUnavailable(); return; }
-        const need = await r.json();
-        currentNeed = need;
-        const accepted = need.status === 'accepted';
-        renderStepper({ status: need.status === 'fulfilled' ? 'fulfilled' : 'active', responseCount: accepted ? 1 : 0, accepted });
-        setText(document.querySelector('.req-title'), need.title || '');
-        setText(document.getElementById('crumb-case'), 'Need');
-        const illus = document.querySelector('.req-illustration');
-        if (illus) illus.textContent = CATEGORY_EMOJI[need.category] || '📦';
-        renderVisitorMeta(need);
-        renderItems(need);
-        renderVisitorPanel(need.status);
-        if (window.mpReapplyI18n) window.mpReapplyI18n();
+        currentNeed = await r.json();
+        renderVisitor(currentNeed);
+        new MutationObserver(() => renderVisitor(currentNeed)).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
       } catch (err) {
         console.warn('Could not load public need:', err.message);
         showVisitorUnavailable();
