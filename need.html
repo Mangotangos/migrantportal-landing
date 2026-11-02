@@ -663,7 +663,9 @@
               </button>
               <div id="hours-total" style="margin-top:8px;font-size:11px;color:var(--gray-400);text-align:center"></div>
             </div>
+            <div id="my-receipts"></div>
             <button onclick="withdrawResponse()" style="width:100%;height:38px;border:1px solid #fca5a5;background:#fee2e2;color:#dc2626;font-size:13px;font-weight:600;border-radius:7px;cursor:pointer;">Withdraw My Response</button>`;
+          loadMyReceipts();
         } else {
           const openItems = need.items.filter(i => i.amount_received < i.amount_needed);
           const HELP_TYPES = [
@@ -933,13 +935,18 @@
       }
     }
 
-    function receiptBlock(r, receipts) {
-      const rid = esc(r.response_id);
-      const rows = receipts.map(rc => {
+    function receiptRows(receipts, canRemove) {
+      return receipts.map(rc => {
         const qty = rc.quantity != null ? ` (${esc(String(rc.quantity))}${rc.unit ? ' ' + esc(rc.unit) : ''})` : (rc.unit ? ` (${esc(rc.unit)})` : '');
         const when = esc(String(rc.received_at).slice(0, 10));
-        return `<div style="font-size:12px;color:var(--gray-700);padding:3px 0">${when}: ${esc(rc.description)}${qty}</div>`;
+        const remove = canRemove ? ` <button onclick="removeReceipt('${esc(rc.id)}')" style="font-size:10px;color:#dc2626;background:none;border:none;cursor:pointer;text-decoration:underline">Remove</button>` : '';
+        return `<div style="font-size:12px;color:var(--gray-700);padding:3px 0">${when}: ${esc(rc.description)}${qty}${remove}</div>`;
       }).join('');
+    }
+
+    function receiptBlock(r, receipts) {
+      const rid = esc(r.response_id);
+      const rows = receiptRows(receipts, true);
       const form = r.status === 'completed' ? '' : `
         <div style="margin-top:8px;padding:8px 10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px">
           <div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:5px">Record what arrived</div>
@@ -952,6 +959,26 @@
           <button onclick="submitReceipt('${rid}')" style="background:#16a34a;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border:none;border-radius:7px;cursor:pointer">Save</button>
         </div>`;
       return (rows ? `<div style="margin-top:8px"><div style="font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.05em">Received</div>${rows}</div>` : '') + form;
+    }
+
+    async function removeReceipt(receiptId) {
+      if (!await showConfirmModal({ title: 'Remove Record', message: 'Remove this record of what arrived?', confirmText: 'Remove', danger: true })) return;
+      try {
+        await apiDelete(`/needs/${needId}/receipts/${receiptId}`);
+        toast('Record removed.');
+        loadResponders();
+      } catch(e) { toast(e.message || 'Could not remove', true); }
+    }
+
+    async function loadMyReceipts() {
+      const el = document.getElementById('my-receipts');
+      if (!el) return;
+      try {
+        const mine = await apiGet(`/needs/${needId}/receipts`);
+        el.innerHTML = mine.length
+          ? `<div style="border:1px solid var(--gray-200);border-radius:10px;padding:12px;margin-bottom:12px"><div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:6px">Received</div>${receiptRows(mine, false)}</div>`
+          : '';
+      } catch(e) { el.innerHTML = ''; /* not accepted yet: nothing to show */ }
     }
 
     async function submitReceipt(responseId) {

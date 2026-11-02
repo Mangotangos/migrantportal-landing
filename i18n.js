@@ -372,7 +372,17 @@
     'Download App': 'Descargar App',
     'Meet a Need': 'Ayuda a Alguien',
     'View Needs Map': 'Ver Mapa de Necesidades',
-    'View Map of Requests': 'Ver Mapa de Solicitudes'
+    'View Map of Requests': 'Ver Mapa de Solicitudes',
+    // ── Need page: record what arrived
+    'Record what arrived': 'Registrar lo que llegó',
+    'What did you receive?': '¿Qué recibieron?',
+    'Quantity': 'Cantidad',
+    'Unit (bags, hours, USD)': 'Unidad (bolsas, horas, USD)',
+    'This completes their part': 'Esto completa su parte',
+    'Received': 'Recibido',
+    'Remove': 'Quitar',
+    'Their part is complete.': 'Su parte está completa.',
+    'Accepted. Arrange details in the chat below.': 'Aceptado. Coordinen los detalles en el chat de abajo.'
   };
 
   function cacheOriginal(el) {
