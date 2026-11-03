@@ -345,6 +345,52 @@
 
     /* ── EMPTY / LOADING ── */
 
+
+    /* Nonprofits directory */
+    .np-top { display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px; }
+    .np-top .sp { flex:1; }
+    .np-tiles { display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px; }
+    .np-tile { background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px; }
+    .np-tile b { font-size:24px;display:block; } .np-tile span { font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2); }
+    .np-tools { display:flex;gap:8px;padding:14px;flex-wrap:wrap;align-items:center; }
+    .np-tools input[type=search] { flex:1;min-width:210px; }
+    .np-chips { display:flex;gap:6px;padding:0 14px 10px;flex-wrap:wrap; }
+    .np-chip { background:var(--teal-glow);color:var(--teal);border-radius:20px;padding:3px 6px 3px 10px;font-size:12px;font-weight:600;display:inline-flex;gap:6px;align-items:center; }
+    .np-chip i { font-style:normal;cursor:pointer;opacity:.7; }
+    .np-svc { display:inline-block;background:var(--teal-glow);color:var(--teal);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;text-transform:uppercase;margin:0 3px 3px 0; }
+    .np-svc.more { background:var(--surface-2);color:var(--text-2); }
+    .np-flag { font-size:11px;color:var(--yellow);font-weight:600;display:block; }
+    .np-bulk { display:none;align-items:center;gap:8px;padding:9px 14px;background:var(--teal-glow); }
+    .np-bulk.on { display:flex; }
+    .np-pg { display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--border);color:var(--text-2);font-size:13px; }
+    .np-pg .sp { flex:1; }
+    .np-review { padding:6px 14px 14px;display:grid;gap:10px; }
+    .np-app { border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap; }
+    .np-app .b { flex:1;min-width:240px; } .np-app small { color:var(--text-2); }
+    .np-cov { padding:6px 14px 14px;overflow-x:auto; }
+    .np-cov table { min-width:860px; } .np-cov th { text-align:center;padding:8px 4px;font-size:10px; }
+    .np-cov th:first-child,.np-cov td:first-child { text-align:left;position:sticky;left:0;background:var(--surface);min-width:150px; }
+    .np-cov td { padding:3px;text-align:center; }
+    .np-cell { display:block;border-radius:6px;padding:6px 0;font-weight:700;font-size:12px;cursor:pointer; }
+    .np-cell:hover { outline:2px solid var(--teal); }
+    .np-c0 { background:var(--red-bg);color:var(--red); } .np-c1 { background:#dbeef0;color:#0A6472; } .np-c2 { background:#a9d8de;color:#074a55; } .np-c3 { background:#5fb4c0;color:#fff; }
+    .np-legend { display:flex;gap:14px;align-items:center;font-size:12px;color:var(--text-2);padding:2px 14px 8px;flex-wrap:wrap; }
+    .np-legend i { display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-3px;margin-right:4px; }
+    .np-att { padding:6px 14px 16px; } .np-att h3 { font-size:13px;margin:14px 0 4px;display:flex;gap:8px;align-items:center; }
+    .np-att .row { display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--border); } .np-att .row .nm { flex:1; }
+    #npDrawerBg { display:none;position:fixed;inset:0;background:rgba(20,36,51,.35);z-index:900; }
+    #npDrawerBg.open { display:block; }
+    #npDrawer { position:fixed;top:0;right:0;bottom:0;width:min(460px,100vw);background:var(--surface);box-shadow:-8px 0 30px rgba(20,36,51,.18);transform:translateX(100%);transition:transform .2s;z-index:901;display:flex;flex-direction:column; }
+    #npDrawer.open { transform:none; }
+    #npDrawer .dh { padding:18px 20px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start; }
+    #npDrawer .db { padding:16px 20px;overflow-y:auto;flex:1; }
+    #npDrawer .df { padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap; }
+    #npDrawer h4 { margin:16px 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3); } #npDrawer h4:first-child { margin-top:0; }
+    #npDrawer .fld { display:block;margin-bottom:10px; }
+    #npDrawer .pick { display:flex;flex-wrap:wrap;gap:6px; }
+    #npDrawer .pick label { font-size:12px;border:1px solid var(--border-2);border-radius:20px;padding:4px 10px;cursor:pointer; }
+    #npDrawer .pick input { margin-right:4px; }
+    @media(max-width:820px){ .np-tiles { grid-template-columns:repeat(2,1fr); } }
     .hidden { display:none; }
     /* Users tabs + drawer */
     .utabs { display:flex;gap:4px;border-bottom:1px solid var(--border);margin:-4px 0 14px;overflow-x:auto; }
@@ -977,55 +1023,61 @@
     <div id="tab-nonprofits" style="display:none">
       <div class="page-header">
         <div class="page-title">Partner Nonprofits</div>
-        <div class="page-subtitle">Manage organizations listed on the public "Find Help" page</div>
+        <div class="page-subtitle">Organizations listed on the public "Find Help" page · <a href="/find-help" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none">View public page →</a></div>
       </div>
-      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
-        <!-- Add form -->
-        <div class="card" style="width:300px;flex-shrink:0;min-width:260px">
-          <div class="card-header"><span class="card-title">Add Nonprofit</span></div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div><label class="form-label">Name *</label><input class="form-input" id="np-name" type="text" placeholder="Organization name" /></div>
-            <div><label class="form-label">Description</label><textarea class="form-textarea" id="np-desc" rows="2" placeholder="Brief description…"></textarea></div>
-            <div>
-              <label class="form-label">Services (select all that apply)</label>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px" id="np-services-picker">
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="food" /> Food</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="shelter" /> Shelter</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="clothing" /> Clothing</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="medical" /> Medical</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="legal" /> Legal</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="employment" /> Employment</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="education" /> Education</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="immigration" /> Immigration</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="transportation" /> Transportation</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="mental_health" /> Mental Health</label>
-                <label style="font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" value="financial" /> Financial</label>
-              </div>
-            </div>
-            <div><label class="form-label">Address</label><input class="form-input" id="np-address" type="text" placeholder="Street address" /></div>
-            <div style="display:flex;gap:8px">
-              <div style="flex:1"><label class="form-label">City</label><input class="form-input" id="np-city" type="text" placeholder="City" /></div>
-              <div style="width:60px"><label class="form-label">State</label><input class="form-input" id="np-state" type="text" placeholder="KS" maxlength="2" /></div>
-            </div>
-            <div><label class="form-label">Zipcode *</label><input class="form-input" id="np-zip" type="text" placeholder="64108" maxlength="10" inputmode="numeric" /></div>
-            <div><label class="form-label">Phone</label><input class="form-input" id="np-phone" type="tel" placeholder="(555) 000-0000" /></div>
-            <div><label class="form-label">Email</label><input class="form-input" id="np-email" type="email" placeholder="help@org.org" /></div>
-            <div><label class="form-label">Website</label><input class="form-input" id="np-website" type="url" placeholder="https://…" /></div>
-            <button onclick="addNonprofit()" class="btn btn-primary" style="height:40px;font-size:13px;border-radius:8px;width:100%">Add Nonprofit</button>
-          </div>
+      <div class="np-top">
+        <span class="sp"></span>
+        <label class="btn btn-secondary" style="display:inline-flex;align-items:center;cursor:pointer">⬆ Import CSV<input type="file" accept=".csv,text/csv" style="display:none" onchange="npImportFile(this)"></label>
+        <button class="btn btn-secondary" onclick="npDownloadTemplate()">CSV template</button>
+        <button class="btn btn-secondary" onclick="npExport()">⬇ Export</button>
+        <button class="btn btn-primary" onclick="npOpenDrawer('')">+ Add nonprofit</button>
+      </div>
+      <div class="np-tiles" id="npTiles"></div>
+      <div class="card" style="padding:0">
+        <div class="utabs" style="padding:0 14px;margin:0">
+          <button class="utab on" data-npt="dir" onclick="npSetTab('dir')">Directory<span class="n" id="npn-dir">0</span></button>
+          <button class="utab" data-npt="rev" onclick="npSetTab('rev')">Awaiting review<span class="n" id="npn-rev">0</span></button>
+          <button class="utab" data-npt="cov" onclick="npSetTab('cov')">Coverage by city</button>
+          <button class="utab" data-npt="att" onclick="npSetTab('att')">Needs attention<span class="n" id="npn-att">0</span></button>
         </div>
-        <!-- List -->
-        <div style="flex:1;min-width:260px">
-          <div class="card" style="padding:0;overflow:hidden">
-            <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:14px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
-              <span>All Partner Nonprofits</span>
-              <a href="/find-help" target="_blank" rel="noopener" style="font-size:12px;color:var(--teal);text-decoration:none">View public page →</a>
-            </div>
-            <div id="np-list" style="padding:16px 20px"><div class="loading">Loading…</div></div>
+
+        <div id="np-p-dir">
+          <div class="np-tools">
+            <input class="form-input" type="search" id="npQ" placeholder="Search name, city, phone, email or website" oninput="npPage=1;npRenderDirectory()">
+            <select class="role-select" style="height:36px" id="npCity" onchange="npPage=1;npRenderDirectory()"></select>
+            <select class="role-select" style="height:36px" id="npSvc" onchange="npPage=1;npRenderDirectory()"></select>
+            <select class="role-select" style="height:36px" id="npLink" onchange="npPage=1;npRenderDirectory()">
+              <option value="">Linked or not</option><option value="y">Has org account</option><option value="n">Directory only</option>
+            </select>
           </div>
+          <div class="np-chips" id="npChips"></div>
+          <div class="np-bulk" id="npBulk"><b id="npBulkCount"></b>
+            <button class="btn btn-secondary" onclick="npBulk('pause')">Move to review</button>
+            <button class="btn btn-delete" onclick="npBulk('remove')">Remove…</button></div>
+          <div id="npDirContent"></div>
+          <div class="np-pg"><span id="npPInfo"></span><span class="sp"></span>
+            <button class="btn btn-secondary" id="npPrev" onclick="npPage--;npRenderDirectory()">← Prev</button><span id="npPPage"></span>
+            <button class="btn btn-secondary" id="npNext" onclick="npPage++;npRenderDirectory()">Next →</button></div>
         </div>
+
+        <div id="np-p-rev" style="display:none">
+          <div class="np-tools" style="padding-bottom:0"><span style="color:var(--text-2)">Inactive listings: new applications from the public form, and anything you moved here. They are not on Find Help until approved.</span></div>
+          <div class="np-review" id="npReview"></div>
+        </div>
+
+        <div id="np-p-cov" style="display:none">
+          <div class="np-tools" style="padding-bottom:4px"><span style="color:var(--text-2)">Active partners per city and service. Red means nobody covers it. Click a cell to see those organizations.</span><span style="flex:1"></span>
+            <select class="role-select" style="height:36px" id="npCovSort" onchange="npRenderCoverage()"><option value="n">Sort: most partners</option><option value="g">Sort: most gaps</option><option value="a">Sort: A to Z</option></select></div>
+          <div class="np-legend"><span><i class="np-c0"></i>0 (gap)</span><span><i class="np-c1"></i>1</span><span><i class="np-c2"></i>2</span><span><i class="np-c3"></i>3 or more</span><b id="npGaps" style="margin-left:auto;color:var(--red)"></b></div>
+          <div class="np-cov"><table class="need-table" id="npCovTable"></table></div>
+        </div>
+
+        <div id="np-p-att" style="display:none"><div class="np-att" id="npAtt"></div></div>
       </div>
     </div>
+
+    <div id="npDrawerBg" onclick="npCloseDrawer()"></div>
+    <aside id="npDrawer" aria-label="Nonprofit details" aria-hidden="true"></aside>
 
     <!-- ANNOUNCEMENTS TAB -->
     <div id="tab-announcements" style="display:none">
@@ -2918,102 +2970,351 @@
   /* ═══════════════════════════════════════════
      NONPROFITS
   ═══════════════════════════════════════════ */
-  async function loadNonprofits() {
-    const el = document.getElementById('np-list');
-    el.innerHTML = '<div class="loading">Loading…</div>';
-    try {
-      const [items, orgs] = await Promise.all([
-        apiGet('/nonprofits/admin/all'),
-        apiGet('/admin/orgs').catch(() => []),
-      ]);
-      const orgById = {};
-      (orgs || []).forEach(o => { orgById[o.id] = o; });
+  const NP_SERVICES = ['food','shelter','clothing','medical','legal','employment','education','immigration','transportation','mental_health','financial'];
+  const NP_PER_PAGE = 25;
+  const npLabel = s => String(s).replace(/_/g, ' ');
+  const npServices = n => (n.services ? n.services.split(',').map(s => s.trim()).filter(Boolean) : []);
+  const npCityKey = n => `${(n.city || '').trim().toLowerCase()}|${(n.state || '').trim().toUpperCase()}`;
+  const npCityLabel = n => (n.city ? `${n.city.trim()}${n.state ? ', ' + n.state.trim().toUpperCase() : ''}` : 'No city');
+  const npById = id => npAll.find(n => n.id === id);
+  let npAll = [], npOrgById = {}, npPage = 1, npSelected = new Set();
 
-      if (!items.length) {
-        el.innerHTML = '<div class="empty"><div class="empty-icon">🏛️</div>No nonprofits yet. Add one using the form.</div>';
-        return;
-      }
-      el.innerHTML = items.map(n => {
-        const services = n.services ? n.services.split(',').map(s => `<span style="background:#e6f5f6;color:#0D7A8A;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase">${escHtml(s.trim())}</span>`).join(' ') : '';
-        const location = [n.city, n.state, n.zipcode].filter(Boolean).join(', ');
-        const linkedOrg = n.org_id ? orgById[n.org_id] : null;
-        const linkRow = linkedOrg
-          ? `<div style="margin-top:10px;display:flex;align-items:center;gap:7px;background:var(--teal-glow);color:var(--teal);border:1px solid rgba(13,122,138,0.25);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:600">🏢 Linked org account — <a href="#" onclick="switchTab('orgs');return false;" style="color:var(--teal);text-decoration:underline">${escHtml(linkedOrg.name)} →</a></div>`
-          : `<div style="margin-top:10px;display:flex;align-items:center;gap:7px;background:var(--surface-2);color:var(--text-3);border:1px solid var(--border-2);border-radius:8px;padding:7px 10px;font-size:12px">No org account — directory listing only</div>`;
-        return `
-          <div style="padding:16px 0;border-bottom:1px solid var(--border)">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-              <div style="flex:1">
-                <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px">
-                  ${escHtml(n.name)}
-                  <span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;background:${n.is_active?'#d1fae5':'#fee2e2'};color:${n.is_active?'#065f46':'#991b1b'}">${n.is_active?'Active':'Inactive'}</span>
-                </div>
-                ${location ? `<div style="font-size:12px;color:var(--text-2);margin-top:3px">📍 ${escHtml(location)}</div>` : ''}
-                ${services ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${services}</div>` : ''}
-                ${n.phone ? `<div style="font-size:12px;color:var(--text-2);margin-top:4px">📞 ${escHtml(n.phone)}</div>` : ''}
-                ${n.website ? `<div style="font-size:12px;margin-top:3px"><a href="${escHtml(n.website)}" target="_blank" rel="noopener noreferrer" style="color:var(--teal)">🔗 ${escHtml(n.website)}</a></div>` : ''}
-                ${n.lat ? `<div style="font-size:11px;color:#94a3b8;margin-top:4px">📌 ${n.lat.toFixed(4)}, ${n.lng.toFixed(4)}</div>` : '<div style="font-size:11px;color:#f59e0b;margin-top:4px">⚠️ No coordinates — zipcode may be invalid</div>'}
-                ${linkRow}
-              </div>
-              <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-                ${!n.is_active ? `<button onclick="approveNonprofit('${escHtml(n.id)}')" class="btn btn-approve">Approve</button>` : ''}
-                <button onclick="deleteNonprofit('${escHtml(n.id)}')" class="btn btn-delete">Delete</button>
-              </div>
-            </div>
-          </div>`;
-      }).join('');
+  async function loadNonprofits() {
+    document.getElementById('npDirContent').innerHTML = '<div class="loading">Loading…</div>';
+    try {
+      const [items, orgs] = await Promise.all([apiGet('/nonprofits/admin/all'), apiGet('/admin/orgs').catch(() => [])]);
+      npAll = Array.isArray(items) ? items : [];
+      npOrgById = {};
+      (orgs || []).forEach(o => { npOrgById[o.id] = o; });
+      npSelected = new Set();
+      npBuildFilters();
+      npRenderAll();
     } catch(e) {
-      el.innerHTML = `<div class="empty" style="color:var(--red)">${escHtml(e.message)}</div>`;
+      document.getElementById('npDirContent').innerHTML = `<div class="empty" style="color:var(--red)">${escHtml(e.message)}</div>`;
     }
   }
 
-  async function addNonprofit() {
-    const name = document.getElementById('np-name').value.trim();
-    const zip  = document.getElementById('np-zip').value.trim();
-    if (!name) { toast('Name is required.', true); return; }
-    if (!zip)  { toast('Zipcode is required for map placement.', true); return; }
+  function npBuildFilters() {
+    const citySel = document.getElementById('npCity'), svcSel = document.getElementById('npSvc');
+    const prevCity = citySel.value, prevSvc = svcSel.value;
+    const cities = new Map();
+    npAll.filter(n => n.is_active).forEach(n => { if (!cities.has(npCityKey(n))) cities.set(npCityKey(n), npCityLabel(n)); });
+    const sorted = [...cities.entries()].sort((a, b) => a[1].localeCompare(b[1]));
+    citySel.innerHTML = `<option value="">All cities (${sorted.length})</option>` + sorted.map(([k, l]) => `<option value="${escHtml(k)}">${escHtml(l)}</option>`).join('');
+    svcSel.innerHTML = '<option value="">All services</option>' + NP_SERVICES.map(s => `<option value="${s}">${npLabel(s)}</option>`).join('');
+    citySel.value = cities.has(prevCity) ? prevCity : '';
+    svcSel.value = prevSvc;
+  }
 
-    const checked = [...document.querySelectorAll('#np-services-picker input[type=checkbox]:checked')];
-    const services = checked.map(c => c.value).join(',');
-
-    const payload = {
-      name,
-      description: document.getElementById('np-desc').value.trim() || null,
-      services: services || null,
-      address:  document.getElementById('np-address').value.trim() || null,
-      city:     document.getElementById('np-city').value.trim() || null,
-      state:    document.getElementById('np-state').value.trim().toUpperCase() || null,
-      zipcode:  zip,
-      phone:    document.getElementById('np-phone').value.trim() || null,
-      email:    document.getElementById('np-email').value.trim() || null,
-      website:  document.getElementById('np-website').value.trim() || null,
-      is_active: true,
+  const npActive = () => npAll.filter(n => n.is_active);
+  const npInactive = () => npAll.filter(n => !n.is_active);
+  function npAttention() {
+    const act = npActive();
+    return {
+      geo: act.filter(n => n.lat == null),
+      phone: act.filter(n => !(n.phone || '').trim()),
+      svc: act.filter(n => !npServices(n).length),
     };
+  }
 
+  function npRenderAll() {
+    const att = npAttention(), attCount = att.geo.length + att.phone.length + att.svc.length;
+    const cities = new Set(npActive().map(npCityKey).filter(k => !k.startsWith('|')));
+    document.getElementById('npTiles').innerHTML =
+      `<div class="np-tile"><b>${npActive().length}</b><span>Active partners</span></div>
+       <div class="np-tile"><b>${cities.size}</b><span>Cities covered</span></div>
+       <div class="np-tile"><b>${npInactive().length}</b><span>Awaiting review</span></div>
+       <div class="np-tile"><b>${attCount}</b><span>Listing issues</span></div>`;
+    document.getElementById('npn-dir').textContent = npActive().length;
+    document.getElementById('npn-rev').textContent = npInactive().length;
+    document.getElementById('npn-att').textContent = attCount;
+    const badge = document.getElementById('nonprofitsBadge');
+    badge.textContent = npInactive().length;
+    badge.className = 'nav-badge' + (npInactive().length === 0 ? ' zero' : '');
+    npRenderDirectory(); npRenderReview(); npRenderCoverage(); npRenderAttention();
+  }
+
+  function npSetTab(tab) {
+    document.querySelectorAll('[data-npt]').forEach(b => b.classList.toggle('on', b.dataset.npt === tab));
+    ['dir', 'rev', 'cov', 'att'].forEach(t => { document.getElementById('np-p-' + t).style.display = t === tab ? '' : 'none'; });
+  }
+
+  function npFiltered() {
+    const q = document.getElementById('npQ').value.trim().toLowerCase();
+    const city = document.getElementById('npCity').value, svc = document.getElementById('npSvc').value, link = document.getElementById('npLink').value;
+    return npActive().filter(n =>
+      (!q || [n.name, n.city, n.phone, n.email, n.website].join(' ').toLowerCase().includes(q)) &&
+      (!city || npCityKey(n) === city) &&
+      (!svc || npServices(n).includes(svc)) &&
+      (!link || (link === 'y') === !!n.org_id));
+  }
+
+  function npRowHtml(n) {
+    const svcs = npServices(n);
+    const id = escHtml(n.id);
+    return `<tr class="urow" onclick="npOpenDrawer('${id}')">
+      <td onclick="event.stopPropagation()"><input type="checkbox" ${npSelected.has(n.id) ? 'checked' : ''} onchange="npToggleSel('${id}',this.checked)"></td>
+      <td><b>${escHtml(n.name)}</b>
+        <div style="font-size:12px;color:var(--text-2)">${n.phone ? escHtml(n.phone) : '<span class="np-flag">No phone</span>'}</div>
+        ${n.lat == null ? '<span class="np-flag">⚠ No map coordinates</span>' : ''}</td>
+      <td>${svcs.slice(0, 3).map(s => `<span class="np-svc">${escHtml(npLabel(s))}</span>`).join('')}${svcs.length > 3 ? `<span class="np-svc more">+${svcs.length - 3}</span>` : ''}</td>
+      <td style="color:var(--text-2)">${escHtml(npCityLabel(n))}</td>
+      <td>${n.org_id && npOrgById[n.org_id] ? `<span style="color:var(--teal);font-weight:600;font-size:12px">Linked</span>` : '<span style="color:var(--text-3);font-size:12px">Directory only</span>'}</td>
+      <td onclick="event.stopPropagation()"><button class="btn btn-secondary" onclick="npOpenDrawer('${id}')">Open</button></td>
+    </tr>`;
+  }
+
+  function npRenderDirectory() {
+    const list = npFiltered();
+    const pages = Math.max(1, Math.ceil(list.length / NP_PER_PAGE));
+    npPage = Math.min(Math.max(1, npPage), pages);
+    const rows = list.slice((npPage - 1) * NP_PER_PAGE, npPage * NP_PER_PAGE);
+    const chips = [['npCity', document.getElementById('npCity').selectedOptions[0]?.textContent], ['npSvc', npLabel(document.getElementById('npSvc').value)],
+      ['npLink', document.getElementById('npLink').selectedOptions[0]?.textContent]].filter(([id]) => document.getElementById(id).value);
+    document.getElementById('npChips').innerHTML = chips.map(([id, label]) => `<span class="np-chip">${escHtml(label)}<i onclick="document.getElementById('${id}').value='';npPage=1;npRenderDirectory()">✕</i></span>`).join('');
+    document.getElementById('npDirContent').innerHTML = rows.length
+      ? `<table class="need-table"><thead><tr><th style="width:30px"><input type="checkbox" onchange="npToggleAll(this.checked)"></th><th>Organization</th><th>Services</th><th>City</th><th>Org account</th><th></th></tr></thead><tbody>${rows.map(npRowHtml).join('')}</tbody></table>`
+      : `<div class="empty">${npActive().length ? 'No organizations match these filters.' : 'No active partners yet. Add one, or import a CSV.'}</div>`;
+    document.getElementById('npPInfo').textContent = `${list.length ? (npPage - 1) * NP_PER_PAGE + 1 : 0}–${Math.min(npPage * NP_PER_PAGE, list.length)} of ${list.length} organizations`;
+    document.getElementById('npPPage').textContent = `Page ${npPage} of ${pages}`;
+    document.getElementById('npPrev').disabled = npPage <= 1;
+    document.getElementById('npNext').disabled = npPage >= pages;
+    npUpdateBulk();
+  }
+
+  function npToggleSel(id, on) { if (on) npSelected.add(id); else npSelected.delete(id); npUpdateBulk(); }
+  function npToggleAll(on) {
+    const list = npFiltered().slice((npPage - 1) * NP_PER_PAGE, npPage * NP_PER_PAGE);
+    list.forEach(n => { if (on) npSelected.add(n.id); else npSelected.delete(n.id); });
+    npRenderDirectory();
+  }
+  function npUpdateBulk() {
+    document.getElementById('npBulk').classList.toggle('on', npSelected.size > 0);
+    document.getElementById('npBulkCount').textContent = `${npSelected.size} selected`;
+  }
+
+  async function npRunBatch(ids, fn, doneMsg) {
+    let failed = 0;
+    for (const id of ids) { try { await fn(id); } catch(e) { failed++; } }
+    toast(failed ? `${ids.length - failed} done; ${failed} failed.` : doneMsg, failed > 0);
+    await loadNonprofits();
+  }
+  async function npBulk(action) {
+    const ids = [...npSelected];
+    if (!ids.length) return;
+    if (action === 'pause') {
+      if (!await showConfirmModal({ title: 'Move to review', message: `Take ${ids.length} listing(s) off the public Find Help page? You can approve them again from Awaiting review.`, confirmText: 'Move to review', danger: false })) return;
+      npRunBatch(ids, id => apiPatch(`/nonprofits/${id}`, { is_active: false }), `${ids.length} listings moved to review.`);
+    } else {
+      if (!await showConfirmModal({ title: 'Remove nonprofits', message: `Permanently remove ${ids.length} organization(s)? This cannot be undone.`, confirmText: 'Remove', danger: true })) return;
+      npRunBatch(ids, id => apiDelete(`/nonprofits/${id}`), `${ids.length} organizations removed.`);
+    }
+  }
+
+  function npRenderReview() {
+    const list = npInactive();
+    document.getElementById('npReview').innerHTML = list.length ? list.map(n => {
+      const id = escHtml(n.id);
+      return `<div class="np-app"><div class="b"><b>${escHtml(n.name)}</b><br>
+        <small>${escHtml(npCityLabel(n))}${n.website ? ' · ' + escHtml(n.website) : ''}${n.created_at ? ' · added ' + escHtml(String(n.created_at).slice(0, 10)) : ''}</small>
+        <div style="margin-top:6px">${npServices(n).map(s => `<span class="np-svc">${escHtml(npLabel(s))}</span>`).join('')}</div></div>
+        <div style="display:flex;gap:6px"><button class="btn btn-secondary" onclick="npOpenDrawer('${id}')">Review</button>
+        <button class="btn btn-approve" onclick="npSetActive('${id}',true)">Approve</button>
+        <button class="btn btn-delete" onclick="npRemove('${id}')">Remove</button></div></div>`;
+    }).join('') : '<div class="empty">Nothing waiting. New applications from the public form will show up here.</div>';
+  }
+
+  function npRenderCoverage() {
+    const groups = new Map();
+    npActive().forEach(n => {
+      const k = npCityKey(n);
+      if (!groups.has(k)) groups.set(k, { key: k, label: npCityLabel(n), orgs: [] });
+      groups.get(k).orgs.push(n);
+    });
+    const rows = [...groups.values()].map(g => {
+      const counts = NP_SERVICES.map(s => g.orgs.filter(n => npServices(n).includes(s)).length);
+      return { ...g, counts, gaps: counts.filter(c => c === 0).length };
+    });
+    const mode = document.getElementById('npCovSort').value;
+    rows.sort((a, b) => mode === 'g' ? b.gaps - a.gaps : mode === 'a' ? a.label.localeCompare(b.label) : b.orgs.length - a.orgs.length);
+    document.getElementById('npCovTable').innerHTML =
+      `<thead><tr><th>City</th><th>Orgs</th>${NP_SERVICES.map(s => `<th>${escHtml(npLabel(s))}</th>`).join('')}</tr></thead><tbody>` +
+      rows.map(r => `<tr><td><b>${escHtml(r.label)}</b></td><td style="font-weight:700">${r.orgs.length}</td>${r.counts.map((c, i) =>
+        `<td><span class="np-cell np-c${Math.min(c, 3)}" data-ck="${escHtml(r.key)}" data-sv="${NP_SERVICES[i]}" onclick="npGoCoverage(this)">${c}</span></td>`).join('')}</tr>`).join('') + '</tbody>';
+    document.getElementById('npGaps').textContent = `${rows.reduce((a, r) => a + r.gaps, 0)} city + service gaps with no active partner`;
+  }
+
+  function npGoCoverage(cell) {
+    document.getElementById('npCity').value = cell.dataset.ck;
+    document.getElementById('npSvc').value = cell.dataset.sv;
+    npPage = 1; npRenderDirectory(); npSetTab('dir');
+  }
+
+  function npRenderAttention() {
+    const a = npAttention();
+    const section = (title, list, why) => `<h3>${title} <span class="status-pill s-pending">${list.length}</span></h3><div style="color:var(--text-2);font-size:12px">${why}</div>` +
+      (list.length ? list.slice(0, 8).map(n => `<div class="row"><div class="nm"><b>${escHtml(n.name)}</b><div style="font-size:12px;color:var(--text-2)">${escHtml(npCityLabel(n))}</div></div><button class="btn btn-secondary" onclick="npOpenDrawer('${escHtml(n.id)}')">Fix</button></div>`).join('') +
+        (list.length > 8 ? `<div class="row" style="color:var(--text-3)">+ ${list.length - 8} more</div>` : '') : '<div class="row" style="color:var(--text-3)">All good.</div>');
+    document.getElementById('npAtt').innerHTML =
+      section('Missing map coordinates', a.geo, 'They will not appear in distance searches on Find Help. Usually a wrong zipcode.') +
+      section('No phone number', a.phone, 'Families cannot call them.') +
+      section('No services selected', a.svc, 'They will not show up when someone filters by service.');
+  }
+
+  /* ── drawer: edit or add ── */
+  function npField(id, label, value, type = 'text') {
+    return `<label class="fld"><span class="form-label">${label}</span><input class="form-input" id="npf-${id}" type="${type}" value="${escHtml(value || '')}"></label>`;
+  }
+
+  function npOpenDrawer(id) {
+    const n = id ? npById(id) : null;
+    if (id && !n) return;
+    const have = new Set(n ? npServices(n) : []);
+    const linked = n && n.org_id ? npOrgById[n.org_id] : null;
+    const drawer = document.getElementById('npDrawer');
+    drawer.innerHTML = `
+      <div class="dh"><div style="flex:1;min-width:0"><b style="font-size:16px">${n ? escHtml(n.name) : 'Add nonprofit'}</b>
+        ${n ? `<div style="margin-top:4px"><span class="status-pill ${n.is_active ? 's-active' : 's-pending'}">${n.is_active ? 'active' : 'awaiting review'}</span></div>` : ''}</div>
+        <button class="btn btn-secondary" onclick="npCloseDrawer()" aria-label="Close">✕</button></div>
+      <div class="db">
+        <h4>Organization</h4>
+        ${npField('name', 'Name *', n && n.name)}
+        <label class="fld"><span class="form-label">Description</span><textarea class="form-textarea" id="npf-description" rows="3">${escHtml(n ? n.description || '' : '')}</textarea></label>
+        <h4>Services</h4><div class="pick" id="npf-services">${NP_SERVICES.map(s => `<label><input type="checkbox" value="${s}" ${have.has(s) ? 'checked' : ''}>${escHtml(npLabel(s))}</label>`).join('')}</div>
+        <h4>Location</h4>
+        ${npField('address', 'Address', n && n.address)}
+        <div style="display:flex;gap:8px"><div style="flex:1">${npField('city', 'City', n && n.city)}</div><div style="width:70px">${npField('state', 'State', n && n.state)}</div></div>
+        ${npField('zipcode', 'Zipcode * (used for the map pin)', n && n.zipcode)}
+        ${n ? `<div style="font-size:12px;margin:-4px 0 8px;${n.lat == null ? 'color:var(--yellow)' : 'color:var(--text-3)'}">${n.lat == null ? '⚠ No map coordinates. Check the zipcode and save.' : `📌 ${Number(n.lat).toFixed(4)}, ${Number(n.lng).toFixed(4)}`}</div>` : ''}
+        <h4>Contact</h4>
+        ${npField('phone', 'Phone', n && n.phone, 'tel')}${npField('email', 'Email', n && n.email, 'email')}${npField('website', 'Website', n && n.website, 'url')}
+        ${n ? `<h4>Org account</h4><div style="font-size:13px">${linked ? `Linked to <a href="#" onclick="npCloseDrawer();switchTab('orgs');return false" style="color:var(--teal)">${escHtml(linked.name)} →</a>` : '<span style="color:var(--text-3)">Directory listing only. No organization login.</span>'}</div>` : ''}
+      </div>
+      <div class="df"><button class="btn btn-primary" onclick="npSave('${n ? escHtml(n.id) : ''}')">${n ? 'Save changes' : 'Add and place on map'}</button>
+        ${n && !n.is_active ? `<button class="btn btn-approve" onclick="npSetActive('${escHtml(n.id)}',true)">Approve</button>` : ''}
+        ${n && n.is_active ? `<button class="btn btn-secondary" onclick="npSetActive('${escHtml(n.id)}',false)">Move to review</button>` : ''}
+        ${n ? `<button class="btn btn-delete" style="margin-left:auto" onclick="npRemove('${escHtml(n.id)}')">Remove…</button>` : ''}</div>`;
+    document.getElementById('npDrawerBg').classList.add('open');
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+  }
+
+  function npCloseDrawer() {
+    document.getElementById('npDrawerBg').classList.remove('open');
+    const d = document.getElementById('npDrawer');
+    d.classList.remove('open');
+    d.setAttribute('aria-hidden', 'true');
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') npCloseDrawer(); });
+
+  function npFormValues() {
+    const v = id => document.getElementById('npf-' + id).value.trim();
+    const services = [...document.querySelectorAll('#npf-services input:checked')].map(c => c.value).join(',');
+    return {
+      name: v('name'), description: v('description'), services, address: v('address'), city: v('city'),
+      state: v('state').toUpperCase(), zipcode: v('zipcode'), phone: v('phone'), email: v('email'), website: v('website'),
+    };
+  }
+
+  async function npSave(id) {
+    const f = npFormValues();
+    if (!f.name) { toast('Name is required.', true); return; }
+    if (!id && !f.zipcode) { toast('Zipcode is required for map placement.', true); return; }
     try {
-      await apiPost('/nonprofits', payload);
-      toast('✓ Nonprofit added and geocoded.');
-      // Clear form
-      ['np-name','np-desc','np-address','np-city','np-state','np-zip','np-phone','np-email','np-website'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-      document.querySelectorAll('#np-services-picker input[type=checkbox]').forEach(c => { c.checked = false; });
+      if (id) {
+        await apiPatch(`/nonprofits/${id}`, f);
+        toast('✓ Saved.');
+      } else {
+        const payload = Object.fromEntries(Object.entries(f).map(([k, v]) => [k, v || null]));
+        await apiPost('/nonprofits', { ...payload, is_active: true });
+        toast('✓ Nonprofit added and placed on the map.');
+      }
+      npCloseDrawer();
       loadNonprofits();
     } catch(e) { toast(e.message, true); }
   }
 
-  async function approveNonprofit(id) {
+  async function npSetActive(id, active) {
     try {
-      await apiPatch(`/nonprofits/${id}`, { is_active: true });
-      toast('✓ Nonprofit approved — now live on Find Help page.');
+      await apiPatch(`/nonprofits/${id}`, { is_active: active });
+      toast(active ? '✓ Approved. Now live on Find Help.' : 'Moved to Awaiting review. Hidden from Find Help.');
+      npCloseDrawer();
       loadNonprofits();
     } catch(e) { toast(e.message, true); }
   }
 
-  async function deleteNonprofit(id) {
-    if (!await showConfirmModal({ title: 'Remove Nonprofit', message: 'This nonprofit will be removed from the public Find Help page.', confirmText: 'Remove', danger: true })) return;
-    try { await apiDelete(`/nonprofits/${id}`); toast('Nonprofit removed.'); loadNonprofits(); }
+  async function npRemove(id) {
+    const n = npById(id);
+    if (!await showConfirmModal({ title: 'Remove nonprofit', message: `Permanently remove "${n ? n.name : 'this organization'}"? It disappears from Find Help and cannot be restored.`, confirmText: 'Remove', danger: true })) return;
+    try { await apiDelete(`/nonprofits/${id}`); toast('Nonprofit removed.'); npCloseDrawer(); loadNonprofits(); }
     catch(e) { toast(e.message, true); }
+  }
+
+  /* ── export / import ── */
+  const NP_CSV_COLUMNS = ['name', 'description', 'services', 'address', 'city', 'state', 'zipcode', 'phone', 'email', 'website'];
+
+  function npExport() {
+    const rows = [NP_CSV_COLUMNS, ...npFiltered().map(n => NP_CSV_COLUMNS.map(c => (c === 'services' ? npServices(n).join(';') : n[c] || '')))];
+    downloadCSV(rows, `nonprofits-${new Date().toISOString().slice(0, 10)}.csv`);
+  }
+
+  function npDownloadTemplate() {
+    downloadCSV([NP_CSV_COLUMNS, ['Example Food Pantry', 'Weekly groceries', 'food;clothing', '123 Main St', 'Olathe', 'KS', '66061', '(913) 555-0100', 'help@example.org', 'https://example.org']], 'nonprofits-import-template.csv');
+  }
+
+  function npParseCsv(text) {
+    const rows = []; let row = [], cur = '', quoted = false;
+    const endRow = () => { row.push(cur); cur = ''; if (row.some(c => c.trim())) rows.push(row); row = []; };
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (quoted) {
+        if (c !== '"') cur += c;
+        else if (text[i + 1] === '"') { cur += '"'; i++; }
+        else quoted = false;
+      } else if (c === '"') quoted = true;
+      else if (c === ',') { row.push(cur); cur = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; endRow(); }
+      else cur += c;
+    }
+    endRow();
+    return rows;
+  }
+
+  function npRowsToPayloads(table) {
+    const header = table[0].map(h => h.trim().toLowerCase().replace(/^\ufeff/, ''));
+    const existing = new Set(npAll.map(n => `${n.name.trim().toLowerCase()}|${(n.zipcode || '').trim()}`));
+    const ok = [], skipped = [];
+    table.slice(1).forEach(cells => {
+      const rec = Object.fromEntries(NP_CSV_COLUMNS.map(c => [c, (cells[header.indexOf(c)] || '').trim()]));
+      const key = `${rec.name.toLowerCase()}|${rec.zipcode}`;
+      if (!rec.name || !rec.zipcode) { skipped.push(`${rec.name || '(no name)'}: name and zipcode are required`); return; }
+      if (existing.has(key)) { skipped.push(`${rec.name}: already in the directory`); return; }
+      existing.add(key);
+      const services = rec.services.split(/[;,|]/).map(s => s.trim().toLowerCase().replace(/\s+/g, '_')).filter(s => NP_SERVICES.includes(s)).join(',');
+      ok.push({ ...Object.fromEntries(Object.entries(rec).map(([k, v]) => [k, v || null])), services: services || null, state: rec.state.toUpperCase() || null, is_active: true });
+    });
+    return { ok, skipped };
+  }
+
+  async function npImportFile(input) {
+    const file = input.files[0];
+    input.value = '';
+    if (!file) return;
+    const table = npParseCsv(await file.text());
+    if (table.length < 2 || !table[0].some(h => h.trim().toLowerCase().replace(/^\ufeff/, '') === 'name')) {
+      toast('That file needs a header row with a "name" column. Use the CSV template.', true); return;
+    }
+    const { ok, skipped } = npRowsToPayloads(table);
+    if (!ok.length) { toast(`Nothing to import. ${skipped.length} rows skipped (${skipped[0] || 'empty file'}).`, true); return; }
+    const detail = skipped.length ? ` ${skipped.length} rows will be skipped (missing name or zipcode, or already listed).` : '';
+    if (!await showConfirmModal({ title: 'Import nonprofits', message: `Add ${ok.length} organizations as active partners? Each is placed on the map from its zipcode. Unrecognized service names are ignored.${detail}`, confirmText: `Import ${ok.length}`, danger: false })) return;
+    let failed = 0;
+    for (let i = 0; i < ok.length; i++) {
+      try { await apiPost('/nonprofits', ok[i]); } catch(e) { failed++; }
+      if ((i + 1) % 10 === 0) toast(`Imported ${i + 1} of ${ok.length}…`);
+    }
+    toast(failed ? `Imported ${ok.length - failed}; ${failed} failed.` : `✓ Imported ${ok.length} organizations.`, failed > 0);
+    loadNonprofits();
   }
 
   /* ═══════════════════════════════════════════
