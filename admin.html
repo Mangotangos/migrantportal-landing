@@ -344,6 +344,50 @@
     .role-select option { background:var(--surface); }
 
     /* ── EMPTY / LOADING ── */
+
+    .hidden { display:none; }
+    /* Users tabs + drawer */
+    .utabs { display:flex;gap:4px;border-bottom:1px solid var(--border);margin:-4px 0 14px;overflow-x:auto; }
+    .utab { background:none;border:0;padding:10px 12px;font-size:13px;font-weight:600;color:var(--text-2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap; }
+    .utab .n { background:var(--surface-2);border-radius:20px;padding:1px 8px;font-size:11px;margin-left:6px; }
+    .utab.on { color:var(--teal);border-color:var(--teal); }
+    .utab.on .n { background:var(--teal-glow); }
+    .utab.del.on { color:var(--red);border-color:var(--red); }
+    .utab.del.on .n { background:var(--red-bg); }
+    .uwho { display:flex;gap:10px;align-items:center;min-width:0; }
+    .uav { width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex:none; }
+    .uwho b { display:block; } .uwho small { display:block;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .urow { cursor:pointer; } .urow:hover td { background:var(--surface-2); }
+    .uperm { display:flex;align-items:center;gap:6px;margin-top:4px;font-size:11px;color:var(--text-2);cursor:pointer; }
+    .umenu-wrap { position:relative;display:inline-block; }
+    .umenu { display:none;position:absolute;right:0;top:34px;background:var(--surface);border:1px solid var(--border-2);border-radius:10px;box-shadow:var(--shadow-md);min-width:180px;z-index:30;padding:6px;text-align:left; }
+    .umenu.open { display:block; }
+    .umenu button { display:block;width:100%;text-align:left;background:none;border:0;padding:8px 10px;border-radius:6px;font-size:13px;color:var(--text);cursor:pointer; }
+    .umenu button:hover { background:var(--surface-2); }
+    .umenu button.d { color:var(--red); } .umenu button.d:hover { background:var(--red-bg); }
+    .umenu hr { border:0;border-top:1px solid var(--border);margin:4px 0; }
+    .ubanner { margin:0 0 10px;background:var(--red-bg);color:var(--red);border-radius:8px;padding:9px 12px;font-size:12px; }
+    .ubulk { display:none;align-items:center;gap:10px;padding:8px 12px;background:var(--teal-glow);border-radius:8px;margin-bottom:10px; }
+    .ubulk.on { display:flex; }
+    .uleft { font-size:12px;font-weight:600;color:var(--text-2); } .uleft.soon { color:var(--red); }
+    .ugroup { margin:12px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden; }
+    .ugroup-h { display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-2);cursor:pointer; }
+    .ugroup-h .t { flex:1; } .ugroup-h small { display:block;color:var(--text-2);font-weight:400; }
+    #userDrawerBg { display:none;position:fixed;inset:0;background:rgba(20,36,51,.35);z-index:900; }
+    #userDrawerBg.open { display:block; }
+    #userDrawer { position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:var(--surface);box-shadow:-8px 0 30px rgba(20,36,51,.18);transform:translateX(100%);transition:transform .2s;z-index:901;display:flex;flex-direction:column; }
+    #userDrawer.open { transform:none; }
+    #userDrawer .dh { padding:18px 20px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center; }
+    #userDrawer .db { padding:16px 20px;overflow-y:auto;flex:1; }
+    #userDrawer .ds { margin-bottom:18px; }
+    #userDrawer .ds h4 { margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3); }
+    #userDrawer dl { display:grid;grid-template-columns:110px 1fr;gap:6px 10px;margin:0;font-size:13px; }
+    #userDrawer dt { color:var(--text-2); } #userDrawer dd { margin:0;word-break:break-word; }
+    #userDrawer .stats { display:grid;grid-template-columns:repeat(2,1fr);gap:8px; }
+    #userDrawer .stats div { background:var(--surface-2);border-radius:8px;padding:10px; }
+    #userDrawer .stats b { font-size:18px;display:block; } #userDrawer .stats span { font-size:11px;color:var(--text-2); }
+    #userDrawer .li { font-size:13px;padding:6px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:10px; }
+    #userDrawer .df { padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap; }
     .empty { padding:48px 20px;text-align:center;color:var(--text-3);font-size:13px; }
     .empty-icon { font-size:28px;margin-bottom:8px; }
     .loading { padding:48px 20px;text-align:center;color:var(--text-3);font-size:13px;display:flex;align-items:center;justify-content:center;gap:10px; }
@@ -821,34 +865,50 @@
         <div id="pendingUsersContent" style="padding:8px 0"></div>
       </div>
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">All Users <span id="usersCount" style="font-weight:500;color:var(--text-2)"></span></span>
-          <button class="btn-export" onclick="exportUsersCSV()">⬇ Export CSV</button>
+        <div class="utabs" role="tablist">
+          <button class="utab on" data-ut="active" onclick="setUsersTab('active')">Active<span class="n" id="utc-active">0</span></button>
+          <button class="utab del" data-ut="deleted" onclick="setUsersTab('deleted')">Deleted<span class="n" id="utc-deleted">0</span></button>
+          <button class="utab" data-ut="test" onclick="setUsersTab('test')">Test accounts<span class="n" id="utc-test">0</span></button>
         </div>
-        <div class="toolbar">
-          <select id="roleFilter" onchange="goUsersPage(1)">
-            <option value="">All roles</option>
-            <option value="admin">Admin</option>
-            <option value="navigator">Navigator</option>
-            <option value="responder">Responder</option>
-          </select>
-          <select id="statusFilter" onchange="goUsersPage(1)">
-            <option value="">Approved</option>
-            <option value="rejected">Rejected</option>
-            <option value="all">Everything</option>
-          </select>
-          <label style="font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:6px;cursor:pointer">
-            <input type="checkbox" id="showTestUsers" onchange="goUsersPage(1)"> Show test accounts</label>
-          <button class="btn btn-delete" style="margin-left:auto" onclick="purgeTestAccounts()">Purge test accounts</button>
+
+        <div id="ut-active">
+          <div class="toolbar">
+            <input id="userSearch" type="search" placeholder="Search name or email" oninput="renderUsersTabs()">
+            <select id="roleFilter" onchange="goUsersPage(1)">
+              <option value="">All roles</option>
+              <option value="admin">Admin</option>
+              <option value="navigator">Navigator</option>
+              <option value="responder">Responder</option>
+            </select>
+            <select id="statusFilter" onchange="goUsersPage(1)">
+              <option value="">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="all">Everything</option>
+            </select>
+            <button class="btn-export" style="margin-left:auto" onclick="exportUsersCSV()">⬇ Export CSV</button>
+          </div>
+          <div id="usersContent"><div class="loading">Loading</div></div>
         </div>
-        <div id="usersContent"><div class="loading">Loading</div></div>
-        <!-- Deleted Users -->
-        <div class="card" id="deleted-users-card" style="margin-top:16px;display:none">
-          <div class="card-header">
-            <span class="card-title" style="color:var(--red)">🗑 Deleted Users</span>
+
+        <div id="ut-deleted" style="display:none">
+          <div class="toolbar">
+            <input id="deletedSearch" type="search" placeholder="Search deleted users" oninput="renderDeletedUsers()">
             <button class="btn btn-secondary" onclick="loadDeletedUsers()" style="margin-left:auto">Refresh</button>
           </div>
-          <div id="deletedUsersContent" style="padding:8px 0"></div>
+          <div class="ubulk" id="deletedBulk">
+            <b id="deletedBulkCount">0 selected</b>
+            <button class="btn btn-approve" onclick="bulkRestore()">Restore selected</button>
+            <button class="btn btn-reject" onclick="bulkPermanentDelete()">Delete selected permanently</button>
+          </div>
+          <div id="deletedUsersContent"></div>
+        </div>
+
+        <div id="ut-test" style="display:none">
+          <div class="toolbar">
+            <input id="testSearch" type="search" placeholder="Search test accounts" oninput="renderUsersTabs()">
+            <button class="btn btn-delete" style="margin-left:auto" onclick="purgeTestAccounts()">Purge test accounts…</button>
+          </div>
+          <div id="testUsersContent"></div>
         </div>
 
         <div class="pagination" id="usersPagination" style="display:none">
@@ -859,6 +919,9 @@
         </div>
       </div>
     </div>
+
+    <div id="userDrawerBg" onclick="closeUserDrawer()"></div>
+    <aside id="userDrawer" aria-label="User details" aria-hidden="true"></aside>
 
     <!-- FLAGGED TAB -->
     <div id="tab-flagged" style="display:none">
@@ -1981,19 +2044,75 @@
     } catch(e) { toast(e.message, true); }
   }
 
-  function updateUsersCount(items, shown, total) {
-    const hiddenTest = items.length - shown.length;
-    const parts = [`${shown.length} shown`];
-    if (total > items.length) parts.push(`${total} total`);
-    if (hiddenTest > 0) parts.push(`${hiddenTest} test account${hiddenTest === 1 ? '' : 's'} hidden`);
-    if (total <= items.length && shown.length) {
-      const byRole = shown.reduce((acc, u) => {
-        const key = u.role === 'connector' ? 'navigator' : u.role;
-        return { ...acc, [key]: (acc[key] || 0) + 1 };
-      }, {});
-      parts.push(Object.entries(byRole).map(([r, n]) => `${n} ${r}`).join(', '));
-    }
-    document.getElementById('usersCount').textContent = `· ${parts.join(' · ')}`;
+  const AVATAR_COLORS = ['#0D7A8A','#E8663F','#4C7FD9','#2E9E5B','#CE8A1E','#7A5BD9','#8C9BA8'];
+  const initials = n => (String(n || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('') || '?').toUpperCase();
+  const avatarColor = id => AVATAR_COLORS[[...String(id)].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_COLORS.length];
+  const avatarHtml = u => `<div class="uav" style="background:${avatarColor(u.id)}">${esc(initials(u.name))}</div>`;
+  const roleLabel = u => (u.role === 'connector' ? 'navigator' : u.role);
+  const rolePill = u => `<span class="status-pill ${u.role === 'admin' ? 's-fulfilled' : isConnector(u) ? 's-active' : 's-pending'}">${esc(roleLabel(u))}</span>`;
+  const jsq = s => esc(String(s ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
+  const matchesSearch = (u, q) => !q || `${u.name} ${u.email}`.toLowerCase().includes(q.toLowerCase());
+  let usersTab = 'active', deletedCache = [];
+
+  function setUsersTab(tab) {
+    usersTab = tab;
+    document.querySelectorAll('.utab').forEach(b => b.classList.toggle('on', b.dataset.ut === tab));
+    ['active', 'deleted', 'test'].forEach(t => { document.getElementById('ut-' + t).style.display = t === tab ? '' : 'none'; });
+    document.getElementById('usersPagination').style.display = tab === 'active' && usersPages > 1 ? 'flex' : 'none';
+  }
+
+  function toggleUserMenu(ev, btn) {
+    ev.stopPropagation();
+    const menu = btn.parentElement.querySelector('.umenu');
+    const wasOpen = menu.classList.contains('open');
+    document.querySelectorAll('.umenu.open').forEach(m => m.classList.remove('open'));
+    if (!wasOpen) menu.classList.add('open');
+  }
+  document.addEventListener('click', () => document.querySelectorAll('.umenu.open').forEach(m => m.classList.remove('open')));
+
+  function userRowHtml(u) {
+    const name = jsq(u.name);
+    const isSelf = u.id === user.id;
+    const canManage = !isSelf && u.role !== 'admin';
+    const rejected = u.status === 'rejected';
+    return `
+      <tr class="urow" onclick="openUserDrawer('${u.id}')">
+        <td><div class="uwho">${avatarHtml(u)}<div><b>${esc(u.name)}${isSelf ? ' <small style="display:inline">(you)</small>' : ''}${u.is_test ? TEST_PILL : ''}</b><small>${esc(u.email)}</small></div></div></td>
+        <td>${rolePill(u)}
+          ${rejected ? `<div style="margin-top:4px"><span class="status-pill s-rejected">rejected</span></div>` : ''}
+          ${u.role === 'responder' && !rejected ? `<label class="uperm" onclick="event.stopPropagation()"><input type="checkbox" ${u.can_submit_needs ? 'checked' : ''} onchange="changeCanSubmit('${u.id}',this)"> Can submit needs</label>` : ''}
+        </td>
+        <td style="color:var(--text-2)">${esc(u.org_name || '—')}</td>
+        <td style="color:var(--text-2)">${esc([u.city, u.state].filter(Boolean).join(', ') || '—')}</td>
+        <td style="color:var(--text-3);font-size:12px">${u.created_at ? esc(u.created_at.slice(0, 10)) : '—'}</td>
+        <td style="white-space:nowrap;text-align:right" onclick="event.stopPropagation()">
+          ${rejected ? `<button class="btn btn-approve" onclick="reconsiderUser('${u.id}','${name}')">Reconsider</button> ` : ''}
+          <span class="umenu-wrap">
+            <button class="btn btn-secondary" aria-label="More actions" onclick="toggleUserMenu(event,this)">⋯</button>
+            <div class="umenu">
+              <button onclick="openUserDrawer('${u.id}')">View details</button>
+              ${canManage && !rejected ? `<button onclick="promptChangeRole('${u.id}','${roleLabel(u)}')">Change role…</button>` : ''}
+              ${canManage ? `<hr><button class="d" onclick="deleteUser('${u.id}','${name}')">Delete user…</button>` : ''}
+            </div>
+          </span>
+        </td>
+      </tr>`;
+  }
+
+  function usersTableHtml(list, emptyMsg) {
+    if (!list.length) return `<div class="empty">${emptyMsg}</div>`;
+    return `<table class="need-table"><thead><tr><th>User</th><th>Role</th><th>Org</th><th>Location</th><th>Joined</th><th></th></tr></thead><tbody>${list.map(userRowHtml).join('')}</tbody></table>`;
+  }
+
+  function renderUsersTabs() {
+    const real = usersCache.filter(u => !u.is_test);
+    const test = usersCache.filter(u => u.is_test);
+    const qa = document.getElementById('userSearch').value.trim();
+    const qt = document.getElementById('testSearch').value.trim();
+    document.getElementById('usersContent').innerHTML = usersTableHtml(real.filter(u => matchesSearch(u, qa)), qa ? 'No users match your search.' : 'No users found.');
+    document.getElementById('testUsersContent').innerHTML = usersTableHtml(test.filter(u => matchesSearch(u, qt)), 'No test accounts on this page.');
+    document.getElementById('utc-active').textContent = real.length;
+    document.getElementById('utc-test').textContent = test.length;
   }
 
   async function loadUsers() {
@@ -2002,63 +2121,86 @@
     if (role) url += `&role=${role}`;
     const status = document.getElementById('statusFilter').value;
     if (status) url += `&status=${status}`;
-    const showTest = document.getElementById('showTestUsers').checked;
     document.getElementById('usersContent').innerHTML = '<div class="loading">Loading</div>';
     try {
       const data = await apiGet(url);
-      usersCache = (data.items || []).filter(u => showTest || !u.is_test);
+      usersCache = data.items || [];
       usersPages = data.pages || 1;
       usersTotal = data.total || 0;
-      updateUsersCount(data.items || [], usersCache, usersTotal);
-      if (!usersCache.length) {
-        document.getElementById('usersContent').innerHTML = '<div class="empty">No users found.</div>';
-        document.getElementById('usersPagination').style.display = 'none';
-        return;
-      }
-      document.getElementById('usersContent').innerHTML = `
-        <table class="need-table">
-          <thead><tr>
-            <th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Org</th><th>Location</th><th>Joined</th><th>Change Role</th><th></th>
-          </tr></thead>
-          <tbody>
-            ${usersCache.map(u => `
-              <tr>
-                <td style="font-weight:600">${u.name}${u.is_test ? TEST_PILL : ''}</td>
-                <td style="color:var(--text-2)">${u.email}</td>
-                <td><span class="status-pill ${u.role==='admin'?'s-fulfilled':isConnector(u)?'s-active':'s-pending'}">${u.role}</span></td>
-                <td>${u.status === 'rejected'
-                  ? `<span class="status-pill s-rejected">rejected</span><div style="font-size:11px;color:var(--text-3);margin-top:2px">${esc(u.rejection_reason || 'No reason')}${u.reviewed_at ? ' · ' + esc(u.reviewed_at) : ''}</div>`
-                  : '<span class="status-pill s-active">approved</span>'}</td>
-                <td style="color:var(--text-2)">${u.org_name||'—'}</td>
-                <td style="color:var(--text-2)">${[u.city,u.state].filter(Boolean).join(', ')||'—'}</td>
-                <td style="color:var(--text-3);font-size:12px">${u.created_at?u.created_at.slice(0,10):'—'}</td>
-                <td>
-                  <select class="role-select" onchange="changeRole('${u.id}',this.value)" ${u.id===user.id||u.status==='rejected'?'disabled':''}>
-                    <option value="">— set role —</option>
-                    <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
-                    <option value="navigator" ${isConnector(u)?'selected':''}>navigator</option>
-                    <option value="responder" ${u.role==='responder'?'selected':''}>responder</option>
-                  </select>
-                  ${u.role==='responder' ? `<label style="display:block;margin-top:6px;font-size:12px;color:var(--text-2);cursor:pointer">
-                    <input type="checkbox" ${u.can_submit_needs?'checked':''} onchange="changeCanSubmit('${u.id}',this)"> Can submit needs</label>` : ''}
-                </td>
-                <td style="white-space:nowrap">
-                  ${u.status === 'rejected' ? `<button class="btn btn-approve" onclick="reconsiderUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Reconsider</button> ` : ''}
-                  ${u.id !== user.id && u.role !== 'admin' ? `<button class="btn btn-delete" onclick="deleteUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Delete</button>` : ''}
-                </td>
-              </tr>`).join('')}
-          </tbody>
-        </table>`;
+      renderUsersTabs();
       const pag = document.getElementById('usersPagination');
-      pag.style.display = usersPages > 1 ? 'flex' : 'none';
+      pag.style.display = usersTab === 'active' && usersPages > 1 ? 'flex' : 'none';
       document.getElementById('usersPageInfo').textContent = `Page ${usersPage} / ${usersPages}`;
       document.getElementById('usersTotalInfo').textContent = `${usersTotal} total`;
       document.getElementById('usersPrev').disabled = usersPage <= 1;
       document.getElementById('usersNext').disabled = usersPage >= usersPages;
     } catch(e) {
-      document.getElementById('usersCount').textContent = '';
       document.getElementById('usersContent').innerHTML = '<div class="empty">Failed to load users.</div>';
     }
+  }
+
+  function promptChangeRole(id, current) {
+    const role = (prompt(`New role for this user (admin, navigator, responder).\nCurrent: ${current}`) || '').trim().toLowerCase();
+    if (!role) return;
+    if (!['admin', 'navigator', 'responder'].includes(role)) { toast('Role must be admin, navigator or responder.', true); return; }
+    changeRole(id, role).then(loadUsers);
+  }
+
+  /* ── User details drawer ── */
+  async function openUserDrawer(id) {
+    const drawer = document.getElementById('userDrawer');
+    document.getElementById('userDrawerBg').classList.add('open');
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    drawer.innerHTML = '<div class="db"><div class="loading">Loading</div></div>';
+    const listed = usersCache.find(u => u.id === id) || deletedCache.find(u => u.id === id);
+    try {
+      const d = await apiGet(`/admin/users/${id}`);
+      drawer.innerHTML = userDrawerHtml({ ...listed, ...d }, false);
+    } catch(e) {
+      // Deleted users are not served by the detail endpoint; show what the list already has.
+      drawer.innerHTML = listed ? userDrawerHtml(listed, true) : '<div class="db"><div class="empty">Could not load this user.</div></div>';
+    }
+  }
+
+  function closeUserDrawer() {
+    document.getElementById('userDrawerBg').classList.remove('open');
+    const drawer = document.getElementById('userDrawer');
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeUserDrawer(); });
+
+  function userDrawerHtml(u, isDeleted) {
+    const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
+    const s = u.stats;
+    const list = (items, fmt, empty) => items && items.length ? items.map(fmt).join('') : `<div class="li" style="color:var(--text-3)">${empty}</div>`;
+    const canManage = u.id !== user.id && u.role !== 'admin';
+    const name = jsq(u.name);
+    return `
+      <div class="dh">${avatarHtml(u)}<div style="flex:1;min-width:0"><b style="font-size:16px">${esc(u.name)}</b><div>${rolePill(u)} ${isDeleted ? '<span class="status-pill s-rejected">deleted</span>' : (u.status === 'rejected' ? '<span class="status-pill s-rejected">rejected</span>' : '<span class="status-pill s-active">approved</span>')}${u.is_test ? TEST_PILL : ''}</div></div>
+        <button class="btn btn-secondary" onclick="closeUserDrawer()" aria-label="Close">✕</button></div>
+      <div class="db">
+        <div class="ds"><h4>Contact</h4><dl>
+          ${row('Email', u.email)}${row('Location', [u.city, u.state].filter(Boolean).join(', '))}${row('Language', u.preferred_language)}
+          ${row('Organization', u.org_name)}${row('Responder type', u.responder_type)}${row('Joined', u.created_at && u.created_at.slice(0, 10))}
+          ${isDeleted ? row('Deleted', u.deleted_at) : ''}
+        </dl></div>
+        ${u.registration_notes ? `<div class="ds"><h4>Signup notes</h4><div style="font-size:13px">${esc(u.registration_notes)}</div></div>` : ''}
+        ${u.status === 'rejected' && u.rejection_reason ? `<div class="ds"><h4>Rejection reason</h4><div style="font-size:13px">${esc(u.rejection_reason)}</div></div>` : ''}
+        ${s ? `<div class="ds"><h4>Activity</h4><div class="stats">
+          <div><b>${s.needs_submitted}</b><span>Needs submitted</span></div><div><b>${s.needs_fulfilled}</b><span>Needs fulfilled</span></div>
+          <div><b>${s.responses_made}</b><span>Responses made</span></div><div><b>${s.responses_fulfilled}</b><span>Responses fulfilled</span></div></div></div>
+        <div class="ds"><h4>Recent needs</h4>${list(u.recent_needs, n => `<div class="li"><span>${esc(n.title)}</span><span style="color:var(--text-3)">${esc(n.status)} · ${esc(n.created_at)}</span></div>`, 'No needs yet.')}</div>
+        <div class="ds"><h4>Recent responses</h4>${list(u.recent_responses, r => `<div class="li"><span>${esc(r.need_title)}</span><span style="color:var(--text-3)">${esc(r.response_status)} · ${esc(r.created_at)}</span></div>`, 'No responses yet.')}</div>`
+        : `<div class="ds"><h4>Activity</h4><div style="font-size:13px;color:var(--text-3)">Activity is not available for deleted users. Restore them to see it.</div></div>`}
+      </div>
+      <div class="df">
+        ${isDeleted
+          ? `<button class="btn btn-approve" onclick="restoreUser('${u.id}','${name}');closeUserDrawer()">Restore</button>
+             <button class="btn btn-reject" onclick="permanentlyDeleteUser('${u.id}','${name}');closeUserDrawer()">Delete permanently…</button>`
+          : (canManage ? `<button class="btn btn-delete" onclick="closeUserDrawer();deleteUser('${u.id}','${name}')">Delete user…</button>` : '')}
+      </div>`;
   }
 
   async function reconsiderUser(id, name) {
@@ -2110,39 +2252,107 @@
   }
 
   async function deleteUser(id, name) {
-    if (!await showConfirmModal({ title: 'Delete User', message: `Delete "${name}"? They will be locked out immediately. You can restore them from the Deleted Users section below.`, confirmText: 'Delete', danger: true })) return;
+    if (!await showConfirmModal({ title: 'Delete User', message: `Delete "${name}"? They will be locked out immediately. You can restore them from the Deleted tab.`, confirmText: 'Delete', danger: true })) return;
     try {
       await apiDelete(`/admin/users/${id}`);
-      toast('User deleted. Restore anytime from the Deleted Users section.');
+      toast('User deleted. Restore anytime from the Deleted tab.');
       loadUsers();
       loadDeletedUsers();
     } catch(e) { toast(e.message || 'Failed to delete user.', true); }
   }
 
+  const RESTORE_WINDOW_DAYS = 30;
+  const daysLeft = deletedAt => {
+    const t = Date.parse(deletedAt);
+    return Number.isNaN(t) ? null : Math.max(0, RESTORE_WINDOW_DAYS - Math.floor((Date.now() - t) / 86400000));
+  };
+
   async function loadDeletedUsers() {
     try {
-      const users = await apiGet('/admin/users/deleted');
-      const card = document.getElementById('deleted-users-card');
-      if (!users.length) { card.style.display = 'none'; return; }
-      card.style.display = '';
-      document.getElementById('deletedUsersContent').innerHTML = `
-        <table class="need-table">
-          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Deleted</th><th></th></tr></thead>
-          <tbody>
-            ${users.map(u => `
-              <tr>
-                <td style="font-weight:600">${u.name}</td>
-                <td style="color:var(--text-2)">${u.email}</td>
-                <td><span class="status-pill s-pending">${u.role}</span></td>
-                <td style="color:var(--text-3);font-size:12px">${u.deleted_at || '—'}</td>
-                <td style="display:flex;gap:6px">
-                  <button class="btn btn-approve" onclick="restoreUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Restore</button>
-                  <button class="btn btn-reject" onclick="permanentlyDeleteUser('${u.id}','${u.name.replace(/'/g,"\\'")}')">Delete Permanently</button>
-                </td>
-              </tr>`).join('')}
-          </tbody>
-        </table>`;
-    } catch(e) { /* silently skip if endpoint unavailable */ }
+      deletedCache = await apiGet('/admin/users/deleted');
+      document.getElementById('utc-deleted').textContent = deletedCache.length;
+      renderDeletedUsers();
+    } catch(e) {
+      document.getElementById('deletedUsersContent').innerHTML = '<div class="empty">Could not load deleted users.</div>';
+    }
+  }
+
+  function deletedRowHtml(u) {
+    const name = jsq(u.name);
+    return `
+      <tr class="urow" onclick="openUserDrawer('${u.id}')">
+        <td onclick="event.stopPropagation()"><input type="checkbox" class="dck" value="${u.id}" onchange="updateDeletedBulk()"></td>
+        <td><div class="uwho">${avatarHtml(u)}<div><b>${esc(u.name)}</b><small>${esc(u.email)}</small></div></div></td>
+        <td>${rolePill(u)}</td>
+        <td style="color:var(--text-3);font-size:12px">${esc(u.deleted_at || '—')}</td>
+        <td style="white-space:nowrap;text-align:right" onclick="event.stopPropagation()">
+          <button class="btn btn-approve" onclick="restoreUser('${u.id}','${name}')">Restore</button>
+          <span class="umenu-wrap">
+            <button class="btn btn-secondary" aria-label="More actions" onclick="toggleUserMenu(event,this)">⋯</button>
+            <div class="umenu">
+              <button onclick="openUserDrawer('${u.id}')">View details</button><hr>
+              <button class="d" onclick="permanentlyDeleteUser('${u.id}','${name}')">Delete permanently…</button>
+            </div>
+          </span>
+        </td>
+      </tr>`;
+  }
+
+  function renderDeletedUsers() {
+    const q = document.getElementById('deletedSearch').value.trim();
+    const list = deletedCache.filter(u => matchesSearch(u, q));
+    const el = document.getElementById('deletedUsersContent');
+    if (!list.length) {
+      el.innerHTML = `<div class="empty">${deletedCache.length ? 'No deleted users match your search.' : 'No deleted users. Anyone you delete will show up here so you can restore them.'}</div>`;
+      updateDeletedBulk();
+      return;
+    }
+    const smoke = list.filter(u => isTestEmail(u.email));
+    const real = list.filter(u => !isTestEmail(u.email));
+    const head = '<thead><tr><th style="width:28px"><input type="checkbox" id="dckAll" onchange="toggleAllDeleted(this)"></th><th>User</th><th>Role</th><th>Deleted</th><th></th></tr></thead>';
+    el.innerHTML = `
+      <div class="ubanner">Deleted users can be restored at any time. Permanent delete cannot be undone.</div>
+      ${real.length ? `<table class="need-table">${head}<tbody>${real.map(deletedRowHtml).join('')}</tbody></table>` : ''}
+      ${smoke.length ? `
+        <div class="ugroup">
+          <div class="ugroup-h" onclick="document.getElementById('smokeBody').classList.toggle('hidden');this.querySelector('.car').textContent=document.getElementById('smokeBody').classList.contains('hidden')?'▸':'▾'">
+            <span class="car">▸</span>
+            <div class="t"><b>Test accounts (${smoke.length})</b><small>Automated test signups (example.com / yopmail.com).</small></div>
+            <button class="btn btn-reject" onclick="event.stopPropagation();purgeDeletedTest()">Delete all ${smoke.length} permanently…</button>
+          </div>
+          <div id="smokeBody" class="hidden"><table class="need-table"><tbody>${smoke.map(deletedRowHtml).join('')}</tbody></table></div>
+        </div>` : ''}`;
+    updateDeletedBulk();
+  }
+
+  const selectedDeletedIds = () => [...document.querySelectorAll('.dck:checked')].map(c => c.value);
+  function toggleAllDeleted(box) { document.querySelectorAll('.dck').forEach(c => { c.checked = box.checked; }); updateDeletedBulk(); }
+  function updateDeletedBulk() {
+    const n = selectedDeletedIds().length;
+    document.getElementById('deletedBulkCount').textContent = `${n} selected`;
+    document.getElementById('deletedBulk').classList.toggle('on', n > 0);
+  }
+
+  async function runBulk(ids, fn, doneMsg) {
+    let failed = 0;
+    for (const id of ids) { try { await fn(id); } catch(e) { failed++; } }
+    toast(failed ? `${ids.length - failed} done; ${failed} failed (permanent delete is refused when a user has linked records).` : doneMsg, failed > 0);
+    loadUsers(); loadDeletedUsers();
+  }
+  async function bulkRestore() {
+    const ids = selectedDeletedIds();
+    if (!ids.length || !await showConfirmModal({ title: 'Restore Users', message: `Restore ${ids.length} user(s)? They will be able to sign in again.`, confirmText: 'Restore', danger: false })) return;
+    runBulk(ids, id => apiPost(`/admin/users/${id}/restore`, {}), `✓ Restored ${ids.length} users.`);
+  }
+  async function bulkPermanentDelete() {
+    const ids = selectedDeletedIds();
+    if (!ids.length || !await showConfirmModal({ title: 'Delete Permanently', message: `Permanently delete ${ids.length} user(s)? This cannot be undone.`, confirmText: 'Delete Forever', danger: true })) return;
+    runBulk(ids, id => apiDelete(`/admin/users/${id}/permanent`), `${ids.length} users permanently deleted.`);
+  }
+  async function purgeDeletedTest() {
+    const ids = deletedCache.filter(u => isTestEmail(u.email)).map(u => u.id);
+    if (!ids.length || !await showConfirmModal({ title: 'Delete Test Accounts', message: `Permanently delete ${ids.length} deleted test account(s)? This cannot be undone.`, confirmText: 'Delete Forever', danger: true })) return;
+    runBulk(ids, id => apiDelete(`/admin/users/${id}/permanent`), `${ids.length} test accounts permanently deleted.`);
   }
 
   async function restoreUser(id, name) {
