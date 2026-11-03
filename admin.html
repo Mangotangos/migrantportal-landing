@@ -923,9 +923,13 @@
 
     <!-- USERS TAB -->
     <div id="tab-users" style="display:none">
-      <div class="page-header">
-        <div class="page-title">Users</div>
-        <div class="page-subtitle">Manage accounts, roles, and approvals</div>
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+        <div><div class="page-title">Users</div>
+        <div class="page-subtitle">Manage accounts, roles, and approvals</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="exportUsersCSV()">⬇ Export</button>
+          <button class="btn btn-primary" onclick="inviteUser()">+ Invite user</button>
+        </div>
       </div>
       <div class="np-tiles" id="usersTiles"></div>
       <div class="card">
@@ -940,6 +944,7 @@
           <div class="ubulk" id="activeBulk">
             <b id="activeBulkCount">0 selected</b>
             <button class="btn btn-secondary" onclick="bulkChangeRole()">Change role…</button>
+            <button class="btn btn-secondary" onclick="bulkEmail()">✉ Email selected</button>
           </div>
           <div class="toolbar">
             <input id="userSearch" type="search" placeholder="Search name or email" oninput="renderUsersTabs()">
@@ -954,7 +959,17 @@
               <option value="rejected">Rejected</option>
               <option value="all">Everything</option>
             </select>
-            <button class="btn-export" style="margin-left:auto" onclick="exportUsersCSV()">⬇ Export CSV</button>
+            <select id="userCity" onchange="goUsersPage(1)"><option value="">All cities</option></select>
+            <select id="userActivity" onchange="goUsersPage(1)">
+              <option value="">Any activity</option>
+              <option value="some">Has activity</option>
+              <option value="none">No activity yet</option>
+            </select>
+            <select id="userSort" onchange="goUsersPage(1)">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="name">Name A–Z</option>
+            </select>
           </div>
           <div id="usersContent"><div class="loading">Loading</div></div>
         </div>
@@ -2202,7 +2217,7 @@
     usersTab = tab;
     document.querySelectorAll('.utab').forEach(b => b.classList.toggle('on', b.dataset.ut === tab));
     ['active', 'pending', 'deleted', 'test'].forEach(t => { document.getElementById('ut-' + t).style.display = t === tab ? '' : 'none'; });
-    document.getElementById('usersPagination').style.display = tab === 'active' && usersPages > 1 ? 'flex' : 'none';
+    document.getElementById('usersPagination').style.display = tab === 'active' && usersTotal > 0 ? 'flex' : 'none';
   }
 
   function toggleUserMenu(ev, btn) {
@@ -2214,6 +2229,38 @@
   }
   document.addEventListener('click', () => document.querySelectorAll('.umenu.open').forEach(m => m.classList.remove('open')));
 
+  const STATUS_DOT = { approved: ['#22a05a', 'Active'], rejected: ['#d92d20', 'Rejected'] };
+  function statusDot(u) {
+    const [color, label] = STATUS_DOT[u.status] || ['#98a2b3', u.status || '—'];
+    return `<span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i style="width:8px;height:8px;border-radius:50%;background:${color}"></i>${esc(label)}</span>`;
+  }
+
+  function activityLabel(u) {
+    const parts = [];
+    if (u.needs_count) parts.push(`${u.needs_count} need${u.needs_count === 1 ? '' : 's'}`);
+    if (u.responses_count) parts.push(`${u.responses_count} response${u.responses_count === 1 ? '' : 's'}`);
+    return parts.length ? esc(parts.join(' · ')) : '<span style="color:var(--text-3)">No activity yet</span>';
+  }
+
+  function gmailCompose({ to = '', bcc = '', subject = '', body = '' }) {
+    const q = new URLSearchParams({ view: 'cm', fs: '1', to, bcc, su: subject, body });
+    window.open(`https://mail.google.com/mail/?${q}`, '_blank', 'noopener');
+  }
+
+  function inviteUser() {
+    gmailCompose({
+      subject: 'You are invited to join MigrantPortal',
+      body: 'Hi,\n\nI would like to invite you to join MigrantPortal, where volunteers and navigators connect families with the help they need.\n\nYou can sign up here: https://migrantportal.com/register\n\nThank you,\nMigrantPortal',
+    });
+  }
+
+  function bulkEmail() {
+    const ids = new Set(selectedActiveIds());
+    const emails = usersCache.filter(u => ids.has(u.id) && u.email).map(u => u.email);
+    if (!emails.length) return;
+    gmailCompose({ bcc: emails.join(','), subject: 'MigrantPortal update' });
+  }
+
   function userRowHtml(u) {
     const name = jsq(u.name);
     const isSelf = u.id === user.id;
@@ -2224,11 +2271,12 @@
         <td onclick="event.stopPropagation()">${canManage && !rejected ? `<input type="checkbox" class="ack" value="${u.id}" aria-label="Select ${esc(u.name)}" onchange="updateActiveBulk()">` : ''}</td>
         <td><div class="uwho">${avatarHtml(u)}<div><b>${esc(u.name)}${isSelf ? ' <small style="display:inline">(you)</small>' : ''}${u.is_test ? TEST_PILL : ''}</b><small>${esc(u.email)}</small></div></div></td>
         <td>${rolePill(u)}
-          ${rejected ? `<div style="margin-top:4px"><span class="status-pill s-rejected">rejected</span></div>` : ''}
           ${u.role === 'responder' && !rejected ? `<label class="uperm" onclick="event.stopPropagation()"><input type="checkbox" ${u.can_submit_needs ? 'checked' : ''} onchange="changeCanSubmit('${u.id}',this)"> Can submit needs</label>` : ''}
         </td>
+        <td>${statusDot(u)}</td>
         <td style="color:var(--text-2)">${esc(u.org_name || '—')}</td>
         <td style="color:var(--text-2)">${esc([u.city, u.state].filter(Boolean).join(', ') || '—')}</td>
+        <td style="font-size:12px">${activityLabel(u)}</td>
         <td style="color:var(--text-3);font-size:12px">${u.created_at ? esc(u.created_at.slice(0, 10)) : '—'}</td>
         <td style="white-space:nowrap;text-align:right" onclick="event.stopPropagation()">
           ${rejected ? `<button class="btn btn-approve" onclick="reconsiderUser('${u.id}','${name}')">Reconsider</button> ` : ''}
@@ -2246,7 +2294,7 @@
 
   function usersTableHtml(list, emptyMsg) {
     if (!list.length) return `<div class="empty">${emptyMsg}</div>`;
-    return `<table class="need-table"><thead><tr><th style="width:28px"><input type="checkbox" aria-label="Select all" onchange="toggleAllActive(this)"></th><th>User</th><th>Role</th><th>Org</th><th>Location</th><th>Joined</th><th></th></tr></thead><tbody>${list.map(userRowHtml).join('')}</tbody></table>`;
+    return `<table class="need-table"><thead><tr><th style="width:28px"><input type="checkbox" aria-label="Select all" onchange="toggleAllActive(this)"></th><th>User</th><th>Role</th><th>Status</th><th>Org</th><th>Location</th><th>Activity</th><th>Joined</th><th></th></tr></thead><tbody>${list.map(userRowHtml).join('')}</tbody></table>`;
   }
 
   function renderUsersTabs() {
@@ -2298,24 +2346,39 @@
     loadUsers();
   }
 
+  function fillCityOptions(cities) {
+    const select = document.getElementById('userCity');
+    const selected = select.value;
+    select.innerHTML = '<option value="">All cities</option>' +
+      cities.map(c => `<option value="${esc(c)}"${c === selected ? ' selected' : ''}>${esc(c)}</option>`).join('');
+  }
+
   async function loadUsers() {
     const role = document.getElementById('roleFilter').value;
     let url = `/admin/users?page=${usersPage}`;
     if (role) url += `&role=${role}`;
     const status = document.getElementById('statusFilter').value;
     if (status) url += `&status=${status}`;
+    ['userCity:city', 'userActivity:activity', 'userSort:sort'].forEach(pair => {
+      const [id, param] = pair.split(':');
+      const value = document.getElementById(id).value;
+      if (value) url += `&${param}=${encodeURIComponent(value)}`;
+    });
     document.getElementById('usersContent').innerHTML = '<div class="loading">Loading</div>';
     try {
       const data = await apiGet(url);
       usersCache = data.items || [];
       usersPages = data.pages || 1;
       usersTotal = data.total || 0;
+      fillCityOptions(data.cities || []);
       renderUsersTabs();
       renderUsersTiles();
       const pag = document.getElementById('usersPagination');
-      pag.style.display = usersTab === 'active' && usersPages > 1 ? 'flex' : 'none';
-      document.getElementById('usersPageInfo').textContent = `Page ${usersPage} / ${usersPages}`;
-      document.getElementById('usersTotalInfo').textContent = `${usersTotal} total`;
+      pag.style.display = usersTab === 'active' && usersTotal > 0 ? 'flex' : 'none';
+      const pageSize = data.page_size || usersCache.length || 1;
+      const first = (usersPage - 1) * pageSize + 1;
+      document.getElementById('usersPageInfo').textContent = `Showing ${first}–${first + usersCache.length - 1} of ${usersTotal}`;
+      document.getElementById('usersTotalInfo').textContent = '';
       document.getElementById('usersPrev').disabled = usersPage <= 1;
       document.getElementById('usersNext').disabled = usersPage >= usersPages;
     } catch(e) {
@@ -2366,6 +2429,9 @@
       <div class="dh">${avatarHtml(u)}<div style="flex:1;min-width:0"><b style="font-size:16px">${esc(u.name)}</b><div>${rolePill(u)} ${isDeleted ? '<span class="status-pill s-rejected">deleted</span>' : (u.status === 'rejected' ? '<span class="status-pill s-rejected">rejected</span>' : '<span class="status-pill s-active">approved</span>')}${u.is_test ? TEST_PILL : ''}</div></div>
         <button class="btn btn-secondary" onclick="closeUserDrawer()" aria-label="Close">✕</button></div>
       <div class="db">
+        ${s ? `<div class="ds"><div class="stats" style="grid-template-columns:repeat(4,1fr)">
+          <div><b>${s.needs_submitted}</b><span>Needs</span></div><div><b>${s.needs_fulfilled}</b><span>Needs fulfilled</span></div>
+          <div><b>${s.responses_made}</b><span>Responses</span></div><div><b>${s.responses_fulfilled}</b><span>Resp. fulfilled</span></div></div></div>` : ''}
         <div class="ds"><h4>Contact</h4><dl>
           ${row('Email', u.email)}${row('Location', [u.city, u.state].filter(Boolean).join(', '))}${row('Language', u.preferred_language)}
           ${row('Organization', u.org_name)}${row('Responder type', u.responder_type)}${row('Joined', u.created_at && u.created_at.slice(0, 10))}
@@ -2373,10 +2439,7 @@
         </dl></div>
         ${u.registration_notes ? `<div class="ds"><h4>Signup notes</h4><div style="font-size:13px">${esc(u.registration_notes)}</div></div>` : ''}
         ${u.status === 'rejected' && u.rejection_reason ? `<div class="ds"><h4>Rejection reason</h4><div style="font-size:13px">${esc(u.rejection_reason)}</div></div>` : ''}
-        ${s ? `<div class="ds"><h4>Activity</h4><div class="stats">
-          <div><b>${s.needs_submitted}</b><span>Needs submitted</span></div><div><b>${s.needs_fulfilled}</b><span>Needs fulfilled</span></div>
-          <div><b>${s.responses_made}</b><span>Responses made</span></div><div><b>${s.responses_fulfilled}</b><span>Responses fulfilled</span></div></div></div>
-        <div class="ds"><h4>Recent needs</h4>${list(u.recent_needs, n => `<div class="li"><span>${esc(n.title)}</span><span style="color:var(--text-3)">${esc(n.status)} · ${esc(n.created_at)}</span></div>`, 'No needs yet.')}</div>
+        ${s ? `<div class="ds"><h4>Recent needs</h4>${list(u.recent_needs, n => `<div class="li"><span>${esc(n.title)}</span><span style="color:var(--text-3)">${esc(n.status)} · ${esc(n.created_at)}</span></div>`, 'No needs yet.')}</div>
         <div class="ds"><h4>Recent responses</h4>${list(u.recent_responses, r => `<div class="li"><span>${esc(r.need_title)}</span><span style="color:var(--text-3)">${esc(r.response_status)} · ${esc(r.created_at)}</span></div>`, 'No responses yet.')}</div>`
         : `<div class="ds"><h4>Activity</h4><div style="font-size:13px;color:var(--text-3)">Activity is not available for deleted users. Restore them to see it.</div></div>`}
       </div>
@@ -2384,7 +2447,9 @@
         ${isDeleted
           ? `<button class="btn btn-approve" onclick="restoreUser('${u.id}','${name}');closeUserDrawer()">Restore</button>
              <button class="btn btn-reject" onclick="permanentlyDeleteUser('${u.id}','${name}');closeUserDrawer()">Delete permanently…</button>`
-          : (canManage ? `<button class="btn btn-delete" onclick="closeUserDrawer();deleteUser('${u.id}','${name}')">Delete user…</button>` : '')}
+          : `${u.email ? `<button class="btn btn-secondary" onclick="gmailCompose({to:'${jsq(u.email)}'})">✉ Email</button>` : ''}
+             ${canManage && u.status !== 'rejected' ? `<button class="btn btn-secondary" onclick="closeUserDrawer();promptChangeRole('${u.id}','${roleLabel(u)}')">Change role…</button>` : ''}
+             ${canManage ? `<button class="btn btn-delete" onclick="closeUserDrawer();deleteUser('${u.id}','${name}')">Delete user…</button>` : ''}`}
       </div>`;
   }
 
