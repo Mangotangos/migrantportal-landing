@@ -554,7 +554,6 @@
     .modal-field-val { font-size:14px;color:var(--text);line-height:1.6; }
 
     /* ── PENDING USER CARD ── */
-    #pending-users-card { border-color:rgba(240,180,41,0.25) !important;background:rgba(240,180,41,0.04) !important;margin-bottom:16px; }
 
     /* ── DISBURSEMENT STATUS ── */
     .disb-requested { background:var(--yellow-bg);color:var(--yellow); }
@@ -928,19 +927,11 @@
         <div class="page-title">Users</div>
         <div class="page-subtitle">Manage accounts, roles, and approvals</div>
       </div>
-      <div class="card" id="pending-users-card" style="display:none">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(240,180,41,0.15);display:flex;align-items:center;justify-content:space-between">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:14px;font-weight:700;color:var(--yellow)">Pending Approvals</span>
-            <span id="pending-users-count" style="background:var(--yellow-bg);color:var(--yellow);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px"></span>
-          </div>
-          <span style="font-size:12px;color:var(--text-2)">Waiting for admin review</span>
-        </div>
-        <div id="pendingUsersContent" style="padding:8px 0"></div>
-      </div>
+      <div class="np-tiles" id="usersTiles"></div>
       <div class="card">
         <div class="utabs" role="tablist">
           <button class="utab on" data-ut="active" onclick="setUsersTab('active')">Active<span class="n" id="utc-active">0</span></button>
+          <button class="utab" data-ut="pending" onclick="setUsersTab('pending')">Awaiting approval<span class="n" id="utc-pending">0</span></button>
           <button class="utab del" data-ut="deleted" onclick="setUsersTab('deleted')">Deleted<span class="n" id="utc-deleted">0</span></button>
           <button class="utab" data-ut="test" onclick="setUsersTab('test')">Test accounts<span class="n" id="utc-test">0</span></button>
         </div>
@@ -964,8 +955,19 @@
           <div id="usersContent"><div class="loading">Loading</div></div>
         </div>
 
-        <div id="ut-deleted" style="display:none">
+        <div id="ut-pending" style="display:none">
           <div class="toolbar">
+            <span style="font-size:12px;color:var(--text-2)">New signups waiting for admin review, oldest first.</span>
+            <button class="btn btn-secondary" onclick="loadPendingUsers()" style="margin-left:auto">Refresh</button>
+          </div>
+          <div class="ubulk" id="pendingBulk">
+            <b id="pendingBulkCount">0 selected</b>
+            <button class="btn btn-approve" onclick="bulkApprove()">Approve selected</button>
+          </div>
+          <div id="pendingUsersContent"></div>
+        </div>
+
+        <div id="ut-deleted" style="display:none">
             <input id="deletedSearch" type="search" placeholder="Search deleted users" oninput="renderDeletedUsers()">
             <button class="btn btn-secondary" onclick="loadDeletedUsers()" style="margin-left:auto">Refresh</button>
           </div>
@@ -2027,16 +2029,46 @@
 
   function goUsersPage(p) { usersPage = p; loadUsers(); }
 
+  let pendingCount = 0;
+
+  function renderUsersTiles() {
+    const testCount = usersCache.filter(u => u.is_test).length;
+    document.getElementById('usersTiles').innerHTML =
+      `<div class="np-tile"><b>${usersTotal}</b><span>Active users</span></div>
+       <div class="np-tile"><b${pendingCount ? ' style="color:var(--yellow)"' : ''}>${pendingCount}</b><span>Awaiting approval</span></div>
+       <div class="np-tile"><b>${deletedCache.length}</b><span>Deleted</span></div>
+       <div class="np-tile"><b>${testCount}</b><span>Test accounts (this page)</span></div>`;
+  }
+
   async function loadPendingUsers() {
     try {
       const data = await apiGet('/admin/users/pending');
       const users = Array.isArray(data) ? data : [];
-      const card = document.getElementById('pending-users-card');
-      card.style.display = users.length ? '' : 'none';
-      document.getElementById('pending-users-count').textContent = users.length;
-      if (!users.length) return;
-      document.getElementById('pendingUsersContent').innerHTML = users.map(renderPendingUser).join('');
+      pendingCount = users.length;
+      document.getElementById('utc-pending').textContent = users.length;
+      document.getElementById('utc-pending').style.background = users.length ? 'var(--yellow-bg)' : '';
+      document.getElementById('pendingUsersContent').innerHTML = users.length
+        ? users.map(renderPendingUser).join('')
+        : '<div class="empty">No signups waiting for approval.</div>';
+      updatePendingBulk();
+      renderUsersTiles();
     } catch(e) { console.error(e); }
+  }
+
+  const selectedPendingIds = () => [...document.querySelectorAll('.pck:checked')].map(c => c.value);
+  function updatePendingBulk() {
+    const n = selectedPendingIds().length;
+    document.getElementById('pendingBulkCount').textContent = `${n} selected`;
+    document.getElementById('pendingBulk').classList.toggle('on', n > 0);
+  }
+
+  async function bulkApprove() {
+    const ids = selectedPendingIds();
+    if (!ids.length || !await showConfirmModal({ title: 'Approve Users', message: `Approve ${ids.length} user(s)? They will be able to sign in right away.`, confirmText: 'Approve', danger: false })) return;
+    let failed = 0;
+    for (const id of ids) { try { await apiPost(`/admin/users/${id}/approve`, {}); } catch(e) { failed++; } }
+    toast(failed ? `${ids.length - failed} approved; ${failed} failed.` : `✓ Approved ${ids.length} users.`, failed > 0);
+    loadPendingUsers(); loadUsers();
   }
 
   const DISPOSABLE_EMAIL_DOMAINS = ['yopmail.com','mailinator.com','guerrillamail.com','10minutemail.com','tempmail.com','trashmail.com','sharklasers.com','getnada.com','maildrop.cc'];
@@ -2072,6 +2104,7 @@
     return `
       <div id="pu-${esc(u.id)}" class="pu-row">
         <div class="pu-top">
+          <input type="checkbox" class="pck" value="${esc(u.id)}" aria-label="Select ${esc(u.name)}" style="margin-top:4px" onchange="updatePendingBulk()">
           <div class="pu-main">
             <div style="font-weight:700;font-size:15px">
               ${esc(u.name)}
@@ -2120,11 +2153,8 @@
   async function approveUser(id) {
     try {
       await apiPost(`/admin/users/${id}/approve`, {});
-      document.getElementById(`pu-${id}`)?.remove();
-      const remaining = document.querySelectorAll('[id^="pu-"]').length;
-      document.getElementById('pending-users-count').textContent = remaining;
-      if (!remaining) document.getElementById('pending-users-card').style.display = 'none';
       toast('✓ User approved — they can now sign in.');
+      loadPendingUsers();
       loadUsers();
     } catch(e) { toast(e.message, true); }
   }
@@ -2134,11 +2164,8 @@
     if (reason === null) return;
     try {
       await apiPost(`/admin/users/${id}/reject`, { reason: reason || '' });
-      document.getElementById(`pu-${id}`)?.remove();
-      const remaining = document.querySelectorAll('[id^="pu-"]').length;
-      document.getElementById('pending-users-count').textContent = remaining;
-      if (!remaining) document.getElementById('pending-users-card').style.display = 'none';
       toast('User rejected. Find them under Users → Rejected.');
+      loadPendingUsers();
       loadUsers();
     } catch(e) { toast(e.message, true); }
   }
@@ -2156,7 +2183,7 @@
   function setUsersTab(tab) {
     usersTab = tab;
     document.querySelectorAll('.utab').forEach(b => b.classList.toggle('on', b.dataset.ut === tab));
-    ['active', 'deleted', 'test'].forEach(t => { document.getElementById('ut-' + t).style.display = t === tab ? '' : 'none'; });
+    ['active', 'pending', 'deleted', 'test'].forEach(t => { document.getElementById('ut-' + t).style.display = t === tab ? '' : 'none'; });
     document.getElementById('usersPagination').style.display = tab === 'active' && usersPages > 1 ? 'flex' : 'none';
   }
 
@@ -2227,6 +2254,7 @@
       usersPages = data.pages || 1;
       usersTotal = data.total || 0;
       renderUsersTabs();
+      renderUsersTiles();
       const pag = document.getElementById('usersPagination');
       pag.style.display = usersTab === 'active' && usersPages > 1 ? 'flex' : 'none';
       document.getElementById('usersPageInfo').textContent = `Page ${usersPage} / ${usersPages}`;
@@ -2371,6 +2399,7 @@
       deletedCache = await apiGet('/admin/users/deleted');
       document.getElementById('utc-deleted').textContent = deletedCache.length;
       renderDeletedUsers();
+      renderUsersTiles();
     } catch(e) {
       document.getElementById('deletedUsersContent').innerHTML = '<div class="empty">Could not load deleted users.</div>';
     }
