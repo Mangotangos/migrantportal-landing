@@ -398,6 +398,8 @@
     .np-cov td { padding:3px;text-align:center; }
     .np-cell { display:block;border-radius:6px;padding:6px 0;font-weight:700;font-size:12px;cursor:pointer; }
     .np-cell:hover { outline:2px solid var(--teal); }
+    .np-cx { background:var(--surface-2);color:var(--text-3); }
+    .np-cell.np-cx { font-weight:400; cursor:default; } .np-cell.np-cx:hover { outline:none; }
     .np-c0 { background:var(--red-bg);color:var(--red); } .np-c1 { background:#dbeef0;color:#0A6472; } .np-c2 { background:#a9d8de;color:#074a55; } .np-c3 { background:#5fb4c0;color:#fff; }
     .np-legend { display:flex;gap:14px;align-items:center;font-size:12px;color:var(--text-2);padding:2px 14px 8px;flex-wrap:wrap; }
     .np-legend i { display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-3px;margin-right:4px; }
@@ -936,6 +938,7 @@
         <div class="utabs" role="tablist">
           <button class="utab on" data-ut="active" onclick="setUsersTab('active')">Active<span class="n" id="utc-active">0</span></button>
           <button class="utab" data-ut="pending" onclick="setUsersTab('pending')">Awaiting approval<span class="n" id="utc-pending">0</span></button>
+          <button class="utab" data-ut="coverage" onclick="setUsersTab('coverage')">Coverage by city<span class="n" id="utc-coverage">0</span></button>
           <button class="utab del" data-ut="deleted" onclick="setUsersTab('deleted')">Deleted<span class="n" id="utc-deleted">0</span></button>
           <button class="utab" data-ut="test" onclick="setUsersTab('test')">Test accounts<span class="n" id="utc-test">0</span></button>
         </div>
@@ -972,6 +975,13 @@
             </select>
           </div>
           <div id="usersContent"><div class="loading">Loading</div></div>
+        </div>
+
+        <div id="ut-coverage" style="display:none">
+          <div class="np-tools" style="padding-bottom:4px"><span style="color:var(--text-2);font-size:13px;max-width:760px">Approved responders per city and need category. Red means open needs there and nobody to help. Responders who have not chosen categories count for every category.</span>
+            <button class="btn btn-secondary" onclick="loadUsersCoverage()" style="margin-left:auto">Refresh</button></div>
+          <div class="np-legend"><span><i class="np-c0"></i>0 (gap)</span><span><i class="np-c1"></i>1</span><span><i class="np-c2"></i>2 or more</span><span><i class="np-cx"></i>no open needs</span><b id="ucovGaps" style="margin-left:auto;color:var(--red)"></b></div>
+          <div class="np-cov"><table class="need-table" id="ucovTable"></table></div>
         </div>
 
         <div id="ut-pending" style="display:none">
@@ -1399,7 +1409,7 @@
     activeTab = name;
     if (name === 'home')          loadHome();
     if (name === 'all')           loadAllNeeds();
-    if (name === 'users')         { loadPendingUsers(); loadUsers(); loadDeletedUsers(); }
+    if (name === 'users')         { loadPendingUsers(); loadUsers(); loadDeletedUsers(); loadUsersCoverage(); }
     if (name === 'reports')       loadReports();
     if (name === 'flagged')       loadFlagged();
     if (name === 'announcements') loadAnnouncements();
@@ -2064,13 +2074,68 @@
 
   let pendingCount = 0;
 
+  let coverageData = null;
+
   function renderUsersTiles() {
-    const testCount = usersCache.filter(u => u.is_test).length;
+    const s = coverageData ? coverageData.summary : { gap_cities: 0, needs_in_thin_areas: 0 };
     document.getElementById('usersTiles').innerHTML =
       `<div class="np-tile"><b>${usersTotal}</b><span>Active users</span></div>
        <div class="np-tile"><b${pendingCount ? ' style="color:var(--yellow)"' : ''}>${pendingCount}</b><span>Awaiting approval</span></div>
-       <div class="np-tile"><b>${deletedCache.length}</b><span>Deleted</span></div>
-       <div class="np-tile"><b>${testCount}</b><span>Test accounts (this page)</span></div>`;
+       <div class="np-tile"><b${s.gap_cities ? ' style="color:var(--red)"' : ''}>${s.gap_cities}</b><span>Cities with open needs and no responders</span></div>
+       <div class="np-tile"><b>${s.needs_in_thin_areas}</b><span>Open needs in thin areas</span></div>`;
+  }
+
+  const catLabel = c => c.charAt(0).toUpperCase() + c.slice(1);
+  const coverageStatusPill = c => ({
+    gap: `<span class="status-pill s-rejected">${c.responders ? `${c.gaps} gap${c.gaps === 1 ? '' : 's'}` : 'No responders'}</span>`,
+    thin: '<span class="status-pill s-pending">Thin</span>',
+    ok: '<span class="status-pill s-active">Covered</span>',
+  }[c.status]);
+
+  function coverageCell(cell, city, category) {
+    if (!cell.needs) return '<span class="np-cell np-cx">·</span>';
+    const tone = Math.min(cell.responders, 2);
+    return `<span class="np-cell np-c${tone}" title="${cell.needs} open need(s), ${cell.responders} responder(s)" data-city="${esc(city)}" onclick="goCoverageCity(this)">${cell.responders}</span>`;
+  }
+
+  function renderUsersCoverage() {
+    const d = coverageData;
+    const table = document.getElementById('ucovTable');
+    document.getElementById('utc-coverage').textContent = d ? d.cities.length : 0;
+    if (!d || !d.cities.length) {
+      table.innerHTML = '<tbody><tr><td><div class="empty">No approved responders or open needs yet.</div></td></tr></tbody>';
+      document.getElementById('ucovGaps').textContent = '';
+      return;
+    }
+    const cats = d.categories.filter(c => d.cities.some(city => city.cells[c].needs > 0));
+    table.innerHTML =
+      `<thead><tr><th>City</th><th>Open needs</th>${cats.map(c => `<th>${esc(catLabel(c))}</th>`).join('')}<th>Status</th></tr></thead><tbody>` +
+      d.cities.map(c => `<tr><td><b>${esc(c.city)}${c.state ? ', ' + esc(c.state) : ''}</b>
+        <div style="font-size:12px;color:var(--text-2)">${c.responders} responder${c.responders === 1 ? '' : 's'} · ${c.navigators} navigator${c.navigators === 1 ? '' : 's'}</div></td>
+        <td style="font-weight:700;${c.open_needs && c.status === 'gap' ? 'color:var(--red)' : ''}">${c.open_needs}</td>
+        ${cats.map(cat => `<td>${coverageCell(c.cells[cat], c.city, cat)}</td>`).join('')}
+        <td>${coverageStatusPill(c)}</td></tr>`).join('') + '</tbody>';
+    document.getElementById('ucovGaps').textContent = d.summary.gap_cities
+      ? `${d.summary.gap_cities} cit${d.summary.gap_cities === 1 ? 'y has' : 'ies have'} open needs and no responders` : '';
+  }
+
+  async function loadUsersCoverage() {
+    try {
+      coverageData = await apiGet('/admin/users/coverage');
+      renderUsersCoverage();
+      renderUsersTiles();
+    } catch(e) {
+      document.getElementById('ucovTable').innerHTML = '<tbody><tr><td><div class="empty">Could not load coverage.</div></td></tr></tbody>';
+    }
+  }
+
+  function goCoverageCity(cell) {
+    const wanted = cell.dataset.city.toLowerCase();
+    const option = [...document.getElementById('userCity').options].find(o => o.value.toLowerCase() === wanted);
+    if (!option) { toast(`No approved users in ${cell.dataset.city} yet.`); return; }
+    document.getElementById('userCity').value = option.value;
+    setUsersTab('active');
+    goUsersPage(1);
   }
 
   async function loadPendingUsers() {
@@ -2216,7 +2281,7 @@
   function setUsersTab(tab) {
     usersTab = tab;
     document.querySelectorAll('.utab').forEach(b => b.classList.toggle('on', b.dataset.ut === tab));
-    ['active', 'pending', 'deleted', 'test'].forEach(t => { document.getElementById('ut-' + t).style.display = t === tab ? '' : 'none'; });
+    ['active', 'pending', 'coverage', 'deleted', 'test'].forEach(t => { document.getElementById('ut-' + t).style.display = t === tab ? '' : 'none'; });
     document.getElementById('usersPagination').style.display = tab === 'active' && usersTotal > 0 ? 'flex' : 'none';
   }
 
