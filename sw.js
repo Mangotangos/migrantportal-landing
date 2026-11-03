@@ -1,11 +1,11 @@
-/**
+﻿/**
  * MigrantPortal service worker
  * - Cache-first for static shell (HTML, CSS, JS, images, fonts)
  * - Network-first with passthrough for /api/ and Railway backend
  * - Offline fallback page for navigations
  * Bump CACHE_NAME on every deploy.
  */
-const CACHE_NAME = 'migrantportal-v94';
+const CACHE_NAME = 'migrantportal-v95';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_URLS = [
@@ -26,7 +26,7 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME).then((cache) => {
       // cache:'reload' bypasses the HTTP cache so a new worker never precaches last deploy's files.
       return cache.addAll(PRECACHE_URLS.map((url) => new Request(url, { cache: 'reload' }))).catch(() => {
-        // Best-effort precache — don't fail install if one file is missing.
+        // Best-effort precache â€” don't fail install if one file is missing.
       });
     })
   );
@@ -59,13 +59,13 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = req.url;
 
-  // Only handle GET — mutations pass through
+  // Only handle GET â€” mutations pass through
   if (req.method !== 'GET') return;
 
   // Skip cross-origin analytics/beacons
   if (isAnalytics(url)) return;
 
-  // Network-first for backend API calls — never stale data
+  // Network-first for backend API calls â€” never stale data
   if (isBackend(url)) {
     event.respondWith(
       fetch(req).catch(() => new Response(
@@ -81,7 +81,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       (async () => {
         try {
-          // Fetch by URL string, not the captured navigate-mode Request —
+          // Fetch by URL string, not the captured navigate-mode Request â€”
           // reusing `req` here throws "Failed to fetch" once Cloudflare's
           // .html -> clean-URL 308 redirect is in the chain.
           // cache:'no-cache' revalidates with the server (304 if unchanged) so the

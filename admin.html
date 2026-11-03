@@ -937,6 +937,10 @@
         </div>
 
         <div id="ut-active">
+          <div class="ubulk" id="activeBulk">
+            <b id="activeBulkCount">0 selected</b>
+            <button class="btn btn-secondary" onclick="bulkChangeRole()">Change role…</button>
+          </div>
           <div class="toolbar">
             <input id="userSearch" type="search" placeholder="Search name or email" oninput="renderUsersTabs()">
             <select id="roleFilter" onchange="goUsersPage(1)">
@@ -1329,6 +1333,19 @@
 </div>
 
 <!-- NEED DETAIL MODAL -->
+<div class="modal-overlay" id="roleOverlay" onclick="resolveRoleModal(null)">
+  <div class="modal" style="width:420px" onclick="event.stopPropagation()">
+    <div style="font-size:17px;font-weight:700" id="roleModalTitle">Change role</div>
+    <div style="color:var(--text-2);font-size:13px;margin:4px 0 14px" id="roleModalSub"></div>
+    <div id="roleModalOpts" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div id="roleModalWarn" style="display:none;margin-top:12px;font-size:12px;color:var(--red)">Admins can manage every user and see all data. Only grant this to people you trust.</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px">
+      <button class="btn btn-secondary" onclick="resolveRoleModal(null)">Cancel</button>
+      <button class="btn btn-approve" id="roleModalOk" onclick="resolveRoleModal(document.querySelector('input[name=newRole]:checked')?.value || null)">Change role</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">×</button>
@@ -2203,6 +2220,7 @@
     const rejected = u.status === 'rejected';
     return `
       <tr class="urow" onclick="openUserDrawer('${u.id}')">
+        <td onclick="event.stopPropagation()">${canManage && !rejected ? `<input type="checkbox" class="ack" value="${u.id}" aria-label="Select ${esc(u.name)}" onchange="updateActiveBulk()">` : ''}</td>
         <td><div class="uwho">${avatarHtml(u)}<div><b>${esc(u.name)}${isSelf ? ' <small style="display:inline">(you)</small>' : ''}${u.is_test ? TEST_PILL : ''}</b><small>${esc(u.email)}</small></div></div></td>
         <td>${rolePill(u)}
           ${rejected ? `<div style="margin-top:4px"><span class="status-pill s-rejected">rejected</span></div>` : ''}
@@ -2227,7 +2245,7 @@
 
   function usersTableHtml(list, emptyMsg) {
     if (!list.length) return `<div class="empty">${emptyMsg}</div>`;
-    return `<table class="need-table"><thead><tr><th>User</th><th>Role</th><th>Org</th><th>Location</th><th>Joined</th><th></th></tr></thead><tbody>${list.map(userRowHtml).join('')}</tbody></table>`;
+    return `<table class="need-table"><thead><tr><th style="width:28px"><input type="checkbox" aria-label="Select all" onchange="toggleAllActive(this)"></th><th>User</th><th>Role</th><th>Org</th><th>Location</th><th>Joined</th><th></th></tr></thead><tbody>${list.map(userRowHtml).join('')}</tbody></table>`;
   }
 
   function renderUsersTabs() {
@@ -2239,6 +2257,44 @@
     document.getElementById('testUsersContent').innerHTML = usersTableHtml(test.filter(u => matchesSearch(u, qt)), 'No test accounts on this page.');
     document.getElementById('utc-active').textContent = real.length;
     document.getElementById('utc-test').textContent = test.length;
+    updateActiveBulk();
+  }
+
+  const selectedActiveIds = () => [...document.querySelectorAll('.ack:checked')].map(c => c.value);
+  function toggleAllActive(box) {
+    box.closest('table').querySelectorAll('.ack').forEach(c => { c.checked = box.checked; });
+    updateActiveBulk();
+  }
+  function updateActiveBulk() {
+    const n = selectedActiveIds().length;
+    document.getElementById('activeBulkCount').textContent = `${n} selected`;
+    document.getElementById('activeBulk').classList.toggle('on', n > 0);
+  }
+
+  let roleModalResolve = null;
+  function showRoleModal({ subtitle, current = '' }) {
+    document.getElementById('roleModalSub').textContent = subtitle;
+    document.getElementById('roleModalOpts').innerHTML = ['navigator', 'responder', 'admin'].map(r =>
+      `<label style="display:flex;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;text-transform:capitalize">
+        <input type="radio" name="newRole" value="${r}" ${r === current ? 'checked' : ''} onchange="document.getElementById('roleModalWarn').style.display = this.value === 'admin' ? 'block' : 'none'"> ${r}</label>`).join('');
+    document.getElementById('roleModalWarn').style.display = 'none';
+    document.getElementById('roleOverlay').classList.add('open');
+    return new Promise(res => { roleModalResolve = res; });
+  }
+  function resolveRoleModal(role) {
+    document.getElementById('roleOverlay').classList.remove('open');
+    if (roleModalResolve) { roleModalResolve(role); roleModalResolve = null; }
+  }
+
+  async function bulkChangeRole() {
+    const ids = selectedActiveIds();
+    if (!ids.length) return;
+    const role = await showRoleModal({ subtitle: `Set the role for ${ids.length} selected user(s).` });
+    if (!role) return;
+    let failed = 0;
+    for (const id of ids) { try { await apiPatch(`/admin/users/${id}/role`, { role }); } catch(e) { failed++; } }
+    toast(failed ? `${ids.length - failed} changed; ${failed} failed.` : `✓ ${ids.length} users are now ${role}s.`, failed > 0);
+    loadUsers();
   }
 
   async function loadUsers() {
@@ -2266,11 +2322,12 @@
     }
   }
 
-  function promptChangeRole(id, current) {
-    const role = (prompt(`New role for this user (admin, navigator, responder).\nCurrent: ${current}`) || '').trim().toLowerCase();
-    if (!role) return;
-    if (!['admin', 'navigator', 'responder'].includes(role)) { toast('Role must be admin, navigator or responder.', true); return; }
-    changeRole(id, role).then(loadUsers);
+  async function promptChangeRole(id, current) {
+    const u = usersCache.find(x => x.id === id);
+    const role = await showRoleModal({ subtitle: `${u ? u.name : 'This user'} is currently ${current}.`, current });
+    if (!role || role === current) return;
+    await changeRole(id, role);
+    loadUsers();
   }
 
   /* ── User details drawer ── */
@@ -2296,7 +2353,7 @@
     drawer.classList.remove('open');
     drawer.setAttribute('aria-hidden', 'true');
   }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeUserDrawer(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeUserDrawer(); if (roleModalResolve) resolveRoleModal(null); } });
 
   function userDrawerHtml(u, isDeleted) {
     const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
