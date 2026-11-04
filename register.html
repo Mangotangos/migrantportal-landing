@@ -770,6 +770,7 @@
           <label class="org-svc-label"><input type="checkbox" value="financial" onchange="checkOrgServices()" /> 💰 Financial Aid</label>
           <label class="org-svc-label"><input type="checkbox" value="childcare" onchange="checkOrgServices()" /> 👶 Childcare</label>
         </div>
+        <div id="org-alerts-mount" style="margin-bottom:24px"></div>
         <div class="btn-row">
           <button class="btn-back" onclick="goOrgTo(2)">Back</button>
           <button class="btn-next" id="btn-org-3" disabled onclick="goOrgTo(4)">Next</button>
@@ -964,6 +965,14 @@
 
     if (_urlRole === 'organization') {
       isOrgFlow = true;
+      // Orgs that respond get the same alert settings (radius + need types) as
+      // individual responders, so reuse that block inside the org services step.
+      const alerts = document.getElementById('responder-only-sections');
+      document.getElementById('org-alerts-mount').appendChild(alerts);
+      alerts.style.display = '';
+      const labels = alerts.querySelectorAll('.section-label');
+      labels[0].textContent = 'Alert us about needs within... (from your organization address)';
+      labels[1].textContent = 'What types of needs can your organization help with?';
       document.getElementById('step-1').classList.remove('visible');
       goOrgTo(1);
     } else if (_urlInviteCode) {
@@ -1115,7 +1124,7 @@
 
     function checkOrgServices() {
       const any = [...document.querySelectorAll('#org-services-grid input[type=checkbox]:checked')].length > 0;
-      setBtn('btn-org-3', any);
+      setBtn('btn-org-3', any && needCategories.length > 0);
     }
 
     let orgZipResolved = false;
@@ -1246,6 +1255,10 @@
         state: orgPayload.state,
         zip_code: orgPayload.zipcode,
       };
+      if (orgUsageChoice !== 'submit') {
+        userPayload.notification_radius = notificationRadius;
+        userPayload.need_categories = needCategories;
+      }
 
       try {
         // 1. Register user account
@@ -1543,6 +1556,7 @@
       if (toggleBtn) toggleBtn.textContent = needCategories.length === 0 ? 'Select All' : 'Clear All';
       if (needCategories.length) clearNeedError();
       updateStep2Summary();
+      if (isOrgFlow) checkOrgServices();
     }
 
     function toggleAllNeeds(btn) {
@@ -1558,6 +1572,7 @@
         clearNeedError();
       }
       updateStep2Summary();
+      if (isOrgFlow) checkOrgServices();
     }
 
     function clearNeedError() {
