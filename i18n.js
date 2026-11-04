@@ -407,7 +407,7 @@
 
     // ── Impact stats
     'Real Impact, Right Now': 'Impacto Real, Ahora',
-    'Updated live from our network': 'Actualizado en tiempo real desde nuestra red',
+    'Starting in Kansas City, open to supporters nationwide': 'Comenzando en Kansas City, abiertos a colaboradores de todo el país',
     'Needs Submitted': 'Solicitudes Enviadas',
     'Responses Given': 'Respuestas Dadas',
     'Families Served': 'Familias Atendidas',
