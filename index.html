@@ -240,94 +240,102 @@
       flex: 1; display: flex; align-items: center; justify-content: center;
       min-width: 280px;
     }
-    /* ─── HERO MOCKUP ANIMATIONS ───────────────── */
+    /* ─── HERO VISUAL (one 9s story loop: submitted → verified → responded) ── */
     @keyframes heroFadeIn {
       from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes desktopFloat {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-10px); }
+    @keyframes hvDrift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes hvRing { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(3.2); opacity: 0; } }
+    @keyframes hvLiveCore { 0%, 64% { background: var(--orange); } 68%, 100% { background: var(--hv-green); } }
+    @keyframes hvSt1 { 0%, 30% { opacity: 1; } 34%, 100% { opacity: 0; } }
+    @keyframes hvSt2 { 0%, 32% { opacity: 0; } 36%, 62% { opacity: 1; } 66%, 100% { opacity: 0; } }
+    @keyframes hvSt3 { 0%, 64% { opacity: 0; } 68%, 96% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes hvF1 { 0% { transform: scaleX(0); } 8%, 94% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+    @keyframes hvF2 { 0%, 33% { transform: scaleX(0); } 41%, 94% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+    @keyframes hvF3 { 0%, 66% { transform: scaleX(0); } 74%, 94% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+    @keyframes hvBtnA { 0%, 64% { opacity: 1; } 66%, 98% { opacity: 0; } 100% { opacity: 1; } }
+    @keyframes hvBtnB { 0%, 64% { opacity: 0; } 66%, 98% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes hvPress { 0%, 61%, 67%, 100% { transform: scale(1); } 64% { transform: scale(.93); } }
+    @keyframes hvToast {
+      0%, 68% { opacity: 0; transform: translateY(12px); }
+      74%, 94% { opacity: 1; transform: translateY(0); }
+      98%, 100% { opacity: 0; transform: translateY(12px); }
     }
-    @keyframes phoneFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      40%       { transform: translateY(-14px) rotate(1deg); }
-      80%       { transform: translateY(-6px) rotate(-0.5deg); }
-    }
-    @keyframes respondPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(255,100,40,0.5); }
-      50%       { box-shadow: 0 0 0 5px rgba(255,100,40,0); }
+    @keyframes hvTap {
+      0%, 58% { opacity: 0; transform: scale(1.6); }
+      62% { opacity: 1; transform: scale(1); }
+      68% { opacity: 0; transform: scale(.8); }
+      100% { opacity: 0; }
     }
     .hero-mockup {
+      --hv-green: #16a36a;
       position: relative; width: 100%; max-width: 580px;
       animation: heroFadeIn 0.8s ease-out forwards;
-      padding-bottom: 24px;
+      padding-bottom: 28px;
     }
-    /* Desktop mockup */
-    .mockup-desktop {
-      background: #f0f0f0; border-radius: 14px;
-      border: none;
-      padding: 12px;
-      box-shadow: 0 24px 64px rgba(13,45,60,0.22), 0 6px 18px rgba(13,45,60,0.10);
-      animation: desktopFloat 4s ease-in-out infinite;
-      will-change: transform;
+    .hv-win {
+      background: #fff; border-radius: 14px; overflow: hidden;
+      border: 1px solid #e6e8ea;
+      box-shadow: 0 24px 64px rgba(13,45,60,.20), 0 6px 18px rgba(13,45,60,.10);
     }
-    .mockup-desktop-bar {
-      background: linear-gradient(135deg, var(--teal), var(--teal-d));
-      border-radius: 8px 8px 0 0;
-      padding: 6px 12px; font-size: 11px; color: white; font-weight: 600;
-      display: flex; align-items: center; gap: 8px; margin: -12px -12px 0;
-      border-radius: 10px 10px 0 0;
+    .hv-chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #f5f6f7; border-bottom: 1px solid #e6e8ea; }
+    .hv-lights { display: flex; gap: 5px; }
+    .hv-lights i { width: 8px; height: 8px; border-radius: 50%; background: #d5d8db; }
+    .hv-url { flex: 1; background: #fff; border: 1px solid #e6e8ea; border-radius: 6px; font-size: 11px; color: var(--gray-500); padding: 4px 10px; }
+    .hv-map { position: relative; height: 330px; background: #eaf4f4; overflow: hidden; }
+    .hv-map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hv-pin { position: absolute; width: 0; height: 0; }
+    .hv-pin .core { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: var(--orange); border: 2.5px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+    .hv-pin .ring { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--orange); animation: hvRing 2.6s ease-out infinite; }
+    .hv-pin.teal .core { background: var(--teal); }
+    .hv-pin.teal .ring { border-color: var(--teal); }
+    .hv-pin.d2 .ring { animation-delay: .8s; }
+    .hv-pin.d3 .ring { animation-delay: 1.5s; }
+    .hv-pin.d4 .ring { animation-delay: 2.1s; }
+    .hv-pin.live .core { animation: hvLiveCore 9s infinite; }
+    .hv-pin.live .ring { animation-duration: 1.6s; }
+    .hv-card { position: absolute; left: 16px; bottom: 16px; width: 282px; background: #fff; border-radius: 12px; padding: 12px 14px; box-shadow: 0 10px 28px rgba(13,45,60,.18); }
+    .hv-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
+    .hv-card-row .hv-city { color: var(--gray-500); }
+    .hv-status { position: relative; height: 14px; width: 144px; }
+    .hv-status span { position: absolute; left: 0; top: 0; opacity: 0; white-space: nowrap; }
+    .hv-status .s1 { color: var(--orange); animation: hvSt1 9s infinite; }
+    .hv-status .s2 { color: var(--teal-d); animation: hvSt2 9s infinite; }
+    .hv-status .s3 { color: var(--hv-green); animation: hvSt3 9s infinite; }
+    .hv-card h4 { margin: 0 0 2px; font-size: 13px; color: var(--text); }
+    .hv-card p { margin: 0 0 10px; font-size: 11px; color: var(--gray-500); line-height: 1.45; }
+    .hv-steps { display: flex; gap: 4px; }
+    .hv-steps i { flex: 1; height: 4px; border-radius: 2px; background: var(--gray-200); position: relative; overflow: hidden; }
+    .hv-steps i::after { content: ""; position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: left; }
+    .hv-steps i:nth-child(1)::after { animation: hvF1 9s infinite; }
+    .hv-steps i:nth-child(2)::after { animation: hvF2 9s infinite; background: var(--teal); }
+    .hv-steps i:nth-child(3)::after { animation: hvF3 9s infinite; background: var(--hv-green); }
+    .hv-phone { position: absolute; right: -18px; bottom: -6px; width: 150px; background: #161b1e; border-radius: 24px; padding: 7px; box-shadow: 0 24px 48px rgba(0,0,0,.35); animation: hvDrift 5s ease-in-out infinite; }
+    .hv-screen { background: #fff; border-radius: 18px; overflow: hidden; height: 268px; position: relative; }
+    .hv-top { background: var(--teal); color: #fff; font-size: 10px; font-weight: 700; padding: 12px 10px 8px; }
+    .hv-body { padding: 10px; display: flex; flex-direction: column; gap: 7px; }
+    .hv-need { border: 1px solid var(--gray-200); border-radius: 10px; padding: 8px; }
+    .hv-need b { display: block; font-size: 10px; margin-bottom: 2px; color: var(--text); }
+    .hv-need small { display: block; font-size: 8.5px; color: var(--gray-500); line-height: 1.4; }
+    .hv-need.dim { opacity: .55; }
+    .hv-chips { display: flex; gap: 3px; margin-top: 5px; }
+    .hv-chips em { white-space: nowrap; font-style: normal; font-size: 7.5px; font-weight: 700; background: #e8f7f8; color: var(--teal-d); border-radius: 20px; padding: 2px 6px; }
+    .hv-chips em.es { background: #fff3ea; color: #c2410c; }
+    .hv-btn { position: relative; height: 30px; border-radius: 8px; margin-top: 6px; overflow: hidden; animation: hvPress 9s infinite; }
+    .hv-btn span { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10px; font-weight: 800; color: #fff; }
+    .hv-btn .a { background: var(--orange); animation: hvBtnA 9s infinite; }
+    .hv-btn .b { background: var(--hv-green); animation: hvBtnB 9s infinite; }
+    .hv-toast { position: absolute; left: 8px; right: 8px; bottom: 10px; background: #0d2d3c; color: #fff; border-radius: 10px; padding: 8px 9px; font-size: 8.5px; line-height: 1.4; opacity: 0; animation: hvToast 9s infinite; }
+    .hv-toast b { display: block; font-size: 9px; }
+    .hv-tap { position: absolute; right: 52px; top: 138px; width: 26px; height: 26px; border-radius: 50%; background: rgba(0,157,165,.25); border: 2px solid var(--teal); opacity: 0; animation: hvTap 9s infinite; pointer-events: none; }
+    /* status pill: mobile only (desktop shows the status on the map card) */
+    .hv-pill { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-mockup, .hero-mockup * { animation: none !important; }
+      .hv-status .s3, .hv-btn .b { opacity: 1; }
+      .hv-steps i::after { transform: scaleX(1); }
     }
-    .mockup-desktop-dots { display: flex; gap: 5px; }
-    .mockup-desktop-dots span { width: 8px; height: 8px; border-radius: 50%; }
-    .mockup-desktop-dots span:nth-child(1) { background: #ff5f57; }
-    .mockup-desktop-dots span:nth-child(2) { background: #febc2e; }
-    .mockup-desktop-dots span:nth-child(3) { background: #28c840; }
-    .mockup-screen {
-      background: white; border-radius: 0 0 8px 8px;
-      padding: 16px; margin-top: 8px;
-      min-height: 280px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .screen-header {
-      background: var(--teal); border-radius: 6px;
-      padding: 8px 12px; color: white; font-size: 12px; font-weight: 700;
-    }
-    .screen-need {
-      background: var(--gray-100); border-radius: 6px;
-      padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start;
-    }
-    .screen-need-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 4px; }
-    .screen-need-text { font-size: 11px; color: var(--gray-500); line-height: 1.5; }
-    .screen-need-text strong { color: var(--text); font-weight: 600; }
-    .screen-pin-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    .screen-pin { background: var(--orange); border-radius: 4px; padding: 4px 8px; font-size: 10px; color: white; font-weight: 700; }
-    .screen-pin.teal { background: var(--teal); }
-    /* Phone mockup overlay */
-    .mockup-phone {
-      position: absolute; bottom: -16px; right: -20px;
-      width: 100px;
-      background: #1a1a1a; border-radius: 16px;
-      padding: 6px;
-      box-shadow: 0 20px 48px rgba(0,0,0,0.38), 0 4px 12px rgba(0,0,0,0.18);
-      animation: phoneFloat 3.2s ease-in-out infinite 0.6s;
-      will-change: transform;
-    }
-    .phone-screen {
-      background: var(--teal); border-radius: 11px;
-      padding: 8px; min-height: 210px;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .phone-row { background: rgba(255,255,255,0.2); border-radius: 4px; height: 8px; }
-    .phone-row.short { width: 60%; }
-    .phone-row.orange { background: var(--orange); height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; animation: respondPulse 2s ease-in-out infinite 1.2s; }
-    .phone-row.white-card { background: white; border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 3px; }
-    .phone-row.white-card .l { background: var(--gray-200); height: 5px; border-radius: 2px; }
-    .phone-row.white-card .l.s { width: 60%; }
-
-    #mockup-screen { transition: opacity 0.4s ease; }
-    #mockup-screen.fading { opacity: 0; }
 
     /* ─── SECTION BASE ──────────────────────────── */
     /* BUG-001: removed any implicit min-height that caused blank space */
@@ -557,7 +565,13 @@
       .hamburger { display: flex; align-items: center; }
       .hero { padding: 40px 20px 0; }
       .hero-inner { flex-direction: column; }
-      .hero-visual { display: none; }
+      .hero-visual { padding: 8px 0 24px; }
+      .hv-win { display: none; }
+      .hv-pill { display: flex; justify-content: center; margin-bottom: 14px; }
+      .hv-pill .hv-status { width: auto; min-width: 170px; height: 26px; background: #fff; border: 1px solid #e6e8ea; border-radius: 20px; box-shadow: 0 4px 12px rgba(13,45,60,.08); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+      .hv-pill .hv-status span { left: 0; right: 0; line-height: 24px; text-align: center; }
+      .hv-phone { position: relative; right: auto; bottom: auto; margin: 0 auto; width: 170px; }
+      .hv-tap { right: 62px; top: 118px; }
       .hero-actions { gap: 24px; }
       .section { padding: 64px 20px; }
       .two-col, .two-col-reverse { flex-direction: column; }
@@ -823,48 +837,57 @@
         </div>
       </div>
 
-      <!-- Right: app mockup -->
-      <div class="hero-visual">
+      <!-- Right: animated product story (decorative) -->
+      <div class="hero-visual" aria-hidden="true">
         <div class="hero-mockup">
-          <div class="mockup-desktop">
-            <div class="mockup-desktop-bar">
-              <div class="mockup-desktop-dots">
-                <span></span><span></span><span></span>
-              </div>
-              &nbsp;&nbsp; migrantportal.com
+          <div class="hv-win">
+            <div class="hv-chrome">
+              <div class="hv-lights"><i></i><i></i><i></i></div>
+              <div class="hv-url">migrantportal.com/requests</div>
             </div>
-            <div class="mockup-screen" id="mockup-screen">
-              <div class="screen-header">🏠 MigrantPortal: Active Needs</div>
-              <div class="screen-need" id="need-1">
-                <div class="screen-need-dot"></div>
-                <div class="screen-need-text"><strong>Family in Kansas City</strong><br/>Needs: diapers, formula, warm clothing for 2 kids</div>
-              </div>
-              <div class="screen-need" id="need-2">
-                <div class="screen-need-dot" style="background:var(--teal)"></div>
-                <div class="screen-need-text"><strong>Single mother, 3 children</strong><br/>Needs: temporary housing referral, school enrollment</div>
-              </div>
-              <div class="screen-pin-row" id="pin-row">
-                <div class="screen-pin">📍 Kansas City</div>
-                <div class="screen-pin teal">📍 Olathe</div>
-                <div class="screen-pin">📍 Overland Park</div>
+            <div class="hv-map">
+              <svg viewBox="0 0 520 330" preserveAspectRatio="xMidYMid slice">
+                <rect width="520" height="330" fill="#eaf4f4"/>
+                <path d="M-10 90 C 120 60, 200 130, 330 96 S 480 40, 540 70" stroke="#fff" stroke-width="14" fill="none"/>
+                <path d="M60 -10 C 90 90, 60 190, 130 340" stroke="#fff" stroke-width="11" fill="none"/>
+                <path d="M-10 230 C 140 200, 300 260, 540 210" stroke="#fff" stroke-width="11" fill="none"/>
+                <path d="M330 -10 C 350 100, 300 200, 380 340" stroke="#fff" stroke-width="9" fill="none"/>
+                <path d="M200 -10 L 230 340" stroke="#f6fbfb" stroke-width="6" fill="none"/>
+                <path d="M-10 150 C 100 160, 260 140, 540 160" stroke="#f6fbfb" stroke-width="6" fill="none"/>
+                <rect x="380" y="110" width="90" height="60" rx="10" fill="#d7ecdd" opacity=".8"/>
+                <rect x="90" y="20" width="70" height="46" rx="10" fill="#d7ecdd" opacity=".8"/>
+                <path d="M420 250 C 460 230, 500 260, 540 250 L 540 340 L 410 340 Z" fill="#cfe6ee" opacity=".8"/>
+              </svg>
+              <div class="hv-pin" style="left:150px;top:120px"><div class="ring"></div><div class="core"></div></div>
+              <div class="hv-pin teal d2" style="left:300px;top:70px"><div class="ring"></div><div class="core"></div></div>
+              <div class="hv-pin d3" style="left:400px;top:190px"><div class="ring"></div><div class="core"></div></div>
+              <div class="hv-pin teal d4" style="left:90px;top:230px"><div class="ring"></div><div class="core"></div></div>
+              <div class="hv-pin live" style="left:245px;top:175px"><div class="ring"></div><div class="core"></div></div>
+              <div class="hv-card">
+                <div class="hv-card-row">
+                  <span class="hv-city">Kansas City, KS</span>
+                  <div class="hv-status"><span class="s1">● Submitted</span><span class="s2">✓ Verified by navigator</span><span class="s3">✓ Responded</span></div>
+                </div>
+                <h4>Diapers &amp; formula</h4>
+                <p>Family of four, two kids under 3. Drop-off this week.</p>
+                <div class="hv-steps"><i></i><i></i><i></i></div>
               </div>
             </div>
           </div>
-          <div class="mockup-phone">
-            <div class="phone-screen">
-              <div class="phone-row"></div>
-              <div class="phone-row short"></div>
-              <div class="phone-row white-card">
-                <div class="l"></div>
-                <div class="l s"></div>
+
+          <div class="hv-pill"><div class="hv-status"><span class="s1">● Submitted</span><span class="s2">✓ Verified by navigator</span><span class="s3">✓ Responded</span></div></div>
+          <div class="hv-phone">
+            <div class="hv-screen">
+              <div class="hv-top">Needs near you</div>
+              <div class="hv-body">
+                <div class="hv-need"><b>Diapers &amp; formula</b><small>Kansas City, KS · verified</small>
+                  <div class="hv-chips"><em>Baby</em><em class="es">Español</em></div>
+                  <div class="hv-btn"><span class="a">Respond</span><span class="b">✓ You're on it</span></div>
+                </div>
+                <div class="hv-need dim"><b>School supplies</b><small>Overland Park · 6 mi</small></div>
               </div>
-              <div class="phone-row orange">
-                <span style="font-size:8px;color:white;font-weight:700;">RESPOND</span>
-              </div>
-              <div class="phone-row white-card">
-                <div class="l"></div>
-                <div class="l s"></div>
-              </div>
+              <div class="hv-toast"><b>Thank you.</b>A navigator will connect you with the family.</div>
+              <div class="hv-tap"></div>
             </div>
           </div>
         </div>
@@ -1275,61 +1298,6 @@
     })();
   </script>
 
-  <!-- Live needs rotator -->
-  <script>
-  (function() {
-    const API = 'https://migrant-portal-production-3826.up.railway.app/needs/public';
-    const INTERVAL = 4000;
-    const dotColors = ['var(--orange)', 'var(--teal)', '#8b5cf6', '#10b981', '#f59e0b'];
-
-    function renderNeeds(items, offset) {
-      const screen = document.getElementById('mockup-screen');
-      const n1 = document.getElementById('need-1');
-      const n2 = document.getElementById('need-2');
-      const pins = document.getElementById('pin-row');
-      if (!screen || !n1 || !n2 || !pins) return;
-
-      function esc(str) {
-        return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-      }
-
-      const a = items[offset % items.length];
-      const b = items[(offset + 1) % items.length];
-
-      screen.classList.add('fading');
-      setTimeout(function() {
-        var descA = esc((a.description || '').slice(0, 60)) + (a.description && a.description.length > 60 ? '…' : '');
-        var descB = esc((b.description || '').slice(0, 60)) + (b.description && b.description.length > 60 ? '…' : '');
-        n1.innerHTML = '<div class="screen-need-dot" style="background:' + dotColors[offset % dotColors.length] + '"></div>'
-          + '<div class="screen-need-text"><strong>' + esc(a.title) + '</strong><br/>' + descA + '</div>';
-
-        n2.innerHTML = '<div class="screen-need-dot" style="background:' + dotColors[(offset + 1) % dotColors.length] + '"></div>'
-          + '<div class="screen-need-text"><strong>' + esc(b.title) + '</strong><br/>' + descB + '</div>';
-
-        var cities = [a.city, b.city].filter(Boolean);
-        pins.innerHTML = cities.map(function(c, i) {
-          return '<div class="screen-pin' + (i % 2 === 1 ? ' teal' : '') + '">📍 ' + esc(c) + '</div>';
-        }).join('');
-
-        screen.classList.remove('fading');
-      }, 400);
-    }
-
-    fetch(API)
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var items = (Array.isArray(data) ? data : (data.items || [])).filter(function(n) { return n.title && n.city; });
-        if (items.length < 2) return;
-        var idx = 0;
-        renderNeeds(items, idx);
-        setInterval(function() {
-          idx = (idx + 2) % items.length;
-          renderNeeds(items, idx);
-        }, INTERVAL);
-      })
-      .catch(function() { /* silently fall back to static content */ });
-  })();
-  </script>
 
   <script src="i18n.js" defer></script>
   <script>
