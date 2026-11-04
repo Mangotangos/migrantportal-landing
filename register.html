@@ -944,6 +944,7 @@
     // registration, so preselect the matching card here too.
     const _urlInviteCode = new URLSearchParams(window.location.search).get('invite');
 
+    const ORG_SIDE_STEPS = ['Organization type', 'How you’ll use it', 'Services', 'Organization details', 'Create account'];
     const TOTAL = 5;
     let currentStep = 1;
     let selectedPlace = null; // { city, state, zip } once resolved
@@ -1093,6 +1094,7 @@
         else if (i === n)  seg.classList.add('active');
       }
       document.getElementById('prog-back-btn').classList.toggle('hidden', n === 1);
+      renderSideSteps(n, ORG_SIDE_STEPS);
     }
 
     function updateOrgStrength(pw) {
@@ -1297,6 +1299,15 @@
       }
     }
 
+    function renderSideSteps(n, labels) {
+      document.querySelectorAll('#side-steps li').forEach(li => {
+        const idx = Number(li.dataset.s);
+        if (labels) li.lastChild.textContent = labels[idx - 1];
+        li.classList.toggle('cur', idx === n);
+        li.classList.toggle('done', idx < n);
+      });
+    }
+
     function updateProgress(n) {
       for (let i = 1; i <= TOTAL; i++) {
         const seg = document.getElementById('seg-' + i);
@@ -1306,11 +1317,7 @@
       }
       const backBtn = document.getElementById('prog-back-btn');
       backBtn.classList.toggle('hidden', n === 1);
-      document.querySelectorAll('#side-steps li').forEach(li => {
-        const idx = Number(li.dataset.s);
-        li.classList.toggle('cur', idx === n);
-        li.classList.toggle('done', idx < n);
-      });
+      renderSideSteps(n);
     }
 
     /* ── Step 1: Card selection ──────────────── */
