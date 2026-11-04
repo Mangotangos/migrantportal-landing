@@ -251,6 +251,47 @@
       .wizard { padding: 28px 24px 32px; }
       .field-row { flex-direction: column; gap: 16px; }
     }
+
+    /* ─── STEP 2 REFRESH + DESKTOP SPLIT ─────────── */
+    .wizard-side { display: none; }
+    .need-chip, .loc-chip, .radius-pill { border-radius: 999px; }
+    .need-chip.selected::after { content: "\2713"; font-size: 11px; margin-left: 2px; }
+    .radius-pills { background: var(--gray-100); border-radius: 10px; padding: 3px; gap: 0; flex-wrap: nowrap; }
+    .radius-pill { flex: 1; white-space: nowrap; font-size: 12.5px; border: none; background: transparent; border-radius: 8px; padding: 9px 4px; color: var(--gray-600); }
+    .radius-pill:hover { background: rgba(255,255,255,0.6); }
+    .radius-pill.selected { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .zip-row { display: flex; gap: 8px; align-items: flex-end; }
+    .zip-row .field { flex: 1; }
+    .btn-geo {
+      border: 1.5px solid var(--teal); color: var(--teal); background: white; border-radius: 8px;
+      padding: 12px 14px; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+      cursor: pointer; white-space: nowrap; transition: background 0.15s;
+    }
+    .btn-geo:hover { background: #f0fbfb; }
+    .btn-geo:disabled { opacity: 0.6; cursor: default; }
+    .step2-summary { display: none; text-align: center; font-size: 12px; color: var(--gray-600); margin-top: 8px; }
+    #step-2 .btn-row { position: sticky; bottom: 0; background: white; padding: 12px 0 4px; margin-top: 16px !important; }
+    #step-2.visible .step2-summary.show { display: block; }
+    @media (min-width: 900px) {
+      .wizard-wrap { padding: 40px 20px 80px; }
+      .wizard-wrap > .wizard { max-width: 640px; border-radius: 0 16px 16px 0; padding: 40px 48px 48px; }
+      .wizard-side {
+        display: flex; flex-direction: column; width: 320px; flex-shrink: 0; align-self: stretch;
+        background: linear-gradient(160deg, var(--teal-d), var(--teal)); color: white;
+        padding: 40px 32px; border-radius: 16px 0 0 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      }
+      .wizard-side h2 { font-family: 'Montserrat', sans-serif; font-size: 21px; line-height: 1.3; font-weight: 800; margin-bottom: 12px; }
+      .wizard-side p { font-size: 14px; line-height: 1.6; opacity: 0.9; }
+      .side-steps { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+      .side-steps li { display: flex; align-items: center; gap: 10px; font-size: 13px; opacity: 0.7; }
+      .side-steps .n { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid white; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+      .side-steps li.cur { opacity: 1; font-weight: 600; }
+      .side-steps li.cur .n { background: white; color: var(--teal-d); }
+      .side-steps li.done .n { background: rgba(255,255,255,0.25); }
+      .side-note { margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.25); font-size: 13px; opacity: 0.95; }
+      .side-note b { display: block; font: 800 26px 'Montserrat', sans-serif; }
+    }
+    @media (max-width: 600px) { .zip-row { flex-wrap: wrap; } .btn-geo { width: 100%; } }
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
   .skip-link:focus { top: 0; }
   .org-svc-label { display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;transition:border-color 0.15s,background 0.15s; }
@@ -344,6 +385,19 @@
 
   <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Create your MigrantPortal account</h1>
   <div class="wizard-wrap">
+    <aside class="wizard-side" aria-hidden="true">
+      <div style="font:800 17px 'Montserrat',sans-serif;margin-bottom:24px">MigrantPortal</div>
+      <h2>Help lands faster when it comes from someone nearby.</h2>
+      <p>Your location only decides which needs you see. It is never shown to anyone else.</p>
+      <ol class="side-steps" id="side-steps">
+        <li data-s="1"><span class="n">1</span>How you'll serve</li>
+        <li data-s="2"><span class="n">2</span>Location &amp; needs</li>
+        <li data-s="3"><span class="n">3</span>About you</li>
+        <li data-s="4"><span class="n">4</span>A little more</li>
+        <li data-s="5"><span class="n">5</span>Create account</li>
+      </ol>
+      <div class="side-note"><b>5 cities</b>live in the Kansas City launch region</div>
+    </aside>
     <div class="wizard">
 
       <!-- PROGRESS ROW -->
@@ -441,13 +495,16 @@
 
       <!-- ── STEP 2: Where to meet requests ────── -->
       <div class="step" id="step-2">
-        <h2 class="step-heading">Where are you located?</h2>
-        <p class="step-sub" style="text-align:left; margin-bottom:20px;">We use this to show you needs near you. Works anywhere in the US.</p>
+        <h2 class="step-heading">Where are you, and what can you help with?</h2>
+        <p class="step-sub" style="text-align:left; margin-bottom:20px;">We only alert you about what you pick, near where you pick. Works anywhere in the US.</p>
 
-        <div class="fields">
-          <div class="field">
-            <label for="loc-zip">ZIP code</label>
-            <input type="text" id="loc-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 66062" oninput="onZipInput(this)" />
+        <div class="fields" style="margin-bottom:0">
+          <div class="zip-row">
+            <div class="field">
+              <label for="loc-zip">ZIP code</label>
+              <input type="text" id="loc-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 66062" oninput="onZipInput(this)" />
+            </div>
+            <button type="button" class="btn-geo" id="btn-geo" onclick="useMyLocation()">&#128205; Use my location</button>
           </div>
         </div>
         <div class="loc-result" id="loc-result" role="status" aria-live="polite"></div>
@@ -466,9 +523,9 @@
           </div>
         </div>
 
-        <div class="vuln-heading" style="margin-top:20px">Quick pick</div>
-        <p class="vuln-desc">Kansas City area, our launch region.</p>
-        <div class="loc-chips" id="loc-chips">
+        <div class="vuln-heading" style="margin-top:16px">Quick pick</div>
+        <p class="vuln-desc" style="margin-bottom:10px">Kansas City area, our launch region.</p>
+        <div class="loc-chips" id="loc-chips" style="margin-bottom:8px">
           <button type="button" class="loc-chip" onclick="pickQuickZip('64106')">Kansas City, MO</button>
           <button type="button" class="loc-chip" onclick="pickQuickZip('66101')">Kansas City, KS</button>
           <button type="button" class="loc-chip" onclick="pickQuickZip('66204')">Overland Park, KS</button>
@@ -489,7 +546,7 @@
           <div class="section-label">What types of needs can you help with?</div>
           <p class="need-hint">Choose at least one. You'll only be notified about these.</p>
           <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
-            <button class="chip-toggle-link" onclick="toggleAllNeeds(this)">Select All</button>
+            <button class="chip-toggle-link" id="needs-toggle" onclick="toggleAllNeeds(this)">Select All</button>
           </div>
           <div class="need-chips" id="need-chips">
             <button class="need-chip" data-cat="housing" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Housing</button>
@@ -510,8 +567,9 @@
         </div>
 
         <div class="btn-row" style="margin-top:24px">
-          <button class="btn-next" id="btn-2" disabled onclick="goFromStep2()">Next</button>
+          <button class="btn-next" id="btn-2" disabled onclick="goFromStep2()">Continue</button>
         </div>
+        <div class="step2-summary" id="step2-summary" aria-live="polite"></div>
       </div>
 
       <!-- ── STEP 3: About you ──────────────────── -->
@@ -966,7 +1024,7 @@
         return;
       }
       document.getElementById('step-' + n).classList.add('visible');
-      if (n === 2) updateStep2Sections();
+      if (n === 2) { updateStep2Sections(); updateStep2Summary(); }
       updateProgress(n);
       window.scrollTo(0, 0);
     }
@@ -1248,6 +1306,11 @@
       }
       const backBtn = document.getElementById('prog-back-btn');
       backBtn.classList.toggle('hidden', n === 1);
+      document.querySelectorAll('#side-steps li').forEach(li => {
+        const idx = Number(li.dataset.s);
+        li.classList.toggle('cur', idx === n);
+        li.classList.toggle('done', idx < n);
+      });
     }
 
     /* ── Step 1: Card selection ──────────────── */
@@ -1270,6 +1333,7 @@
       const btn = document.getElementById('btn-2');
       btn.disabled = !selectedPlace;
       btn.classList.toggle('ready', !!selectedPlace);
+      updateStep2Summary();
     }
 
     function applyPlace(place) {
@@ -1306,6 +1370,53 @@
     function onZipInput(input) {
       input.value = input.value.replace(/\D/g, '');
       lookupZip(input.value);
+    }
+
+    function updateStep2Summary() {
+      const el = document.getElementById('step2-summary');
+      if (!el) return;
+      const parts = [];
+      const showNeeds = document.getElementById('responder-only-sections').style.display !== 'none';
+      if (showNeeds) {
+        parts.push(needCategories.length + (needCategories.length === 1 ? ' need' : ' needs'));
+        parts.push(notificationRadius ? 'within ' + notificationRadius + ' mi' : 'any distance');
+      }
+      if (selectedPlace) parts.push(selectedPlace.city + ', ' + selectedPlace.state);
+      el.textContent = parts.join(' \u00b7 ');
+      el.classList.toggle('show', parts.length > 0 && !!selectedPlace);
+    }
+
+    async function useMyLocation() {
+      const btn = document.getElementById('btn-geo');
+      if (!navigator.geolocation) {
+        setLocationResult('bad', 'Location is not available in this browser. Enter your ZIP instead.');
+        return;
+      }
+      btn.disabled = true;
+      setLocationResult('', '');
+      navigator.geolocation.getCurrentPosition(async pos => {
+        try {
+          const url = 'https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&lat='
+            + pos.coords.latitude + '&lon=' + pos.coords.longitude;
+          const res = await fetch(url);
+          const data = res.ok ? await res.json() : null;
+          const addr = data && data.address ? data.address : null;
+          const zip = addr && addr.postcode ? String(addr.postcode).slice(0, 5) : '';
+          if (!/^\d{5}$/.test(zip) || (addr.country_code && addr.country_code !== 'us')) {
+            setLocationResult('bad', "We couldn't find a US ZIP for your location. Enter it manually.");
+          } else {
+            document.getElementById('loc-zip').value = zip;
+            await lookupZip(zip);
+          }
+        } catch (err) {
+          setLocationResult('bad', "We couldn't look up your location. Enter your ZIP instead.");
+        } finally {
+          btn.disabled = false;
+        }
+      }, () => {
+        btn.disabled = false;
+        setLocationResult('bad', 'Location permission was denied. Enter your ZIP instead.');
+      }, { timeout: 10000 });
     }
 
     function pickQuickZip(zip) {
@@ -1408,6 +1519,7 @@
       document.querySelectorAll('.radius-pill').forEach(p => p.classList.remove('selected'));
       el.classList.add('selected');
       notificationRadius = value;
+      updateStep2Summary();
     }
 
     /* ── Step 2: Need category chips ─────────── */
@@ -1420,9 +1532,10 @@
         el.classList.add('selected');
         if (!needCategories.includes(cat)) needCategories.push(cat);
       }
-      const toggleBtn = document.querySelector('.chip-toggle-link');
+      const toggleBtn = document.getElementById('needs-toggle');
       if (toggleBtn) toggleBtn.textContent = needCategories.length === 0 ? 'Select All' : 'Clear All';
       if (needCategories.length) clearNeedError();
+      updateStep2Summary();
     }
 
     function toggleAllNeeds(btn) {
@@ -1437,6 +1550,7 @@
         btn.textContent = 'Clear All';
         clearNeedError();
       }
+      updateStep2Summary();
     }
 
     function clearNeedError() {
