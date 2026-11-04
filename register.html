@@ -289,7 +289,7 @@
       .side-steps li.cur .n { background: white; color: var(--teal-d); }
       .side-steps li.done .n { background: rgba(255,255,255,0.25); }
       .side-note { margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.25); font-size: 13px; opacity: 0.95; }
-      .side-note b { display: block; font: 800 26px 'Montserrat', sans-serif; }
+      .side-note strong { display: block; font: 800 26px 'Montserrat', sans-serif; }
     }
     @media (max-width: 600px) { .zip-row { flex-wrap: wrap; } .btn-geo { width: 100%; } }
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
@@ -396,7 +396,7 @@
         <li data-s="4"><span class="n">4</span>A little more</li>
         <li data-s="5"><span class="n">5</span>Create account</li>
       </ol>
-      <div class="side-note"><b>5 cities</b>live in the Kansas City launch region</div>
+      <p class="side-note"><strong>5 cities</strong>live in the Kansas City launch region</p>
     </aside>
     <div class="wizard">
 
@@ -770,7 +770,8 @@
           <label class="org-svc-label"><input type="checkbox" value="financial" onchange="checkOrgServices()" /> 💰 Financial Aid</label>
           <label class="org-svc-label"><input type="checkbox" value="childcare" onchange="checkOrgServices()" /> 👶 Childcare</label>
         </div>
-        <div id="org-alerts-mount" style="margin-bottom:24px"></div>
+        <div id="org-alerts-mount" style="margin-bottom:12px"></div>
+        <p class="need-error" id="org-step3-hint" style="margin:0 0 16px">Pick at least one service and one need type to continue.</p>
         <div class="btn-row">
           <button class="btn-back" onclick="goOrgTo(2)">Back</button>
           <button class="btn-next" id="btn-org-3" disabled onclick="goOrgTo(4)">Next</button>
@@ -1124,7 +1125,9 @@
 
     function checkOrgServices() {
       const any = [...document.querySelectorAll('#org-services-grid input[type=checkbox]:checked')].length > 0;
-      setBtn('btn-org-3', any && needCategories.length > 0);
+      const ready = any && needCategories.length > 0;
+      setBtn('btn-org-3', ready);
+      document.getElementById('org-step3-hint').style.display = ready ? 'none' : '';
     }
 
     let orgZipResolved = false;
