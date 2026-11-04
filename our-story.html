@@ -368,6 +368,24 @@
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://migrantportal.com/community.png" />
   <meta name="twitter:card" content="summary_large_image" />
+
+<style id="mp-nav-v2">
+/* NAV v2: floating bar (shared) */
+nav.mpnav{position:sticky;top:12px;z-index:200;margin:12px 24px 0;height:64px;padding:0 12px 0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid #e3ecee;border-radius:18px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 30px rgba(8,50,61,.10)}
+nav.mpnav .mpnav-logo{display:flex;align-items:center;gap:10px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.3px;color:#1a2e44;text-decoration:none;min-height:44px;flex-shrink:0}
+nav.mpnav .mpnav-logo img{width:36px;height:36px;border-radius:8px;object-fit:contain}
+nav.mpnav .mpnav-links{display:flex;align-items:center;gap:18px}
+nav.mpnav .mpnav-links a{position:relative;padding:8px 4px;font-size:14px;font-weight:600;color:#27434d;text-decoration:none;white-space:nowrap}
+nav.mpnav .mpnav-links a:hover,nav.mpnav .mpnav-links a.active{color:#0D7A8A}
+nav.mpnav .mpnav-links a::after{content:"";position:absolute;left:4px;right:4px;bottom:2px;height:2px;background:#F59E0B;transform:scaleX(0);transition:transform .15s}
+nav.mpnav .mpnav-links a:hover::after,nav.mpnav .mpnav-links a.active::after{transform:scaleX(1)}
+nav.mpnav .mpnav-right{display:flex;align-items:center;gap:8px}
+nav.mpnav .mpnav-cta{background:#0973A7;color:#fff;padding:11px 24px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;transition:background .15s}
+nav.mpnav .mpnav-cta:hover{background:#075d8a;color:#fff}
+nav.mpnav .mp-lang-toggle{border-radius:999px!important}
+@media(max-width:1000px){nav.mpnav .mpnav-links{display:none}nav.mpnav .hamburger{display:flex!important}}
+@media(max-width:700px){nav.mpnav{margin:8px 12px 0;top:8px;padding:0 10px 0 14px}nav.mpnav .mpnav-cta{padding:9px 16px}}
+</style>
 </head>
 <body>
 
@@ -375,20 +393,10 @@
   501(c)(3) nonprofit in formation &mdash; <a href="/signup">Join our network today</a>
 </div>
 
-<nav aria-label="Main navigation">
-  <a href="/" class="nav-logo" aria-label="MigrantPortal home">
-    <img src="logo.png" alt="" class="nav-logo-icon" />
-    <span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
-  </a>
-  <div class="nav-links">
-    <a href="/how-migrantportal-works">How It Works</a>
-      <a href="/vision" class="nav-link">Our Vision</a>
-    <a href="/requests">Browse Requests</a>
-    <a href="/faq">FAQ</a>
-    <a href="/contact">Contact</a>
-    <a href="/press-kit">Press</a>
-    <a href="/login" class="nav-cta">Sign In</a>
-  </div>
+<nav class="mpnav" aria-label="Main navigation">
+  <a href="/" class="mpnav-logo"><img src="logo.png" alt="" /><span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span></a>
+  <div class="mpnav-links"><a href="/">Home</a><a href="/how-migrantportal-works">How It Works</a><a href="/vision">Our Vision</a><a href="/find-help">Find Help</a><a href="/requests">Browse Requests</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></div>
+  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Sign In</a></div>
 </nav>
 
 <!-- HERO -->
