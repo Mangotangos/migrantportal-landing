@@ -495,7 +495,7 @@
     }
     .newsletter-inner {
       max-width: 1120px; margin: 0 auto;
-      background: #fff; border-radius: 20px;
+      background: #FFFDF8; border-radius: 20px;
       padding: 36px 44px;
       box-shadow: 0 18px 50px rgba(6,74,83,0.25);
       display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; align-items: center;
@@ -525,17 +525,17 @@
       transition: background 0.15s, transform 0.15s;
     }
     .newsletter-submit:hover { background: var(--orange-d); transform: translateY(-1px); }
-    .newsletter-note { margin-top: 10px; font-size: 12px; color: #6B8A90; }
+    .newsletter-note { margin-top: 10px; font-size: 13px; color: #4A6A70; }
 
     /* ─── FOOTER ───────────────────────────────── */
-    .footer { background: linear-gradient(180deg, var(--teal-bg) 0%, #085F6A 100%); padding-top: 130px; }
+    .footer { background: linear-gradient(180deg, #0A5F6B 0%, #073F49 100%); padding-top: 130px; }
     .footer-live {
-      display: inline-flex; align-items: center; gap: 10px; margin-top: 18px;
+      display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; white-space: nowrap;
       padding: 9px 16px; border-radius: 999px;
       background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
       font-size: 13px; font-weight: 700; color: #fff;
     }
-    .footer-live small { font-weight: 500; font-size: 13px; color: #BFE3E7; }
+    .footer-live small { font-weight: 500; font-size: 12.5px; color: #E3F6F8; }
     .footer-live-dot {
       width: 9px; height: 9px; border-radius: 50%; background: #4ADE80;
       animation: footer-pulse 2s infinite;
@@ -545,19 +545,10 @@
       70% { box-shadow: 0 0 0 9px rgba(74,222,128,0); }
       100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
     }
-    .footer-contact { margin-top: 8px; font-size: 12.5px; color: #BFE3E7; line-height: 1.5; }
+    .footer-contact { margin-top: 8px; font-size: 13.5px; color: #E3F6F8; line-height: 1.5; }
     .footer-contact a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
-    .footer-pills {
-      border-top: 1px solid rgba(255,255,255,0.18);
-      padding: 22px 48px;
-    }
-    .footer-pills-inner {
-      max-width: 1120px; margin: 0 auto;
-      display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
-    }
-    .footer-pills-list { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; font-weight: 600; color: #E8F7F8; }
-    .footer-pills-list b { font-size: 15px; color: #fff; margin-right: 6px; }
-    .footer-pills-list > span + span::before { content: "•"; margin-right: 12px; color: #F6C76B; }
+    .footer-app { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .footer-app-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #FFD98A; }
     .footer-badges { display: flex; gap: 10px; flex-wrap: wrap; }
     .footer-badge {
       display: flex; align-items: center; gap: 10px;
@@ -599,14 +590,14 @@
       font-size: 11px; font-weight: 700;
       letter-spacing: 0.12em; text-transform: uppercase;
       font-variant: small-caps;
-      color: #F6C76B; margin-bottom: 16px;
+      color: #FFD98A; margin-bottom: 16px;
     }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .footer-col ul li a { font-size: 15px; font-weight: 500; color: #fff; transition: color 0.15s; }
     .footer-col ul li a:hover { text-decoration: underline; text-decoration-color: var(--orange); text-underline-offset: 5px; text-decoration-thickness: 2px; }
     .footer-bottom {
       padding: 18px 48px;
-      background: #064A53;
+      background: #042B32;
     }
     .footer-bottom-inner {
       max-width: 1120px; margin: 0 auto;
@@ -646,7 +637,6 @@
       .two-col, .two-col-reverse { flex-direction: column; }
       .section-newsletter { padding: 24px 20px 0; }
       .newsletter-inner { grid-template-columns: 1fr; gap: 24px; padding: 28px 24px; }
-      .footer-pills { padding: 18px 20px; }
       .footer-main { padding: 0 20px 32px; }
       .footer-bottom { padding: 16px 20px; }
 
@@ -1266,31 +1256,23 @@
       </div>
     </div>
 
-    <!-- Highlights -->
-    <div class="footer-pills">
-      <div class="footer-pills-inner">
-        <div class="footer-pills-list">
-          <span><b>24/7</b><span data-i18n="Open to Post Needs">Open to post needs</span></span>
-          <span><b>Free</b><span data-i18n="For Helpers">for helpers</span></span>
-          <span><b>Faith-driven</b>community network</span>
-        </div>
-        <div class="footer-badges">
-          <a href="https://apps.apple.com/us/app/migrantportal/id6768141465" class="footer-badge" target="_blank" rel="noopener">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            <span><small>Download on the</small><b>App Store</b></span>
-          </a>
-          <a href="https://play.google.com/store/apps/details?id=com.migrantportal.app" class="footer-badge" target="_blank" rel="noopener">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.18 23.76c.37.21.8.22 1.19.04l12.34-6.96-2.7-2.7-10.83 9.62zM.5 1.57C.19 1.96 0 2.5 0 3.18v17.65c0 .67.19 1.21.51 1.6L.6 22.5l9.89-9.89v-.23L.6 2.49.5 1.57zM20.04 10.3l-2.62-1.48-3.01 3.01 3.01 3.01 2.63-1.49c.75-.42.75-1.62-.01-2.05zM4.37.2 16.71 7.16l-2.7 2.7L3.18.24C3.57.06 4 .07 4.37.2z"/></svg>
-            <span><small>Get it on</small><b>Google Play</b></span>
-          </a>
-        </div>
-      </div>
-    </div>
-
     <!-- Bottom bar -->
     <div class="footer-bottom">
       <div class="footer-bottom-inner">
         <p class="footer-copy">MigrantPortal © 2026 · Built with compassion</p>
+        <div class="footer-app">
+          <span class="footer-app-label">Get the app</span>
+          <div class="footer-badges">
+            <a href="https://apps.apple.com/us/app/migrantportal/id6768141465" class="footer-badge" target="_blank" rel="noopener">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+              <span><small>Download on the</small><b>App Store</b></span>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.migrantportal.app" class="footer-badge" target="_blank" rel="noopener">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.18 23.76c.37.21.8.22 1.19.04l12.34-6.96-2.7-2.7-10.83 9.62zM.5 1.57C.19 1.96 0 2.5 0 3.18v17.65c0 .67.19 1.21.51 1.6L.6 22.5l9.89-9.89v-.23L.6 2.49.5 1.57zM20.04 10.3l-2.62-1.48-3.01 3.01 3.01 3.01 2.63-1.49c.75-.42.75-1.62-.01-2.05zM4.37.2 16.71 7.16l-2.7 2.7L3.18.24C3.57.06 4 .07 4.37.2z"/></svg>
+              <span><small>Get it on</small><b>Google Play</b></span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
