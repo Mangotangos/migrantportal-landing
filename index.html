@@ -488,65 +488,77 @@
 
     /* ─── NEWSLETTER ───────────────────────────── */
     .section-newsletter {
-      background: var(--teal-bg);
-      padding: 64px 40px;
+      background: var(--cream);
+      padding: 0 40px;
+      margin-bottom: -70px;
+      position: relative; z-index: 2;
     }
     .newsletter-inner {
       max-width: 1120px; margin: 0 auto;
-      display: flex; gap: 64px; align-items: center; flex-wrap: wrap;
+      background: #fff; border-radius: 20px;
+      padding: 36px 44px;
+      box-shadow: 0 18px 50px rgba(6,74,83,0.25);
+      display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; align-items: center;
     }
-    .newsletter-text { flex: 1; min-width: 260px; }
     .newsletter-text h2 {
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(24px, 3vw, 32px);
-      font-weight: 800; color: white; margin-bottom: 12px;
+      font-size: clamp(24px, 3vw, 28px);
+      font-weight: 800; color: #12343A; letter-spacing: -0.5px; margin-bottom: 8px;
     }
-    .newsletter-text p { font-size: 14px; color: rgba(255,255,255,0.92); max-width: 400px; line-height: 1.7; }
-    .newsletter-form { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 12px; }
-    .newsletter-form input {
-      background: white; border: none; border-radius: 8px;
-      padding: 14px 16px; font-size: 14px; font-family: 'Inter', sans-serif;
+    .newsletter-text p { font-size: 15px; color: #4A6A70; line-height: 1.5; }
+    #eo-subscribe-form { display: flex; flex-wrap: wrap; gap: 10px; }
+    .newsletter-form input[type="email"] {
+      flex: 1; min-width: 0;
+      background: #fff; border: 2px solid #D5E3E5; border-radius: 12px;
+      padding: 15px 18px; font-size: 15px; font-family: 'Inter', sans-serif;
       color: var(--text); outline: none;
     }
-    .newsletter-form input::placeholder { color: #aaa; }
+    .newsletter-form input[type="email"]:focus { border-color: var(--teal-bg); }
+    .newsletter-form input::placeholder { color: #8AA0A5; }
     .newsletter-submit {
       background: var(--orange); color: #fff;
-      font-size: 14px; font-weight: 700;
-      padding: 14px; border-radius: 8px;
-      border: none; cursor: pointer;
-      font-family: 'Inter', sans-serif; letter-spacing: 0.04em;
+      font-size: 14px; font-weight: 800;
+      padding: 15px 26px; border-radius: 12px;
+      border: none; cursor: pointer; white-space: nowrap;
+      font-family: 'Montserrat', sans-serif; letter-spacing: 0.04em;
       text-transform: uppercase;
-      transition: background 0.15s;
+      transition: background 0.15s, transform 0.15s;
     }
-    .newsletter-submit:hover { background: var(--orange-d); }
+    .newsletter-submit:hover { background: var(--orange-d); transform: translateY(-1px); }
+    .newsletter-note { margin-top: 10px; font-size: 12px; color: #6B8A90; }
 
     /* ─── FOOTER ───────────────────────────────── */
-    .footer { background: var(--teal-bg); }
-    .footer-trusted {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 56px 48px;
+    .footer { background: linear-gradient(180deg, var(--teal-bg) 0%, #085F6A 100%); padding-top: 130px; }
+    .footer-live {
+      display: inline-flex; align-items: center; gap: 10px; margin-top: 18px;
+      padding: 9px 16px; border-radius: 999px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+      font-size: 13px; font-weight: 700; color: #fff;
     }
-    .footer-trusted-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
-    .footer-trusted h3 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      font-variant: small-caps;
-      color: rgba(255,255,255,0.92); margin-bottom: 32px;
+    .footer-live small { font-weight: 500; font-size: 13px; color: #BFE3E7; }
+    .footer-live-dot {
+      width: 9px; height: 9px; border-radius: 50%; background: #4ADE80;
+      animation: footer-pulse 2s infinite;
     }
-    .trusted-logos {
-      display: flex; gap: 32px; align-items: center;
-      justify-content: center; flex-wrap: wrap;
+    @keyframes footer-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.7); }
+      70% { box-shadow: 0 0 0 9px rgba(74,222,128,0); }
+      100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
     }
-    .trusted-logo {
-      padding: 10px 24px; border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px; background: rgba(255,255,255,0.06);
-      font-size: 13px; font-weight: 600; color: #fff;
-      letter-spacing: 0.04em;
+    .footer-contact { margin-top: 8px; font-size: 12.5px; color: #BFE3E7; line-height: 1.5; }
+    .footer-contact a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+    .footer-pills {
+      border-top: 1px solid rgba(255,255,255,0.18);
+      padding: 22px 48px;
     }
+    .footer-pills-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; font-weight: 600; color: #E8F7F8;
+    }
+    .footer-pills-inner b { font-size: 15px; color: #fff; margin-right: 6px; }
+    .footer-pills-inner span + span::before { content: "•"; margin-right: 12px; color: #F6C76B; }
     .footer-main {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 56px 48px;
+      padding: 0 48px 44px;
     }
     .footer-main-inner {
       max-width: 1120px; margin: 0 auto;
@@ -578,22 +590,21 @@
       font-size: 11px; font-weight: 700;
       letter-spacing: 0.12em; text-transform: uppercase;
       font-variant: small-caps;
-      color: #fff; margin-bottom: 16px;
+      color: #F6C76B; margin-bottom: 16px;
     }
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-col ul li a { font-size: 14px; color: rgba(255,255,255,0.92); transition: color 0.15s; }
-    .footer-col ul li a:hover { color: white; }
+    .footer-col ul li a { font-size: 15px; font-weight: 500; color: #fff; transition: color 0.15s; }
+    .footer-col ul li a:hover { text-decoration: underline; text-decoration-color: var(--orange); text-underline-offset: 5px; text-decoration-thickness: 2px; }
     .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding: 22px 48px;
-      background: transparent;
+      padding: 18px 48px;
+      background: #064A53;
     }
     .footer-bottom-inner {
       max-width: 1120px; margin: 0 auto;
       display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 12px;
     }
-    .footer-social { display: flex; gap: 10px; background: transparent !important; }
+    .footer-social { display: flex; gap: 10px; background: transparent !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; position: static; }
     .footer-social a {
       width: 34px; height: 34px; border-radius: 7px;
       background: rgba(0,0,0,0.2);
@@ -624,10 +635,10 @@
       .hero-actions { gap: 24px; }
       .section { padding: 64px 20px; }
       .two-col, .two-col-reverse { flex-direction: column; }
-      .section-newsletter { padding: 48px 20px; }
-      .newsletter-inner { flex-direction: column; gap: 32px; }
-      .footer-trusted { padding: 32px 20px; }
-      .footer-main { padding: 32px 20px; }
+      .section-newsletter { padding: 24px 20px 0; }
+      .newsletter-inner { grid-template-columns: 1fr; gap: 24px; padding: 28px 24px; }
+      .footer-pills { padding: 18px 20px; }
+      .footer-main { padding: 0 20px 32px; }
       .footer-bottom { padding: 16px 20px; }
 
       .app-badges { flex-direction: column; align-items: center; }
@@ -1117,11 +1128,7 @@
     <div class="newsletter-inner">
       <div class="newsletter-text">
         <h2 id="signup-h">Stay in the Loop</h2>
-        <p>
-          Sign up for updates from MigrantPortal, featuring real stories of impact,
-          new opportunities to meet needs, and inspiring ways people like you are seeing
-          and serving migrant families across the country.
-        </p>
+        <p>Real stories of impact and new ways to meet needs, sent monthly.</p>
       </div>
       <div class="newsletter-form">
         <form id="eo-subscribe-form" onsubmit="eoSubscribe(event)">
@@ -1129,8 +1136,9 @@
           <input type="email" id="eo-email" placeholder="Email address" required />
           <input type="text" name="hp_name" tabindex="-1" aria-hidden="true" style="display:none" />
           <button type="submit" class="newsletter-submit" id="eo-btn">Subscribe</button>
-          <p id="eo-msg" style="font-size:13px;margin-top:4px;display:none;"></p>
+          <p id="eo-msg" style="font-size:13px;margin-top:4px;display:none;flex-basis:100%;"></p>
         </form>
+        <p class="newsletter-note">🔒 No spam. Unsubscribe anytime.</p>
         <script>
           async function eoSubscribe(e) {
             e.preventDefault();
@@ -1177,16 +1185,6 @@
   <!-- FOOTER -->
   <footer class="footer" aria-label="Site footer">
 
-    <!-- Trusted By -->
-    <div class="footer-trusted">
-      <div class="footer-trusted-inner">
-        <h3>Live now:</h3>
-        <div class="trusted-logos">
-          <div class="trusted-logo">Kansas City, MO</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Main footer -->
     <div class="footer-main">
       <div class="footer-main-inner">
@@ -1200,20 +1198,7 @@
             </div>
             <p>Connecting migrant families with faith communities, volunteers, and donors, one need at a time.</p>
           </div>
-          <div class="footer-stats" style="margin-top:24px;">
-            <div class="footer-stat">
-              <div class="footer-stat-num">24/7</div>
-              <div class="footer-stat-label" data-i18n="Open to Post Needs">Open to Post Needs</div>
-            </div>
-            <div class="footer-stat">
-              <div class="footer-stat-num">1</div>
-              <div class="footer-stat-label" data-i18n="Launch City">Launch City</div>
-            </div>
-            <div class="footer-stat">
-              <div class="footer-stat-num">Free</div>
-              <div class="footer-stat-label" data-i18n="For Helpers">For Helpers</div>
-            </div>
-          </div>
+          <div class="footer-live"><span class="footer-live-dot" aria-hidden="true"></span>Live in Kansas City, MO <small>· more cities soon</small></div>
         </div>
 
         <!-- Links -->
@@ -1222,7 +1207,7 @@
           <ul>
             <li><a href="/how-migrantportal-works">How It Works</a></li>
             <li><a href="/vision">Our Vision</a></li>
-            <li><a href="/contact">Contact Us</a><div style="font-size:11px;color:rgba(255,255,255,0.92);margin-top:2px">Response within 24 hours</div></li>
+            <li><a href="/contact">Contact Us</a><div class="footer-contact">Response within 24 hours</div></li>
           </ul>
         </div>
 
@@ -1250,6 +1235,15 @@
       </div>
     </div>
 
+    <!-- Highlights -->
+    <div class="footer-pills">
+      <div class="footer-pills-inner">
+        <span><b>24/7</b><span data-i18n="Open to Post Needs">Open to post needs</span></span>
+        <span><b>Free</b><span data-i18n="For Helpers">for helpers</span></span>
+        <span><b>Faith-driven</b>community network</span>
+      </div>
+    </div>
+
     <!-- Bottom bar -->
     <div class="footer-bottom">
       <div class="footer-bottom-inner">
@@ -1263,6 +1257,17 @@
           <a href="https://www.instagram.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Instagram">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.908 4.908 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428.05 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 0 1-1.153 1.772 4.915 4.915 0 0 1-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.05-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.904 4.904 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 0 1 1.153-1.772A4.897 4.897 0 0 1 5.45 2.525c.638-.248 1.363-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 1.802c-2.67 0-2.986.01-4.04.059-.976.045-1.505.207-1.858.344-.466.181-.8.398-1.15.748-.35.35-.566.684-.747 1.15-.137.353-.3.882-.344 1.857-.05 1.055-.06 1.37-.06 4.04 0 2.67.01 2.986.06 4.04.045.976.207 1.505.344 1.858.181.466.398.8.748 1.15.35.35.683.566 1.15.747.352.137.881.3 1.857.344 1.054.05 1.37.06 4.04.06 2.67 0 2.987-.01 4.04-.06.976-.045 1.505-.207 1.858-.344.466-.181.8-.398 1.15-.748.35-.35.566-.683.747-1.15.137-.352.3-.881.344-1.857.05-1.054.06-1.37.06-4.04 0-2.67-.01-2.986-.06-4.04-.045-.976-.207-1.505-.344-1.858a3.09 3.09 0 0 0-.748-1.15 3.098 3.098 0 0 0-1.15-.747c-.352-.137-.881-.3-1.857-.344-1.054-.05-1.37-.06-4.04-.06zm0 4.594a5.604 5.604 0 1 1 0 11.208A5.604 5.604 0 0 1 12 8.396zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm7.146-9.404a1.31 1.31 0 1 1-2.62 0 1.31 1.31 0 0 1 2.62 0z"/></svg>
           </a>
+          <!-- TO ADD A SOCIAL ICON: uncomment one block below and replace the href. Icons auto-style via .footer-social a.
+          <a href="https://www.youtube.com/@YOUR_HANDLE" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+          </a>
+          <a href="https://x.com/YOUR_HANDLE" target="_blank" rel="noopener" aria-label="X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/YOUR_HANDLE" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+          </a>
+          -->
         </nav>
         <div class="footer-legal">
           <a href="/privacy">Privacy</a>
