@@ -232,6 +232,7 @@
     'Enter your zipcode to see local nonprofits and partner organizations ready to help migrants in your area. No account needed.': 'Escribe tu código postal para ver organizaciones locales listas para ayudar a migrantes en tu área. No necesitas una cuenta.',
     'Showing results within 25 miles': 'Resultados dentro de 25 millas',
     'All Services': 'Todos los servicios',
+    '📍 Use my location': '📍 Usar mi ubicación',
     'Immigration': 'Inmigración',
     'Mental Health': 'Salud mental',
     'Financial Aid': 'Ayuda financiera',

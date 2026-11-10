@@ -105,6 +105,12 @@
     .state-sub { font-size: 16px; color: var(--text-2); max-width: 440px; margin: 0 auto; line-height: 1.5; }
     .state-error { color: #dc2626; }
 
+    /* ── Use my location ── */
+    .loc-btn { margin-top: 14px; background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.55); border-radius: 999px; padding: 9px 20px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .loc-btn:hover { background: rgba(255,255,255,0.14); }
+    .loc-btn:disabled { opacity: 0.6; cursor: wait; }
+    .loc-btn:focus-visible { outline: 3px solid #ffd2c2; outline-offset: 2px; }
+
     /* ── Stats + preview + nearest ── */
     .stats-line { margin-top: 6px; font-size: 15px; font-weight: 600; opacity: 0.95; }
     .section-label { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); margin: 36px 0 16px; }
@@ -195,6 +201,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
       onkeydown="if(event.key==='Enter') doSearch()" aria-label="Zipcode" />
     <button class="search-btn" id="searchBtn" onclick="doSearch()">Search</button>
   </div>
+  <button class="loc-btn" id="locBtn" type="button" onclick="useMyLocation()">📍 Use my location</button>
   <div class="radius-hint">Showing results within 25 miles</div>
   <div class="stats-line" id="statsLine" hidden></div>
   <div class="hero-chips" id="chips" role="group" aria-label="Type of help">
@@ -333,16 +340,44 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   let activeService = '';
   let lastZip = '';
 
+  let lastQuery = '';
+
   async function doSearch() {
     const zip = document.getElementById('zipInput').value.trim();
     if (!zip || zip.length < 5) {
       showError('Please enter a valid 5-digit zipcode.');
       return;
     }
-    lastZip = zip;
+    await runSearch(`zip=${encodeURIComponent(zip)}`, zip);
+  }
+
+  function useMyLocation() {
+    const btn = document.getElementById('locBtn');
+    if (!navigator.geolocation) {
+      showError('Your browser cannot share its location.', 'Enter your zipcode above instead.');
+      return;
+    }
+    btn.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        btn.disabled = false;
+        const query = `lat=${pos.coords.latitude.toFixed(4)}&lng=${pos.coords.longitude.toFixed(4)}`;
+        runSearch(query, 'your location');
+      },
+      () => {
+        btn.disabled = false;
+        showError('We could not get your location.', 'Allow location access, or enter your zipcode above.');
+      },
+      { timeout: 10000, maximumAge: 300000 }
+    );
+  }
+
+  async function runSearch(query, label) {
+    lastQuery = query;
+    lastZip = label;
     setLoading();
     try {
-      const url = `${API}/nonprofits?zip=${encodeURIComponent(zip)}${activeService ? '&service=' + activeService : ''}`;
+      const url = `${API}/nonprofits?${query}${activeService ? '&service=' + activeService : ''}`;
       const resp = await fetch(url);
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
@@ -390,7 +425,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
           </div>
           <div id="nearestSlot"></div>
         </div>`;
-      if (!hasPartnersInRadius) loadNearest(lastZip, activeService);
+      if (!hasPartnersInRadius) loadNearest(lastQuery, lastZip, activeService);
       return;
     }
 
@@ -444,13 +479,13 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     }
   }
 
-  async function loadNearest(zip, service) {
+  async function loadNearest(query, label, service) {
     const slot = document.getElementById('nearestSlot');
     if (!slot) return;
     try {
-      const url = `${API}/nonprofits?zip=${encodeURIComponent(zip)}&radius=${NEAREST_RADIUS_MILES}${service ? '&service=' + service : ''}`;
+      const url = `${API}/nonprofits?${query}&radius=${NEAREST_RADIUS_MILES}${service ? '&service=' + service : ''}`;
       const nearest = (await fetchJson(url)).slice(0, NEAREST_LIMIT);
-      if (!nearest.length || zip !== lastZip || !document.getElementById('nearestSlot')) return;
+      if (!nearest.length || label !== lastZip || !document.getElementById('nearestSlot')) return;
       document.getElementById('nearestSlot').innerHTML = `
         <div class="section-label">Nearest partners</div>
         <div class="results-grid">${nearest.map(n => cardHtml(n)).join('')}</div>`;
@@ -494,12 +529,12 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     setTimeout(() => { document.getElementById('searchBtn').disabled = false; }, 3000);
   }
 
-  function showError(msg) {
+  function showError(msg, sub = 'Check the zipcode and try again.') {
     document.getElementById('resultsState').innerHTML = `
       <div class="state-box">
         <div class="state-icon">⚠️</div>
         <div class="state-title state-error">${escHtml(msg)}</div>
-        <div class="state-sub">Check the zipcode and try again.</div>
+        <div class="state-sub">${escHtml(sub)}</div>
       </div>`;
     document.getElementById('searchBtn').disabled = false;
   }
