@@ -105,6 +105,11 @@
     .state-sub { font-size: 16px; color: var(--text-2); max-width: 440px; margin: 0 auto; line-height: 1.5; }
     .state-error { color: #dc2626; }
 
+    /* ── Stats + preview + nearest ── */
+    .stats-line { margin-top: 6px; font-size: 15px; font-weight: 600; opacity: 0.95; }
+    .section-label { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); margin: 36px 0 16px; }
+    .np-dist { color: var(--teal); font-weight: 600; }
+
     /* ── Zero-results actions ── */
     .zero-box { background: var(--orange-light); border: 1px solid #f5c4b0; border-radius: var(--radius); padding: 20px; max-width: 520px; margin: 24px auto 0; text-align: left; }
     .zero-box h4 { font-family: 'Montserrat', sans-serif; font-size: 1.05rem; margin-bottom: 6px; }
@@ -191,6 +196,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     <button class="search-btn" id="searchBtn" onclick="doSearch()">Search</button>
   </div>
   <div class="radius-hint">Showing results within 25 miles</div>
+  <div class="stats-line" id="statsLine" hidden></div>
   <div class="hero-chips" id="chips" role="group" aria-label="Type of help">
     <button class="chip active" onclick="setFilter('')" data-service="" aria-pressed="true">All Services</button>
     <button class="chip" onclick="setFilter('food')" data-service="food" aria-pressed="false">Food</button>
@@ -216,6 +222,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
       <div class="state-title">Search by Zipcode</div>
       <div class="state-sub">Type your zipcode above, then tap a type of help to narrow the list.</div>
     </div>
+    <div id="partnerPreview"></div>
   </div>
 </main>
 
@@ -369,6 +376,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   function renderResults(items) {
     const el = document.getElementById('resultsState');
     if (!items.length) {
+      const hasPartnersInRadius = allResults.length > 0;
       el.innerHTML = `
         <div class="state-box">
           <div class="state-icon" aria-hidden="true">🔍</div>
@@ -380,7 +388,9 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
             <a class="btn" href="/signup">Post a request</a>
             <a class="btn alt" href="/requests">Browse requests</a>
           </div>
+          <div id="nearestSlot"></div>
         </div>`;
+      if (!hasPartnersInRadius) loadNearest(lastZip, activeService);
       return;
     }
 
@@ -393,6 +403,65 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
       </div>`;
   }
 
+  const NEAREST_RADIUS_MILES = 300;
+  const NEAREST_LIMIT = 3;
+  const PREVIEW_LIMIT = 3;
+
+  function distanceHtml(n) {
+    if (typeof n.distance_miles !== 'number') return '';
+    return ` · <span class="np-dist">${n.distance_miles.toFixed(1)} mi away</span>`;
+  }
+
+  async function fetchJson(url) {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return resp.json();
+  }
+
+  async function loadStats() {
+    const line = document.getElementById('statsLine');
+    try {
+      const stats = await fetchJson(`${API}/nonprofits/stats`);
+      if (!stats.partners) return;
+      const states = stats.states > 1 ? ` in ${stats.states} states` : '';
+      line.textContent = `${stats.partners} partner organization${stats.partners !== 1 ? 's' : ''}${states}`;
+      line.hidden = false;
+    } catch (e) {
+      line.hidden = true;
+    }
+  }
+
+  async function loadPartnerPreview() {
+    const slot = document.getElementById('partnerPreview');
+    try {
+      const partners = (await fetchJson(`${API}/nonprofits`)).slice(0, PREVIEW_LIMIT);
+      if (!partners.length || lastZip) return;
+      slot.innerHTML = `
+        <div class="section-label">Partners on MigrantPortal</div>
+        <div class="results-grid">${partners.map(n => cardHtml(n)).join('')}</div>`;
+    } catch (e) {
+      slot.innerHTML = '';
+    }
+  }
+
+  async function loadNearest(zip, service) {
+    const slot = document.getElementById('nearestSlot');
+    if (!slot) return;
+    try {
+      const url = `${API}/nonprofits?zip=${encodeURIComponent(zip)}&radius=${NEAREST_RADIUS_MILES}${service ? '&service=' + service : ''}`;
+      const nearest = (await fetchJson(url)).slice(0, NEAREST_LIMIT);
+      if (!nearest.length || zip !== lastZip || !document.getElementById('nearestSlot')) return;
+      document.getElementById('nearestSlot').innerHTML = `
+        <div class="section-label">Nearest partners</div>
+        <div class="results-grid">${nearest.map(n => cardHtml(n)).join('')}</div>`;
+    } catch (e) {
+      slot.innerHTML = '';
+    }
+  }
+
+  loadStats();
+  loadPartnerPreview();
+
   const SERVICE_LABELS = { mental_health: 'Mental Health', financial: 'Financial Aid' };
   const serviceLabel = s => SERVICE_LABELS[s] || s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' ');
 
@@ -402,7 +471,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     return `
       <div class="np-card">
         <div class="np-name">${escHtml(n.name)}</div>
-        ${location ? `<div class="np-location">📍 ${escHtml(location)}${n.zipcode ? ' ' + escHtml(n.zipcode) : ''}</div>` : ''}
+        ${location ? `<div class="np-location">📍 ${escHtml(location)}${n.zipcode ? ' ' + escHtml(n.zipcode) : ''}${distanceHtml(n)}</div>` : ''}
         ${n.description ? `<div class="np-desc">${escHtml(n.description)}</div>` : ''}
         ${services.length ? `<div class="np-services">${services.map(s => `<span class="np-tag">${escHtml(serviceLabel(s))}</span>`).join('')}</div>` : ''}
         <div class="np-contact">
