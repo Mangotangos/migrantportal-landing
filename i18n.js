@@ -58,20 +58,20 @@
     'Back to Home': 'Volver al inicio',
 
     // ── Index / landing
-    'Help a migrant family now': 'Ayuda a una familia migrante ahora',
-    'Help a Migrant Family Now': 'Ayuda a una familia migrante ahora',
+    'Help a migrant neighbor now': 'Ayuda a una persona migrante ahora',
+    'Help a Migrant Neighbor Now': 'Ayuda a una persona migrante ahora',
     'The Immigrant Needs Network Connecting Families with Help': 'La red de necesidades de inmigrantes que conecta familias con ayuda',
     'MigrantPortal — Migrant Resource Platform & Immigrant Needs Network': 'MigrantPortal — Plataforma de recursos para migrantes y red de necesidades',
     'Where Help Meets Hope': 'Donde la Ayuda Se Encuentra con la Esperanza',
     'MigrantPortal — Migrant Resource Platform & Needs Network': 'MigrantPortal — Plataforma de recursos para migrantes y red de necesidades',
-    'Connecting Migrant Families with the Help They Need': 'Conectamos a familias migrantes con la ayuda que necesitan',
+    'Connecting Migrant Neighbors with the Help They Need': 'Conectamos a vecinos migrantes con la ayuda que necesitan',
     'A free network for families, faith communities, and volunteers': 'Una red gratuita para familias, comunidades de fe y voluntarios',
     'respond with practical help, close to home.': 'responden con ayuda práctica, cerca de casa.',
     'Every need is reviewed by a navigator before it is published. We never sell personal information.': 'Un navegador revisa cada necesidad antes de publicarla. Nunca vendemos información personal.',
     'Request help for a family': 'Solicita ayuda para una familia',
     'Join as a partner': 'Únete como aliado',
     'Bring your organization on board': 'Suma a tu organización',
-    'Explore vetted, urgent needs of migrant families, each one verified before they reach your community.': 'Explora necesidades urgentes de familias migrantes, cada una verificada antes de llegar a tu comunidad.',
+    'Explore vetted, urgent needs of migrants and their families, each one verified before they reach your community.': 'Explora necesidades urgentes de personas migrantes y sus familias, cada una verificada antes de llegar a tu comunidad.',
     'For churches and nonprofits': 'Para iglesias y organizaciones sin fines de lucro',
     'Faith communities and nonprofits submit the needs of families they know, and MigrantPortal connects them with volunteers ready to help.': 'Las comunidades de fe y las organizaciones sin fines de lucro presentan las necesidades de las familias que conocen, y MigrantPortal las conecta con voluntarios dispuestos a ayudar.',
     'Partner with us': 'Colabora con nosotros',
@@ -79,8 +79,8 @@
     "See how a family's need becomes real help, from navigator to neighbor.": 'Descubre cómo la necesidad de una familia se convierte en ayuda real, del navegador al vecino.',
     'Post available beds, coordinate arrivals, and connect guests to the services they need.': 'Publica camas disponibles, coordina llegadas y conecta a los huéspedes con los servicios que necesitan.',
     'Stay in the Loop': 'Mantente al tanto',
-    'Sign up for updates from MigrantPortal, featuring real stories of impact, new opportunities to meet needs, and inspiring ways people like you are seeing and serving migrant families across the country.': 'Regístrate para recibir actualizaciones de MigrantPortal con historias reales de impacto, nuevas oportunidades para cubrir necesidades y formas inspiradoras en que personas como tú ven y sirven a familias migrantes en todo el país.',
-    'Connecting migrant families with faith communities, volunteers, and donors, one need at a time.': 'Conectamos a familias migrantes con comunidades de fe, voluntarios y donantes, una necesidad a la vez.',
+    'Sign up for updates from MigrantPortal, featuring real stories of impact, new opportunities to meet needs, and inspiring ways people like you are seeing and serving migrants and their families across the country.': 'Regístrate para recibir actualizaciones de MigrantPortal con historias reales de impacto, nuevas oportunidades para cubrir necesidades y formas inspiradoras en que personas como tú ven y sirven a personas migrantes y sus familias en todo el país.',
+    'Connecting migrants and their families with faith communities, volunteers, and donors, one need at a time.': 'Conectamos a personas migrantes y sus familias con comunidades de fe, voluntarios y donantes, una necesidad a la vez.',
     'Open to Post Needs': 'Abierto para publicar necesidades',
     'Launch City': 'Ciudad de lanzamiento',
     'Meet a need': 'Conoce una necesidad',
@@ -89,7 +89,7 @@
     'Post what your family needs': 'Publica lo que necesita tu familia',
     'Give a gift': 'Haz una donación',
     'Fund a specific need directly': 'Financia una necesidad específica directamente',
-    'MigrantPortal — Help a Migrant Family Now': 'MigrantPortal — Ayuda a una familia migrante ahora',
+    'MigrantPortal — Help a Migrant Neighbor Now': 'MigrantPortal — Ayuda a una persona migrante ahora',
     'Connecting migrants in need with faith communities, volunteers, and donors.': 'Conectamos migrantes en necesidad con comunidades de fe, voluntarios y donantes.',
     'MigrantPortal connects migrants in need with faith communities, volunteers, and donors. Submit needs, respond with compassion, and track impact — all in one app.': 'MigrantPortal conecta a migrantes en necesidad con comunidades de fe, voluntarios y donantes. Envía solicitudes, responde con compasión y sigue el impacto — todo en una sola aplicación.',
     'Our Mission': 'Nuestra Misión',
@@ -410,7 +410,7 @@
 
     // ── Feature strip
     'Discover live needs': 'Descubre necesidades en tiempo real',
-    'Explore vetted, urgent needs of migrant families across the nation — verified before they reach your community.': 'Explora necesidades urgentes y verificadas de familias migrantes en todo el país, confirmadas antes de llegar a tu comunidad.',
+    'Explore vetted, urgent needs of migrants and their families across the nation — verified before they reach your community.': 'Explora necesidades urgentes y verificadas de personas migrantes y sus familias en todo el país, confirmadas antes de llegar a tu comunidad.',
     'View Map of Requests': 'Ver mapa de solicitudes',
     'For professionals': 'Para profesionales',
     'Caseworkers, educators, and clinics use MigrantPortal to engage faith communities and wrap support around families they serve.': 'Trabajadores sociales, educadores y clínicas usan MigrantPortal para conectar comunidades de fe y brindar apoyo integral a las familias que atienden.',
@@ -418,7 +418,7 @@
     'Become a Partner': 'Conviértete en Socio',
 
     // ── How it works
-    'Learn how our Care-Sharing technology drives action for migrant families in crisis.': 'Conoce cómo nuestra tecnología Care-Sharing impulsa la acción para familias migrantes en crisis.',
+    'Learn how our Care-Sharing technology drives action for migrants and their families in crisis.': 'Conoce cómo nuestra tecnología Care-Sharing impulsa la acción para personas migrantes y sus familias en crisis.',
 
     // ── Impact stats
     'Real Impact, Right Now': 'Impacto Real, Ahora',
@@ -446,7 +446,7 @@
     // ── Get Involved
     'Get Involved Today': 'Involúcrate Hoy',
     'Choose the role that fits how you want to help': 'Elige el rol que se adapta a cómo quieres ayudar',
-    'Know a migrant family in need? Submit their needs directly and connect them with responders in your community.': '¿Conoces a una familia migrante en necesidad? Envía sus necesidades directamente y conéctalos con personas que pueden ayudar en tu comunidad.',
+    'Know a migrant in need? Submit their needs directly and connect them with responders in your community.': '¿Conoces a una persona migrante en necesidad? Envía sus necesidades directamente y conéctalos con personas que pueden ayudar en tu comunidad.',
     'Join as Navigator': 'Únete como Navegador',
     'Are you a faith community, volunteer, or organization? Browse real needs and respond with your time, resources, or skills.': '¿Eres una comunidad de fe, voluntario u organización? Explora necesidades reales y responde con tu tiempo, recursos o habilidades.',
     'Join as Responder': 'Únete como Ayudante',
@@ -464,12 +464,12 @@
 
     // ── Newsletter
     "Don't miss out!": '¡No te lo pierdas!',
-    'Sign up for updates from MigrantPortal — featuring real stories of impact, new opportunities to meet needs, and inspiring ways people like you are seeing and serving migrant families across the country.': 'Regístrate para recibir actualizaciones de MigrantPortal con historias reales de impacto, nuevas oportunidades para cubrir necesidades e inspiradoras formas en que personas como tú están sirviendo a familias migrantes en todo el país.',
+    'Sign up for updates from MigrantPortal — featuring real stories of impact, new opportunities to meet needs, and inspiring ways people like you are seeing and serving migrants and their families across the country.': 'Regístrate para recibir actualizaciones de MigrantPortal con historias reales de impacto, nuevas oportunidades para cubrir necesidades e inspiradoras formas en que personas como tú están sirviendo a personas migrantes y sus familias en todo el país.',
     'Subscribe': 'Suscribirme',
 
     // ── Footer
     'Trusted By Teams Across:': 'Con la Confianza de Equipos En:',
-    'Connecting migrant families with faith communities, volunteers, and donors, one need at a time.': 'Conectando familias migrantes con comunidades de fe, voluntarios y donantes, una necesidad a la vez.',
+    'Connecting migrants and their families with faith communities, volunteers, and donors, one need at a time.': 'Conectando personas migrantes y sus familias con comunidades de fe, voluntarios y donantes, una necesidad a la vez.',
     'Avg. Response Time': 'Tiempo de Respuesta Prom.',
     'Launch Cities': 'Ciudades de Lanzamiento',
     'For Helpers': 'Para Ayudantes',

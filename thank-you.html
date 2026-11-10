@@ -81,7 +81,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <svg viewBox="0 0 52 52"><polyline points="14,27 22,35 38,17"/></svg>
       </div>
       <h1 data-i18n="Thank you for your gift!">Thank you for your gift!</h1>
-      <p class="subtitle" data-i18n="You helped meet a real need today.">You helped meet a real need today. Your generosity makes a real difference in a migrant family's life.</p>
+      <p class="subtitle" data-i18n="You helped meet a real need today.">You helped meet a real need today. Your generosity makes a real difference in a migrant neighbor's life.</p>
 
       <div class="amount-box" id="amount-box" style="display:none;">
         <div class="amount-label">Amount donated</div>
@@ -138,13 +138,13 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
       // Share link setup
       const shareUrl = location.origin + '/';
-      const shareMsg = 'I just donated through MigrantPortal to help a migrant family in need. Join me:';
+      const shareMsg = 'I just donated through MigrantPortal to help a migrant neighbor in need. Join me:';
       document.getElementById('share-fb').href =
         'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
       document.getElementById('share-tw').href =
         'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareMsg) + '&url=' + encodeURIComponent(shareUrl);
       document.getElementById('share-em').href =
-        'mailto:?subject=' + encodeURIComponent('Help a migrant family') +
+        'mailto:?subject=' + encodeURIComponent('Help a migrant neighbor') +
         '&body=' + encodeURIComponent(shareMsg + ' ' + shareUrl);
     })();
 
