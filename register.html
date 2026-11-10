@@ -836,6 +836,10 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
             <label for="org-website">Website</label>
             <input type="url" id="org-website" placeholder="https://yourorg.org" oninput="checkOrgDetails()" />
           </div>
+          <div class="field">
+            <label for="org-hours">Hours (optional)</label>
+            <input type="text" id="org-hours" maxlength="120" placeholder="Mon to Fri, 9am to 5pm" />
+          </div>
         </div>
         <div class="btn-row">
           <button class="btn-back" onclick="goBackFromOrgDetails()">Back</button>
@@ -1267,6 +1271,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         phone:       document.getElementById('org-phone').value.trim() || null,
         email:       document.getElementById('org-email').value.trim() || null,
         website:     document.getElementById('org-website').value.trim() || null,
+        hours:       document.getElementById('org-hours').value.trim() || null,
         contact_name: fname + ' ' + lname,
       };
 

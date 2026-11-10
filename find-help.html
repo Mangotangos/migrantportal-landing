@@ -115,6 +115,8 @@
     .stats-line { margin-top: 6px; font-size: 15px; font-weight: 600; opacity: 0.95; }
     .section-label { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); margin: 36px 0 16px; }
     .np-dist { color: var(--teal); font-weight: 600; }
+    .np-hours { font-size: 15px; color: var(--text-2); margin-bottom: 14px; }
+    .np-hours b { color: var(--text); }
 
     /* ── Zero-results actions ── */
     .zero-box { background: var(--orange-light); border: 1px solid #f5c4b0; border-radius: var(--radius); padding: 20px; max-width: 520px; margin: 24px auto 0; text-align: left; }
@@ -442,6 +444,8 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   const NEAREST_LIMIT = 3;
   const PREVIEW_LIMIT = 3;
 
+  const hoursLabel = () => (document.documentElement.lang === 'es' ? 'Horario' : 'Hours');
+
   function distanceHtml(n) {
     if (typeof n.distance_miles !== 'number') return '';
     return ` · <span class="np-dist">${n.distance_miles.toFixed(1)} mi away</span>`;
@@ -508,6 +512,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
         <div class="np-name">${escHtml(n.name)}</div>
         ${location ? `<div class="np-location">📍 ${escHtml(location)}${n.zipcode ? ' ' + escHtml(n.zipcode) : ''}${distanceHtml(n)}</div>` : ''}
         ${n.description ? `<div class="np-desc">${escHtml(n.description)}</div>` : ''}
+        ${n.hours ? `<div class="np-hours"><b>${hoursLabel()}:</b> ${escHtml(n.hours)}</div>` : ''}
         ${services.length ? `<div class="np-services">${services.map(s => `<span class="np-tag">${escHtml(serviceLabel(s))}</span>`).join('')}</div>` : ''}
         <div class="np-contact">
           ${n.phone ? `<span class="np-phone">📞 <a href="tel:${escHtml(n.phone)}">${escHtml(n.phone)}</a></span>` : ''}

@@ -3471,6 +3471,7 @@
         ${n ? `<div style="font-size:12px;margin:-4px 0 8px;${n.lat == null ? 'color:var(--yellow)' : 'color:var(--text-3)'}">${n.lat == null ? '⚠ No map coordinates. Check the zipcode and save.' : `📌 ${Number(n.lat).toFixed(4)}, ${Number(n.lng).toFixed(4)}`}</div>` : ''}
         <h4>Contact</h4>
         ${npField('phone', 'Phone', n && n.phone, 'tel')}${npField('email', 'Email', n && n.email, 'email')}${npField('website', 'Website', n && n.website, 'url')}
+        <label class="fld"><span class="form-label">Hours (optional, shown on the listing as typed)</span><input class="form-input" id="npf-hours" type="text" maxlength="120" placeholder="Mon to Fri, 9am to 5pm" value="${escHtml(n && n.hours || '')}"></label>
         ${n ? `<h4>Responders and org account</h4><div style="font-size:13px">${linked ? `Linked to <a href="#" onclick="npCloseDrawer();switchTab('orgs');return false" style="color:var(--teal)">${escHtml(linked.name)} →</a>
           <div style="font-size:12px;color:var(--text-2);margin-top:4px">${linked.member_count} responder account${linked.member_count === 1 ? '' : 's'} · owner ${escHtml(linked.owner_name)}${linked.owner_email ? ' (' + escHtml(linked.owner_email) + ')' : ''}</div>` : '<span style="color:var(--text-3)">Directory listing only. No responders signed in under this organization.</span>'}</div>
         <h4>Verification</h4><div style="font-size:13px">${n.last_verified_at ? 'Last verified ' + escHtml(npDate(n.last_verified_at)) : '<span style="color:var(--yellow)">Never verified</span>'}</div>
@@ -3499,7 +3500,7 @@
     const services = [...document.querySelectorAll('#npf-services input:checked')].map(c => c.value).join(',');
     return {
       name: v('name'), org_type: v('org_type'), description: v('description'), services, address: v('address'), city: v('city'),
-      state: v('state').toUpperCase(), zipcode: v('zipcode'), phone: v('phone'), email: v('email'), website: v('website'),
+      state: v('state').toUpperCase(), zipcode: v('zipcode'), phone: v('phone'), email: v('email'), website: v('website'), hours: v('hours'),
       ...(document.getElementById('npf-admin_notes') ? { admin_notes: v('admin_notes') } : {}),
     };
   }
