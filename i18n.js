@@ -229,6 +229,14 @@
 
     // ── Find Help
     'Find Help Near You': 'Encuentra Ayuda Cerca de Ti',
+    'Enter your zipcode to see local nonprofits and partner organizations ready to help migrants in your area. No account needed.': 'Escribe tu código postal para ver organizaciones locales listas para ayudar a migrantes en tu área. No necesitas una cuenta.',
+    'Showing results within 25 miles': 'Resultados dentro de 25 millas',
+    'All Services': 'Todos los servicios',
+    'Immigration': 'Inmigración',
+    'Mental Health': 'Salud mental',
+    'Financial Aid': 'Ayuda financiera',
+    'Search by Zipcode': 'Buscar por código postal',
+    'Type your zipcode above, then tap a type of help to narrow the list.': 'Escribe tu código postal arriba y luego toca un tipo de ayuda para filtrar la lista.',
     'Find help near you': 'Encuentra ayuda cerca de ti',
     'Search by city, state, or ZIP': 'Buscar por ciudad, estado o código postal',
     'Search nonprofits': 'Buscar organizaciones',
