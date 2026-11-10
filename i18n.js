@@ -415,6 +415,7 @@
     // ── Hero paragraph (mixed-content text nodes)
     'MigrantPortal is a free migrant resource platform where families post real needs and': 'MigrantPortal es una plataforma gratuita de recursos para migrantes donde las familias publican sus necesidades y',
     'faith communities, volunteers, and donors': 'comunidades de fe, voluntarios y donantes',
+    'faith communities and volunteers': 'comunidades de fe y voluntarios',
     'respond — with compassion, in their language, near them.': 'responden — con compasión, en su idioma, cerca de ellos.',
 
     // ── Hero actions
