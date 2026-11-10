@@ -44,8 +44,18 @@
   margin-bottom: 12px;
 }
 .footer-brand-logo .mp-p { color: #fff; }
+/* Pale-mint pill so the teal hand of the logo stays visible on the teal footer */
+.footer-brand-logo {
+  width: fit-content;
+  padding: 6px 18px 6px 10px;
+  background: linear-gradient(180deg, #eaf6f2, #d6ece6);
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 40px;
+}
+.footer-brand-logo > span,
+.footer-brand-logo > span > span { color: #0b5a66 !important; }
 .footer-brand-logo-icon {
-  width: 30px; height: 30px; border-radius: 6px;
+  width: 34px; height: 34px; border-radius: 6px;
   object-fit: contain;
 }
 .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.92); line-height: 1.7; }
