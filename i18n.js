@@ -80,6 +80,7 @@
     'Post available beds, coordinate arrivals, and connect guests to the services they need.': 'Publica camas disponibles, coordina llegadas y conecta a los huéspedes con los servicios que necesitan.',
     'Stay in the Loop': 'Mantente al tanto',
     'Sign up for updates from MigrantPortal, featuring real stories of impact, new opportunities to meet needs, and inspiring ways people like you are seeing and serving migrants and their families across the country.': 'Regístrate para recibir actualizaciones de MigrantPortal con historias reales de impacto, nuevas oportunidades para cubrir necesidades y formas inspiradoras en que personas como tú ven y sirven a personas migrantes y sus familias en todo el país.',
+    'MigrantPortal serves individuals and families alike.': 'MigrantPortal atiende tanto a personas solas como a familias.',
     'Connecting migrants and their families with faith communities, volunteers, and donors, one need at a time.': 'Conectamos a personas migrantes y sus familias con comunidades de fe, voluntarios y donantes, una necesidad a la vez.',
     'Open to Post Needs': 'Abierto para publicar necesidades',
     'Launch City': 'Ciudad de lanzamiento',
