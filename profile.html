@@ -146,6 +146,15 @@
       font-size: 14px; font-weight: 700; transition: background .15s;
     }
     .save-btn:hover { background: #005f66; }
+    .alerts-sect .radius-pills { display:flex; gap:6px; margin:8px 0 18px; flex-wrap:wrap; }
+    .alerts-sect .rpill { padding:8px 16px; border-radius:999px; border:1.5px solid var(--gray-200); background:#fff; font-size:13px; cursor:pointer; }
+    .alerts-sect .rpill.on { border-color:var(--teal); background:#e6f4f5; color:var(--teal); font-weight:600; }
+    .alerts-sect .achips { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .alerts-sect .achip { display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:8px; border:1.5px solid var(--gray-200); background:#fff; font-size:13px; cursor:pointer; }
+    .alerts-sect .achip.on { border-color:var(--teal); background:#e6f4f5; color:var(--teal); font-weight:600; }
+    .alerts-sect .alert-lbl { font-size:13px; font-weight:700; margin-top:4px; }
+    .alerts-sect .alert-foot { display:flex; align-items:center; justify-content:space-between; margin-top:18px; gap:12px; }
+
     .save-btn:disabled { opacity: .45; cursor: not-allowed; }
     .save-success {
       display: none; margin-top: 12px; padding: 10px 14px;
@@ -451,6 +460,25 @@
     <!-- ── NOTIFICATIONS ── -->
     <div class="tab-panel" id="panel-notifications">
       <div class="profile-form-card form-flush">
+        <section class="form-sect alerts-sect" id="alertsSect" style="display:none">
+          <h3>Needs I&rsquo;m alerted about</h3>
+          <p>You&rsquo;ll only be alerted about the need types you pick, within the distance you choose of your ZIP code.</p>
+          <div class="alert-lbl">Within</div>
+          <div class="radius-pills" id="alertRadius">
+            <button type="button" class="rpill" data-r="25">25 mi</button>
+            <button type="button" class="rpill" data-r="50">50 mi</button>
+            <button type="button" class="rpill" data-r="200">200 mi</button>
+            <button type="button" class="rpill" data-r="any">Any distance</button>
+          </div>
+          <div class="alert-lbl">Need types</div>
+          <div class="achips" id="alertChips"></div>
+          <div class="alert-foot">
+            <span class="save-hint" id="alertHint">Pick at least one need type.</span>
+            <button class="save-btn" id="alertSaveBtn" onclick="saveAlertSettings()">Save alerts</button>
+          </div>
+        </section>
+      </div>
+      <div class="profile-form-card form-flush">
         <section class="form-sect">
           <h3>Communication preferences</h3>
           <p>Choose how MigrantPortal contacts you. <span class="crit-note">Critical</span> notifications are needed to use the platform, so we recommend leaving them on.</p>
@@ -539,6 +567,7 @@
       setText('city', u.city); setText('zip', u.zip_code);
       setSelect('state', u.state); setSelect('country', u.country);
       applyNotifPrefs(u.notification_prefs);
+      initAlertSettings(u);
       if (u.role)   document.getElementById('avatarRole').textContent = u.role;
       if (document.getElementById('topRole')) document.getElementById('topRole').textContent = u.role || '—';
       updateAvatar();
@@ -551,6 +580,77 @@
       const find = () => [...sel.options].find(o => o.value === value || o.text === value);
       if (!find()) sel.add(new Option(value, value));
       sel.value = find().value;
+    }
+
+
+    // ── Alert settings (radius + need types), responders and responding orgs only
+    const ALERT_ICON_PATHS = {
+      housing: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+      food: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+      clothing: '<path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>',
+      furniture: '<path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z"/><path d="M4 18v2"/><path d="M20 18v2"/>',
+      transportation: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+      employment: '<rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+      legal: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+      medical: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>',
+      education: '<path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+      translation: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+      childcare: '<path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/>',
+      financial: '<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+      other: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+    };
+    const ALERT_CATS = [['housing','Housing'],['food','Food'],['clothing','Clothing'],['furniture','Furniture'],['transportation','Transportation'],['employment','Employment'],['legal','Legal Aid'],['medical','Medical'],['education','Education'],['translation','Translation'],['childcare','Childcare'],['financial','Financial'],['other','Other']];
+    let alertCats = [];
+    let alertRadius = 50;
+
+    function renderAlertSettings() {
+      document.getElementById('alertChips').innerHTML = ALERT_CATS.map(([k, label]) =>
+        `<button type="button" class="achip${alertCats.includes(k) ? ' on' : ''}" data-cat="${k}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ALERT_ICON_PATHS[k]}</svg>${label}</button>`).join('');
+      document.querySelectorAll('#alertRadius .rpill').forEach(b => {
+        b.classList.toggle('on', b.dataset.r === (alertRadius == null ? 'any' : String(alertRadius)));
+      });
+      document.getElementById('alertSaveBtn').disabled = alertCats.length === 0;
+    }
+
+    function initAlertSettings(u) {
+      if (u.role !== 'responder') return;
+      alertCats = Array.isArray(u.need_categories) ? [...u.need_categories] : [];
+      alertRadius = u.notification_radius === undefined ? 50 : u.notification_radius;
+      document.getElementById('alertsSect').style.display = '';
+      renderAlertSettings();
+    }
+
+    document.getElementById('alertChips').addEventListener('click', e => {
+      const chip = e.target.closest('.achip');
+      if (!chip) return;
+      const cat = chip.dataset.cat;
+      alertCats = alertCats.includes(cat) ? alertCats.filter(c => c !== cat) : [...alertCats, cat];
+      renderAlertSettings();
+    });
+    document.getElementById('alertRadius').addEventListener('click', e => {
+      const pill = e.target.closest('.rpill');
+      if (!pill) return;
+      alertRadius = pill.dataset.r === 'any' ? null : Number(pill.dataset.r);
+      renderAlertSettings();
+    });
+
+    async function saveAlertSettings() {
+      const btn = document.getElementById('alertSaveBtn');
+      btn.disabled = true;
+      try {
+        const sent = [...alertCats];
+        const updated = await apiPatch('/auth/profile', { need_categories: sent, notification_radius: alertRadius });
+        const saved = Array.isArray(updated.need_categories) ? updated.need_categories : [];
+        if (sent.length !== saved.length || sent.some(c => !saved.includes(c))) {
+          throw new Error('The server did not save the change.');
+        }
+        localStorage.setItem('mp_user', JSON.stringify(updated));
+        _mpToast('Alert settings saved.');
+      } catch (e) {
+        _mpToast('Save failed: ' + (e.message || 'Unknown error'), true);
+      } finally {
+        renderAlertSettings();
+      }
     }
 
     // ── Notification preferences (single source of truth for the rows)

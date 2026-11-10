@@ -174,9 +174,11 @@ async function fetchNearbyNeeds(user) {
     ...n,
     distance: origin && n.lat != null && n.lng != null ? distanceMiles(origin, n) : null,
   }));
+  const wanted = Array.isArray(user.need_categories) ? user.need_categories : [];
+  const inScope = wanted.length ? needs.filter(n => wanted.includes(n.category)) : needs;
   const nearby = origin
-    ? needs.filter(n => n.distance != null && n.distance <= radius)
-    : needs.filter(n => user.state && n.state === user.state);
+    ? inScope.filter(n => n.distance != null && n.distance <= radius)
+    : inScope.filter(n => user.state && n.state === user.state);
   nearby.sort((a, b) =>
     (URGENCY_RANK[b.urgency] || 0) - (URGENCY_RANK[a.urgency] || 0) ||
     (a.distance ?? Infinity) - (b.distance ?? Infinity));

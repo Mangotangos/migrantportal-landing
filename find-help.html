@@ -379,6 +379,9 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
       </div>`;
   }
 
+  const SERVICE_LABELS = { mental_health: 'Mental Health', financial: 'Financial Aid' };
+  const serviceLabel = s => SERVICE_LABELS[s] || s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' ');
+
   function cardHtml(n) {
     const services = n.services ? n.services.split(',').map(s => s.trim()).filter(Boolean) : [];
     const location = [n.city, n.state].filter(Boolean).join(', ');
@@ -387,7 +390,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
         <div class="np-name">${escHtml(n.name)}</div>
         ${location ? `<div class="np-location">📍 ${escHtml(location)}${n.zipcode ? ' ' + escHtml(n.zipcode) : ''}</div>` : ''}
         ${n.description ? `<div class="np-desc">${escHtml(n.description)}</div>` : ''}
-        ${services.length ? `<div class="np-services">${services.map(s => `<span class="np-tag">${escHtml(s)}</span>`).join('')}</div>` : ''}
+        ${services.length ? `<div class="np-services">${services.map(s => `<span class="np-tag">${escHtml(serviceLabel(s))}</span>`).join('')}</div>` : ''}
         <div class="np-contact">
           ${n.phone ? `<span class="np-phone">📞 <a href="tel:${escHtml(n.phone)}">${escHtml(n.phone)}</a></span>` : ''}
           ${n.email ? `<a href="mailto:${escHtml(n.email)}">✉️ ${escHtml(n.email)}</a>` : ''}
