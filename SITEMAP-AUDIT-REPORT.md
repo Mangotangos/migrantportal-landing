@@ -23,7 +23,7 @@ All major user workflows are functional. One minor gap: email verification uses 
 | Our Story | our-story.html | ✅ Live | Company background |
 | Vision | vision.html | ✅ Live | Mission statement |
 | Impact | impact.html | ✅ Live | Social impact metrics |
-| Press Kit | press-kit.html | ✅ Live | Media resources |
+| Press Kit | press-kit.html | 🗑️ Removed 2026-11-09 | 301 → /our-story |
 
 ### Auth Pages (7 pages)
 | Page | File | Status | Details |

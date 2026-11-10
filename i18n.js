@@ -107,7 +107,6 @@
     'See how you can help': 'Mira cómo puedes ayudar',
     'Impact': 'Impacto',
     'Our Story': 'Nuestra Historia',
-    'Press Kit': 'Kit de Prensa',
     'Privacy Policy': 'Política de Privacidad',
     'Privacy': 'Privacidad',
     'Terms of Service': 'Términos de Servicio',
