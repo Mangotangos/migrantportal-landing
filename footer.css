@@ -48,15 +48,16 @@
 .footer-brand-logo {
   width: fit-content;
   padding: 6px 18px 6px 10px;
-  background: linear-gradient(180deg, #eaf6f2, #d6ece6);
-  border: 1px solid rgba(255,255,255,0.5);
+  background: linear-gradient(180deg, #cfe5e1, #b8d6d1);
+  border: 1px solid rgba(255,255,255,0.35);
   border-radius: 40px;
 }
+.footer-brand-logo picture { display: flex; }
 .footer-brand-logo > span,
 .footer-brand-logo > span > span { color: #0b5a66 !important; }
 .footer-brand-logo-icon {
   width: 34px; height: 34px; border-radius: 6px;
-  object-fit: contain;
+  object-fit: contain; display: block;
 }
 .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.92); line-height: 1.7; }
 .footer-stats { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
