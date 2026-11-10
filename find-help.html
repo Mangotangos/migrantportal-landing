@@ -113,6 +113,15 @@
 
     /* ── Stats + preview + nearest ── */
     .stats-line { margin-top: 6px; font-size: 15px; font-weight: 600; opacity: 0.95; }
+    .section-head { margin: 36px 0 16px; }
+    .section-head .section-label { margin: 0 0 4px; }
+    .section-sub { font-size: 14px; color: var(--text-2); margin: 0; }
+    .section-note { background: #fff6e0; border: 1px solid #ecd49a; color: #4a3a0a; border-radius: 10px; padding: 12px 14px; font-size: 13.5px; line-height: 1.5; margin: 0 0 16px; }
+    .np-card.is-partner { border-top: 4px solid var(--teal); }
+    .np-badge { display: inline-block; background: #dff3e6; color: #14532d; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 12px; margin-bottom: 8px; }
+    .partner-empty { background: var(--white); border: 2px dashed #9cc7cd; border-radius: var(--radius); padding: 24px; margin-bottom: 8px; }
+    .partner-empty h4 { margin: 0 0 6px; font-size: 17px; }
+    .partner-empty p { margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: var(--text-2); }
     .section-label { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); margin: 36px 0 16px; }
     .np-dist { color: var(--teal); font-weight: 600; }
     .np-hours { font-size: 15px; color: var(--text-2); margin-bottom: 14px; }
@@ -431,13 +440,45 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
       return;
     }
 
+    const partners = items.filter(isPartner);
+    const resources = items.filter(n => !isPartner(n));
     el.innerHTML = `
       <div class="results-header">
         <div class="results-count">${items.length} organization${items.length !== 1 ? 's' : ''} found near ${escHtml(lastZip)}</div>
       </div>
-      <div class="results-grid">
-        ${items.map(n => cardHtml(n)).join('')}
-      </div>`;
+      ${partnersSectionHtml(partners, true)}
+      ${resourcesSectionHtml(resources)}`;
+  }
+
+  const isPartner = n => Boolean(n.org_id);
+
+  function partnersSectionHtml(partners, showEmpty) {
+    if (!partners.length && !showEmpty) return '';
+    const body = partners.length
+      ? `<div class="results-grid">${partners.map(n => cardHtml(n)).join('')}</div>`
+      : `<div class="partner-empty">
+          <h4>No partner organizations near ${escHtml(lastZip)} yet</h4>
+          <p>You can still post a request and our navigators will help match you. Other local organizations that may be able to help are listed below.</p>
+          <a class="btn" href="/signup">Post a request</a>
+          <a class="btn alt" href="/signup">Become a partner</a>
+        </div>`;
+    return `
+      <div class="section-head">
+        <div class="section-label">MigrantPortal partners</div>
+        <p class="section-sub">Verified organizations that work with us. Request help through MigrantPortal and a partner responds.</p>
+      </div>
+      ${body}`;
+  }
+
+  function resourcesSectionHtml(resources) {
+    if (!resources.length) return '';
+    return `
+      <div class="section-head">
+        <div class="section-label">Other local resources</div>
+        <p class="section-sub">Public organizations in your area. Not affiliated with MigrantPortal.</p>
+      </div>
+      <p class="section-note">We list these for convenience. Please call to confirm hours, eligibility and services before you go.</p>
+      <div class="results-grid">${resources.map(n => cardHtml(n)).join('')}</div>`;
   }
 
   const NEAREST_RADIUS_MILES = 300;
@@ -457,29 +498,22 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     return resp.json();
   }
 
-  async function loadStats() {
-    const line = document.getElementById('statsLine');
-    try {
-      const stats = await fetchJson(`${API}/nonprofits/stats`);
-      if (!stats.partners) return;
-      const states = stats.states > 1 ? ` in ${stats.states} states` : '';
-      line.textContent = `${stats.partners} partner organization${stats.partners !== 1 ? 's' : ''}${states}`;
-      line.hidden = false;
-    } catch (e) {
-      line.hidden = true;
-    }
-  }
-
   async function loadPartnerPreview() {
     const slot = document.getElementById('partnerPreview');
+    const line = document.getElementById('statsLine');
     try {
-      const partners = (await fetchJson(`${API}/nonprofits`)).slice(0, PREVIEW_LIMIT);
-      if (!partners.length || lastZip) return;
-      slot.innerHTML = `
-        <div class="section-label">Partners on MigrantPortal</div>
-        <div class="results-grid">${partners.map(n => cardHtml(n)).join('')}</div>`;
+      const all = await fetchJson(`${API}/nonprofits`);
+      const partners = all.filter(isPartner);
+      if (partners.length) {
+        line.textContent = `${partners.length} partner organization${partners.length !== 1 ? 's' : ''}`;
+        line.hidden = false;
+      }
+      if (lastZip) return;
+      slot.innerHTML = partnersSectionHtml(partners.slice(0, PREVIEW_LIMIT), false)
+        + resourcesSectionHtml(all.filter(n => !isPartner(n)).slice(0, PREVIEW_LIMIT));
     } catch (e) {
       slot.innerHTML = '';
+      line.hidden = true;
     }
   }
 
@@ -491,14 +525,13 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
       const nearest = (await fetchJson(url)).slice(0, NEAREST_LIMIT);
       if (!nearest.length || label !== lastZip || !document.getElementById('nearestSlot')) return;
       document.getElementById('nearestSlot').innerHTML = `
-        <div class="section-label">Nearest partners</div>
+        <div class="section-label">Nearest organizations</div>
         <div class="results-grid">${nearest.map(n => cardHtml(n)).join('')}</div>`;
     } catch (e) {
       slot.innerHTML = '';
     }
   }
 
-  loadStats();
   loadPartnerPreview();
 
   const SERVICE_LABELS = { mental_health: 'Mental Health', financial: 'Financial Aid' };
@@ -508,7 +541,8 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     const services = n.services ? n.services.split(',').map(s => s.trim()).filter(Boolean) : [];
     const location = [n.city, n.state].filter(Boolean).join(', ');
     return `
-      <div class="np-card">
+      <div class="np-card${isPartner(n) ? ' is-partner' : ''}">
+        ${isPartner(n) ? '<span class="np-badge">✓ Partner</span>' : ''}
         <div class="np-name">${escHtml(n.name)}</div>
         ${location ? `<div class="np-location">📍 ${escHtml(location)}${n.zipcode ? ' ' + escHtml(n.zipcode) : ''}${distanceHtml(n)}</div>` : ''}
         ${n.description ? `<div class="np-desc">${escHtml(n.description)}</div>` : ''}

@@ -804,7 +804,7 @@
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-send"/></svg></span> Email
     </button>
     <button type="button" class="nav-item" onclick="switchTab('nonprofits')">
-      <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-landmark"/></svg></span> Partner Orgs
+      <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-landmark"/></svg></span> Directory
       <span class="nav-badge zero" id="nonprofitsBadge">0</span>
     </button>
     <button type="button" class="nav-item" onclick="switchTab('audit')">
@@ -1082,8 +1082,8 @@
     <!-- NONPROFITS TAB -->
     <div id="tab-nonprofits" style="display:none">
       <div class="page-header">
-        <div class="page-title">Partner Organizations</div>
-        <div class="page-subtitle">Organizations listed on the public "Find Help" page · <a href="/find-help" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none">View public page →</a></div>
+        <div class="page-title">Organizations Directory</div>
+        <div class="page-subtitle">Partners (organizations with a linked, approved account) and other resources shown on the public "Find Help" page ·<a href="/find-help" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none">View public page →</a></div>
       </div>
       <div class="np-top">
         <span class="sp"></span>
@@ -1095,7 +1095,8 @@
       <div class="np-tiles" id="npTiles"></div>
       <div class="card" style="padding:0">
         <div class="utabs" style="padding:0 14px;margin:0">
-          <button class="utab on" data-npt="dir" onclick="npSetTab('dir')">Directory<span class="n" id="npn-dir">0</span></button>
+          <button class="utab" data-npt="par" onclick="npSetTab('par')">Partners<span class="n" id="npn-par">0</span></button>
+          <button class="utab on" data-npt="res" onclick="npSetTab('res')">Other resources<span class="n" id="npn-res">0</span></button>
           <button class="utab" data-npt="rev" onclick="npSetTab('rev')">Awaiting review<span class="n" id="npn-rev">0</span></button>
           <button class="utab" data-npt="cov" onclick="npSetTab('cov')">Coverage by city</button>
           <button class="utab" data-npt="att" onclick="npSetTab('att')">Needs attention<span class="n" id="npn-att">0</span></button>
@@ -1108,9 +1109,6 @@
             <select class="role-select" style="height:36px" id="npCity" onchange="npPage=1;npRenderDirectory()"></select>
             <select class="role-select" style="height:36px" id="npSvc" onchange="npPage=1;npRenderDirectory()"></select>
             <select class="role-select" style="height:36px" id="npTypeFilter" onchange="npPage=1;npRenderDirectory()"></select>
-            <select class="role-select" style="height:36px" id="npLink" onchange="npPage=1;npRenderDirectory()">
-              <option value="">Linked or not</option><option value="y">Has org account</option><option value="n">Directory only</option>
-            </select>
           </div>
           <div class="np-chips" id="npChips"></div>
           <div class="np-bulk" id="npBulk"><b id="npBulkCount"></b>
@@ -3248,7 +3246,8 @@
   const npCityKey = n => `${(n.city || '').trim().toLowerCase()}|${(n.state || '').trim().toUpperCase()}`;
   const npCityLabel = n => (n.city ? `${n.city.trim()}${n.state ? ', ' + n.state.trim().toUpperCase() : ''}` : 'No city');
   const npById = id => npAll.find(n => n.id === id);
-  let npAll = [], npRemoved = [], npOrgById = {}, npPage = 1, npSelected = new Set();
+  let npAll = [], npRemoved = [], npOrgById = {}, npPage = 1, npSelected = new Set(), npKind = 'res';
+  const npIsPartner = n => Boolean(n.org_id);
 
   async function loadNonprofits() {
     document.getElementById('npDirContent').innerHTML = '<div class="loading">Loading…</div>';
@@ -3299,11 +3298,13 @@
     const att = npAttention(), attCount = att.geo.length + att.phone.length + att.svc.length + att.stale.length;
     const cities = new Set(npActive().map(npCityKey).filter(k => !k.startsWith('|')));
     document.getElementById('npTiles').innerHTML =
-      `<div class="np-tile"><b>${npActive().length}</b><span>Active partners</span></div>
+      `<div class="np-tile"><b>${npActive().filter(npIsPartner).length}</b><span>Partners</span></div>
+       <div class="np-tile"><b>${npActive().filter(n => !npIsPartner(n)).length}</b><span>Other resources</span></div>
        <div class="np-tile"><b>${cities.size}</b><span>Cities covered</span></div>
        <div class="np-tile"><b>${npInactive().length}</b><span>Awaiting review</span></div>
        <div class="np-tile"><b>${attCount}</b><span>Listing issues</span></div>`;
-    document.getElementById('npn-dir').textContent = npActive().length;
+    document.getElementById('npn-par').textContent = npActive().filter(npIsPartner).length;
+    document.getElementById('npn-res').textContent = npActive().filter(n => !npIsPartner(n)).length;
     document.getElementById('npn-rev').textContent = npInactive().length;
     document.getElementById('npn-att').textContent = attCount;
     document.getElementById('npn-rem').textContent = npRemoved.length;
@@ -3313,20 +3314,24 @@
     npRenderDirectory(); npRenderReview(); npRenderCoverage(); npRenderAttention(); npRenderRemoved();
   }
 
+  // 'par' and 'res' share the directory panel; 'dir' shows both (used by coverage drill-down)
   function npSetTab(tab) {
+    const isDirTab = ['par', 'res', 'dir'].includes(tab);
+    if (isDirTab) { npKind = tab === 'dir' ? '' : tab; npSelected = new Set(); npPage = 1; npRenderDirectory(); }
+    const panel = isDirTab ? 'dir' : tab;
     document.querySelectorAll('[data-npt]').forEach(b => b.classList.toggle('on', b.dataset.npt === tab));
-    ['dir', 'rev', 'cov', 'att', 'rem'].forEach(t => { document.getElementById('np-p-' + t).style.display = t === tab ? '' : 'none'; });
+    ['dir', 'rev', 'cov', 'att', 'rem'].forEach(t => { document.getElementById('np-p-' + t).style.display = t === panel ? '' : 'none'; });
   }
 
   function npFiltered() {
     const q = document.getElementById('npQ').value.trim().toLowerCase();
-    const city = document.getElementById('npCity').value, svc = document.getElementById('npSvc').value, link = document.getElementById('npLink').value, type = document.getElementById('npTypeFilter').value;
+    const city = document.getElementById('npCity').value, svc = document.getElementById('npSvc').value, type = document.getElementById('npTypeFilter').value;
     return npActive().filter(n =>
+      (!npKind || (npKind === 'par') === npIsPartner(n)) &&
       (!q || [n.name, n.city, n.phone, n.email, n.website].join(' ').toLowerCase().includes(q)) &&
       (!city || npCityKey(n) === city) &&
       (!svc || npServices(n).includes(svc)) &&
-      (!type || npType(n) === type) &&
-      (!link || (link === 'y') === !!n.org_id));
+      (!type || npType(n) === type));
   }
 
   function npRowHtml(n) {
@@ -3350,12 +3355,11 @@
     npPage = Math.min(Math.max(1, npPage), pages);
     const rows = list.slice((npPage - 1) * NP_PER_PAGE, npPage * NP_PER_PAGE);
     const chips = [['npCity', document.getElementById('npCity').selectedOptions[0]?.textContent], ['npSvc', npLabel(document.getElementById('npSvc').value)],
-      ['npLink', document.getElementById('npLink').selectedOptions[0]?.textContent],
       ['npTypeFilter', document.getElementById('npTypeFilter').selectedOptions[0]?.textContent]].filter(([id]) => document.getElementById(id).value);
     document.getElementById('npChips').innerHTML = chips.map(([id, label]) => `<span class="np-chip">${escHtml(label)}<i onclick="document.getElementById('${id}').value='';npPage=1;npRenderDirectory()">✕</i></span>`).join('');
     document.getElementById('npDirContent').innerHTML = rows.length
       ? `<table class="need-table"><thead><tr><th style="width:30px"><input type="checkbox" onchange="npToggleAll(this.checked)"></th><th>Organization</th><th>Services</th><th>City</th><th>Org account</th><th></th></tr></thead><tbody>${rows.map(npRowHtml).join('')}</tbody></table>`
-      : `<div class="empty">${npActive().length ? 'No organizations match these filters.' : 'No active partners yet. Add one, or import a CSV.'}</div>`;
+      : `<div class="empty">${npActive().length ? 'No organizations match these filters.' : npKind === 'par' ? 'No partners yet. An organization becomes a partner once it has a linked, approved org account.' : 'No organizations yet. Add one, or import a CSV.'}</div>`;
     document.getElementById('npPInfo').textContent = `${list.length ? (npPage - 1) * NP_PER_PAGE + 1 : 0}–${Math.min(npPage * NP_PER_PAGE, list.length)} of ${list.length} organizations`;
     document.getElementById('npPPage').textContent = `Page ${npPage} of ${pages}`;
     document.getElementById('npPrev').disabled = npPage <= 1;
@@ -3800,7 +3804,7 @@
     { icon:cmdIc('i-book'),      label:'Resources',        tab:'resources' },
     { icon:cmdIc('i-megaphone'), label:'Announcements',    tab:'announcements' },
     { icon:cmdIc('i-send'),      label:'Email',            tab:'email' },
-    { icon:cmdIc('i-landmark'),  label:'Partner Orgs',       tab:'nonprofits' },
+    { icon:cmdIc('i-landmark'),  label:'Directory',      tab:'nonprofits' },
     { icon:cmdIc('i-scroll'),    label:'Audit Log',        tab:'audit' },
   ];
   let cmdIdx = 0;
