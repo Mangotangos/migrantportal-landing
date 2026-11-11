@@ -91,6 +91,14 @@
     'MigrantPortal is a free migrant resource platform in Kansas City. Verified': 'MigrantPortal es una plataforma gratuita de recursos para migrantes en Kansas City, donde',
     '(partner nonprofits) submit real needs from individuals and families, and': '(organizaciones sin fines de lucro asociadas) presentan necesidades reales de personas y familias, y',
     'Live in Kansas City': 'Activo en Kansas City',
+    'Diapers & formula': 'Pañales y fórmula',
+    '● Submitted': '● Enviada',
+    '✓ Verified by navigator': '✓ Verificada',
+    '✓ Responded': '✓ Atendida',
+    'Kansas City, KS · verified': 'Kansas City, KS · verificada',
+    'School supplies': 'Útiles escolares',
+    'Overland Park · 6 mi': 'Overland Park · a 6 mi',
+    'Baby': 'Bebé',
     'Need help? Want to help? Start here.': '¿Necesitas ayuda? ¿Quieres ayudar? Empieza aquí.',
     'Every need is reviewed by a navigator and MigrantPortal before it is published.': 'Un navegador y MigrantPortal revisan cada necesidad antes de publicarla.',
     'Needs near you': 'Necesidades cerca de ti',
@@ -551,9 +559,23 @@
     );
   }
 
+  // Spanish nav labels are longer; keep them on one line between the mobile and wide layouts.
+  function injectLangStyles() {
+    if (document.getElementById('mp-lang-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'mp-lang-styles';
+    style.textContent =
+      '@media (min-width: 1041px) { html[lang="es"] .nav-link { white-space: nowrap; padding: 8px 8px; font-size: 13px; } }' +
+      '@media (min-width: 801px) and (max-width: 1040px) {' +
+      ' html[lang="es"] .nav-links, html[lang="es"] .nav-login, html[lang="es"] .nav-signup { display: none; }' +
+      ' html[lang="es"] .hamburger { display: flex; align-items: center; } }';
+    document.head.appendChild(style);
+  }
+
   function applyLang(lang) {
     const toEs = lang === 'es';
     document.documentElement.lang = toEs ? 'es' : 'en';
+    injectLangStyles();
 
     // Explicit data-i18n wins
     document.querySelectorAll('[' + DATA_ATTR + ']').forEach(function (el) {
