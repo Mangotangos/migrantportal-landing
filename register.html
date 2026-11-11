@@ -1325,7 +1325,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
               website: orgPayload.website,
               city: orgPayload.city,
               state: orgPayload.state,
-              nonprofit_id: nonprofitId,
+              ...(nonprofitId ? { nonprofit_id: nonprofitId } : {}),
             }, userData.access_token);
             orgInviteCode = org.invite_code || '';
           } catch (orgEx) {
