@@ -88,7 +88,7 @@
     'Live now: Kansas City metro': 'Activo ahora: área metropolitana de Kansas City',
     'Supporters welcome anywhere': 'Colaboradores bienvenidos en cualquier lugar',
     'Opening city by city': 'Abriendo ciudad por ciudad',
-    'MigrantPortal is a free migrant resource platform in Kansas City. Verified': 'MigrantPortal es una plataforma gratuita de recursos para migrantes en Kansas City.',
+    'MigrantPortal is a free migrant resource platform in Kansas City. Verified': 'MigrantPortal es una plataforma gratuita de recursos para migrantes en Kansas City, donde',
     '(partner nonprofits) submit real needs from individuals and families, and': '(organizaciones sin fines de lucro asociadas) presentan necesidades reales de personas y familias, y',
     'Live in Kansas City': 'Activo en Kansas City',
     'Need help? Want to help? Start here.': '¿Necesitas ayuda? ¿Quieres ayudar? Empieza aquí.',
