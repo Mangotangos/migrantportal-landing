@@ -25,3 +25,6 @@ __pycache__/
 *.pyc
 *.pyo
 index.html.pre-redesign.bak
+
+# local design scratch
+_mockups/
