@@ -355,9 +355,11 @@
     }
 
     /* larger visual on wide screens; smaller viewports keep the base size */
-    @media (min-width: 1360px) {
-      .hero-inner { max-width: 1280px; gap: 32px; }
-      .hero-text { flex: 0 1 580px; }
+    @media (min-width: 1100px) {
+      .hero-inner { max-width: 1320px; gap: 32px; }
+      .hero-text { flex: 0 1 540px; }
+      .hero h1 { font-size: clamp(38px, 3.7vw, 52px); line-height: 1.08; text-wrap: balance; }
+      .hero-actions { gap: 20px 28px; }
       .hero-visual { flex: 1; }
       .hero-mockup { max-width: 660px; }
       .hv-map { height: 390px; }
@@ -383,6 +385,10 @@
       .hv-toast { font-size: 10.5px; padding: 10px 11px; left: 10px; right: 10px; bottom: 12px; }
       .hv-toast b { font-size: 11.5px; }
       .hv-tap { right: 72px; top: 150px; width: 32px; height: 32px; }
+    }
+
+    @media (min-width: 1360px) {
+      .hero-text { flex-basis: 600px; }
     }
 
     /* ─── SECTION BASE ──────────────────────────── */
