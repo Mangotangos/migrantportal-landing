@@ -231,6 +231,13 @@
     .hero-reach strong { color: var(--navy, #1a2b4a); }
     .reach-badge { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #e8f7f8; color: #007a80; }
     .reach-badge.soft { background: #f2f2f2; color: #555; }
+    .reach-badge.live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #17a06b; margin-right: 6px; vertical-align: 1px; }
+    .hero-welcome {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 19px; font-weight: 700; line-height: 1.3;
+      color: var(--text); margin: -20px 0 28px;
+    }
+    .hero-action-note { display: block; max-width: 230px; margin-top: 8px; font-size: 12px; line-height: 1.45; color: var(--gray-500); }
     .hero-sub a { color: var(--teal-bg); text-decoration: underline; text-underline-offset: 2px; }
     .hero-actions {
       display: flex; gap: 40px; flex-wrap: wrap;
@@ -746,16 +753,14 @@
         <h1>Connecting Migrant Neighbors with the Help They Need</h1>
         <p class="hero-tagline">A free network for families, faith communities, and volunteers</p>
         <p class="hero-sub">
-          MigrantPortal is a free migrant resource platform where verified <a href="#navigator-card">navigators</a> (partner nonprofits) submit real family needs and
+          MigrantPortal is a free migrant resource platform in Kansas City. Verified <a href="#navigator-card">navigators</a> (partner nonprofits) submit real needs from individuals and families, and
           <a href="#join-roles">faith communities and volunteers</a> respond with practical help, close to home.
         </p>
-        <p class="hero-sub" style="margin:-24px 0 40px;">MigrantPortal serves individuals and families alike.</p>
-        <p class="hero-reach"><strong>Starting in Kansas City, open to supporters nationwide.</strong>
-          <span class="reach-badge">Live now: Kansas City metro</span>
-          <span class="reach-badge">Supporters welcome anywhere</span>
-          <span class="reach-badge soft">Opening city by city</span>
+        <p class="hero-reach">
+          <span class="reach-badge live">Live in Kansas City</span>
+          <span class="reach-badge soft">Supporters welcome anywhere</span>
         </p>
-        <p class="hero-trust" style="font-size:14px;color:var(--gray-500);margin:-20px 0 32px;">Every need is reviewed by a navigator before it is published.</p>
+        <p class="hero-welcome">Need help? Want to help? Start here.</p>
         <h2 class="sr-only">Take action</h2>
         <div class="hero-actions">
           <!-- Meet a need -->
@@ -774,6 +779,7 @@
             <div class="hero-action-body">
               <h3>Meet a need</h3>
               <a href="/requests">Respond to an urgent need in minutes</a>
+              <span class="hero-action-note">Every need is reviewed by a navigator and MigrantPortal before it is published.</span>
             </div>
           </div>
           <!-- Submit a need -->
