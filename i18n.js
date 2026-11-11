@@ -233,6 +233,8 @@
     'Showing results within 25 miles': 'Resultados dentro de 25 millas',
     'All Services': 'Todos los servicios',
     'Hours (optional)': 'Horario (opcional)',
+    'List my organization on the public Find Help page': 'Incluir mi organización en la página pública Buscar Ayuda',
+    'Shows your name, city, services, hours, phone, email and website. Uncheck it to respond to requests without a public listing.': 'Muestra su nombre, ciudad, servicios, horario, teléfono, correo y sitio web. Desmárquelo para responder a solicitudes sin aparecer en la lista pública.',
     '📍 Use my location': '📍 Usar mi ubicación',
     'Immigration': 'Inmigración',
     'Mental Health': 'Salud mental',
