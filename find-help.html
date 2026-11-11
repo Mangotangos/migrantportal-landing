@@ -165,7 +165,7 @@
     .loc-btn, .radius-hint, .stats-line { display: inline-block; }
     .hero > .loc-btn { margin-top: 14px; margin-right: 14px; }
     .filter-bar { position: sticky; top: 64px; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
-    .filter-bar .hero-chips { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; max-width: none; margin: 0; padding: 12px max(24px, calc(50% - 516px)); scrollbar-width: none; }
+    .filter-bar .hero-chips { flex-wrap: wrap; justify-content: flex-start; max-width: none; margin: 0; padding: 12px max(24px, calc(50% - 516px)); scrollbar-width: none; }
     .filter-bar .chip { flex: none; background: var(--white); color: var(--text); border: 1.5px solid var(--border); }
     .filter-bar .chip:hover { border-color: var(--teal); background: var(--white); }
     .filter-bar .chip.active { background: var(--teal); color: #fff; border-color: var(--teal); }
@@ -183,7 +183,7 @@
     .np-card.is-partner { border: 2px solid var(--teal); }
     @media (max-width: 600px) {
       .hero { padding: 32px 16px 20px; }
-      .filter-bar .hero-chips { padding: 10px 16px; }
+      .filter-bar .hero-chips { padding: 10px 16px; flex-wrap: nowrap; overflow-x: auto; }
       .np-card { grid-template-columns: 1fr; }
     }
   </style>
