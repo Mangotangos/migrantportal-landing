@@ -3479,9 +3479,12 @@
         ${n ? `<h4>Responders and org account</h4><div style="font-size:13px">${linked ? `Linked to <a href="#" onclick="npCloseDrawer();switchTab('orgs');return false" style="color:var(--teal)">${escHtml(linked.name)} →</a>
           <div style="font-size:12px;color:var(--text-2);margin-top:4px">${linked.member_count} responder account${linked.member_count === 1 ? '' : 's'} · owner ${escHtml(linked.owner_name)}${linked.owner_email ? ' (' + escHtml(linked.owner_email) + ')' : ''}</div>` : '<span style="color:var(--text-3)">Directory listing only. No responders signed in under this organization.</span>'}</div>
         <h4>Verification</h4><div style="font-size:13px">${n.last_verified_at ? 'Last verified ' + escHtml(npDate(n.last_verified_at)) : '<span style="color:var(--yellow)">Never verified</span>'}</div>
-        <h4>Admin notes (private)</h4><textarea class="form-textarea" id="npf-admin_notes" rows="3" placeholder="e.g. Spoke with the director on 10/12. Open Tue and Thu.">${escHtml(n.admin_notes || '')}</textarea>` : ''}
+        <h4>Admin notes (private)</h4><textarea class="form-textarea" id="npf-admin_notes" rows="3" placeholder="e.g. Spoke with the director on 10/12. Open Tue and Thu.">${escHtml(n.admin_notes || '')}</textarea>`
+        : `<h4>Visibility</h4>
+        <label class="pick" style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="npf-visible" checked onchange="npSyncAddLabel()">Show on Find Help</label>
+        <div style="font-size:12px;color:var(--text-3);margin-top:4px">Hidden listings stay in Awaiting review until you approve them.</div>`}
       </div>
-      <div class="df"><button class="btn btn-primary" onclick="npSave('${n ? escHtml(n.id) : ''}')">${n ? 'Save changes' : 'Add and place on map'}</button>
+      <div class="df"><button class="btn btn-primary" id="npSaveBtn" onclick="npSave('${n ? escHtml(n.id) : ''}')">${n ? 'Save changes' : 'Add and place on map'}</button>
         ${n ? `<button class="btn btn-secondary" onclick="npVerify('${escHtml(n.id)}')">Mark verified</button>` : ''}
         ${n && !n.is_active ? `<button class="btn btn-approve" onclick="npSetActive('${escHtml(n.id)}',true)">Approve</button>` : ''}
         ${n && n.is_active ? `<button class="btn btn-secondary" onclick="npSetActive('${escHtml(n.id)}',false)">Move to review</button>` : ''}
@@ -3489,6 +3492,11 @@
     document.getElementById('npDrawerBg').classList.add('open');
     drawer.classList.add('open');
     drawer.setAttribute('aria-hidden', 'false');
+  }
+
+  function npSyncAddLabel() {
+    const visible = document.getElementById('npf-visible').checked;
+    document.getElementById('npSaveBtn').textContent = visible ? 'Add and place on map' : 'Save as draft';
   }
 
   function npCloseDrawer() {
@@ -3519,8 +3527,9 @@
         toast('✓ Saved.');
       } else {
         const payload = Object.fromEntries(Object.entries(f).map(([k, v]) => [k, v || null]));
-        await apiPost('/nonprofits', { ...payload, is_active: true });
-        toast('✓ Nonprofit added and placed on the map.');
+        const isVisible = document.getElementById('npf-visible').checked;
+        await apiPost('/nonprofits', { ...payload, is_active: isVisible });
+        toast(isVisible ? '✓ Nonprofit added and placed on the map.' : '✓ Saved as draft in Awaiting review. Hidden from Find Help.');
       }
       npCloseDrawer();
       loadNonprofits();
