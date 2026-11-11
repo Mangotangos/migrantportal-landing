@@ -1292,7 +1292,8 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         password,
         role,
         responder_type: role === 'responder' ? 'church' : null,
-        registration_notes: `Organization application (${orgUsageChoice}): ${orgPayload.org_name} (${orgType})`,
+        registration_notes: `Organization application (${orgUsageChoice}): ${orgPayload.org_name} (${orgType})` +
+          (orgUsageChoice !== 'submit' && !document.getElementById('org-public').checked ? '. Opted out of the public Find Help listing.' : ''),
         city: orgPayload.city,
         state: orgPayload.state,
         zip_code: orgPayload.zipcode,
