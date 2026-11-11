@@ -154,6 +154,38 @@
       .search-btn { padding: 18px 20px; }
       .zero-box .btn.alt { margin: 8px 0 0; }
     }
+
+    /* ── Redesign: compact hero, sticky filters, call-first list ── */
+    .hero { padding: 40px max(24px, calc(50% - 516px)) 28px; text-align: left; }
+    .hero p { margin: 0 0 22px; max-width: 640px; opacity: 0.9; }
+    .search-wrap { margin: 0; max-width: 640px; width: 100%; box-shadow: none; }
+    .search-wrap input { border-radius: 12px 0 0 12px; }
+    .search-wrap { justify-content: flex-start; overflow: visible; }
+    .search-btn { border-radius: 0 12px 12px 0; }
+    .loc-btn, .radius-hint, .stats-line { display: inline-block; }
+    .hero > .loc-btn { margin-top: 14px; margin-right: 14px; }
+    .filter-bar { position: sticky; top: 64px; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .filter-bar .hero-chips { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; max-width: none; margin: 0; padding: 12px max(24px, calc(50% - 516px)); scrollbar-width: none; }
+    .filter-bar .chip { flex: none; background: var(--white); color: var(--text); border: 1.5px solid var(--border); }
+    .filter-bar .chip:hover { border-color: var(--teal); background: var(--white); }
+    .filter-bar .chip.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .filter-bar .chip:focus-visible { outline-color: var(--orange); }
+    .results-section { max-width: 1080px; margin-top: 28px; }
+    .results-grid { grid-template-columns: 1fr; gap: 14px; }
+    .np-card { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 16px 24px; }
+    .np-card:hover { transform: none; }
+    .np-body { min-width: 0; }
+    .np-card .np-contact { border-top: 0; padding-top: 0; margin-top: 0; align-self: start; }
+    .np-call { display: flex !important; justify-content: center; background: var(--orange); color: #fff !important; border-radius: 10px; padding: 13px 14px; min-height: 48px; align-items: center; font-weight: 700 !important; font-family: 'Montserrat', sans-serif; }
+    .np-call:hover { text-decoration: none !important; background: #b83305; }
+    .np-link { justify-content: center; border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 12px; min-height: 42px; align-items: center; overflow-wrap: anywhere; text-align: center; }
+    .np-link:hover { border-color: var(--teal); text-decoration: none !important; }
+    .np-card.is-partner { border: 2px solid var(--teal); }
+    @media (max-width: 600px) {
+      .hero { padding: 32px 16px 20px; }
+      .filter-bar .hero-chips { padding: 10px 16px; }
+      .np-card { grid-template-columns: 1fr; }
+    }
   </style>
   <style>
     /* ─── SYNCED FOOTER (from homepage) ───────────── */
@@ -215,6 +247,9 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <button class="loc-btn" id="locBtn" type="button" onclick="useMyLocation()">📍 Use my location</button>
   <div class="radius-hint">Showing results within 25 miles</div>
   <div class="stats-line" id="statsLine" hidden></div>
+</section>
+
+<div class="filter-bar">
   <div class="hero-chips" id="chips" role="group" aria-label="Type of help">
     <button class="chip active" onclick="setFilter('')" data-service="" aria-pressed="true">All Services</button>
     <button class="chip" onclick="setFilter('food')" data-service="food" aria-pressed="false">Food</button>
@@ -230,7 +265,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     <button class="chip" onclick="setFilter('financial')" data-service="financial" aria-pressed="false">Financial Aid</button>
     <button class="chip" onclick="setFilter('childcare')" data-service="childcare" aria-pressed="false">Childcare</button>
   </div>
-</section>
+</div>
 
 <!-- RESULTS -->
 <main id="main-content" class="results-section">
@@ -542,17 +577,19 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     const location = [n.city, n.state].filter(Boolean).join(', ');
     return `
       <div class="np-card${isPartner(n) ? ' is-partner' : ''}">
+        <div class="np-body">
         ${isPartner(n) ? '<span class="np-badge">✓ Partner</span>' : ''}
         <div class="np-name">${escHtml(n.name)}</div>
         ${location ? `<div class="np-location">📍 ${escHtml(location)}${n.zipcode ? ' ' + escHtml(n.zipcode) : ''}${distanceHtml(n)}</div>` : ''}
         ${n.description ? `<div class="np-desc">${escHtml(n.description)}</div>` : ''}
         ${n.hours ? `<div class="np-hours"><b>${hoursLabel()}:</b> ${escHtml(n.hours)}</div>` : ''}
         ${services.length ? `<div class="np-services">${services.map(s => `<span class="np-tag">${escHtml(serviceLabel(s))}</span>`).join('')}</div>` : ''}
+        </div>
         <div class="np-contact">
-          ${n.phone ? `<span class="np-phone">📞 <a href="tel:${escHtml(n.phone)}">${escHtml(n.phone)}</a></span>` : ''}
-          ${n.email ? `<a href="mailto:${escHtml(n.email)}">✉️ ${escHtml(n.email)}</a>` : ''}
-          ${n.website ? `<a href="${escHtml(safeSrc(n.website))}" target="_blank" rel="noopener noreferrer">🔗 Visit Website</a>` : ''}
-          ${!n.phone && !n.email && !n.website ? '<span style="font-size:13px;color:#94a3b8">No contact info listed</span>' : ''}
+          ${n.phone ? `<a class="np-call" href="tel:${escHtml(n.phone)}">📞 ${escHtml(n.phone)}</a>` : ''}
+          ${n.website ? `<a class="np-link" href="${escHtml(safeSrc(n.website))}" target="_blank" rel="noopener noreferrer">🔗 Visit Website</a>` : ''}
+          ${n.email ? `<a class="np-link" href="mailto:${escHtml(n.email)}">✉️ ${escHtml(n.email)}</a>` : ''}
+          ${!n.phone && !n.email && !n.website ? '<span style="font-size:13px;color:#64748b">No contact info listed</span>' : ''}
         </div>
       </div>`;
   }
