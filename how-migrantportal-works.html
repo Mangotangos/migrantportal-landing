@@ -490,16 +490,16 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
         <div class="stat-label">Needs submitted by navigators</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num" id="stat-rate">0%</div>
-        <div class="stat-label">Of needs met</div>
+        <div class="stat-num" id="stat-responders">0</div>
+        <div class="stat-label">Responders ready to help</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-families">0</div>
+        <div class="stat-label">Families served</div>
       </div>
       <div class="stat-card">
         <div class="stat-num" id="stat-orgs">0</div>
         <div class="stat-label">Partner faith communities & organizations</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-states">0</div>
-        <div class="stat-label">States with active networks</div>
       </div>
     </div>
   </section>
@@ -521,12 +521,9 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
         .then(d => {
           const total = (d.total_active || 0) + (d.total_fulfilled || 0);
           countUp(document.getElementById('stat-needs'), total, '', 1200);
+          countUp(document.getElementById('stat-responders'), d.total_responders || 0, '', 1200);
+          countUp(document.getElementById('stat-families'), d.total_families_helped || 0, '', 1200);
           countUp(document.getElementById('stat-orgs'), d.total_orgs || 0, '', 1200);
-          countUp(document.getElementById('stat-states'), d.total_states || 0, '', 1200);
-          const rate = Math.round(d.fulfillment_rate || 0);
-          const rateEl = document.getElementById('stat-rate');
-          if (rate > 0) { countUp(rateEl, rate, '%', 1200); }
-          else if (rateEl && rateEl.closest) { rateEl.closest('.stat-card').style.display = 'none'; }
         })
         .catch(() => {});
     })();
@@ -591,7 +588,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
             </div>
             <p>Connecting migrants and their families with faith communities, volunteers, and donors, one need at a time.</p>
           </div>
-          <div class="footer-live"><span class="footer-live-dot" aria-hidden="true"></span>Live in Kansas City, MO <small>· more cities soon</small></div>
+          <div class="footer-live"><span class="footer-live-dot" aria-hidden="true"></span>Live in Kansas City, MO <small>· ready to expand to your city</small></div>
           <nav class="footer-social" aria-label="Social media links">
             <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Facebook">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
