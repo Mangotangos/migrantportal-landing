@@ -209,18 +209,21 @@
     .home-action-value { font-family:var(--mono);font-size:21px;font-weight:600;letter-spacing:-0.5px;line-height:1.1; }
     .home-action-label { font-size:11px;color:var(--text-3);font-weight:600;margin-top:2px; }
 
-    /* ── ACTIVITY TIMELINE ── */
-    .timeline { display:flex;flex-direction:column; }
-    .t-row { display:flex;gap:12px;padding:9px 2px;position:relative; }
-    .t-rail { display:flex;flex-direction:column;align-items:center;flex-shrink:0; }
-    .t-icon { width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
-    .t-icon svg.ic { width:13px;height:13px;stroke-width:2.2; }
-    .t-line { flex:1;width:1px;background:var(--border);margin:3px 0;min-height:10px; }
-    .t-row:last-child .t-line { display:none; }
-    .t-body { flex:1;display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:3px; }
-    .t-text { font-size:13px;color:var(--text); }
-    .t-text b { font-weight:700; }
-    .t-time { font-family:var(--mono);font-size:11px;color:var(--text-3);flex-shrink:0; }
+    /* ── ACTIVITY FEED (compact) ── */
+    .act-chips { display:flex;gap:6px;flex-wrap:wrap; }
+    .act-chip { font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:inherit; }
+    .act-chip.on { background:var(--teal);border-color:var(--teal);color:#fff; }
+    .act-day { font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:8px 6px 2px; }
+    .act-row { display:flex;align-items:center;gap:10px;height:32px;padding:0 6px;border-radius:6px;cursor:pointer; }
+    .act-row:hover { background:var(--surface-2); }
+    .act-icon { width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+    .act-icon svg.ic { width:11px;height:11px;stroke-width:2.4; }
+    .act-text { flex:1;min-width:0;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .act-text b { font-weight:600; }
+    .act-text .act-note { color:var(--text-3); }
+    .act-time { font-size:11px;color:var(--text-3);flex-shrink:0;min-width:58px;text-align:right; }
+    .act-more { display:block;width:100%;margin-top:6px;padding:8px 0 2px;border:0;background:none;color:var(--teal);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit; }
+    .act-empty { padding:14px 6px;font-size:12px;color:var(--text-3); }
     .ic-approve { background:var(--green-bg);color:var(--green); }
     .ic-reject  { background:var(--red-bg);color:var(--red); }
     .ic-disb    { background:var(--teal-glow);color:var(--teal); }
@@ -244,6 +247,7 @@
     .btn:active { transform:scale(0.96); }
     .btn-approve { background:var(--green-bg);color:var(--green);border-color:rgba(46,158,91,0.2); }
     .btn-approve:hover { background:var(--green);color:#FFFFFF; }
+    .btn[data-busy-for]:disabled { opacity:0.6;cursor:wait; }
     .btn-reject  { background:var(--red-bg);color:var(--red);border-color:rgba(217,67,67,0.2); }
     .btn-reject:hover  { background:var(--red);color:white; }
     .btn-delete  { background:transparent;color:var(--text-3);border-color:var(--border-2); }
@@ -863,7 +867,12 @@
       <div class="card" style="margin-top:20px">
         <div class="card-header">
           <span class="card-title">Recent Activity</span>
-          <button class="btn-export" onclick="switchTab('audit')">View full log →</button>
+          <div class="act-chips" id="homeActivityChips">
+            <button class="act-chip on" data-filter="all" onclick="setActivityFilter('all')">All</button>
+            <button class="act-chip" data-filter="new" onclick="setActivityFilter('new')">New needs</button>
+            <button class="act-chip" data-filter="review" onclick="setActivityFilter('review')">Reviews</button>
+            <button class="act-chip" data-filter="response" onclick="setActivityFilter('response')">Responses</button>
+          </div>
         </div>
         <div id="homeActivityContent"><div class="loading">Loading</div></div>
       </div>
@@ -1604,7 +1613,7 @@
       apiGet('/admin/needs/flagged'),
       apiGet('/admin/disbursements?status=requested'),
       apiGet('/admin/users/pending'),
-      apiGet('/admin/audit-log?page=1&per_page=15'),
+      apiGet('/admin/audit-log?page=1&per_page=30'),
     ]);
 
     if (statsRes.status === 'fulfilled') {
@@ -1623,48 +1632,85 @@
       document.getElementById('haUsers').textContent = items.length;
     }
 
-    const activityEl = document.getElementById('homeActivityContent');
-    if (activityRes.status !== 'fulfilled') {
-      activityEl.innerHTML = '<div class="empty"><div class="empty-icon"><svg class="ic" viewBox="0 0 24 24" style="width:26px;height:26px;margin:0 auto"><use href="#i-scroll"/></svg></div>No recent activity.</div>';
+    homeActivityItems = activityRes.status === 'fulfilled'
+      ? (Array.isArray(activityRes.value) ? activityRes.value : (activityRes.value.items || []))
+      : [];
+    renderHomeActivity();
+  }
+
+  /* ── Home: compact Recent Activity feed ── */
+  const ACTIVITY_SHOWN = 6;
+  // Audit-log events are all need events (event_type on need_events).
+  const ACTIVITY_EVENTS = {
+    submitted:         { group:'new',      text:'submitted a need',            sym:'i-clock', cls:'ic-other' },
+    approved:          { group:'review',   text:'approved a need',             sym:'i-check', cls:'ic-approve' },
+    rejected:          { group:'review',   text:'rejected a need',             sym:'i-x',     cls:'ic-reject' },
+    deleted:           { group:'review',   text:'deleted a need',              sym:'i-x',     cls:'ic-reject' },
+    flags_cleared:     { group:'review',   text:'cleared flags on a need',     sym:'i-check', cls:'ic-approve' },
+    question:          { group:'review',   text:'asked a question on a need',  sym:'i-clock', cls:'ic-announce' },
+    responded:         { group:'response', text:'responded to a need',         sym:'i-send',  cls:'ic-disb' },
+    response_accepted: { group:'response', text:'accepted a response from',    sym:'i-check', cls:'ic-disb' },
+    fulfilled:         { group:'response', text:'marked a need fulfilled',     sym:'i-check', cls:'ic-approve' },
+    received:          { group:'response', text:'confirmed items received',    sym:'i-check', cls:'ic-approve' },
+    receipt_removed:   { group:'response', text:'removed a receipt',           sym:'i-x',     cls:'ic-other' },
+  };
+  let homeActivityItems = [];
+  let homeActivityFilter = 'all';
+
+  function setActivityFilter(filter) {
+    homeActivityFilter = filter;
+    document.querySelectorAll('#homeActivityChips .act-chip').forEach(c => c.classList.toggle('on', c.dataset.filter === filter));
+    renderHomeActivity();
+  }
+
+  function activityEvent(action) {
+    return ACTIVITY_EVENTS[action] || { group:'other', text:(action || 'updated').replace(/_/g, ' ') + ' a need', sym:'i-clock', cls:'ic-other' };
+  }
+
+  // Day key and label in Central time, e.g. "Today", "Yesterday", "Mon, Nov 10".
+  function activityDay(date) {
+    const key = d => d.toLocaleDateString('en-CA', { timeZone:'America/Chicago' });
+    const now = new Date();
+    const dayKey = key(date);
+    if (dayKey === key(now)) return { dayKey, label:'Today' };
+    if (dayKey === key(new Date(now - 86400000))) return { dayKey, label:'Yesterday' };
+    return { dayKey, label: date.toLocaleDateString('en-US', { timeZone:'America/Chicago', weekday:'short', month:'short', day:'numeric' }) };
+  }
+
+  function activityTime(date, isToday) {
+    const mins = Math.floor((Date.now() - date) / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    if (isToday) return `${Math.floor(mins / 60)}h ago`;
+    return date.toLocaleTimeString('en-US', { timeZone:'America/Chicago', hour:'numeric', minute:'2-digit' });
+  }
+
+  function activityRow(e, day) {
+    const ev = activityEvent(e.action);
+    const date = parseUtc(String(e.created_at).replace(' ', 'T'));
+    const note = e.detail || e.reason || '';
+    return `<div class="act-row" onclick="switchTab('audit')" title="${esc(fmtCentral(String(e.created_at).replace(' ', 'T')))}">
+      <span class="act-icon ${ev.cls}"><svg class="ic" viewBox="0 0 24 24"><use href="#${ev.sym}"/></svg></span>
+      <span class="act-text"><b>${esc(e.admin_name || e.actor || 'Someone')}</b> ${esc(ev.text)}${note ? ` <span class="act-note">· ${esc(note)}</span>` : ''}</span>
+      <span class="act-time">${esc(activityTime(date, day.label === 'Today'))}</span>
+    </div>`;
+  }
+
+  function renderHomeActivity() {
+    const el = document.getElementById('homeActivityContent');
+    const matching = homeActivityItems.filter(e => e.created_at && (homeActivityFilter === 'all' || activityEvent(e.action).group === homeActivityFilter));
+    if (!matching.length) {
+      el.innerHTML = `<div class="act-empty">${homeActivityFilter === 'all' ? 'No recent activity.' : 'Nothing recent in this view.'}</div>`;
       return;
     }
-    const data = activityRes.value;
-    const items = Array.isArray(data) ? data : (data.items || []);
-    if (!items.length) {
-      activityEl.innerHTML = '<div class="empty"><div class="empty-icon"><svg class="ic" viewBox="0 0 24 24" style="width:26px;height:26px;margin:0 auto"><use href="#i-scroll"/></svg></div>No recent activity.</div>';
-      return;
-    }
-    const ICON_SYMBOL = {
-      approve:'i-check', user_approve:'i-check',
-      reject:'i-x', user_reject:'i-x', delete:'i-x',
-      announcement:'i-megaphone',
-      disbursement:'i-send',
-    };
-    const ICON_CLASS = {
-      approve:'ic-approve', user_approve:'ic-approve',
-      reject:'ic-reject', user_reject:'ic-reject', delete:'ic-reject',
-      announcement:'ic-announce',
-      disbursement:'ic-disb',
-    };
-    activityEl.innerHTML = `
-      <div class="timeline">
-        ${items.map(e => {
-          const actKey = (e.action || '').split('_')[0];
-          const sym = ICON_SYMBOL[e.action] || ICON_SYMBOL[actKey] || 'i-clock';
-          const iconCls = ICON_CLASS[e.action] || ICON_CLASS[actKey] || 'ic-other';
-          const ts = e.created_at ? new Date(e.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
-          const who = esc(e.admin_name || e.actor || 'Admin');
-          const action = esc((e.action || '').replace(/_/g, ' '));
-          const detail = esc(e.detail || e.reason || '');
-          return `<div class="t-row">
-            <div class="t-rail"><div class="t-icon ${iconCls}"><svg class="ic" viewBox="0 0 24 24"><use href="#${sym}"/></svg></div><div class="t-line"></div></div>
-            <div class="t-body">
-              <div class="t-text"><b>${who}</b> ${action}${detail ? ' — ' + detail : ''}</div>
-              <div class="t-time">${esc(ts)}</div>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>`;
+    let lastDay = '';
+    const rows = matching.slice(0, ACTIVITY_SHOWN).map(e => {
+      const day = activityDay(parseUtc(String(e.created_at).replace(' ', 'T')));
+      const header = day.dayKey !== lastDay ? `<div class="act-day">${esc(day.label)}</div>` : '';
+      lastDay = day.dayKey;
+      return header + activityRow(e, day);
+    }).join('');
+    el.innerHTML = rows + `<button class="act-more" onclick="switchTab('audit')">See all in Audit Log →</button>`;
   }
 
   // Auto-refresh every 30s; re-renders visible tab data and timestamps
@@ -1822,8 +1868,8 @@
           <div class="pc-meta">${esc(n.city)}, ${esc(n.state)} ${esc(n.zip)} &nbsp;·&nbsp; ${n.family_adults} adult${n.family_adults!==1?'s':''}, ${n.family_children} child${n.family_children!==1?'ren':''} &nbsp;·&nbsp; ${esc(n.connector_org || 'No org')}</div>
           <div class="pc-desc">${esc(n.description.slice(0,160))}${n.description.length>160?'…':''}</div>
           <div class="pc-actions">
-            <button class="btn btn-approve" onclick="approveSingle('${n.id}')">✓ Approve</button>
-            <button class="btn btn-reject" onclick="showReject('${n.id}')">✗ Reject</button>
+            <button class="btn btn-approve" data-busy-for="${n.id}" data-busy-text="Approving…" onclick="approveSingle('${n.id}')">✓ Approve</button>
+            <button class="btn btn-reject" data-busy-for="${n.id}" data-busy-text="Rejecting…" onclick="showReject('${n.id}')">✗ Reject</button>
             <button class="btn btn-delete" onclick="deleteNeed('${n.id}', pendingNeeds[${i}].title)">Delete</button>
             <span style="font-size:11px;color:var(--text-3);margin-left:4px;cursor:pointer" onclick="openNeedModal(${i})">View details →</span>
           </div>
@@ -1839,26 +1885,57 @@
     updateBulkBar();
   }
 
-  async function approveSingle(id) {
+  // Needs with an approve/reject request in flight, so a second click can't send it again.
+  const needBusy = new Set();
+
+  // Disable every Approve/Reject button for this need (queue card, All Needs row, details popup).
+  // The clicked kind of button shows its busy label; the rest just grey out.
+  function setNeedBusy(id, busySelector) {
+    const isBusy = !!busySelector;
+    if (isBusy) needBusy.add(id); else needBusy.delete(id);
+    document.querySelectorAll(`[data-busy-for="${CSS.escape(id)}"]`).forEach(btn => {
+      btn.disabled = isBusy;
+      if (isBusy && btn.matches(busySelector)) { btn.dataset.label = btn.textContent; btn.textContent = btn.dataset.busyText; }
+      else if (!isBusy && btn.dataset.label) { btn.textContent = btn.dataset.label; delete btn.dataset.label; }
+    });
+  }
+
+  // A need left the queue: drop it from Pending and refresh any view still showing it as pending.
+  function afterNeedDecision(id) {
+    pendingNeeds = pendingNeeds.filter(n => n.id !== id);
+    selectedIds.delete(id);
+    renderPending(); loadStats();
+    if (allNeedsCache.some(n => n.id === id)) loadAllNeeds();
+  }
+
+  async function approveSingle(id, closeModalOnDone = false) {
+    if (needBusy.has(id)) return false;
+    setNeedBusy(id, '.btn-approve');
     try {
       const r = await apiPatch(`/admin/needs/${id}/approve`, {});
       toast(`✓ Approved — notified ${r.notified_responders} responder(s).`);
-      pendingNeeds = pendingNeeds.filter(n => n.id !== id);
-      selectedIds.delete(id);
-      renderPending(); loadStats();
-    } catch(e) { toast(e.message, true); }
+    } catch(e) {
+      setNeedBusy(id, null);
+      if (!e.message.startsWith('ALREADY_APPROVED')) { toast(e.message, true); return false; }
+      toast('Already approved. Refreshed the list.');
+    }
+    needBusy.delete(id);
+    if (closeModalOnDone) closeModal();
+    afterNeedDecision(id);
+    return true;
   }
 
   async function showReject(id) {
+    if (needBusy.has(id)) return;
     const reason = await showRejectModal({ title: 'Reject Need', subtitle: 'Select a reason or write a custom one. The navigator will be notified.', presets: NEED_REJECT_PRESETS });
     if (reason === null) return;
+    setNeedBusy(id, '.btn-reject');
     try {
       await apiPatch(`/admin/needs/${id}/reject`, { reason });
       toast('Need rejected.');
-      pendingNeeds = pendingNeeds.filter(n => n.id !== id);
-      selectedIds.delete(id);
-      renderPending(); loadStats();
-    } catch(e) { toast(e.message, true); }
+      needBusy.delete(id);
+      afterNeedDecision(id);
+    } catch(e) { setNeedBusy(id, null); toast(e.message, true); }
   }
 
   async function bulkApprove() {
@@ -1984,7 +2061,7 @@
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap">
-        ${pending ? `<button class="btn btn-approve" onclick="approveSingle('${n.id}');closeModal()">✓ Approve</button><button class="btn btn-reject" onclick="showReject('${n.id}');closeModal()">✗ Reject</button>` : ''}
+        ${pending ? `<button class="btn btn-approve" data-busy-for="${n.id}" data-busy-text="Approving…" onclick="approveSingle('${n.id}', true)">✓ Approve</button><button class="btn btn-reject" data-busy-for="${n.id}" data-busy-text="Rejecting…" onclick="closeModal();showReject('${n.id}')">✗ Reject</button>` : ''}
         ${pending ? `<button class="btn" style="border-color:var(--border)" onclick="toggleQuestion(true)">Ask navigator a question</button>` : ''}
         ${extraHtml}
         <button class="btn btn-delete" style="${extraHtml ? '' : 'margin-left:auto'}" onclick="closeModal()">Close</button>
@@ -2143,7 +2220,7 @@
                 <td>${staleBadge(n.created_at) || `<span style="font-size:11px;color:var(--text-3)">${staleDays(n.created_at)}d</span>`}</td>
                 <td style="display:flex;gap:6px">
                   <button class="btn" style="background:var(--blue-bg);color:var(--blue);border:1px solid rgba(88,166,255,0.25)" data-need-id="${escHtml(n.id)}" data-action="view-need">View</button>
-                  ${n.status==='pending'?`<button class="btn btn-approve" data-need-id="${escHtml(n.id)}" data-action="approve-need">Approve</button>`:''}
+                  ${n.status==='pending'?`<button class="btn btn-approve" data-need-id="${escHtml(n.id)}" data-busy-for="${escHtml(n.id)}" data-busy-text="Approving…" data-action="approve-need">Approve</button>`:''}
                   <button class="btn btn-delete" data-need-id="${escHtml(n.id)}" data-need-title="${escHtml(n.title)}" data-action="delete-need">Delete</button>
                 </td>
               </tr>`).join('')}
