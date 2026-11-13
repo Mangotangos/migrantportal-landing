@@ -617,7 +617,9 @@
 
     function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : '—'; }
     function timeAgo(d) {
-      const diff = Math.floor((Date.now() - new Date(d)) / 86400000);
+      // API timestamps are naive UTC; without the Z they parse as local time and go negative
+      const utc = /Z$|[+-]\d\d:\d\d$/.test(d) ? d : d + 'Z';
+      const diff = Math.max(0, Math.floor((Date.now() - new Date(utc)) / 86400000));
       if (diff === 0) return 'Today'; if (diff === 1) return '1d ago';
       return diff + 'd ago';
     }
