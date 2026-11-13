@@ -598,13 +598,14 @@
   <script>
     requireAuth();
     const user = getUser() || {};
-    const canSubmitNeeds = u => u.role !== 'responder' || u.can_submit_needs === true;
-    document.body.classList.toggle('no-submit', !canSubmitNeeds(user));
+    // Not named canSubmitNeeds: api.js declares that global, and redeclaring it with const kills this whole script.
+    const orgCanSubmit = u => u.role !== 'responder' || u.can_submit_needs === true;
+    document.body.classList.toggle('no-submit', !orgCanSubmit(user));
     // Refresh the cached profile so an admin grant takes effect without re-login
     apiGet('/auth/me').then(me => {
       if (!me) return;
       localStorage.setItem('mp_user', JSON.stringify(me));
-      document.body.classList.toggle('no-submit', !canSubmitNeeds(me));
+      document.body.classList.toggle('no-submit', !orgCanSubmit(me));
     }).catch(() => {});
     const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
     document.getElementById('topAvatar').textContent = initials;
