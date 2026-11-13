@@ -607,7 +607,8 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           </div>
           <div class="field">
             <label for="phone">Phone number</label>
-            <input type="tel" id="phone" name="tel" autocomplete="tel" placeholder="(555) 000-0000" oninput="checkStep3()" />
+            <input type="tel" id="phone" name="tel" autocomplete="tel" maxlength="30" placeholder="(555) 000-0000" oninput="checkStep3()" />
+            <p class="need-error" id="phone-error" role="alert" hidden>Use digits, spaces, and + ( ) . - only.</p>
           </div>
           <!-- Navigators see sensitive immigration data, so an admin reads this before approving them. -->
           <div class="field" id="field-notes" data-for="navigator" hidden>
@@ -1510,11 +1511,17 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
       return isNavigatorSignup() && !_urlInviteCode;
     }
 
+    // Same characters the backend accepts (PHONE_PATTERN in auth.py).
+    const PHONE_PATTERN = /^[0-9+().\- ]*$/;
+
     function checkStep3() {
       const notes = document.getElementById('reg-notes').value.trim();
+      const phoneOk = PHONE_PATTERN.test(document.getElementById('phone').value);
+      document.getElementById('phone-error').hidden = phoneOk;
       const ok = document.getElementById('fname').value.trim() &&
                  document.getElementById('lname').value.trim() &&
                  document.getElementById('email').value.includes('@') &&
+                 phoneOk &&
                  (!notesRequired() || notes.length >= MIN_NOTES_LENGTH);
       setBtn('btn-3', !!ok);
     }
@@ -1652,6 +1659,8 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         if (responderType && role === 'responder') payload.responder_type = responderType;
         if (referralSource) payload.referral_source = referralSource;
         if (_urlInviteCode) payload.invite_code = _urlInviteCode;
+        const phone = document.getElementById('phone').value.trim();
+        if (phone) payload.phone = phone;
         if (selectedPlace) {
           payload.city = selectedPlace.city;
           payload.state = selectedPlace.state;
@@ -1686,7 +1695,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
     }
   </script>
 
-<script src="i18n.js?v=20261112" defer></script>
+<script src="i18n.js?v=20261112b" defer></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {

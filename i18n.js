@@ -190,6 +190,7 @@
     "We'll use this to set up your account and match you with needs in your area.": 'Usaremos esto para crear tu cuenta y conectarte con necesidades en tu zona.',
     "We'll use this to set up your account.": 'Usaremos esto para crear tu cuenta.',
     'Who do you work with?': '¿Con quién trabajas?',
+    'Use digits, spaces, and + ( ) . - only.': 'Usa solo números, espacios y + ( ) . -',
     'Describe the organization, agency, or church you serve migrants through.': 'Describe la organización, agencia o iglesia a través de la cual sirves a migrantes.',
     'An admin reads this before approving your account, because MigrantPortal handles sensitive immigration data.': 'Un administrador lee esto antes de aprobar tu cuenta, porque MigrantPortal maneja información migratoria delicada.',
     'We only alert you about what you pick, near where you pick. Works anywhere in the US.': 'Solo te avisamos de lo que elijas, cerca de donde elijas. Funciona en todo EE. UU.',
