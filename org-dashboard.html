@@ -539,7 +539,7 @@
             <div class="section-row"><div class="section-heading">What the labels mean</div></div>
             <div class="quick-card">
               <ul class="hiw-list">
-                <li><span class="badge badge-pending">Awaiting Approval</span><span>Shown on the need's page until our team approves it.</span></li>
+                <li><span class="badge badge-pending">Awaiting Approval</span><span>Waiting for our team to approve it. Responders can't see it yet.</span></li>
                 <li><span class="badge badge-open">Open</span><span>Not fulfilled yet. Open the need to see offers.</span></li>
                 <li><span class="badge badge-urgent">Urgent</span><span>How soon the family needs help: Low, Medium, High, or Urgent.</span></li>
                 <li><span class="badge badge-closed">Fulfilled</span><span>Done. Everyone involved was notified.</span></li>
@@ -621,6 +621,18 @@
       return diff + 'd ago';
     }
 
+    const STATUS_BADGE = {
+      pending:   ['badge-pending', 'Awaiting Approval'],
+      approved:  ['badge-open',    'Approved'],
+      active:    ['badge-open',    'Open'],
+      fulfilled: ['badge-closed',  'Fulfilled'],
+      closed:    ['badge-closed',  'Closed'],
+    };
+    function statusBadge(status) {
+      const [cls, label] = STATUS_BADGE[status] || ['badge-closed', cap(status || 'unknown')];
+      return `<span class="badge ${cls}">${label}</span>`;
+    }
+
     function needRow(n, cols) {
       const urg  = n.urgency || 'low';
       const loc  = [n.city, n.state].filter(Boolean).join(', ');
@@ -635,7 +647,7 @@
           <td><span class="badge ${URGENCY_BADGE[urg]}"><span class="dot"></span>${cap(urg)}</span></td>
           <td>${loc}</td>
           <td>${fam}</td>
-          <td><span class="badge badge-open">Open</span></td>
+          <td>${statusBadge(n.status)}</td>
           <td><a href="need?id=${n.id}" style="font-size:12px;color:var(--teal);font-weight:600;">View →</a></td>
         </tr>`;
       return `
@@ -647,7 +659,7 @@
           <td>${loc}</td>
           <td>${fam}</td>
           <td style="color:var(--gray-400);">${date}</td>
-          <td><span class="badge badge-open">Open</span></td>
+          <td>${statusBadge(n.status)}</td>
           <td><a href="need?id=${n.id}" style="font-size:12px;color:var(--teal);font-weight:600;">View →</a></td>
         </tr>`;
     }
@@ -768,10 +780,11 @@
 
       // Stats
       document.getElementById('statTotal').textContent    = allNeeds.length || '0';
-      document.getElementById('statOpen').textContent     = allNeeds.filter(n => n.status !== 'closed').length || '0';
+      const openCount = allNeeds.filter(n => n.status === 'active').length;
+      document.getElementById('statOpen').textContent     = openCount;
       loadNearbyNeeds(org);
       document.getElementById('statMembers').textContent  = stats ? stats.member_count : (members.length || '1');
-      document.getElementById('needsBadge').textContent   = allNeeds.filter(n => n.status !== 'closed').length || '0';
+      document.getElementById('needsBadge').textContent   = openCount;
 
       // Recent needs table (5 rows)
       const recent = allNeeds.slice(0, 5);
