@@ -370,7 +370,8 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <svg viewBox="0 0 32 32" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16l7 7L26 9"/></svg>
       </div>
       <h2>Need Submitted!</h2>
-      <p>Thank you. Your need is now in review by the MigrantPortal team. Once approved, nearby helpers and faith communities will be notified, and you will be alerted when someone offers to help.</p>
+      <p id="successMsgDefault">Thank you. Your need is now in review by the MigrantPortal team. Once approved, nearby helpers and faith communities will be notified, and you will be alerted when someone offers to help.</p>
+      <p id="successMsgNamed" style="display:none;"><span>Thank you.</span> <span id="successNeedTitle" data-no-i18n></span> <span>is now in review by the MigrantPortal team. Once approved, nearby helpers and faith communities will be notified, and you will be alerted when someone offers to help.</span> <span>You can track it under</span> <a href="navigator-dashboard#needs" id="successMyNeeds">My Needs</a><span>.</span></p>
       <div class="success-btns">
         <a href="requests" class="btn-primary" style="text-decoration:none;">View All Needs</a>
         <a href="dashboard" class="btn-secondary" style="text-decoration:none;">Back to Dashboard</a>
@@ -411,6 +412,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         document.getElementById('sbOrgName').textContent = (org && org.name) || 'My Organization';
         document.getElementById('sbOrgRole').textContent = org ? (org.owner_id === u.id ? 'Admin' : 'Member') : '';
         document.getElementById('crumbDash').href = 'org-dashboard';
+        document.getElementById('successMyNeeds').href = 'org-dashboard#needs';
       }
       function renderNavigatorSidebar(u) {
         document.getElementById('sidebar').innerHTML =
@@ -582,6 +584,12 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
       try {
         await apiPost('/needs', payload);
+        if (title) {
+          // Title is user input — textContent only
+          document.getElementById('successNeedTitle').textContent = '"' + title + '"';
+          document.getElementById('successMsgDefault').style.display = 'none';
+          document.getElementById('successMsgNamed').style.display = 'block';
+        }
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('successCard').style.display = 'block';
       } catch (ex) {
@@ -598,7 +606,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
       err.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   </script>
-<script src="i18n.js?v=20261110" defer></script>
+<script src="i18n.js?v=20261113" defer></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
