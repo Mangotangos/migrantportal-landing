@@ -694,6 +694,7 @@
     const CASE_STEPS = ['Posted', 'Responder responded', 'Offer accepted', 'Delivery', 'Fulfilled'];
     let caseProgress = { status: 'active', responseCount: 0, accepted: false, acceptedName: '' };
     let iResponded = false;
+    let myResponseStatus = 'offered'; // this helper's own offer: offered | accepted | in_progress | completed
 
     function renderStepper(patch = {}) {
       caseProgress = { ...caseProgress, ...patch };
@@ -755,7 +756,8 @@
       }
       if (role === 'responder' && iResponded) {
         if (closed) return { eyebrow: 'Thank you', title: status === 'fulfilled' ? 'Your delivery is recorded' : 'This need is closed', text: 'You helped a family. Thank you.', calm: true };
-        if (accepted) return { eyebrow: 'Your next step', title: 'Confirm the drop-off with the navigator', text: 'Your offer was accepted. Agree a time and place in the chat below, then keep your records in the panel on the right.' };
+        if (myResponseStatus === 'completed') return { eyebrow: 'Done', title: 'Waiting for the navigator to confirm', text: 'You marked your part done. The navigator will check with the family and close the need.', calm: true };
+        if (myResponseStatus !== 'offered') return { eyebrow: 'Your next step', title: 'Confirm the drop-off with the navigator', text: 'Your offer was accepted. Agree a time and place in the chat below, then keep your records in the panel on the right.' };
         return { eyebrow: 'Offer sent', title: 'Waiting for the navigator to review your offer', text: 'Once your offer is accepted you can chat here to arrange the drop-off.', calm: true };
       }
       if (role === 'responder' && !closed) return { eyebrow: 'Offer to help', title: 'What can you give?', text: 'Choose how you want to help in the panel on the right. The navigator will review your offer and message you here.' };
@@ -778,8 +780,9 @@
       // Responder's own offer badge
       const badge = document.getElementById('offer-badge');
       if (badge) {
-        badge.classList.toggle('ok', !!caseProgress.accepted);
-        badge.textContent = closedNow ? 'Delivered' : caseProgress.accepted ? 'Accepted' : 'Waiting for review';
+        const isMineAccepted = myResponseStatus !== 'offered';
+        badge.classList.toggle('ok', isMineAccepted);
+        badge.textContent = closedNow ? 'Delivered' : isMineAccepted ? 'Accepted' : 'Waiting for review';
       }
     }
 
@@ -857,6 +860,40 @@
       el._t = setTimeout(() => el.style.opacity = '0', 2800);
     }
 
+    // Accepted helper's own progress. "Done" emails the navigator, who then checks with the family.
+    function myProgressHtml() {
+      if (myResponseStatus === 'offered') return '';
+      const isDone = myResponseStatus === 'completed';
+      const isOnIt = myResponseStatus === 'in_progress';
+      const hint = isDone ? 'You marked your part done. The navigator will check with the family and close the need.'
+        : isOnIt ? 'Tap Done once everything is dropped off.'
+        : 'Let the navigator know when you start and when you are done.';
+      const btn = (status, label, isPrimary) => `<button type="button" class="my-progress-btn" onclick="setMyProgress('${status}')"
+        style="flex:1;height:38px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;${isPrimary
+          ? 'background:var(--teal);color:#fff;border:none' : 'background:#fff;color:var(--teal);border:1px solid var(--teal)'}">${label}</button>`;
+      return `<div id="my-progress" style="border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:12px">
+        <span style="display:block;font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:4px">Your progress</span>
+        <p style="font-size:12px;color:var(--gray-600);margin:0 0 ${isDone ? 0 : 10}px">${hint}</p>
+        ${isDone ? '' : `<div style="display:flex;gap:8px">${isOnIt ? '' : btn('in_progress', "I'm on it", false)}${btn('completed', 'Done', true)}</div>`}
+      </div>`;
+    }
+
+    async function setMyProgress(status) {
+      const buttons = document.querySelectorAll('#my-progress .my-progress-btn');
+      buttons.forEach(b => { b.disabled = true; });
+      try {
+        await apiPatch(`/needs/${needId}/my-response-status`, { status });
+        myResponseStatus = status;
+        toast(status === 'completed' ? 'Marked done. The navigator has been told.' : 'The navigator knows you are on it.');
+        renderPanel(currentNeed, true);
+        renderNextCard();
+        if (window.mpReapplyI18n) window.mpReapplyI18n();
+      } catch (e) {
+        buttons.forEach(b => { b.disabled = false; });
+        toast(e.message, true);
+      }
+    }
+
     // ── Render sidebar panel based on need + user state
     function renderPanel(need, alreadyResponded) {
       const panel = document.getElementById('panel-content');
@@ -902,8 +939,9 @@
               <div class="offer-eyebrow">Your offer</div>
               <div style="font-weight:700;font-size:14px;margin-top:4px">You're responding</div>
               <div style="font-size:12px;color:var(--gray-600);margin-top:2px">Thank you for offering your support.</div>
-              <span class="offer-badge${caseProgress.accepted ? ' ok' : ''}" id="offer-badge">${caseProgress.accepted ? 'Accepted' : 'Waiting for review'}</span>
+              <span class="offer-badge${myResponseStatus !== 'offered' ? ' ok' : ''}" id="offer-badge">${myResponseStatus !== 'offered' ? 'Accepted' : 'Waiting for review'}</span>
             </div>
+            ${myProgressHtml()}
             <div style="border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:12px">
               <div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:10px">⏱ Log Volunteer Hours</div>
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
@@ -1529,6 +1567,7 @@
         currentNeed.status = 'fulfilled';
         currentNeed.outcome_note = note;
         renderPanel(currentNeed, false);
+        renderStepper({ status: 'fulfilled' }); // steps, chips and "Your next step" card
       } catch(e) { toast(e.message, true); }
     }
 
@@ -1816,7 +1855,9 @@
         if (currentUser?.role === 'responder') {
           try {
             const responded = await apiGet('/needs/responded');
-            alreadyResponded = responded.some(n => n.id === needId);
+            const mine = responded.find(n => n.id === needId);
+            alreadyResponded = !!mine;
+            myResponseStatus = mine?.my_response_status || 'offered';
           } catch(e) { console.error('loadResponded check failed:', e); }
         }
 
@@ -2398,7 +2439,7 @@
   });
 </script>
 
-<script src="i18n.js?v=20261110" defer></script>
+<script src="i18n.js?v=20261113" defer></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {

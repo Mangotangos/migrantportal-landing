@@ -7,6 +7,17 @@ const URGENCY_RANK = { urgent: 3, high: 2, medium: 1, low: 0 };
 const DEFAULT_RADIUS_MI = 50;
 const NEARBY_MAX_ROWS = 5;
 
+// Each role dashboard calls this instead of requireAuth(). Someone who reaches another role's
+// dashboard (old tab, bookmark, shared link) goes to /dashboard, which routes them by role.
+function requireDashboardRole(isAllowed) {
+  const user = requireAuth();
+  if (user && user.role !== 'admin' && !isAllowed(user)) {
+    window.location.replace('/dashboard');
+    return null;
+  }
+  return user;
+}
+
 const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : '—';
 const fmtMiles = d => d == null ? '—' : d < 1 ? '< 1 mi' : `${Math.round(d)} mi`;
 const fmtLoc = o => [o.city, o.state].filter(Boolean).join(', ');
