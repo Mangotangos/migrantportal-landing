@@ -1810,8 +1810,8 @@
         <input type="checkbox" id="chk-${n.id}" onchange="toggleSelect('${n.id}')">
         <div class="pc-body">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <span class="pc-title" onclick="openNeedModal(${i})">${n.title}</span>
-            <span class="pc-case">#${n.case_number}</span>
+            <span class="pc-title" onclick="openNeedModal(${i})">${esc(n.title)}</span>
+            <span class="pc-case">#${esc(n.case_number)}</span>
             <span class="status-pill s-pending">
               <span class="urgency-dot ${URGENCY_COLOR[n.urgency]}"></span>${n.urgency}
             </span>
@@ -1819,12 +1819,12 @@
             ${triageBadge(n)}
             ${timeInQueue(n.created_at)}
           </div>
-          <div class="pc-meta">${n.city}, ${n.state} ${n.zip} &nbsp;·&nbsp; ${n.family_adults} adult${n.family_adults!==1?'s':''}, ${n.family_children} child${n.family_children!==1?'ren':''} &nbsp;·&nbsp; ${n.navigator_org || 'No org'}</div>
-          <div class="pc-desc">${n.description.slice(0,160)}${n.description.length>160?'…':''}</div>
+          <div class="pc-meta">${esc(n.city)}, ${esc(n.state)} ${esc(n.zip)} &nbsp;·&nbsp; ${n.family_adults} adult${n.family_adults!==1?'s':''}, ${n.family_children} child${n.family_children!==1?'ren':''} &nbsp;·&nbsp; ${esc(n.connector_org || 'No org')}</div>
+          <div class="pc-desc">${esc(n.description.slice(0,160))}${n.description.length>160?'…':''}</div>
           <div class="pc-actions">
             <button class="btn btn-approve" onclick="approveSingle('${n.id}')">✓ Approve</button>
             <button class="btn btn-reject" onclick="showReject('${n.id}')">✗ Reject</button>
-            <button class="btn btn-delete" onclick="deleteNeed('${n.id}','${n.title.replace(/'/g,"\\'")}')">Delete</button>
+            <button class="btn btn-delete" onclick="deleteNeed('${n.id}', pendingNeeds[${i}].title)">Delete</button>
             <span style="font-size:11px;color:var(--text-3);margin-left:4px;cursor:pointer" onclick="openNeedModal(${i})">View details →</span>
           </div>
         </div>
@@ -1902,37 +1902,187 @@
   /* ═══════════════════════════════════════════
      NEED DETAIL MODAL
   ═══════════════════════════════════════════ */
-  function openNeedModal(idx) {
-    const n = pendingNeeds[idx];
-    if (!n) return;
-    const days = staleDays(n.created_at);
-    document.getElementById('modalContent').innerHTML = `
+  /* ── Need review modal (pending queue + all needs) ── */
+  // API timestamps are naive UTC; without a Z the browser parses them as local time
+  function parseUtc(iso) {
+    return new Date(iso.endsWith('Z') || /[+-]\d\d:\d\d$/.test(iso) ? iso : iso + 'Z');
+  }
+
+  function fmtCentral(iso) {
+    if (!iso) return '—';
+    return parseUtc(iso).toLocaleString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }) + ' CT';
+  }
+
+  function sinceText(iso) {
+    const mins = Math.max(0, Math.floor((Date.now() - parseUtc(iso)) / 60000));
+    if (mins < 60) return `${mins} min`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs} hr${hrs !== 1 ? 's' : ''}`;
+    const days = Math.floor(hrs / 24);
+    return `${days} day${days !== 1 ? 's' : ''}`;
+  }
+
+  function modalField(label, valueHtml, subHtml = '') {
+    const sub = subHtml ? `<div style="font-size:12px;color:var(--text-2)">${subHtml}</div>` : '';
+    return `<div class="modal-field"><div class="modal-field-label">${label}</div><div class="modal-field-val">${valueHtml}</div>${sub}</div>`;
+  }
+
+  function needHeaderHtml(n) {
+    const isPending = n.status === 'pending';
+    const waiting = isPending && n.created_at ? `<span class="status-pill" style="background:var(--surface-2);color:var(--text-2)">Waiting ${sinceText(n.created_at)}</span>` : '';
+    return `
       <div style="margin-bottom:20px">
-        <div style="font-size:18px;font-weight:800;letter-spacing:-0.4px;margin-bottom:6px">${n.title}</div>
+        <div style="font-size:18px;font-weight:800;letter-spacing:-0.4px;margin-bottom:6px">${esc(n.title)}</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <span class="pc-case">#${n.case_number}</span>
-          <span class="status-pill s-pending"><span class="urgency-dot ${URGENCY_COLOR[n.urgency]}"></span>${n.urgency}</span>
-          <span style="font-size:12px;color:var(--text-2)">${CAT_EMOJI[n.category]||'📦'} ${n.category}</span>
-          ${days >= 3 ? staleBadge(n.created_at) : ''}
+          <span class="pc-case">#${esc(n.case_number)}</span>
+          ${isPending ? '' : `<span class="status-pill ${STATUS_CLASS[n.status]||''}">${esc(n.status)}</span>`}
+          <span class="status-pill s-pending"><span class="urgency-dot ${URGENCY_COLOR[n.urgency]}"></span>${esc(n.urgency)}</span>
+          <span style="font-size:12px;color:var(--text-2)">${CAT_EMOJI[n.category]||'📦'} ${esc(n.category)}</span>
+          ${waiting}
+          ${staleDays(n.created_at) >= 3 ? staleBadge(n.created_at) : ''}
+          ${isPending ? '' : triageBadge(n)}
+        </div>
+      </div>`;
+  }
+
+  function needFactsHtml(n) {
+    const remote = n.can_help_remotely ? '<span style="color:var(--green);font-weight:600">Remote help OK</span>' : '';
+    const family = `${n.family_adults} adult${n.family_adults!==1?'s':''}, ${n.family_children} child${n.family_children!==1?'ren':''}`;
+    const helpers = n.status === 'pending' ? modalField('Helpers to alert', '<span id="reviewHelpers">…</span>', 'when you approve') : modalField('Navigator Org', esc(n.connector_org || '—'));
+    return `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+        ${modalField('Submitted', fmtCentral(n.created_at), n.created_at ? `${sinceText(n.created_at)} ago` : '')}
+        ${modalField('Location', `${esc(n.city)}, ${esc(n.state)} ${esc(n.zip || '')}`, remote)}
+        ${modalField('Family Size', family)}
+        ${helpers}
+      </div>`;
+  }
+
+  function needItemsHtml(n) {
+    const items = n.items || [];
+    if (!items.length) return modalField('Items Requested', '<span style="color:var(--text-3)">None listed</span>');
+    const rows = items.map(it => `
+      <div style="display:flex;justify-content:space-between;gap:12px;padding:8px 12px;border-top:1px solid var(--border)">
+        <span>${esc(it.label)}</span><strong>${esc(it.amount_needed)}${it.unit && it.unit !== 'item' ? ' ' + esc(it.unit) : ''}</strong>
+      </div>`).join('');
+    return modalField('Items Requested', `<div style="border:1px solid var(--border);border-top:none;border-radius:8px;overflow:hidden;font-size:13px">${rows}</div>`);
+  }
+
+  function needDescriptionHtml(n) {
+    return modalField('Full Description', `<div style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13px;line-height:1.7;white-space:pre-wrap">${esc(n.description || '—')}</div>`);
+  }
+
+  function needActionsHtml(n, extraHtml = '') {
+    const pending = n.status === 'pending';
+    return `
+      <div id="questionBox" style="display:none;margin-top:16px">
+        <label for="questionText" class="modal-field-label" style="display:block">Question for the navigator</label>
+        <textarea id="questionText" rows="3" maxlength="1000" style="width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:10px;font:inherit;font-size:13px" placeholder="e.g. Which store is closest to the family?"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn btn-approve" id="questionSend" onclick="sendQuestion('${n.id}')">Send question</button>
+          <button class="btn btn-delete" onclick="toggleQuestion(false)">Cancel</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
-        <div class="modal-field"><div class="modal-field-label">Location</div><div class="modal-field-val">${n.city}, ${n.state} ${n.zip}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Navigator Org</div><div class="modal-field-val">${n.navigator_org||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Family Size</div><div class="modal-field-val">${n.family_adults} adult${n.family_adults!==1?'s':''}, ${n.family_children} child${n.family_children!==1?'ren':''}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Submitted</div><div class="modal-field-val">${n.created_at ? new Date(n.created_at).toLocaleDateString() : '—'}</div></div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-field-label">Full Description</div>
-        <div class="modal-field-val" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13px;line-height:1.7">${n.description}</div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:20px">
-        <button class="btn btn-approve" onclick="approveSingle('${n.id}');closeModal()">✓ Approve</button>
-        <button class="btn btn-reject" onclick="showReject('${n.id}');closeModal()">✗ Reject</button>
-        <button class="btn btn-delete" style="margin-left:auto" onclick="closeModal()">Close</button>
-      </div>
-    `;
+      <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap">
+        ${pending ? `<button class="btn btn-approve" onclick="approveSingle('${n.id}');closeModal()">✓ Approve</button><button class="btn btn-reject" onclick="showReject('${n.id}');closeModal()">✗ Reject</button>` : ''}
+        ${pending ? `<button class="btn" style="border-color:var(--border)" onclick="toggleQuestion(true)">Ask navigator a question</button>` : ''}
+        ${extraHtml}
+        <button class="btn btn-delete" style="${extraHtml ? '' : 'margin-left:auto'}" onclick="closeModal()">Close</button>
+      </div>`;
+  }
+
+  function renderNeedModal(n, extraActionsHtml = '') {
+    const content = document.getElementById('modalContent');
+    content.dataset.needId = n.id;
+    content.innerHTML =
+      needHeaderHtml(n) +
+      `<div id="needReview" style="margin-bottom:16px;font-size:13px;color:var(--text-3)">Loading submitter…</div>` +
+      needFactsHtml(n) + needItemsHtml(n) + needDescriptionHtml(n) +
+      needActionsHtml(n, extraActionsHtml);
     document.getElementById('modalOverlay').classList.add('open');
+    loadNeedReview(n.id);
+  }
+
+  async function loadNeedReview(needId) {
+    const content = document.getElementById('modalContent');
+    try {
+      const r = await apiGet(`/admin/needs/${encodeURIComponent(needId)}/review`);
+      if (content.dataset.needId !== needId) return;  // modal moved on to another need
+      document.getElementById('needReview').innerHTML = submitterHtml(r.submitter, r.submitter_stats) + reviewChecksHtml(r.checks);
+      const helpers = document.getElementById('reviewHelpers');
+      if (helpers) helpers.textContent = `${r.helpers_to_alert}${r.helpers_capped ? '+' : ''} helper${r.helpers_to_alert !== 1 ? 's' : ''}`;
+    } catch (e) {
+      if (content.dataset.needId !== needId) return;
+      document.getElementById('needReview').textContent = 'Could not load submitter details: ' + e.message;
+      const helpers = document.getElementById('reviewHelpers');
+      if (helpers) helpers.textContent = '—';
+    }
+  }
+
+  function submitterHtml(s, stats) {
+    if (!s) return `<div style="color:var(--text-3);margin-bottom:12px">Submitter account not found.</div>`;
+    const initials = (s.name || '?').split(/\s+/).map(w => (w.match(/\p{L}/u) || [''])[0]).join('').slice(0, 2).toUpperCase() || '?';
+    const role = s.role === 'connector' || s.role === 'navigator' ? 'Navigator' : s.role;
+    const approved = s.approved_at ? `Approved ${parseUtc(s.approved_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/Chicago' })}` : esc(s.status);
+    const contact = [s.email && `<a href="mailto:${esc(s.email)}">${esc(s.email)}</a>`, s.phone && `<a href="tel:${esc(s.phone)}">${esc(s.phone)}</a>`].filter(Boolean).join(' · ');
+    const stat = (num, label, color) => `<div style="background:var(--surface-2);border-radius:8px;padding:8px 10px"><div style="font-size:18px;font-weight:800;color:${color}">${num}</div><div style="font-size:11px;color:var(--text-2)">${label}</div></div>`;
+    return `
+      <div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;color:var(--text)">
+        <div class="modal-field-label">Submitted by</div>
+        <div style="display:flex;gap:12px;align-items:center;margin:8px 0 12px">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">${esc(initials)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:700">${esc(s.name)} <span class="status-pill" style="font-size:11px">${esc(role)}</span> <span style="font-size:12px;color:var(--text-2)">${approved}</span></div>
+            <div style="font-size:13px;color:var(--text-2);overflow-wrap:anywhere">${contact || 'No contact on file'}</div>
+            <div style="font-size:13px;color:var(--text-2)">Org: ${esc(s.org_name || 'Independent navigator')}</div>
+          </div>
+          <button class="btn" style="border-color:var(--border);flex-shrink:0" onclick="closeModal();openUserDrawer('${esc(s.id)}')">View profile</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+          ${stat(stats.submitted, 'needs submitted', 'var(--text)')}${stat(stats.approved, 'approved', 'var(--green)')}${stat(stats.rejected, 'rejected', 'var(--red, #b91c1c)')}
+        </div>
+      </div>`;
+  }
+
+  function reviewChecksHtml(c) {
+    const ok = text => `<div style="display:flex;gap:8px;color:var(--text)"><span style="color:var(--green);font-weight:800">✓</span><span>${text}</span></div>`;
+    const warn = text => `<div style="display:flex;gap:8px;color:var(--text)"><span style="color:var(--orange);font-weight:800">⚠</span><span>${text}</span></div>`;
+    const recent = c.recent_needs.map(r => `#${esc(r.case_number)} ${esc(r.title)} (${esc(r.status)}, ${sinceText(r.created_at)} ago)`).join('<br>');
+    const rows = [
+      c.contact_info.length ? warn(`Contact details in public text: ${c.contact_info.map(esc).join(', ')}`) : ok('No phone numbers, emails, links or addresses in the public text'),
+      c.recent_needs.length ? warn(`${c.recent_needs.length} other need${c.recent_needs.length !== 1 ? 's' : ''} from this navigator in the last 30 days:<br>${recent}`) : ok('No other needs from this navigator in the last 30 days'),
+      c.auto_flag_reason ? warn(`Auto-flagged: ${esc(c.auto_flag_reason)}`) : ok('No auto-flags'),
+      c.community_flag_count ? warn(`Reported by ${c.community_flag_count} user${c.community_flag_count !== 1 ? 's' : ''}`) : '',
+    ];
+    return `
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px">
+        <div class="modal-field-label">Review checks</div>
+        ${rows.join('')}
+      </div>`;
+  }
+
+  function toggleQuestion(show) {
+    document.getElementById('questionBox').style.display = show ? 'block' : 'none';
+    if (show) document.getElementById('questionText').focus();
+  }
+
+  async function sendQuestion(needId) {
+    const text = document.getElementById('questionText').value.trim();
+    if (!text) { toast('Write a question first.', true); return; }
+    const btn = document.getElementById('questionSend');
+    btn.disabled = true;
+    try {
+      const r = await apiPost(`/admin/needs/${encodeURIComponent(needId)}/question`, { message: text });
+      toast(r.emailed ? 'Question sent to the navigator (app + email).' : 'Question sent to the navigator in the app.');
+      document.getElementById('questionText').value = '';
+      toggleQuestion(false);
+    } catch (e) { toast(e.message, true); }
+    finally { btn.disabled = false; }
+  }
+
+  function openNeedModal(idx) {
+    const n = pendingNeeds[idx];
+    if (n) renderNeedModal(n);
   }
 
   function closeModal(e) {
@@ -1943,37 +2093,7 @@
   function openAllNeedModal(id) {
     const n = allNeedsCache.find(x => x.id === id);
     if (!n) return;
-    const days = staleDays(n.created_at);
-    const isPending = n.status === 'pending';
-    document.getElementById('modalContent').innerHTML = `
-      <div style="margin-bottom:20px">
-        <div style="font-size:18px;font-weight:800;letter-spacing:-0.4px;margin-bottom:6px">${n.title}</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <span class="pc-case">#${n.case_number}</span>
-          <span class="status-pill ${STATUS_CLASS[n.status]||''}">${n.status}</span>
-          <span class="status-pill s-pending"><span class="urgency-dot ${URGENCY_COLOR[n.urgency]}"></span>${n.urgency}</span>
-          <span style="font-size:12px;color:var(--text-2)">${CAT_EMOJI[n.category]||'📦'} ${n.category}</span>
-          ${days >= 3 ? staleBadge(n.created_at) : ''}
-          ${triageBadge(n)}
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
-        <div class="modal-field"><div class="modal-field-label">Location</div><div class="modal-field-val">${n.city}, ${n.state} ${n.zip||''}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Navigator Org</div><div class="modal-field-val">${n.navigator_org||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Family Size</div><div class="modal-field-val">${n.family_adults} adult${n.family_adults!==1?'s':''}, ${n.family_children} child${n.family_children!==1?'ren':''}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Submitted</div><div class="modal-field-val">${n.created_at ? new Date(n.created_at).toLocaleDateString() : '—'}</div></div>
-      </div>
-      <div class="modal-field">
-        <div class="modal-field-label">Full Description</div>
-        <div class="modal-field-val" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13px;line-height:1.7">${n.description||'—'}</div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:20px">
-        ${isPending ? `<button class="btn btn-approve" onclick="approveSingle('${n.id}');closeModal()">✓ Approve</button><button class="btn btn-reject" onclick="showReject('${n.id}');closeModal()">✗ Reject</button>` : ''}
-        <a href="need?id=${n.id}" class="btn" style="margin-left:auto;text-decoration:none">View Full Page →</a>
-        <button class="btn btn-delete" onclick="document.getElementById('modalOverlay').classList.remove('open')">Close</button>
-      </div>
-    `;
-    document.getElementById('modalOverlay').classList.add('open');
+    renderNeedModal(n, `<a href="need?id=${encodeURIComponent(n.id)}" class="btn" style="margin-left:auto;text-decoration:none;display:inline-flex;align-items:center">View Full Page →</a>`);
   }
 
   /* ═══════════════════════════════════════════
@@ -2056,7 +2176,7 @@
       toast('Fetching data for export…');
       const data = await apiGet('/admin/needs?page=1&per_page=5000');
       const rows = [['Case#','Title','Category','Urgency','Status','City','State','Adults','Children','Navigator Org','Created']];
-      (data.items || []).forEach(n => rows.push([n.case_number,n.title,n.category,n.urgency,n.status,n.city,n.state,n.family_adults,n.family_children,n.navigator_org||'',n.created_at||'']));
+      (data.items || []).forEach(n => rows.push([n.case_number,n.title,n.category,n.urgency,n.status,n.city,n.state,n.family_adults,n.family_children,n.connector_org||'',n.created_at||'']));
       downloadCSV(rows, `migrantportal-needs-${new Date().toISOString().slice(0,10)}.csv`);
       toast(`✓ Exported ${rows.length-1} needs.`);
     } catch(e) { toast('Export failed.', true); }
@@ -2860,9 +2980,9 @@
             ${items.map(n => `
               <tr>
                 <td><strong style="font-family:var(--mono)">#${n.case_number}</strong></td>
-                <td>${n.title}</td>
+                <td>${esc(n.title)}</td>
                 <td><span class="status-pill ${STATUS_CLASS[n.status]||''}">${n.status}</span></td>
-                <td style="font-size:12px;color:var(--text-2)">${n.auto_flag_reason||'—'}</td>
+                <td style="font-size:12px;color:var(--text-2)">${esc(n.auto_flag_reason||'—')}</td>
                 <td style="text-align:center;font-weight:700;color:var(--orange)">${n.community_flag_count}</td>
                 <td style="display:flex;gap:6px;flex-wrap:wrap">
                   <button class="btn btn-approve" onclick="clearFlags('${n.id}')">Clear Flags</button>
