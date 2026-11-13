@@ -1493,7 +1493,7 @@
         renderKpiDelta('dFulfilled', s.fulfilled_count,  prev.fulfilled_count, false);
         renderKpiDelta('dTotal',     s.total_needs,      prev.total_needs,     false);
         renderKpiDelta('dResponders',s.total_responders, prev.total_responders,false);
-        const rateDiff = s.fulfillment_rate - prev.fulfillment_rate;
+        const rateDiff = Math.round((s.fulfillment_rate - prev.fulfillment_rate) * 10) / 10;
         const rEl = document.getElementById('dRate');
         if (rEl && rateDiff !== 0) {
           rEl.textContent = (rateDiff > 0 ? '+' : '') + rateDiff + '%';
