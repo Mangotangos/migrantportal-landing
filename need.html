@@ -361,7 +361,7 @@
       .more-card { width: calc(50% - 6px); }
     }
     /* ─── VISITOR (logged-out) VIEW ───────────── */
-    body.visitor #chat-card, body.visitor #network, body.visitor #more-requests,
+    body.visitor #chat-card, body.visitor #more-requests,
     body.visitor #donate-card, body.visitor #donor-impact-card, body.visitor #navigator-funds-card,
     body.visitor #bookmark-btn, body.visitor #qr-btn, body.visitor #qr-modal, body.visitor .btn-help, body.visitor .needs-header .btn-help,
     body.visitor .nav-right > a[href="dashboard"], body.visitor .mob-nav, body.visitor .bar-back, body.visitor .req-illustration { display: none !important; }
@@ -568,35 +568,6 @@
           </div>
         </div>
 
-        <!-- NETWORK -->
-        <div class="card" id="network">
-          <div class="section-heading">Response teams nearby</div>
-          <p class="network-desc">Message a team from the list, or pick one on the map.</p>
-          <div class="network-layout">
-            <div class="network-list">
-              <div class="network-group-title">Faith Community Response Teams (2)</div>
-              <div class="network-item">
-                <div class="network-pin">📍</div>
-                <div>
-                  <div class="network-name">New Hope Community Faith Community</div>
-                  <div class="network-meta">New Hope · 2 mi · 66101 · Lead Faith Community</div>
-                </div>
-              </div>
-              <div class="network-item">
-                <div class="network-pin">📍</div>
-                <div>
-                  <div class="network-name">Faith Community Entered Needs</div>
-                  <div class="network-meta">New Hope · 2 mi · 66101 · Lead Faith Community</div>
-                </div>
-              </div>
-            </div>
-            <div class="map-placeholder">
-              <div class="map-placeholder-icon">🗺️</div>
-              <div>Kansas City, KS area</div>
-            </div>
-          </div>
-        </div>
-
         <!-- MORE REQUESTS -->
         <div id="more-requests">
           <div class="more-heading">More Verified Requests</div>
@@ -774,9 +745,6 @@
         card.innerHTML = `<div class="next-eyebrow">${copy.eyebrow}</div><h2>${esc(copy.title)}</h2><p>${esc(copy.text)}</p>${copy.html || ''}`;
       }
       const closedNow = caseProgress.status === 'fulfilled' || caseProgress.status === 'closed';
-      // Response teams only matter while a need is open and the viewer is logged in
-      const net = document.getElementById('network');
-      if (net) net.style.display = currentUser && !closedNow ? '' : 'none';
       // Responder's own offer badge
       const badge = document.getElementById('offer-badge');
       if (badge) {
