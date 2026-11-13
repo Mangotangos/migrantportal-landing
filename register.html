@@ -1079,7 +1079,10 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
     function goFromStep1() {
       const sel = document.querySelector('#cards-1 .card.selected');
       if (!sel) return;
-      goTo(sel.dataset.val === 'navigator' || sel.dataset.val === 'connector' ? 2 : 'rt');
+      // church/navigator/connector all sign up as role=navigator, which never sends
+      // responder_type, so only Individual Helper gets "How will you help?".
+      const skipsHelpType = ['church', 'navigator', 'connector'].includes(sel.dataset.val);
+      goTo(skipsHelpType ? 2 : 'rt');
     }
 
     /* ══ ORG FLOW FUNCTIONS ════════════════════════════════════════════════ */
