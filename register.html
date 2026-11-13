@@ -1568,7 +1568,9 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
     /* ── Step 2: Responder sections visibility ── */
     function updateStep2Sections() {
       const sel = document.querySelector('#cards-1 .card.selected');
-      const isResponder = sel && (sel.dataset.val === 'own' || sel.dataset.val === 'church');
+      // Only responders get "new need nearby" alerts (backend matching filters on
+      // role=responder), so navigator cards, church included, skip radius + need types.
+      const isResponder = sel && sel.dataset.val === 'own';
       document.getElementById('responder-only-sections').style.display = isResponder ? '' : 'none';
     }
 
@@ -1664,8 +1666,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           payload.state = selectedPlace.state;
           if (selectedPlace.zip) payload.zip_code = selectedPlace.zip;
         }
-        // Saved whenever step 2 showed the radius and need chips (individual helpers
-        // and faith community members), whatever role they end up with.
+        // Saved whenever step 2 showed the radius and need chips (individual helpers).
         if (document.getElementById('responder-only-sections').style.display !== 'none') {
           payload.notification_radius = notificationRadius;
           payload.need_categories = needCategories;
