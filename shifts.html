@@ -182,8 +182,8 @@
         <div class="shift-card">
           <div class="shift-header">
             <div>
-              <div class="shift-title">${s.title}</div>
-              ${s.description ? `<div style="font-size:12px;color:var(--gray-600);margin-top:3px">${s.description}</div>` : ''}
+              <div class="shift-title">${esc(s.title)}</div>
+              ${s.description ? `<div style="font-size:12px;color:var(--gray-600);margin-top:3px">${esc(s.description)}</div>` : ''}
             </div>
             ${s.cancelled ? '<span style="background:var(--red-lt);color:var(--red);font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px">Cancelled</span>' : ''}
           </div>

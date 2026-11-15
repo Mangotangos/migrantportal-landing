@@ -526,7 +526,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
       list.innerHTML = items.map(item => `
         <div class="item-row">
           <input type="text" id="item-name-${item.id}" aria-label="Item name" placeholder="Item name (e.g. Winter jacket, size M)"
-            value="${item.name}" oninput="updateItem(${item.id}, 'name', this.value)" />
+            value="${esc(item.name)}" oninput="updateItem(${item.id}, 'name', this.value)" />
           <input type="number" id="item-qty-${item.id}" aria-label="Quantity" placeholder="Qty" min="1" max="999"
             value="${item.quantity}" oninput="updateItem(${item.id}, 'qty', this.value)"
             style="text-align:center;" />

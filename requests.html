@@ -761,7 +761,7 @@
               <span class="card-id">${need.case_number ? '#' + need.case_number : '#MP' + String(need.id).slice(0, 6).toUpperCase()}</span>
               ${age ? `<span class="card-age"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${age}</span>` : ''}
             </div>
-            <div class="card-title">${need.title}</div>
+            <div class="card-title">${esc(need.title)}</div>
             <div class="card-desc">${need.description ? need.description.slice(0,110) + (need.description.length > 110 ? '…' : '') : ''}</div>
             ${loc || need._dist != null ? `<div class="card-loc">${loc}${need._dist != null ? `${loc ? ' · ' : ''}<span class="dist-chip">${need._dist < 10 ? need._dist.toFixed(1) : Math.round(need._dist)} mi</span>` : (originPoint && need.lat == null ? `${loc ? ' · ' : ''}<span style="color:#6b6b6b">distance unknown</span>` : '')}</div>` : ''}
             <div class="card-footer">
@@ -797,7 +797,7 @@
         .addTo(map)
         .bindPopup(`
           <div class="popup-id">#${need.case_number || need.id.slice(0,6).toUpperCase()}</div>
-          <div class="popup-title">${need.title}</div>
+          <div class="popup-title">${esc(need.title)}</div>
           <div class="popup-loc">${loc}</div>
           <div style="margin-top:8px">
             <a href="need?id=${need.id}" style="color:#009DA5;font-size:12px;font-weight:600;">View Details →</a>
@@ -1266,8 +1266,8 @@
             <div style="display:flex;align-items:center;gap:8px">
               <span style="display:flex;color:var(--teal)">${categoryIcon(n.category, 16, 2)}</span>
               <div>
-                <div style="font-size:13px;font-weight:600">${n.title}</div>
-                <div style="font-size:11px;color:#999">#${n.case_number} · ${n.status} · ${[n.city,n.state].filter(Boolean).join(', ')||'—'}</div>
+                <div style="font-size:13px;font-weight:600">${esc(n.title)}</div>
+                <div style="font-size:11px;color:#999">#${n.case_number} · ${n.status} · ${esc([n.city,n.state].filter(Boolean).join(', ')||'—')}</div>
               </div>
             </div>
           </a>`).join('');

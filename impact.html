@@ -236,10 +236,10 @@
         wins.innerHTML = '<div class="empty">No fulfilled needs yet — be the first to help!</div>';
       } else {
         wins.innerHTML = d.recent_wins.map(n => `
-          <a href="need?id=${n.id}" class="win-card" style="display:block;text-decoration:none;color:inherit">
-            <div class="win-title">${CAT_EMOJI[n.category]||'📦'} ${n.title}</div>
-            <div class="win-meta">${n.city}, ${n.state}</div>
-            ${n.outcome_note ? `<div class="win-note">"${n.outcome_note}"</div>` : ''}
+          <a href="need?id=${encodeURIComponent(n.id)}" class="win-card" style="display:block;text-decoration:none;color:inherit">
+            <div class="win-title">${CAT_EMOJI[n.category]||'📦'} ${esc(n.title)}</div>
+            <div class="win-meta">${esc(n.city)}, ${esc(n.state)}</div>
+            ${n.outcome_note ? `<div class="win-note">"${esc(n.outcome_note)}"</div>` : ''}
           </a>`).join('');
       }
 
@@ -248,7 +248,7 @@
       document.getElementById('cat-bars').innerHTML = d.categories.length
         ? d.categories.map(c => `
           <div class="bar-row">
-            <div class="bar-label">${CAT_EMOJI[c.category]||''} ${c.category}</div>
+            <div class="bar-label">${CAT_EMOJI[c.category]||''} ${esc(c.category)}</div>
             <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c.count/maxCat*100)}%"></div></div>
             <div class="bar-count">${c.count}</div>
           </div>`).join('')
@@ -259,7 +259,7 @@
       document.getElementById('city-bars').innerHTML = d.top_cities.length
         ? d.top_cities.map(c => `
           <div class="city-row">
-            <div class="city-label">📍 ${c.city}, ${c.state}</div>
+            <div class="city-label">📍 ${esc(c.city)}, ${esc(c.state)}</div>
             <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c.count/maxCity*100)}%"></div></div>
             <div class="bar-count">${c.count}</div>
           </div>`).join('')
@@ -270,7 +270,7 @@
         ? d.top_responders.map((r, i) => `
           <div class="resp-row">
             <div class="resp-rank ${i===0?'gold':''}">${i+1}</div>
-            <div><div class="resp-name">${r.name}</div><div class="resp-org">${r.org_name||'Independent'}</div></div>
+            <div><div class="resp-name">${esc(r.name)}</div><div class="resp-org">${esc(r.org_name||'Independent')}</div></div>
             <div class="resp-count">${r.count} response${r.count!==1?'s':''}</div>
           </div>`).join('')
         : '<div class="empty">No responses yet.</div>';

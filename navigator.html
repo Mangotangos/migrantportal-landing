@@ -319,8 +319,8 @@
         document.getElementById('expiry-list').innerHTML = d.expiring_soon.map(n => `
           <div class="alert-row" id="expiry-row-${n.id}">
             <div class="alert-row-info">
-              <div class="alert-row-title">${n.title}</div>
-              <div class="alert-row-sub">#${n.case_number} · ${n.days_left ?? '?'} days left · ${n.city}, ${n.state}</div>
+              <div class="alert-row-title">${esc(n.title)}</div>
+              <div class="alert-row-sub">#${n.case_number} · ${n.days_left ?? '?'} days left · ${esc(n.city)}, ${esc(n.state)}</div>
             </div>
             <a href="need?id=${n.id}" class="btn-sm btn-view">View</a>
             <button class="btn-renew" onclick="handleRenew('${n.id}', this)">Renew</button>
@@ -334,7 +334,7 @@
         document.getElementById('followup-list').innerHTML = d.followups_due.map(n => `
           <div class="alert-row" id="fu-row-${n.id}">
             <div class="alert-row-info">
-              <div class="alert-row-title">${n.title}</div>
+              <div class="alert-row-title">${esc(n.title)}</div>
               ${n.follow_up_note ? `<div class="followup-note">"${n.follow_up_note}"</div>` : ''}
             </div>
             <button class="btn-snooze" onclick="handleSnooze('${n.id}', '${(n.follow_up_note||'').replace(/'/g,"\\'")}', this)">+7d</button>
@@ -367,12 +367,12 @@
           <div style="flex:1">
             <div class="need-body">
               <div class="need-top">
-                <div class="need-title">${CAT_EMOJI[n.category]||'📦'} ${n.title}</div>
+                <div class="need-title">${CAT_EMOJI[n.category]||'📦'} ${esc(n.title)}</div>
                 <span class="need-status" style="background:${sc}22;color:${sc}">${n.status.toUpperCase()}</span>
               </div>
-              <div class="need-desc">${n.description}</div>
+              <div class="need-desc">${esc(n.description)}</div>
               <div class="need-meta">
-                <span>📍 ${n.city}, ${n.state}</span>
+                <span>📍 ${esc(n.city)}, ${esc(n.state)}</span>
                 <span class="need-meta-dot"></span>
                 <span>💬 ${n.response_count ?? 0} responses</span>
                 <span class="need-meta-dot"></span>
