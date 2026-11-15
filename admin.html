@@ -464,6 +464,10 @@
     #userDrawer .stats div { background:var(--surface-2);border-radius:8px;padding:10px; }
     #userDrawer .stats b { font-size:18px;display:block; } #userDrawer .stats span { font-size:11px;color:var(--text-2); }
     #userDrawer .li { font-size:13px;padding:6px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:10px; }
+    #userDrawer .chips { display:flex;flex-wrap:wrap;gap:6px; }
+    #userDrawer .chip { background:var(--surface-2);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:500; }
+    #userDrawer .chip.all { background:rgba(206,138,30,.14);color:var(--yellow);font-weight:600; }
+    #userDrawer .hint { font-size:12px;color:var(--text-3);margin-top:6px; }
     #userDrawer .df { padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap; }
     .empty { padding:48px 20px;text-align:center;color:var(--text-3);font-size:13px; }
     .empty-icon { font-size:28px;margin-bottom:8px; }
@@ -2679,6 +2683,20 @@
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeUserDrawer(); if (roleModalResolve) resolveRoleModal(null); } });
 
+  const ALERT_CAT_LABELS = { legal: 'Legal Aid' };
+  const alertCatLabel = c => ALERT_CAT_LABELS[c] || catLabel(String(c));
+
+  // Responders only. Hidden when the API did not send the field (older backend) so we never claim "all categories" falsely.
+  function alertSettingsHtml(u) {
+    if (u.role !== 'responder' || !Array.isArray(u.need_categories)) return '';
+    const cats = u.need_categories;
+    const chips = cats.length
+      ? `<div class="chips">${cats.map(c => `<span class="chip">${esc(alertCatLabel(c))}</span>`).join('')}</div>`
+      : '<div class="chips"><span class="chip all">All categories</span></div><div class="hint">None chosen, so they get alerts for every category.</div>';
+    const radius = u.notification_radius == null ? 'Any distance' : `Within ${u.notification_radius} miles`;
+    return `<div class="ds"><h4>Alert settings</h4><dl><dt>Can help with</dt><dd>${chips}</dd><dt>Alert radius</dt><dd>${esc(radius)}</dd></dl></div>`;
+  }
+
   function userDrawerHtml(u, isDeleted) {
     const row = (k, v) => v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '';
     const s = u.stats;
@@ -2697,6 +2715,7 @@
           ${row('Organization', u.org_name)}${row('Responder type', u.responder_type)}${row('Joined', u.created_at && u.created_at.slice(0, 10))}
           ${isDeleted ? row('Deleted', u.deleted_at) : ''}
         </dl></div>
+        ${alertSettingsHtml(u)}
         ${u.registration_notes ? `<div class="ds"><h4>Signup notes</h4><div style="font-size:13px">${esc(u.registration_notes)}</div></div>` : ''}
         ${u.status === 'rejected' && u.rejection_reason ? `<div class="ds"><h4>Rejection reason</h4><div style="font-size:13px">${esc(u.rejection_reason)}</div></div>` : ''}
         ${s ? `<div class="ds"><h4>Recent needs</h4>${list(u.recent_needs, n => `<div class="li"><span>${esc(n.title)}</span><span style="color:var(--text-3)">${esc(n.status)} · ${esc(n.created_at)}</span></div>`, 'No needs yet.')}</div>
