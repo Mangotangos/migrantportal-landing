@@ -337,7 +337,7 @@
               <div class="alert-row-title">${esc(n.title)}</div>
               ${n.follow_up_note ? `<div class="followup-note">"${n.follow_up_note}"</div>` : ''}
             </div>
-            <button class="btn-snooze" onclick="handleSnooze('${n.id}', '${(n.follow_up_note||'').replace(/'/g,"\\'")}', this)">+7d</button>
+            <button class="btn-snooze" onclick="handleSnooze('${esc(String(n.id))}', '${esc((n.follow_up_note||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"))}', this)">+7d</button>
             <button class="btn-done" onclick="handleFollowupDone('${n.id}', this)">✓ Done</button>
           </div>`).join('');
       }

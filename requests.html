@@ -745,7 +745,7 @@
       const bg    = CARD_ICON_BG;
       const dot   = URGENCY_DOT[need.urgency]     || '#999';
       const age   = need.created_at ? timeAgo(need.created_at) : '';
-      const loc   = [need.city, need.state, need.zip].filter(Boolean).join(', ');
+      const loc   = esc([need.city, need.state, need.zip].filter(Boolean).join(', '));
       const adults   = need.family_adults   || 1;
       const children = need.family_children || 0;
       const urgencyLabel = need.urgency ? need.urgency.charAt(0).toUpperCase() + need.urgency.slice(1) : '';
@@ -787,7 +787,7 @@
     function addMarker(need, idx) {
       if (!mapReady || !need.lat || !need.lng) { markers.push(null); return; }
       const urgent = need.urgency === 'urgent';
-      const loc    = [need.city, need.state].filter(Boolean).join(', ');
+      const loc    = esc([need.city, need.state].filter(Boolean).join(', '));
       const icon = L.divIcon({
         html: `<div class="map-pin${urgent ? ' urgent' : ''}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-1px;margin-right:3px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Need</div>`,
         className: '',

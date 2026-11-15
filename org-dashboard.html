@@ -649,7 +649,7 @@
           <td><a href="need?id=${n.id}" style="font-weight:600;color:var(--teal);">${esc(n.title)}</a></td>
           <td>${CAT_EMOJI[n.category]||''} ${cap(n.category)}</td>
           <td><span class="badge ${URGENCY_BADGE[urg]}"><span class="dot"></span>${cap(urg)}</span></td>
-          <td>${loc}</td>
+          <td>${esc(loc)}</td>
           <td>${fam}</td>
           <td>${statusBadge(n.status)}</td>
           <td><a href="need?id=${n.id}" style="font-size:12px;color:var(--teal);font-weight:600;">View →</a></td>
@@ -660,7 +660,7 @@
           <td><a href="need?id=${n.id}" style="font-weight:600;color:var(--teal);">${esc(n.title)}</a></td>
           <td>${CAT_EMOJI[n.category]||''} ${cap(n.category)}</td>
           <td><span class="badge ${URGENCY_BADGE[urg]}"><span class="dot"></span>${cap(urg)}</span></td>
-          <td>${loc}</td>
+          <td>${esc(loc)}</td>
           <td>${fam}</td>
           <td style="color:var(--gray-400);">${date}</td>
           <td>${statusBadge(n.status)}</td>
