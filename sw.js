@@ -5,13 +5,13 @@
  * - Offline fallback page for navigations
  * Bump CACHE_NAME on every deploy.
  */
-const CACHE_NAME = 'migrantportal-v160';
+const CACHE_NAME = 'migrantportal-v161';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_URLS = [
   '/',
   '/offline',
-  '/js/mp-actions.js?v=1',
+  '/js/mp-actions.js?v=2',
   '/manifest.json',
   '/i18n.js',
   '/footer.css?v=3',
