@@ -70,3 +70,23 @@
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /child-safety.html
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/forgot-password
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/forgot-password.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/verify-email
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/verify-email.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/pending
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/pending.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/onboarding
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/onboarding.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/reset-password
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/reset-password.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'

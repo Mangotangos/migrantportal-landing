@@ -8,8 +8,7 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#0D7A8A" />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --teal: #0D7A8A; --text: #111827; --muted: #6b7280; --border: #e5e7eb; }
@@ -48,16 +47,7 @@
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
   .skip-link:focus { top: 0; }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="/js/mp-error-log.js?v=1"></script>
 
 <style id="mp-nav-v2">
 /* NAV v2: floating bar (style only; page keeps its own links) */
@@ -104,35 +94,20 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
       <div id="verify-reminder" style="background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:16px;margin:20px 0;text-align:left;display:none">
         <div style="font-size:13px;font-weight:700;color:#1e40af;margin-bottom:8px">📧 Verify Your Email</div>
         <p style="font-size:13px;color:#1e40af;margin-bottom:12px;line-height:1.5">We'll email you once your application has been reviewed. Check your inbox (and spam folder) so you don't miss it.</p>
-        <button onclick="resendVerificationEmail()" style="background:#1e40af;color:white;border:none;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s">Resend Verification Email</button>
+        <button id="resendVerifyBtn" style="background:#1e40af;color:white;border:none;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s">Resend Verification Email</button>
       </div>
 
       <p style="font-size:13px">Questions? Email us at <a href="mailto:support@migrantportal.com" style="color:var(--teal)">support@migrantportal.com</a></p>
 
       <a href="/" class="btn">Back to Homepage</a>
-      <span class="logout-link" onclick="logout()">Sign out</span>
+      <span class="logout-link" id="logoutLink">Sign out</span>
     </div>
   </div>
 
   <script src="api.js?v=2"></script>
-  <script>
-    const user = getUser();
-    if (user) {
-      if (user.name) document.getElementById('user-name').textContent = user.name.split(' ')[0];
-      if (user.email) document.getElementById('user-email').textContent = user.email;
-      if (user.status === 'approved') {
-        window.location.href = '/dashboard';
-      }
-    }
-  </script>
+  <script src="/js/pending.js?v=1"></script>
 <script src="i18n.js?v=20261115" defer></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/sw.js').catch(function () {});
-    });
-  }
-</script>
+<script src="/js/sw-register.js?v=1"></script>
 <style>
   .mp-app-footer{background:#0d7a8a;color:#fff;text-align:center;padding:20px 16px;font-size:13px;line-height:1.8}
   .mp-app-footer a{color:#fff;text-decoration:underline;margin:0 8px}

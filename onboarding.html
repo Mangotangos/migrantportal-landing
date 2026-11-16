@@ -6,8 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome | MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -102,16 +101,7 @@
     }
     .skip-link:hover { color: var(--teal); }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="/js/mp-error-log.js?v=1"></script>
 </head>
 <body>
 
@@ -154,32 +144,10 @@
   </div>
 
   <div class="bottom">
-    <button class="btn-primary" id="next-btn" onclick="next()">Next →</button>
+    <button class="btn-primary" id="next-btn">Next →</button>
     <a href="/login" class="skip-link">Already have an account? Sign in</a>
   </div>
 
-  <script>
-    let current = 0;
-    const total = 3;
-    const track = document.getElementById('track');
-    const btn = document.getElementById('next-btn');
-
-    function update() {
-      track.style.transform = `translateX(-${current * 100}vw)`;
-      for (let i = 0; i < total; i++) {
-        document.getElementById('d' + i).className = 'dot' + (i === current ? ' active' : '');
-      }
-      btn.textContent = current < total - 1 ? 'Next →' : 'Get Started →';
-    }
-
-    function next() {
-      if (current < total - 1) {
-        current++;
-        update();
-      } else {
-        window.location.href = '/signup';
-      }
-    }
-  </script>
+  <script src="/js/onboarding.js?v=1"></script>
 </body>
 </html>

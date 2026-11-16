@@ -8,8 +8,7 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --teal:#007C84; --orange:#D13A06; --navy:#172936; --text:#0D0D0D; --gray-600:#555; --gray-400:#6b6b6b; --gray-200:#E8E8E8; --gray-100:#F4F4F4; }
@@ -56,16 +55,7 @@
     .resend-link button { background: none; border: none; color: var(--teal); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; }
     .alert-success { background: #f0fdf4; border: 1px solid #86efac; color: #16a34a; }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="/js/mp-error-log.js?v=1"></script>
 
 <style id="mp-nav-v2">
 /* NAV v2: floating bar (style only; page keeps its own links) */
@@ -102,9 +92,9 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
         <input class="code-input" id="codeInput" type="text" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="000000" autocomplete="one-time-code" />
 
-        <button class="btn" id="verifyBtn" onclick="handleVerify()">Verify Email</button>
+        <button class="btn" id="verifyBtn">Verify Email</button>
 
-        <div class="resend-link">Didn't get the code? <button onclick="handleResend()">Resend</button></div>
+        <div class="resend-link">Didn't get the code? <button id="resendBtn">Resend</button></div>
         <div class="back-link" style="margin-top:10px">Wrong account? <a href="login">Sign in</a></div>
       </div>
 
@@ -124,54 +114,6 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
   </div>
 
   <script src="api.js?v=2"></script>
-  <script>
-    // Must be logged in to verify
-    const mpUser = JSON.parse(localStorage.getItem('mp_user') || 'null');
-    if (!mpUser || !mpUser.token) {
-      window.location.href = 'login';
-    }
-
-    async function handleVerify() {
-      const err = document.getElementById('alertError');
-      const btn = document.getElementById('verifyBtn');
-      const code = document.getElementById('codeInput').value.trim();
-
-      err.style.display = 'none';
-      if (!code || code.length !== 6) {
-        err.textContent = 'Please enter the 6-digit code from your email.';
-        err.style.display = 'block';
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerHTML = '<div class="spinner"></div> Verifying…';
-
-      try {
-        await apiPost('/auth/verify-email', { verification_code: code });
-        document.getElementById('formState').style.display = 'none';
-        document.getElementById('successState').style.display = 'block';
-      } catch (ex) {
-        err.textContent = ex.message || 'Verification failed. Please try again.';
-        err.style.display = 'block';
-        btn.disabled = false;
-        btn.innerHTML = 'Verify Email';
-      }
-    }
-
-    async function handleResend() {
-      const ok = document.getElementById('alertSuccess');
-      const err = document.getElementById('alertError');
-      err.style.display = 'none';
-      try {
-        await apiPost('/auth/send-verification-email', {});
-        ok.textContent = 'A new code has been sent to your email.';
-        ok.style.display = 'block';
-        setTimeout(() => { ok.style.display = 'none'; }, 4000);
-      } catch (ex) {
-        err.textContent = ex.message || 'Could not resend. Try again.';
-        err.style.display = 'block';
-      }
-    }
-  </script>
+  <script src="/js/verify-email.js?v=1"></script>
 </body>
 </html>
