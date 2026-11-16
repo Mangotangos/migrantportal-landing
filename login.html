@@ -12,8 +12,7 @@
   <meta name="theme-color" content="#0D7A8A" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --teal:#007C84; --orange:#D13A06; --navy:#172936; --text:#0D0D0D; --gray-600:#555; --gray-400:#6b6b6b; --gray-200:#E8E8E8; --gray-100:#F4F4F4; }
@@ -60,16 +59,7 @@
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
   .skip-link:focus { top: 0; }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="js/mp-error-log.js?v=1"></script>
   <meta property="og:title" content="Sign In | MigrantPortal" />
   <meta property="og:description" content="Log in to MigrantPortal to continue connecting migrants with local help." />
   <meta property="og:url" content="https://migrantportal.com/login" />
@@ -102,7 +92,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
       <div class="error" id="errorBox"></div>
 
-      <form onsubmit="handleLogin(event)">
+      <form id="loginForm">
         <div class="form-group">
           <label for="email">Email address</label>
           <input type="email" id="email" placeholder="you@example.com" required autocomplete="email" />
@@ -111,7 +101,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           <label for="password">Password</label>
           <div class="pw-wrap">
             <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
-            <button type="button" class="pw-toggle" onclick="togglePw()">Show</button>
+            <button type="button" class="pw-toggle" id="pwToggle">Show</button>
           </div>
           <a href="forgot-password" class="forgot">Forgot password?</a>
         </div>
@@ -124,100 +114,9 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
   </div>
 
   <script src="api.js?v=2"></script>
-  <script>
-    // Validates ?next= against an internal-path allowlist pattern to prevent open redirects,
-    // and strips a trailing .html left over from the old static-site routes.
-    function getSafeNextPath() {
-      const next = new URLSearchParams(window.location.search).get('next');
-      if (!next) return null;
-      const stripped = next.replace(/\.html$/i, '');
-      // Plain page slug, or a single need link (need?id=<uuid>) so shared links survive sign-in.
-      return /^([a-z0-9-]+|need\?id=[0-9a-f-]{36})$/i.test(stripped) ? stripped : null;
-    }
-
-    // Org-linked responders land on the org dashboard, not the individual one
-    function homeFor(user) {
-      if (user?.role === 'admin') return 'admin';
-      if (user?.role === 'responder' && user?.org_id) return 'org-dashboard';
-      return 'dashboard';
-    }
-
-    // Redirect if already logged in — role-aware
-    const _existingUser = localStorage.getItem('mp_user');
-    if (_existingUser) {
-      try {
-        window.location.href = getSafeNextPath() || homeFor(JSON.parse(_existingUser));
-      } catch (_) {
-        window.location.href = getSafeNextPath() || 'dashboard';
-      }
-    }
-
-    // BUG-014: Prevent auto-submit when browser fills saved credentials
-    // Also clear autofilled email to avoid leaking a different account's address
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.querySelector('form');
-      if (form) {
-        form.addEventListener('submit', function(e) {
-          // Only allow submission triggered by explicit user action (click/keyboard)
-          if (!e.isTrusted) { e.preventDefault(); }
-        });
-      }
-      setTimeout(function() {
-        const emailEl = document.getElementById('email');
-        if (emailEl) emailEl.value = '';
-      }, 50);
-    });
-
-    function togglePw() {
-      const inp = document.getElementById('password');
-      const btn = inp.nextElementSibling;
-      inp.type = inp.type === 'password' ? 'text' : 'password';
-      btn.textContent = inp.type === 'password' ? 'Show' : 'Hide';
-    }
-
-    async function handleLogin(e) {
-      e.preventDefault();
-      const btn = document.getElementById('loginBtn');
-      const err = document.getElementById('errorBox');
-      err.style.display = 'none';
-      btn.disabled = true;
-      btn.innerHTML = '<div class="spinner"></div> Signing in…';
-
-      try {
-        const data = await apiPost('/auth/login', {
-          email: document.getElementById('email').value.trim(),
-          password: document.getElementById('password').value
-        });
-        saveSession(data.access_token, data.user);
-        try { localStorage.removeItem('mp_lang'); } catch(_) {}
-        window.location.href = getSafeNextPath() || homeFor(data.user);
-      } catch (ex) {
-        const msg = ex.message || '';
-        if (msg.startsWith('PENDING:')) {
-          err.style.background = '#FFFBEB'; err.style.borderColor = '#FDE68A'; err.style.color = '#92400E';
-          err.textContent = '⏳ Your account is awaiting admin approval. You\'ll be notified once approved (1–2 business days).';
-        } else if (msg.startsWith('REJECTED:')) {
-          const reason = msg.replace('REJECTED:', '').trim();
-          err.textContent = '❌ Your account was not approved.' + (reason ? ' Reason: ' + reason : ' Please contact support.');
-        } else if (msg.startsWith('SUSPENDED:')) {
-          err.textContent = '🚫 Your account has been suspended. Please contact support.';
-        } else {
-          err.textContent = msg || 'Sign in failed. Please try again.';
-        }
-        err.style.display = 'block';
-        btn.disabled = false;
-        btn.innerHTML = 'Sign In';
-      }
-    }
-  </script>
+  <script src="js/login.js?v=1"></script>
 <script src="i18n.js?v=20261115" defer></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/sw.js').catch(function () {});
-    });
-  }
-</script>
+<script src="js/sw-register.js?v=1"></script>
 <style>
   .mp-app-footer{background:#0d7a8a;color:#fff;text-align:center;padding:20px 16px;font-size:13px;line-height:1.8}
   .mp-app-footer a{color:#fff;text-decoration:underline;margin:0 8px}

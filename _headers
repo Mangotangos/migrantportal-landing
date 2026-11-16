@@ -27,3 +27,10 @@
 
 /*.webp
   Cache-Control: public, max-age=31536000, immutable
+
+# Stricter script policy for pages converted off inline scripts (design note: migrantportal-e2e/docs/csp-design.md).
+# A second Content-Security-Policy is enforced in addition to the /* one, so both must allow a script.
+/login
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/login.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
