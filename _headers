@@ -111,13 +111,13 @@
 /responder-dashboard.html
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /
-  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com https://www.googletagmanager.com; script-src-attr 'none'
 /index.html
-  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com https://www.googletagmanager.com; script-src-attr 'none'
 /contact
-  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com https://www.google.com https://www.gstatic.com; script-src-attr 'none'
 /contact.html
-  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com https://www.google.com https://www.gstatic.com; script-src-attr 'none'
 /faq
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /faq.html
