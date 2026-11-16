@@ -20,6 +20,8 @@
     hide: function () { const t = document.getElementById(this.dataset.target); if (t) t.style.display = 'none'; },
     scrollTo: function () { const t = document.getElementById(this.dataset.target); if (t) t.scrollIntoView({ behavior: 'smooth' }); },
     stop: function (event) { event.stopPropagation(); },
+    // data-args='[event, "registeredName"]': run registeredName only when the backdrop (this) itself was clicked.
+    overlay: function (event, name) { if (event.target === this && registry[name]) registry[name](); },
   });
 
   // Lets tests (and the console) check that markup names a registered action; a typo would otherwise be a silent no-op.

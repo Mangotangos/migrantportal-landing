@@ -162,3 +162,7 @@
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /register.html
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/admin
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/admin.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
