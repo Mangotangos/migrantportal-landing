@@ -1,0 +1,1 @@
+function _mpToast(msg,err=false){const t=document.getElementById('_mpToast');if(!t)return;t.textContent=msg;t.style.background=err?'linear-gradient(135deg,#F85149,#d93f3a)':'linear-gradient(135deg,#2D3748,#1A202C)';t.style.display='block';clearTimeout(t._to);t._to=setTimeout(()=>{t.style.display='none';},3500);}

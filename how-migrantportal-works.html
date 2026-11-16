@@ -34,8 +34,7 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -312,16 +311,7 @@
     @media (max-width: 800px) {
     }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="/js/index-2.js?v=1"></script>
   <style>
     /* ─── SYNCED FOOTER (from homepage) ───────────── */
     @media (max-width: 800px) {
@@ -353,7 +343,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <nav class="mpnav" aria-label="Main navigation">
   <a href="/" class="mpnav-logo"><img src="logo.png" alt="" /><span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span></a>
   <div class="mpnav-links"><a href="/">Home</a><a href="/how-migrantportal-works" class="active" aria-current="page">How It Works</a><a href="/vision">Our Vision</a><a href="/find-help">Find Help</a><a href="/requests">Browse Requests</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></div>
-  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Sign In</a><button class="hamburger" aria-label="Open menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Sign In</a><button class="hamburger" aria-label="Open menu" data-nav="toggle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button></div>
 </nav>
@@ -361,16 +351,16 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <div class="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <div class="mobile-nav-header">
       <span style="font-family:Montserrat,sans-serif;font-weight:800;font-size:18px;"><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
-      <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close menu">×</button>
+      <button class="mobile-close" data-nav="close" aria-label="Close menu">×</button>
     </div>
-    <a href="/" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
-    <a href="/how-migrantportal-works" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
-    <a href="/vision" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Our Vision</a>
-    <a href="/find-help" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Find Help</a>
-    <a href="/requests" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Browse Requests</a>
-    <a href="/faq" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">FAQ</a>
-    <a href="/contact" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
-    <a href="/login" class="mobile-cta" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Sign In</a>
+    <a href="/" class="mobile-link" data-nav="close">Home</a>
+    <a href="/how-migrantportal-works" class="mobile-link" data-nav="close">How It Works</a>
+    <a href="/vision" class="mobile-link" data-nav="close">Our Vision</a>
+    <a href="/find-help" class="mobile-link" data-nav="close">Find Help</a>
+    <a href="/requests" class="mobile-link" data-nav="close">Browse Requests</a>
+    <a href="/faq" class="mobile-link" data-nav="close">FAQ</a>
+    <a href="/contact" class="mobile-link" data-nav="close">Contact</a>
+    <a href="/login" class="mobile-cta" data-nav="close">Sign In</a>
   </div>
 
   <main id="main-content">
@@ -406,7 +396,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
         <div class="step-body" id="body1">
           Every community has churches, nonprofits, and community centers that walk alongside migrants and their families daily. These navigators have first-hand knowledge of the critical and urgent needs that stand between a family and stability — from school enrollment to housing to basic necessities. MigrantPortal gives them a trusted channel to act on what they see.
         </div>
-        <button class="read-more" id="btn1" onclick="toggleStep(1)">
+        <button class="read-more" id="btn1">
           Read more <span class="arrow">▾</span>
         </button>
       </div>
@@ -426,7 +416,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
         <div class="step-body" id="body2">
           Navigators, the faith communities and nonprofits who know the family personally, verify each need before they submit it to MigrantPortal. Then a MigrantPortal administrator reviews the request to make sure it is accurate, legitimate, and genuinely important to the family's wellbeing. Only approved needs are published. This layer of trust protects families and ensures responders can give with confidence. Family privacy is protected throughout.
         </div>
-        <button class="read-more" id="btn2" onclick="toggleStep(2)">
+        <button class="read-more" id="btn2">
           Read more <span class="arrow">▾</span>
         </button>
       </div>
@@ -446,7 +436,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
         <div class="step-body" id="body3">
           Once a need is approved, MigrantPortal notifies faith communities, volunteers, and partner organizations within close proximity. Local faith communities take a leading role in mobilizing their response teams to confirm they can meet the need — whether it's a tangible item, financial support, or relational care. Community organizations and individual donors can also respond, ensuring no need goes unmet due to a lack of resources.
         </div>
-        <button class="read-more" id="btn3" onclick="toggleStep(3)">
+        <button class="read-more" id="btn3">
           Read more <span class="arrow">▾</span>
         </button>
       </div>
@@ -465,7 +455,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
         <div class="step-body" id="body4">
           When a faith community or volunteer offers to meet a need, the organization that submitted it is notified and can chat with the volunteer in the app to arrange the details. Gifts and help go to that organization, which gets them to the family. When the need is met, the organization marks it fulfilled, and the volunteer and the MigrantPortal team are notified. Every met need is a real story of a family receiving dignity, safety, and hope, and the cycle of care continues for the next family in need.
         </div>
-        <button class="read-more" id="btn4" onclick="toggleStep(4)">
+        <button class="read-more" id="btn4">
           Read more <span class="arrow">▾</span>
         </button>
       </div>
@@ -498,31 +488,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
       </div>
     </div>
   </section>
-  <script>
-    (function () {
-      const API_BASE = 'https://migrant-portal-production-3826.up.railway.app';
-      function countUp(el, target, suffix, duration) {
-        const start = performance.now();
-        function step(now) {
-          const t = Math.min((now - start) / duration, 1);
-          const val = Math.floor(t * target);
-          el.textContent = val.toLocaleString() + suffix;
-          if (t < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
-      }
-      fetch(API_BASE + '/impact')
-        .then(r => r.json())
-        .then(d => {
-          const total = (d.total_active || 0) + (d.total_fulfilled || 0);
-          countUp(document.getElementById('stat-needs'), total, '', 1200);
-          countUp(document.getElementById('stat-responders'), d.total_responders || 0, '', 1200);
-          countUp(document.getElementById('stat-families'), d.total_families_helped || 0, '', 1200);
-          countUp(document.getElementById('stat-orgs'), d.total_orgs || 0, '', 1200);
-        })
-        .catch(() => {});
-    })();
-  </script>
+  <script src="/js/how-migrantportal-works.js?v=1"></script>
 
   <!-- ROLES -->
   <section class="roles">
@@ -661,15 +627,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
 
   </footer>
 
-  <script>
-    function toggleStep(n) {
-      const body = document.getElementById('body' + n);
-      const btn  = document.getElementById('btn' + n);
-      const open = body.classList.toggle('open');
-      btn.classList.toggle('open', open);
-      btn.querySelector('.arrow').textContent = open ? '▴' : '▾';
-      btn.childNodes[0].textContent = open ? 'Read less ' : 'Read more ';
-    }
-  </script>
+  <script src="/js/how-migrantportal-works-2.js?v=1"></script>
+<script src="/js/mp-nav.js?v=1"></script>
 </body>
 </html>

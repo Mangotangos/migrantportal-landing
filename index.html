@@ -5,12 +5,7 @@
   <meta name="google-site-verification" content="PFiNyJwQDA-gE7c2KtQl8gmwQtY122scMSG1IMY5bSw" />
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBSGKX340V"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-VBSGKX340V');
-  </script>
+  <script src="/js/index.js?v=1"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Help for Migrants in Kansas City | MigrantPortal</title>
   <meta name="description" content="Migrants in Kansas City: get help with housing, food, rides and more from local churches and volunteers. Submit a need, find help nearby, or volunteer. Free, in English and Spanish." />
@@ -76,8 +71,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     @media (prefers-reduced-motion: reduce) {
@@ -688,16 +682,7 @@
     .badge-coming { background: var(--gray-100); color: var(--gray-500); border: 1.5px solid var(--gray-200); }
     .badge-coming .badge-store { font-size: 14px; }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="/js/index-2.js?v=1"></script>
   <link rel="stylesheet" href="/footer.css?v=3" />
 </head>
 <body>
@@ -722,7 +707,7 @@
     </div>
     <div class="nav-right">
       <a href="login" class="nav-signup">Sign In</a>
-      <button class="hamburger" aria-label="Open menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+      <button class="hamburger" aria-label="Open menu" data-nav="toggle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
@@ -732,15 +717,15 @@
   <div class="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <div class="mobile-nav-header">
       <span class="nav-logo" style="font-family:Montserrat,sans-serif;font-weight:800;"><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
-      <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close menu">×</button>
+      <button class="mobile-close" data-nav="close" aria-label="Close menu">×</button>
     </div>
-    <a href="/" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
-    <a href="/how-migrantportal-works" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
-    <a href="/vision" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Our Vision</a>
-    <a href="/requests" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Browse Requests</a>
-    <a href="/faq" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">FAQ</a>
-    <a href="/contact" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
-    <a href="/login" class="mobile-cta" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Sign In</a>
+    <a href="/" class="mobile-link" data-nav="close">Home</a>
+    <a href="/how-migrantportal-works" class="mobile-link" data-nav="close">How It Works</a>
+    <a href="/vision" class="mobile-link" data-nav="close">Our Vision</a>
+    <a href="/requests" class="mobile-link" data-nav="close">Browse Requests</a>
+    <a href="/faq" class="mobile-link" data-nav="close">FAQ</a>
+    <a href="/contact" class="mobile-link" data-nav="close">Contact</a>
+    <a href="/login" class="mobile-cta" data-nav="close">Sign In</a>
   </div>
 
   <main id="main-content">
@@ -1022,7 +1007,7 @@
         <p>Real stories of impact and new ways to meet needs, sent monthly.</p>
       </div>
       <div class="newsletter-form">
-        <form id="eo-subscribe-form" onsubmit="eoSubscribe(event)">
+        <form id="eo-subscribe-form">
           <label for="eo-email" class="sr-only">Email address</label>
           <input type="email" id="eo-email" placeholder="Email address" required />
           <input type="text" name="hp_name" tabindex="-1" aria-hidden="true" style="display:none" />
@@ -1030,43 +1015,7 @@
           <p id="eo-msg" style="font-size:13px;margin-top:4px;display:none;flex-basis:100%;"></p>
         </form>
         <p class="newsletter-note">🔒 No spam. Unsubscribe anytime.</p>
-        <script>
-          async function eoSubscribe(e) {
-            e.preventDefault();
-            if (e.target.querySelector('[name="hp_name"]').value) return;
-            const email = document.getElementById('eo-email').value;
-            const btn = document.getElementById('eo-btn');
-            const msg = document.getElementById('eo-msg');
-            msg.style.display = 'block';
-            if (!navigator.onLine) {
-              msg.style.color = '#f9a8a8';
-              msg.textContent = 'Network error. Please try again.';
-              return;
-            }
-            btn.disabled = true; btn.textContent = 'Subscribing…';
-            try {
-              const fd = new FormData();
-              fd.set('field_0', email);
-              fd.set('hpc4b27b6e-eb38-11e9-be00-06b4694bee2a', '');
-              const r = await fetch('https://eomail5.com/form/2e646492-2bee-11f1-bc0c-4794b1b22e22', {
-                method: 'POST', mode: 'cors', cache: 'no-cache', body: fd
-              });
-              const data = await r.json().catch(() => ({}));
-              if (data.success) {
-                msg.style.color = '#90e0c8';
-                msg.textContent = 'Thanks for subscribing!';
-                document.getElementById('eo-email').value = '';
-              } else {
-                msg.style.color = '#f9a8a8';
-                msg.textContent = 'Something went wrong. Please try again.';
-              }
-            } catch (_) {
-              msg.style.color = '#f9a8a8';
-              msg.textContent = 'Network error. Please try again.';
-            }
-            btn.disabled = false; btn.textContent = 'Subscribe';
-          }
-        </script>
+        <script src="/js/index-3.js?v=1"></script>
       </div>
     </div>
   </section>
@@ -1167,48 +1116,11 @@
 
   </footer>
 
-  <script>
-    (function(){
-      const API = 'https://migrant-portal-production-3826.up.railway.app/impact';
-      function animateCount(el, target) {
-        if (!el || isNaN(target)) return;
-        var start = 0, duration = 1200, step = Math.ceil(target / 60);
-        var timer = setInterval(function(){
-          start += step;
-          if (start >= target) { start = target; clearInterval(timer); }
-          el.textContent = start.toLocaleString();
-        }, duration / 60);
-      }
-      fetch(API)
-        .then(function(r){ return r.ok ? r.json() : null; })
-        .then(function(d){
-          if (!d) return;
-          var totalNeeds = (d.total_active || 0) + (d.total_fulfilled || 0);
-          animateCount(document.getElementById('stat-needs'),      totalNeeds);
-          animateCount(document.getElementById('stat-responses'),  d.total_responders      || 0);
-          var famVal = d.total_families_helped || 0;
-          var famCard = document.getElementById('stat-families');
-          if (famVal > 0) { animateCount(famCard, famVal); }
-          else if (famCard && famCard.closest) { famCard.closest('.live-stat-card').style.display = 'none'; }
-          animateCount(document.getElementById('stat-orgs'),       d.total_orgs            || 0);
-        })
-        .catch(function(){
-          ['stat-needs','stat-responses','stat-families','stat-orgs'].forEach(function(id){
-            var el = document.getElementById(id);
-            if (el) el.textContent = '—';
-          });
-        });
-    })();
-  </script>
+  <script src="/js/index-4.js?v=1"></script>
 
 
   <script src="i18n.js?v=20261115" defer></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').catch(function () {});
-      });
-    }
-  </script>
+  <script src="/js/index-5.js?v=1"></script>
+<script src="/js/mp-nav.js?v=1"></script>
 </body>
 </html>

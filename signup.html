@@ -17,8 +17,7 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -165,16 +164,7 @@
     .skip-link { position: absolute; top: -40px; left: 0; background: #000; color: #fff; padding: 8px 16px; font-size: 14px; font-weight: 600; z-index: 9999; text-decoration: none; border-radius: 0 0 4px 0; }
   .skip-link:focus { top: 0; }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="/js/index-2.js?v=1"></script>
   <style>
     /* ─── SYNCED FOOTER (from homepage) ───────────── */
     @media (max-width: 800px) {
@@ -207,7 +197,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <nav class="mpnav" aria-label="Main navigation">
   <a href="/" class="mpnav-logo"><img src="logo.png" alt="" /><span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span></a>
   <div class="mpnav-links"><a href="/">Home</a><a href="/how-migrantportal-works">How It Works</a><a href="/vision">Our Vision</a><a href="/find-help">Find Help</a><a href="/requests">Browse Requests</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></div>
-  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Sign In</a><button class="hamburger" aria-label="Open menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Sign In</a><button class="hamburger" aria-label="Open menu" data-nav="toggle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button></div>
 </nav>
@@ -216,15 +206,15 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <div class="mobile-nav" role="dialog" aria-modal="true">
     <div class="mobile-nav-header">
       <span style="font-family:Montserrat,sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.3px;"><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
-      <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close">×</button>
+      <button class="mobile-close" data-nav="close" aria-label="Close">×</button>
     </div>
-    <a href="/" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
-    <a href="/how-migrantportal-works" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
-    <a href="/vision" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Our Vision</a>
-    <a href="/find-help" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Find Help</a>
-    <a href="/requests" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Browse Requests</a>
-    <a href="/faq" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">FAQ</a>
-    <a href="/contact" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
+    <a href="/" class="mobile-link" data-nav="close">Home</a>
+    <a href="/how-migrantportal-works" class="mobile-link" data-nav="close">How It Works</a>
+    <a href="/vision" class="mobile-link" data-nav="close">Our Vision</a>
+    <a href="/find-help" class="mobile-link" data-nav="close">Find Help</a>
+    <a href="/requests" class="mobile-link" data-nav="close">Browse Requests</a>
+    <a href="/faq" class="mobile-link" data-nav="close">FAQ</a>
+    <a href="/contact" class="mobile-link" data-nav="close">Contact</a>
     <a href="/login" class="mobile-cta">Sign In</a>
   </div>
 
@@ -353,5 +343,6 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
 
   </footer>
 
+<script src="/js/mp-nav.js?v=1"></script>
 </body>
 </html>

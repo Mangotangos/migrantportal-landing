@@ -19,8 +19,7 @@
   <meta property="og:image" content="https://migrantportal.com/community.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /><script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -239,7 +238,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <nav class="mpnav" aria-label="Main navigation">
   <a href="/" class="mpnav-logo"><img src="logo.png" alt="" /><span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span></a>
   <div class="mpnav-links"><a href="/">Home</a><a href="/how-migrantportal-works">How It Works</a><a href="/vision">Our Vision</a><a href="/find-help">Find Help</a><a href="/requests">Browse Requests</a><a href="/faq">FAQ</a><a href="/contact" class="active" aria-current="page">Contact</a></div>
-  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Sign In</a><button class="hamburger" aria-label="Open menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Sign In</a><button class="hamburger" aria-label="Open menu" data-nav="toggle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button></div>
 </nav>
@@ -247,15 +246,15 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <div class="mobile-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <div class="mobile-nav-header">
       <span style="font-family:Montserrat,sans-serif;font-weight:800;font-size:18px;"><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span>
-      <button class="mobile-close" onclick="document.querySelector('.mobile-nav').classList.remove('open')" aria-label="Close menu">×</button>
+      <button class="mobile-close" data-nav="close" aria-label="Close menu">×</button>
     </div>
-    <a href="/" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Home</a>
-    <a href="/how-migrantportal-works" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">How It Works</a>
-    <a href="/vision" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Our Vision</a>
-    <a href="/requests" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Browse Requests</a>
-    <a href="/faq" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">FAQ</a>
-    <a href="/contact" class="mobile-link" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Contact</a>
-    <a href="/login" class="mobile-cta" onclick="document.querySelector('.mobile-nav').classList.remove('open')">Sign In</a>
+    <a href="/" class="mobile-link" data-nav="close">Home</a>
+    <a href="/how-migrantportal-works" class="mobile-link" data-nav="close">How It Works</a>
+    <a href="/vision" class="mobile-link" data-nav="close">Our Vision</a>
+    <a href="/requests" class="mobile-link" data-nav="close">Browse Requests</a>
+    <a href="/faq" class="mobile-link" data-nav="close">FAQ</a>
+    <a href="/contact" class="mobile-link" data-nav="close">Contact</a>
+    <a href="/login" class="mobile-cta" data-nav="close">Sign In</a>
   </div>
 
   <!-- HERO -->
@@ -471,89 +470,11 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
 
   </footer>
 
-  <script>
-    (function() {
-      const form = document.getElementById('contactForm');
-      const btn = document.getElementById('submitBtn');
-      const successMsg = document.getElementById('successMsg');
-      const formLoadTime = Date.now();
-      let lastSubmitTime = 0;
-
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        // 1. Honeypot check — bots fill this field
-        if (document.getElementById('website').value !== '') return;
-
-        // 2. Timing check — reject if submitted in < 3 seconds (bot speed)
-        if (Date.now() - formLoadTime < 3000) {
-          _mpToast('Please take a moment to fill out the form.', true);
-          return;
-        }
-
-        // 3. Rate limit — 60 second cooldown between submissions
-        if (lastSubmitTime && Date.now() - lastSubmitTime < 60000) {
-          _mpToast('Please wait a moment before sending another message.', true);
-          return;
-        }
-
-        const firstName = document.getElementById('firstName').value.trim();
-        const lastName = document.getElementById('lastName').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const subject = document.getElementById('subject').value;
-        const message = document.getElementById('message').value.trim();
-
-        if (!firstName || !lastName || !email || !subject || !message) {
-          _mpToast('Please fill in all required fields.', true);
-          return;
-        }
-
-        // 4. reCAPTCHA token check
-        const captchaToken = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
-        if (!captchaToken) {
-          _mpToast('Please complete the CAPTCHA verification.', true);
-          return;
-        }
-
-        btn.disabled = true;
-        btn.textContent = 'Sending…';
-        lastSubmitTime = Date.now();
-
-        try {
-          const res = await fetch('https://migrant-portal-production-3826.up.railway.app/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ firstName, lastName, email, subject, message, captchaToken })
-          });
-
-          if (res.ok) {
-            form.style.display = 'none';
-            successMsg.classList.add('visible');
-          } else {
-            throw new Error('Server error');
-          }
-        } catch (_) {
-          // Fallback: open mailto
-          const body = encodeURIComponent(`Name: ${firstName} ${lastName}\nEmail: ${email}\nSubject: ${subject}\n\n${message}`);
-          window.location.href = `mailto:support@migrantportal.com?subject=${encodeURIComponent(subject)}&body=${body}`;
-          btn.disabled = false;
-          btn.textContent = 'Send Message';
-          if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
-        }
-      });
-    })();
-  </script>
-  <script>
-  function _mpToast(msg,err=false){const t=document.getElementById('_mpToast');if(!t)return;t.textContent=msg;t.style.background=err?'linear-gradient(135deg,#F85149,#d93f3a)':'linear-gradient(135deg,#2D3748,#1A202C)';t.style.display='block';clearTimeout(t._to);t._to=setTimeout(()=>{t.style.display='none';},3500);}
-  </script>
+  <script src="/js/contact.js?v=1"></script>
+  <script src="/js/contact-2.js?v=1"></script>
 
 <script src="i18n.js?v=20261115" defer></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/sw.js').catch(function () {});
-    });
-  }
-</script>
+<script src="/js/index-5.js?v=1"></script>
+<script src="/js/mp-nav.js?v=1"></script>
 </body>
 </html>
