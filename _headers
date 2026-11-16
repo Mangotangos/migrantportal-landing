@@ -130,3 +130,23 @@
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /signup.html
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/submit-need
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/submit-need.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/profile
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/profile.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/shifts
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/shifts.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/navigator
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/navigator.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/offline
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/offline.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
