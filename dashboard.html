@@ -6,22 +6,7 @@
   <meta name="robots" content="noindex" />
   <title>Dashboard | MigrantPortal</title>
   <link rel="icon" type="image/png" href="logo.png" />
-  <script>
-    // /dashboard is only a router: the role dashboards hold the real UI.
-    (function () {
-      var user = null;
-      try { user = JSON.parse(localStorage.getItem('mp_user')); } catch (_) { /* treated as signed out */ }
-
-      var target = '/login';
-      if (user) {
-        if (user.role === 'admin') target = '/admin';
-        else if (user.role === 'responder') target = user.org_id ? '/org-dashboard' : '/responder-dashboard';
-        else if (user.role === 'navigator' || user.role === 'connector') target = '/navigator-dashboard';
-        else localStorage.removeItem('mp_user'); // unknown role: sign out so login does not bounce back here
-      }
-      window.location.replace(target);
-    })();
-  </script>
+  <script src="/js/dashboard.js?v=1"></script>
 </head>
 <body>
   <noscript><p><a href="/login">Continue to MigrantPortal</a></p></noscript>

@@ -1,0 +1,129 @@
+let user = requireDashboardRole(u => u.role === 'responder') || {};
+const typeLabel = t => t ? ' · ' + cap(t) : '';
+let nearby = [], responded = [], bookmarked = [], submitted = [], families = [];
+let radius = DEFAULT_RADIUS_MI, hasOrigin = false;
+
+// Gate on the flag, not the role: submit/families/submitted only for can_submit_needs.
+const canSubmit = () => user.can_submit_needs === true;
+
+function mount() {
+  const items = [
+    { id: 'overview', icon: 'dash', label: 'Dashboard' },
+    { id: 'near', icon: 'pin', label: 'Needs Near You', badgeId: 'nearBadge' },
+    { id: 'responses', icon: 'chat', label: 'My Responses' },
+  ];
+  if (canSubmit()) items.push({ id: 'families', icon: 'families', label: 'Families' }, { id: 'submitted', icon: 'needs', label: 'My Submitted Needs' });
+  items.push({ href: 'shifts', icon: 'calendar', label: 'Shifts' }, { href: 'donate', icon: 'heart', label: 'Donations' });
+  const mobile = [
+    { id: 'overview', icon: 'dash', label: 'Overview' },
+    { id: 'near', icon: 'pin', label: 'Near You' },
+    { id: 'responses', icon: 'chat', label: 'Responses' },
+    canSubmit() ? { id: 'submitted', icon: 'needs', label: 'Submitted' } : { href: 'requests', icon: 'search', label: 'Browse' },
+    { href: 'profile', icon: 'user', label: 'Profile' },
+  ];
+  const role = 'Responder' + typeLabel(user.responder_type) + (canSubmit() ? ' · can submit' : '');
+  mountShell(user, { icon: '🤝', roleLabel: role, items, mobile });
+  document.getElementById('headerActions').innerHTML =
+    `<button class="btn-outline" data-href="requests">Browse All Needs</button>` +
+    (canSubmit() ? `<button class="btn-outline" data-href="submit-need">+ Submit a Need</button>` : '') +
+    `<button class="btn-primary" data-action="section" data-arg="near">Help a Family Nearby</button>`;
+}
+
+const respStatus = n => {
+  if (n.status === 'fulfilled') return '<span class="badge badge-done">Fulfilled</span>';
+  if (n.my_response_status === 'completed') return '<span class="badge badge-done">Done, awaiting navigator</span>';
+  if (n.my_response_status === 'in_progress') return '<span class="badge badge-medium">In progress</span>';
+  return '<span class="badge badge-open">Offered</span>';
+};
+
+const nearRow = n => `<tr><td>${needLink(n)}</td><td>${fmtMiles(n.distance)}</td><td>${urgencyBadge(n.urgency)}</td><td class="hide-sm">${catLabel(n.category)}</td><td><a class="act-link" href="need?id=${esc(n.id)}">Respond →</a></td></tr>`;
+const respRow = n => `<tr><td>${needLink(n)}</td><td class="hide-sm">${esc(fmtLoc(n))}</td><td>${respStatus(n)}</td></tr>`;
+
+const hasLocation = () => !!(user.city && user.state);
+const NEAR_EMPTY = () => hasLocation()
+  ? emptyCard('No open needs near you yet', `We will notify you within ${radius} miles when a family needs help. <a href="profile">Change the distance in your profile</a>.`)
+  : emptyCard('Add your city so we can find needs near you', 'We need your city and state to match you with families nearby and to notify you. <a href="profile">Set my location →</a>');
+const RESP_EMPTY = emptyCard('No responses yet', 'Offers you make show up here so you can follow them to the end.');
+
+function renderStats() {
+  document.getElementById('statsGrid').innerHTML =
+    statCard('Open Near You', 'statNear', !hasLocation() ? 'Set your location' : hasOrigin ? `Within ${radius} mi` : 'In your state', nearby.length ? 'up' : '') +
+    statCard('My Responses', 'statResp', 'All time') +
+    statCard('Fulfilled', 'statFul', 'Families helped') +
+    statCard('Saved', 'statSaved', 'Bookmarked needs');
+  document.getElementById('statNear').textContent = nearby.length;
+  document.getElementById('statResp').textContent = responded.length;
+  document.getElementById('statFul').textContent = responded.filter(n => n.status === 'fulfilled').length;
+  document.getElementById('statSaved').textContent = bookmarked.length;
+  setBadge('nearBadge', nearby.length);
+}
+
+function renderNeeds() {
+  const nearHead = ['Need', 'Distance', 'Urgency', '~Category', ''];
+  const nearTable = rows => rows.length ? tableCard(nearHead, rows.map(nearRow).join('')) : NEAR_EMPTY();
+  document.getElementById('nearSlot').innerHTML = sectionRow('Needs Near You', '<a class="see-all" href="#" data-action="section" data-arg="near">See all →</a>') + nearTable(nearby.slice(0, NEARBY_MAX_ROWS));
+  document.getElementById('nearFullSlot').innerHTML = nearTable(nearby);
+  document.getElementById('nearSub').textContent = !hasLocation() ? 'Add your city in your profile to see needs near you' : hasOrigin ? `Open needs within ${radius} miles of ${fmtLoc(user)}` : 'Open needs in your state';
+  const respHead = ['Need', '~Location', 'My offer'];
+  const respTable = rows => rows.length ? tableCard(respHead, rows.map(respRow).join('')) : RESP_EMPTY;
+  document.getElementById('respSlot').innerHTML = sectionRow('My Responses', '<a class="see-all" href="#" data-action="section" data-arg="responses">See all →</a>') + respTable(responded.slice(0, 5));
+  document.getElementById('respFullSlot').innerHTML = respTable(responded);
+}
+
+function renderNudge() {
+  document.getElementById('nudgeSlot').innerHTML = responded.length ? '' : nudgeCard('nudge',
+    "You haven't responded to a need yet",
+    'As soon as a family near you needs help, you will see it here and get a notification.',
+    `<button class="btn-outline" data-href="profile">Set My Location</button><button class="btn-primary" data-href="requests">Browse All Needs</button>`);
+  if (!responded.length) document.getElementById('nudge').style.display = 'flex';
+}
+
+function renderActivity() {
+  const items = [];
+  nearby.slice(0, 3).forEach(n => items.push([n.created_at, feedItem('📍', `New need posted${n.distance == null ? '' : ` <b>${fmtMiles(n.distance)}</b> from you`}: <a href="need?id=${esc(n.id)}" style="font-weight:600">${esc(n.title)}</a>`, n.created_at ? timeAgo(n.created_at) : '')]));
+  responded.slice(0, 5).forEach(n => items.push([n.created_at, feedItem(n.status === 'fulfilled' ? '✅' : '💬',
+    n.status === 'fulfilled' ? `<b>${esc(n.title)}</b> fulfilled, thank you` : `You offered to help with <b>${esc(n.title)}</b>`, esc(fmtLoc(n)))]));
+  items.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+  renderFeed('activityFeed', items.slice(0, 8).map(x => x[1]).join(''));
+}
+
+function renderSubmitter() {
+  if (!canSubmit()) return;
+  document.getElementById('familiesSlot').innerHTML = families.length
+    ? tableCard(['Family', 'Country', 'Language', 'Household'], families.map(f => `<tr><td><b>${esc(f.name)}</b></td><td>${esc(f.origin_country || '—')}</td><td>${esc(f.language || '—')}</td><td>${f.adults}A ${f.children}C</td></tr>`).join(''))
+    : emptyCard('No families yet', 'Families you add will appear here.');
+  const badge = n => n.status === 'fulfilled' ? '<span class="badge badge-done">Fulfilled</span>'
+    : n.status !== 'active' ? `<span class="badge badge-closed">${esc(cap(n.status))}</span>`
+    : n.response_count ? `<span class="badge badge-open">${n.response_count} responder${n.response_count > 1 ? 's' : ''}</span>` : '<span class="badge badge-wait">Awaiting response</span>';
+  document.getElementById('submittedSlot').innerHTML = submitted.length
+    ? tableCard(['Need', 'Family', 'Urgency', 'Responses', ''], submitted.map(n => `<tr><td>${needLink(n)}</td><td>${esc(n.family_name || '—')}</td><td>${urgencyBadge(n.urgency)}</td><td>${badge(n)}</td><td><a class="act-link" href="need?id=${esc(n.id)}">View →</a></td></tr>`).join(''))
+    : emptyCard('No submitted needs yet', 'Needs you submit will appear here.');
+}
+
+function renderAll() { renderStats(); renderNeeds(); renderNudge(); renderActivity(); renderSubmitter(); }
+
+async function loadData() {
+  mount(); // synchronously, from the cached profile, so the notification bell can dock in the topbar
+  user = await refreshUser();
+  mount(); // again with the fresh profile (can_submit_needs may have changed)
+  const wantSubmit = canSubmit();
+  const [nearRes, respRes, bookRes, subRes, famRes] = await Promise.allSettled([
+    fetchNearbyNeeds(user),
+    apiGet('/needs/responded'),
+    apiGet('/needs/bookmarked'),
+    wantSubmit ? apiGet('/needs/mine') : Promise.resolve([]),
+    wantSubmit ? apiGet('/families/mine') : Promise.resolve([]),
+  ]);
+  const ok = (r, label) => { if (r.status === 'fulfilled') return r.value; console.error(label + ' failed', r.reason); return null; };
+  const near = ok(nearRes, 'nearby');
+  if (near) ({ nearby, radius, hasOrigin } = near); else { radius = user.notification_radius || DEFAULT_RADIUS_MI; showError('Could not load needs near you. Browse all needs instead.'); }
+  responded = ok(respRes, 'responded') || [];
+  bookmarked = ok(bookRes, 'bookmarked') || [];
+  submitted = ok(subRes, 'mine') || [];
+  families = ok(famRes, 'families') || [];
+  // Needs you already offered on, or submitted yourself, are not "near you" opportunities.
+  const taken = new Set([...responded, ...submitted].map(n => n.id));
+  nearby = nearby.filter(n => !taken.has(n.id));
+  renderAll();
+}
+loadData();

@@ -98,3 +98,15 @@
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /org-dashboard.html
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/dashboard
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/dashboard.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/navigator-dashboard
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/navigator-dashboard.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/responder-dashboard
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/responder-dashboard.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'

@@ -91,30 +91,63 @@ function mountShell(user, cfg) {
     <div class="topbar-right">
       <a href="requests" class="nav-link">Browse Needs</a>
       <a href="dashboard" class="nav-link">My Dashboard</a>
-      <button type="button" class="mp-lang-toggle" onclick="toggleDashLang()" aria-label="Cambiar a español">ES</button>
-      <div class="user-chip" onclick="window.location.href='profile'">
+      <button type="button" class="mp-lang-toggle" data-action="toggleLang" aria-label="Cambiar a español">ES</button>
+      <div class="user-chip" data-href="profile">
         <div class="user-avatar">${esc(initials)}</div><span class="user-name">${esc(user.name || user.email || 'User')}</span>
       </div>
     </div>`;
   const item = (i, first) => {
-    const act = i.href ? `window.location.href='${i.href}'` : `showSection('${i.id}', this)`;
+    const nav = i.href ? ` data-href="${esc(i.href)}"` : '';
     const badge = i.badgeId ? `<span class="sidebar-badge" id="${i.badgeId}" style="display:none">0</span>` : '';
-    return `<div class="sidebar-item${first ? ' active' : ''}" data-sec="${i.id || ''}" onclick="${act}"><span class="ico">${dashIcon(i.icon)}</span>${i.label}${badge}</div>`;
+    return `<div class="sidebar-item${first ? ' active' : ''}" data-sec="${i.id || ''}"${nav}><span class="ico">${dashIcon(i.icon)}</span>${i.label}${badge}</div>`;
   };
   document.getElementById('shell-side').innerHTML = `
     <div class="org-chip"><div class="org-icon">${cfg.icon}</div><div><div class="org-name">${esc(user.name || 'My account')}</div><div class="org-role">${esc(cfg.roleLabel)}</div></div></div>
     <div class="sidebar-section"><div class="sidebar-label">Overview</div>${cfg.items.map((i, n) => item(i, n === 0)).join('')}</div>
     <div class="sidebar-section" style="margin-top:16px"><div class="sidebar-label">Support</div>
-      <div class="sidebar-item" onclick="window.location.href='faq'"><span class="ico">${dashIcon('book')}</span>Resources</div>
-      <div class="sidebar-item" onclick="window.location.href='contact'"><span class="ico">${dashIcon('help')}</span>Help &amp; Support</div></div>
+      <div class="sidebar-item" data-href="faq"><span class="ico">${dashIcon('book')}</span>Resources</div>
+      <div class="sidebar-item" data-href="contact"><span class="ico">${dashIcon('help')}</span>Help &amp; Support</div></div>
     <div class="sidebar-section" style="margin-top:16px"><div class="sidebar-label">Account</div>
-      <div class="sidebar-item" onclick="window.location.href='profile'"><span class="ico">${dashIcon('user')}</span>Profile &amp; Settings</div>
-      <div class="sidebar-item" onclick="logout()"><span class="ico">${dashIcon('out')}</span>Sign Out</div></div>`;
+      <div class="sidebar-item" data-href="profile"><span class="ico">${dashIcon('user')}</span>Profile &amp; Settings</div>
+      <div class="sidebar-item" data-action="logout"><span class="ico">${dashIcon('out')}</span>Sign Out</div></div>`;
   document.getElementById('shell-mobile').innerHTML = cfg.mobile.map((i, n) => {
-    const act = i.href ? `window.location.href='${i.href}'` : `showSection('${i.id}', this)`;
-    return `<button class="mob-nav-item${n === 0 ? ' active' : ''}" data-sec="${i.id || ''}" onclick="${act}"><span class="ico">${dashIcon(i.icon)}</span>${i.label}</button>`;
+    const nav = i.href ? ` data-href="${esc(i.href)}"` : '';
+    return `<button class="mob-nav-item${n === 0 ? ' active' : ''}" data-sec="${i.id || ''}"${nav}><span class="ico">${dashIcon(i.icon)}</span>${i.label}</button>`;
   }).join('');
 }
+
+/* ── Delegated actions (replaces inline on* handlers; pages add to MP_ACTIONS) ──────────────────
+   data-href="x"      navigate         data-action="name" [data-arg=...]   MP_ACTIONS[name](el, event)
+   data-sec="id"      showSection(id)  data-input="name"   MP_INPUT[name](value, el, event)
+   data-submit="name" MP_SUBMIT[name](event, el)  (preventDefault is the handler's job, as before) */
+const MP_ACTIONS = {
+  logout: () => logout(),
+  toggleLang: () => toggleDashLang(),
+  goto: el => { window.location.href = el.dataset.arg; },
+  section: el => showSection(el.dataset.arg),
+};
+const MP_INPUT = {};
+const MP_SUBMIT = {};
+document.addEventListener('click', event => {
+  const el = event.target.closest('[data-href], [data-action], [data-sec]');
+  if (!el) return;
+  if (el.dataset.href) { window.location.href = el.dataset.href; return; }
+  if (el.dataset.action) {
+    if (el.tagName === 'A') event.preventDefault();
+    const run = MP_ACTIONS[el.dataset.action];
+    if (run) run(el, event);
+    return;
+  }
+  if (el.dataset.sec) showSection(el.dataset.sec, el);
+});
+document.addEventListener('input', event => {
+  const name = event.target.dataset && event.target.dataset.input;
+  if (name && MP_INPUT[name]) MP_INPUT[name](event.target.value, event.target, event);
+});
+document.addEventListener('submit', event => {
+  const name = event.target.dataset && event.target.dataset.submit;
+  if (name && MP_SUBMIT[name]) MP_SUBMIT[name](event, event.target);
+});
 
 function showSection(id, el) {
   document.querySelectorAll('[id^="sec-"]').forEach(s => { s.style.display = s.id === 'sec-' + id ? '' : 'none'; });
