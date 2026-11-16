@@ -10,8 +10,7 @@
   <meta name="theme-color" content="#0D7A8A" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -363,16 +362,7 @@
   }
   .skip-step:hover { color:var(--gray-600); }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="/js/index-2.js?v=1"></script>
 
 <style id="mp-nav-v2">
 /* NAV v2: floating bar (style only; page keeps its own links) */
@@ -414,7 +404,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
       <!-- PROGRESS ROW -->
       <div class="progress-row">
-        <button class="prog-back hidden" id="prog-back-btn" onclick="goBack()" aria-label="Previous step">
+        <button class="prog-back hidden" id="prog-back-btn" data-action="goBack" aria-label="Previous step">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </button>
         <div class="progress-wrap" id="progress">
@@ -432,28 +422,28 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <p class="step-sub">Your choice shapes how you impact families in your community.</p>
         <p class="step-note">If you are connected with a faith community, we encourage you to choose <strong>Faith Community Member</strong>.</p>
         <div class="cards" id="cards-1">
-          <div class="card" data-val="own" onclick="selectCard('cards-1', this, 'btn-1')">
+          <div class="card" data-val="own" data-action="selectCard" data-args="[&quot;cards-1&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-1&quot;]">
             <div class="card-icon">🙋</div>
             <div class="card-body">
               <div class="card-title">Individual Helper</div>
               <div class="card-desc">I want to volunteer, donate, or offer my skills to families in need.</div>
             </div>
           </div>
-          <div class="card" data-val="church" onclick="selectCard('cards-1', this, 'btn-1')">
+          <div class="card" data-val="church" data-action="selectCard" data-args="[&quot;cards-1&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-1&quot;]">
             <div class="card-icon">⛪</div>
             <div class="card-body">
               <div class="card-title">Faith Community Member</div>
               <div class="card-desc">I serve through my church or faith organization.</div>
             </div>
           </div>
-          <div class="card" data-val="connector" onclick="selectCard('cards-1', this, 'btn-1')">
+          <div class="card" data-val="connector" data-action="selectCard" data-args="[&quot;cards-1&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-1&quot;]">
             <div class="card-icon">🤝</div>
             <div class="card-body">
               <div class="card-title">Case Worker / Navigator</div>
               <div class="card-desc">I work with migrants and their families, submit needs on their behalf, and track progress.</div>
             </div>
           </div>
-          <div class="card" data-val="navigator" onclick="selectCard('cards-1', this, 'btn-1')">
+          <div class="card" data-val="navigator" data-action="selectCard" data-args="[&quot;cards-1&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-1&quot;]">
             <div class="card-icon">🧭</div>
             <div class="card-body">
               <div class="card-title">Community Navigator</div>
@@ -462,7 +452,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-next" id="btn-1" disabled onclick="goFromStep1()">Next</button>
+          <button class="btn-next" id="btn-1" disabled data-action="goFromStep1">Next</button>
         </div>
       </div>
 
@@ -471,28 +461,28 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <h2 class="step-heading">How will you help?</h2>
         <p class="step-sub" style="text-align:left;margin-bottom:20px;">Select your primary way of contributing to migrants and their families.</p>
         <div class="cards" id="cards-rt">
-          <div class="card" data-val="volunteer" onclick="selectCard('cards-rt', this, 'btn-rt')">
+          <div class="card" data-val="volunteer" data-action="selectCard" data-args="[&quot;cards-rt&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-rt&quot;]">
             <div class="card-icon">❤️</div>
             <div class="card-body">
               <div class="card-title">Volunteer</div>
               <div class="card-desc">Give time and hands-on help to families in your community.</div>
             </div>
           </div>
-          <div class="card" data-val="donor" onclick="selectCard('cards-rt', this, 'btn-rt')">
+          <div class="card" data-val="donor" data-action="selectCard" data-args="[&quot;cards-rt&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-rt&quot;]">
             <div class="card-icon">🎁</div>
             <div class="card-body">
               <div class="card-title">Donor</div>
               <div class="card-desc">Contribute money, goods, or resources to meet specific needs.</div>
             </div>
           </div>
-          <div class="card" data-val="professional" onclick="selectCard('cards-rt', this, 'btn-rt')">
+          <div class="card" data-val="professional" data-action="selectCard" data-args="[&quot;cards-rt&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-rt&quot;]">
             <div class="card-icon">💼</div>
             <div class="card-body">
               <div class="card-title">Professional</div>
               <div class="card-desc">Offer legal, medical, or other skilled services.</div>
             </div>
           </div>
-          <div class="card" data-val="church" onclick="selectCard('cards-rt', this, 'btn-rt')">
+          <div class="card" data-val="church" data-action="selectCard" data-args="[&quot;cards-rt&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-rt&quot;]">
             <div class="card-icon">⛪</div>
             <div class="card-body">
               <div class="card-title">Faith Community / Org</div>
@@ -501,7 +491,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-next" id="btn-rt" disabled onclick="goTo(2)">Next</button>
+          <button class="btn-next" id="btn-rt" disabled data-action="goTo" data-args="[2]">Next</button>
         </div>
       </div>
 
@@ -514,23 +504,23 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           <div class="zip-row">
             <div class="field">
               <label for="loc-zip">ZIP code</label>
-              <input type="text" id="loc-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 66062" oninput="onZipInput(this)" />
+              <input type="text" id="loc-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 66062" data-input="onZipInput" data-args="[{&quot;$&quot;:&quot;this&quot;}]" />
             </div>
-            <button type="button" class="btn-geo" id="btn-geo" onclick="useMyLocation()">&#128205; Use my location</button>
+            <button type="button" class="btn-geo" id="btn-geo" data-action="useMyLocation">&#128205; Use my location</button>
           </div>
         </div>
         <div class="loc-result" id="loc-result" role="status" aria-live="polite"></div>
-        <p class="loc-alt"><button type="button" class="chip-toggle-link" onclick="toggleManualLocation()">Enter city and state instead</button></p>
+        <p class="loc-alt"><button type="button" class="chip-toggle-link" data-action="toggleManualLocation">Enter city and state instead</button></p>
 
         <div id="loc-manual" style="display:none">
           <div class="field-row">
             <div class="field">
               <label for="loc-city">City</label>
-              <input type="text" id="loc-city" autocomplete="address-level2" placeholder="Austin" onchange="lookupCityState()" />
+              <input type="text" id="loc-city" autocomplete="address-level2" placeholder="Austin" data-change="lookupCityState" />
             </div>
             <div class="field" style="max-width:110px">
               <label for="loc-state">State</label>
-              <select id="loc-state" autocomplete="address-level1" onchange="lookupCityState()"></select>
+              <select id="loc-state" autocomplete="address-level1" data-change="lookupCityState"></select>
             </div>
           </div>
         </div>
@@ -538,50 +528,50 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <div class="vuln-heading" style="margin-top:16px">Quick pick</div>
         <p class="vuln-desc" style="margin-bottom:10px">Kansas City area, our launch region.</p>
         <div class="loc-chips" id="loc-chips" style="margin-bottom:8px">
-          <button type="button" class="loc-chip" onclick="pickQuickZip('64106')">Kansas City, MO</button>
-          <button type="button" class="loc-chip" onclick="pickQuickZip('66101')">Kansas City, KS</button>
-          <button type="button" class="loc-chip" onclick="pickQuickZip('66204')">Overland Park, KS</button>
-          <button type="button" class="loc-chip" onclick="pickQuickZip('66061')">Olathe, KS</button>
-          <button type="button" class="loc-chip" onclick="pickQuickZip('64050')">Independence, MO</button>
+          <button type="button" class="loc-chip" data-action="pickQuickZip" data-args="[&quot;64106&quot;]">Kansas City, MO</button>
+          <button type="button" class="loc-chip" data-action="pickQuickZip" data-args="[&quot;66101&quot;]">Kansas City, KS</button>
+          <button type="button" class="loc-chip" data-action="pickQuickZip" data-args="[&quot;66204&quot;]">Overland Park, KS</button>
+          <button type="button" class="loc-chip" data-action="pickQuickZip" data-args="[&quot;66061&quot;]">Olathe, KS</button>
+          <button type="button" class="loc-chip" data-action="pickQuickZip" data-args="[&quot;64050&quot;]">Independence, MO</button>
         </div>
 
         <!-- Responder-only: radius + category -->
         <div id="responder-only-sections" style="display:none">
           <div class="section-label">Notify me about needs within...</div>
           <div class="radius-pills">
-            <button class="radius-pill" onclick="selectRadius(this, 25)">25 mi</button>
-            <button class="radius-pill selected" onclick="selectRadius(this, 50)">50 mi</button>
-            <button class="radius-pill" onclick="selectRadius(this, 200)">200 mi</button>
-            <button class="radius-pill" onclick="selectRadius(this, null)">Any distance</button>
+            <button class="radius-pill" data-action="selectRadius" data-args="[{&quot;$&quot;:&quot;this&quot;},25]">25 mi</button>
+            <button class="radius-pill selected" data-action="selectRadius" data-args="[{&quot;$&quot;:&quot;this&quot;},50]">50 mi</button>
+            <button class="radius-pill" data-action="selectRadius" data-args="[{&quot;$&quot;:&quot;this&quot;},200]">200 mi</button>
+            <button class="radius-pill" data-action="selectRadius" data-args="[{&quot;$&quot;:&quot;this&quot;},null]">Any distance</button>
           </div>
 
           <div id="need-types-block">
           <div class="section-label">What types of needs can you help with?</div>
           <p class="need-hint">Choose at least one. You'll only be notified about these.</p>
           <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
-            <button class="chip-toggle-link" id="needs-toggle" onclick="toggleAllNeeds(this)">Select All</button>
+            <button class="chip-toggle-link" id="needs-toggle" data-action="toggleAllNeeds" data-args="[{&quot;$&quot;:&quot;this&quot;}]">Select All</button>
           </div>
           <div class="need-chips" id="need-chips">
-            <button class="need-chip" data-cat="housing" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Housing</button>
-            <button class="need-chip" data-cat="food" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>Food</button>
-            <button class="need-chip" data-cat="clothing" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>Clothing</button>
-            <button class="need-chip" data-cat="furniture" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z"/><path d="M4 18v2"/><path d="M20 18v2"/></svg>Furniture</button>
-            <button class="need-chip" data-cat="transportation" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>Transportation</button>
-            <button class="need-chip" data-cat="employment" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Employment</button>
-            <button class="need-chip" data-cat="legal" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>Legal Aid</button>
-            <button class="need-chip" data-cat="medical" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>Medical</button>
-            <button class="need-chip" data-cat="education" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Education</button>
-            <button class="need-chip" data-cat="translation" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Translation</button>
-            <button class="need-chip" data-cat="childcare" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg>Childcare</button>
-            <button class="need-chip" data-cat="financial" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>Financial</button>
-            <button class="need-chip" data-cat="other" onclick="toggleNeedChip(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>Other</button>
+            <button class="need-chip" data-cat="housing" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Housing</button>
+            <button class="need-chip" data-cat="food" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>Food</button>
+            <button class="need-chip" data-cat="clothing" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>Clothing</button>
+            <button class="need-chip" data-cat="furniture" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z"/><path d="M4 18v2"/><path d="M20 18v2"/></svg>Furniture</button>
+            <button class="need-chip" data-cat="transportation" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>Transportation</button>
+            <button class="need-chip" data-cat="employment" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Employment</button>
+            <button class="need-chip" data-cat="legal" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>Legal Aid</button>
+            <button class="need-chip" data-cat="medical" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>Medical</button>
+            <button class="need-chip" data-cat="education" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Education</button>
+            <button class="need-chip" data-cat="translation" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Translation</button>
+            <button class="need-chip" data-cat="childcare" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg>Childcare</button>
+            <button class="need-chip" data-cat="financial" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>Financial</button>
+            <button class="need-chip" data-cat="other" data-action="toggleNeedChip" data-args="[{&quot;$&quot;:&quot;this&quot;}]"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>Other</button>
           </div>
           <p class="need-error" id="need-error" role="alert" style="display:none">Please choose at least one type of need.</p>
           </div>
         </div>
 
         <div class="btn-row" style="margin-top:24px">
-          <button class="btn-next" id="btn-2" disabled onclick="goFromStep2()">Continue</button>
+          <button class="btn-next" id="btn-2" disabled data-action="goFromStep2">Continue</button>
         </div>
         <div class="step2-summary" id="step2-summary" aria-live="polite"></div>
       </div>
@@ -594,32 +584,32 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           <div class="field-row">
             <div class="field">
               <label for="fname">First name</label>
-              <input type="text" id="fname" name="given-name" autocomplete="given-name" placeholder="Jane" oninput="checkStep3()" />
+              <input type="text" id="fname" name="given-name" autocomplete="given-name" placeholder="Jane" data-input="checkStep3" />
             </div>
             <div class="field">
               <label for="lname">Last name</label>
-              <input type="text" id="lname" name="family-name" autocomplete="family-name" placeholder="Doe" oninput="checkStep3()" />
+              <input type="text" id="lname" name="family-name" autocomplete="family-name" placeholder="Doe" data-input="checkStep3" />
             </div>
           </div>
           <div class="field">
             <label for="email">Email address</label>
-            <input type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com" oninput="checkStep3()" />
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com" data-input="checkStep3" />
           </div>
           <div class="field">
             <label for="phone">Phone number</label>
-            <input type="tel" id="phone" name="tel" autocomplete="tel" maxlength="30" placeholder="(555) 000-0000" oninput="checkStep3()" />
+            <input type="tel" id="phone" name="tel" autocomplete="tel" maxlength="30" placeholder="(555) 000-0000" data-input="checkStep3" />
             <p class="need-error" id="phone-error" role="alert" hidden>Use digits, spaces, and + ( ) . - only.</p>
           </div>
           <!-- Navigators see sensitive immigration data, so an admin reads this before approving them. -->
           <div class="field" id="field-notes" data-for="navigator" hidden>
             <label for="reg-notes"><span>Who do you work with?</span> <span style="color:#dc2626">*</span></label>
-            <textarea id="reg-notes" rows="3" maxlength="1000" placeholder="Describe the organization, agency, or church you serve migrants through." oninput="checkStep3()" style="width:100%;padding:10px 14px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s"></textarea>
+            <textarea id="reg-notes" rows="3" maxlength="1000" placeholder="Describe the organization, agency, or church you serve migrants through." data-input="checkStep3" style="width:100%;padding:10px 14px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s"></textarea>
             <p style="font-size:12px;color:#6B7280;margin-top:4px">An admin reads this before approving your account, because MigrantPortal handles sensitive immigration data.</p>
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-back" onclick="goBack()">Back</button>
-          <button class="btn-next" id="btn-3"disabled onclick="goTo('3b')">Next</button>
+          <button class="btn-back" data-action="goBack">Back</button>
+          <button class="btn-next" id="btn-3"disabled data-action="goTo" data-args="[&quot;3b&quot;]">Next</button>
         </div>
       </div>
 
@@ -628,18 +618,18 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <h2 class="step-heading">How did you hear about MigrantPortal?</h2>
         <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;line-height:1.6;">Optional — helps us understand how families and helpers find us.</p>
         <div class="referral-chips">
-          <button class="referral-chip" onclick="selectReferral(this, 'friend_family')">👥 Friend or family</button>
-          <button class="referral-chip" onclick="selectReferral(this, 'church')">⛪ Church or faith org</button>
-          <button class="referral-chip" onclick="selectReferral(this, 'social_media')">📱 Social media</button>
-          <button class="referral-chip" onclick="selectReferral(this, 'google')">🔍 Google search</button>
-          <button class="referral-chip" onclick="selectReferral(this, 'news')">📰 News article</button>
-          <button class="referral-chip" onclick="selectReferral(this, 'organization')">🏢 Organization I work with</button>
-          <button class="referral-chip" onclick="selectReferral(this, 'other')">Other</button>
+          <button class="referral-chip" data-action="selectReferral" data-args="[{&quot;$&quot;:&quot;this&quot;},&quot;friend_family&quot;]">👥 Friend or family</button>
+          <button class="referral-chip" data-action="selectReferral" data-args="[{&quot;$&quot;:&quot;this&quot;},&quot;church&quot;]">⛪ Church or faith org</button>
+          <button class="referral-chip" data-action="selectReferral" data-args="[{&quot;$&quot;:&quot;this&quot;},&quot;social_media&quot;]">📱 Social media</button>
+          <button class="referral-chip" data-action="selectReferral" data-args="[{&quot;$&quot;:&quot;this&quot;},&quot;google&quot;]">🔍 Google search</button>
+          <button class="referral-chip" data-action="selectReferral" data-args="[{&quot;$&quot;:&quot;this&quot;},&quot;news&quot;]">📰 News article</button>
+          <button class="referral-chip" data-action="selectReferral" data-args="[{&quot;$&quot;:&quot;this&quot;},&quot;organization&quot;]">🏢 Organization I work with</button>
+          <button class="referral-chip" data-action="selectReferral" data-args="[{&quot;$&quot;:&quot;this&quot;},&quot;other&quot;]">Other</button>
         </div>
         <div class="btn-row">
-          <button class="btn-back" onclick="goBack()">Back</button>
-          <button class="btn-next ready" id="btn-3b" onclick="goTo(5)">Next</button>
-          <button class="skip-step" onclick="goTo(5)">Skip</button>
+          <button class="btn-back" data-action="goBack">Back</button>
+          <button class="btn-next ready" id="btn-3b" data-action="goTo" data-args="[5]">Next</button>
+          <button class="skip-step" data-action="goTo" data-args="[5]">Skip</button>
         </div>
       </div>
 
@@ -650,7 +640,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <div class="fields">
           <div class="field">
             <label for="pw">Password</label>
-            <input type="password" id="pw" name="new-password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" oninput="checkStep5(); updateStrength(this.value)" />
+            <input type="password" id="pw" name="new-password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" data-input="pwInput" data-args="[{&quot;oninput="checkStep5(); updateStrength(this.value)"quot;:&quot;value&quot;}]" />
             <div style="margin-top:8px;">
               <div style="display:flex;gap:4px;margin-bottom:4px;">
                 <div class="str-seg" id="str-1"></div>
@@ -664,11 +654,11 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           </div>
           <div class="field">
             <label for="pw2">Confirm password</label>
-            <input type="password" id="pw2" name="new-password-confirm" autocomplete="new-password" minlength="8" placeholder="Re-enter password" oninput="checkStep5()" />
+            <input type="password" id="pw2" name="new-password-confirm" autocomplete="new-password" minlength="8" placeholder="Re-enter password" data-input="checkStep5" />
           </div>
         </div>
         <div class="check-row" style="margin-bottom:12px;">
-          <input type="checkbox" id="agree" onchange="checkStep5()" />
+          <input type="checkbox" id="agree" data-change="checkStep5" />
           <label for="agree">
             I agree to the MigrantPortal
             <a href="/terms"  target="_blank" rel="noopener noreferrer">Terms of Service</a> and
@@ -676,7 +666,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           </label>
         </div>
         <div class="check-row" style="margin-bottom:24px;">
-          <input type="checkbox" id="agree-data" onchange="checkStep5()" />
+          <input type="checkbox" id="agree-data" data-change="checkStep5" />
           <label for="agree-data">
             I agree to handle all migrant information with strict confidentiality.
             I will not share, publish, or misuse any personal information submitted through MigrantPortal.
@@ -688,8 +678,8 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         </div>
         <div id="reg-error" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;line-height:1.4;"></div>
         <div class="btn-row">
-          <button class="btn-back" onclick="goBack()">Back</button>
-          <button class="btn-next" id="btn-5" disabled onclick="submitForm()">Create Account</button>
+          <button class="btn-back" data-action="goBack">Back</button>
+          <button class="btn-next" id="btn-5" disabled data-action="submitForm">Create Account</button>
         </div>
         <p class="privacy-note" style="font-size:13px;color:#6b7280;text-align:center;margin:14px 0 0;line-height:1.5;">We never sell personal information. <a href="/privacy" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">Privacy Policy</a></p>
       </div>
@@ -701,29 +691,29 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <h2 class="step-heading" style="text-align:center">What type of organization are you?</h2>
         <p class="step-sub" style="margin-bottom:20px;">This helps us categorize your listing in the Find Help directory.</p>
         <div class="cards" id="cards-org-type">
-          <div class="card" data-val="nonprofit" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+          <div class="card" data-val="nonprofit" data-action="selectCard" data-args="[&quot;cards-org-type&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-org-1&quot;]">
             <div class="card-icon">🏛️</div>
             <div class="card-body"><div class="card-title">Nonprofit / 501(c)(3)</div><div class="card-desc">Registered nonprofit organization serving migrants and their families.</div></div>
           </div>
-          <div class="card" data-val="church" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+          <div class="card" data-val="church" data-action="selectCard" data-args="[&quot;cards-org-type&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-org-1&quot;]">
             <div class="card-icon">⛪</div>
             <div class="card-body"><div class="card-title">Church / Faith Community</div><div class="card-desc">Faith-based organization mobilizing members to respond to needs.</div></div>
           </div>
-          <div class="card" data-val="government" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+          <div class="card" data-val="government" data-action="selectCard" data-args="[&quot;cards-org-type&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-org-1&quot;]">
             <div class="card-icon">🏢</div>
             <div class="card-body"><div class="card-title">Government Agency</div><div class="card-desc">Local, state, or federal agency providing services to migrants.</div></div>
           </div>
-          <div class="card" data-val="school" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+          <div class="card" data-val="school" data-action="selectCard" data-args="[&quot;cards-org-type&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-org-1&quot;]">
             <div class="card-icon">🎓</div>
             <div class="card-body"><div class="card-title">School / University</div><div class="card-desc">Educational institution offering support programs for migrants.</div></div>
           </div>
-          <div class="card" data-val="community" onclick="selectCard('cards-org-type',this,'btn-org-1')">
+          <div class="card" data-val="community" data-action="selectCard" data-args="[&quot;cards-org-type&quot;,{&quot;$&quot;:&quot;this&quot;},&quot;btn-org-1&quot;]">
             <div class="card-icon">🤝</div>
             <div class="card-body"><div class="card-title">Community Group</div><div class="card-desc">Informal or grassroots group serving your local area.</div></div>
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-next" id="btn-org-1" disabled onclick="goOrgTo(2)">Next</button>
+          <button class="btn-next" id="btn-org-1" disabled data-action="goOrgTo" data-args="[2]">Next</button>
         </div>
       </div>
 
@@ -732,22 +722,22 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <h2 class="step-heading" style="text-align:center">How will your organization use MigrantPortal?</h2>
         <p class="step-sub" style="margin-bottom:24px;">This decides what your account(s) can do. You're not locked in — you can add the other side later from your Org Dashboard.</p>
         <div class="cards" id="cards-org-usage">
-          <div class="card" data-val="respond" onclick="selectOrgUsage(this)">
+          <div class="card" data-val="respond" data-action="selectOrgUsage" data-args="[{&quot;$&quot;:&quot;this&quot;}]">
             <div class="card-icon">🙌</div>
             <div class="card-body"><div class="card-title">Respond to needs</div><div class="card-desc">Browse real needs in your area and help fulfill them. Your org is listed in the public Find Help directory.</div></div>
           </div>
-          <div class="card" data-val="submit" onclick="selectOrgUsage(this)">
+          <div class="card" data-val="submit" data-action="selectOrgUsage" data-args="[{&quot;$&quot;:&quot;this&quot;}]">
             <div class="card-icon">🧭</div>
             <div class="card-body"><div class="card-title">Submit needs for families</div><div class="card-desc">You work directly with migrants and their families and want to submit their needs on their behalf. Admin-reviewed — this handles sensitive data.</div></div>
           </div>
-          <div class="card" data-val="both" onclick="selectOrgUsage(this)">
+          <div class="card" data-val="both" data-action="selectOrgUsage" data-args="[{&quot;$&quot;:&quot;this&quot;}]">
             <div class="card-icon">🤝</div>
             <div class="card-body"><div class="card-title">Both</div><div class="card-desc">Submit needs for families you serve AND respond to needs from others in your community. One account does both, and you get an invite code to add teammates.</div></div>
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-back" onclick="goOrgTo(1)">Back</button>
-          <button class="btn-next" id="btn-org-2" disabled onclick="goFromOrgUsage()">Next</button>
+          <button class="btn-back" data-action="goOrgTo" data-args="[1]">Back</button>
+          <button class="btn-next" id="btn-org-2" disabled data-action="goFromOrgUsage">Next</button>
         </div>
       </div>
 
@@ -756,25 +746,25 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <h2 class="step-heading">What services do you provide?</h2>
         <p style="font-size:14px;color:var(--gray-600);margin-bottom:20px;line-height:1.6;">Select all that apply. These show as tags on your public listing, and we'll alert you about matching needs.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px" id="org-services-grid">
-          <label class="org-svc-label"><input type="checkbox" value="food" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>Food</label>
-          <label class="org-svc-label"><input type="checkbox" value="shelter" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Shelter</label>
-          <label class="org-svc-label"><input type="checkbox" value="clothing" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>Clothing</label>
-          <label class="org-svc-label"><input type="checkbox" value="medical" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>Medical</label>
-          <label class="org-svc-label"><input type="checkbox" value="legal" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>Legal</label>
-          <label class="org-svc-label"><input type="checkbox" value="employment" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Employment</label>
-          <label class="org-svc-label"><input type="checkbox" value="education" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Education</label>
-          <label class="org-svc-label"><input type="checkbox" value="immigration" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>Immigration</label>
-          <label class="org-svc-label"><input type="checkbox" value="transportation" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>Transportation</label>
-          <label class="org-svc-label"><input type="checkbox" value="mental_health" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>Mental Health</label>
-          <label class="org-svc-label"><input type="checkbox" value="financial" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>Financial Aid</label>
-          <label class="org-svc-label"><input type="checkbox" value="childcare" onchange="checkOrgServices()" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg>Childcare</label>
+          <label class="org-svc-label"><input type="checkbox" value="food" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>Food</label>
+          <label class="org-svc-label"><input type="checkbox" value="shelter" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Shelter</label>
+          <label class="org-svc-label"><input type="checkbox" value="clothing" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>Clothing</label>
+          <label class="org-svc-label"><input type="checkbox" value="medical" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>Medical</label>
+          <label class="org-svc-label"><input type="checkbox" value="legal" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>Legal</label>
+          <label class="org-svc-label"><input type="checkbox" value="employment" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Employment</label>
+          <label class="org-svc-label"><input type="checkbox" value="education" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Education</label>
+          <label class="org-svc-label"><input type="checkbox" value="immigration" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>Immigration</label>
+          <label class="org-svc-label"><input type="checkbox" value="transportation" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>Transportation</label>
+          <label class="org-svc-label"><input type="checkbox" value="mental_health" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>Mental Health</label>
+          <label class="org-svc-label"><input type="checkbox" value="financial" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>Financial Aid</label>
+          <label class="org-svc-label"><input type="checkbox" value="childcare" data-change="checkOrgServices" /> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/></svg>Childcare</label>
         </div>
         <div class="org-alert-note" id="org-alert-note"></div>
         <div id="org-alerts-mount" style="margin-bottom:12px"></div>
         <p class="need-error" id="org-step3-hint" style="margin:0 0 16px">Pick at least one service to continue.</p>
         <div class="btn-row">
-          <button class="btn-back" onclick="goOrgTo(2)">Back</button>
-          <button class="btn-next" id="btn-org-3" disabled onclick="goOrgTo(4)">Next</button>
+          <button class="btn-back" data-action="goOrgTo" data-args="[2]">Back</button>
+          <button class="btn-next" id="btn-org-3" disabled data-action="goOrgTo" data-args="[4]">Next</button>
         </div>
       </div>
 
@@ -785,42 +775,42 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
         <div class="fields">
           <div class="field">
             <label for="org-name">Organization name <span style="color:#dc2626">*</span></label>
-            <input type="text" id="org-name" placeholder="e.g. Hope Community Center" oninput="checkOrgDetails()" />
+            <input type="text" id="org-name" placeholder="e.g. Hope Community Center" data-input="checkOrgDetails" />
           </div>
           <div class="field">
             <label for="org-desc">Brief description</label>
-            <textarea id="org-desc" rows="2" placeholder="What does your organization do for migrants?" oninput="checkOrgDetails()" style="padding:12px 14px;border-radius:8px;border:1.5px solid var(--gray-200);font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s;width:100%"></textarea>
+            <textarea id="org-desc" rows="2" placeholder="What does your organization do for migrants?" data-input="checkOrgDetails" style="padding:12px 14px;border-radius:8px;border:1.5px solid var(--gray-200);font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border 0.15s;width:100%"></textarea>
           </div>
           <div class="field">
             <label for="org-address">Street address</label>
-            <input type="text" id="org-address" placeholder="123 Main St" oninput="checkOrgDetails()" />
+            <input type="text" id="org-address" placeholder="123 Main St" data-input="checkOrgDetails" />
           </div>
           <div class="field">
             <label for="org-zip">ZIP code <span style="color:#dc2626">*</span></label>
-            <input type="text" id="org-zip" placeholder="e.g. 66062" maxlength="5" inputmode="numeric" autocomplete="postal-code" oninput="onOrgZipInput(this)" />
+            <input type="text" id="org-zip" placeholder="e.g. 66062" maxlength="5" inputmode="numeric" autocomplete="postal-code" data-input="onOrgZipInput" data-args="[{&quot;$&quot;:&quot;this&quot;}]" />
           </div>
           <div class="loc-result" id="org-loc-result" role="status" aria-live="polite"></div>
           <div class="field-row">
             <div class="field">
               <label for="org-city">City</label>
-              <input type="text" id="org-city" autocomplete="address-level2" placeholder="Filled in from ZIP" oninput="checkOrgDetails()" />
+              <input type="text" id="org-city" autocomplete="address-level2" placeholder="Filled in from ZIP" data-input="checkOrgDetails" />
             </div>
             <div class="field" style="max-width:110px">
               <label for="org-state">State</label>
-              <select id="org-state" autocomplete="address-level1" onchange="checkOrgDetails()"></select>
+              <select id="org-state" autocomplete="address-level1" data-change="checkOrgDetails"></select>
             </div>
           </div>
           <div class="field">
             <label for="org-phone">Phone number</label>
-            <input type="tel" id="org-phone" placeholder="(555) 000-0000" oninput="checkOrgDetails()" />
+            <input type="tel" id="org-phone" placeholder="(555) 000-0000" data-input="checkOrgDetails" />
           </div>
           <div class="field">
             <label for="org-email">Public contact email</label>
-            <input type="email" id="org-email" placeholder="help@yourorg.org" oninput="checkOrgDetails()" />
+            <input type="email" id="org-email" placeholder="help@yourorg.org" data-input="checkOrgDetails" />
           </div>
           <div class="field">
             <label for="org-website">Website</label>
-            <input type="url" id="org-website" placeholder="https://yourorg.org" oninput="checkOrgDetails()" />
+            <input type="url" id="org-website" placeholder="https://yourorg.org" data-input="checkOrgDetails" />
           </div>
           <div class="field">
             <label for="org-hours">Hours (optional)</label>
@@ -835,8 +825,8 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-back" onclick="goBackFromOrgDetails()">Back</button>
-          <button class="btn-next" id="btn-org-4" disabled onclick="goOrgTo(5)">Next</button>
+          <button class="btn-back" data-action="goBackFromOrgDetails">Back</button>
+          <button class="btn-next" id="btn-org-4" disabled data-action="goOrgTo" data-args="[5]">Next</button>
         </div>
       </div>
 
@@ -848,20 +838,20 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           <div class="field-row">
             <div class="field">
               <label for="org-fname">First name <span style="color:#dc2626">*</span></label>
-              <input type="text" id="org-fname" autocomplete="given-name" placeholder="Jane" oninput="checkOrgAccount()" />
+              <input type="text" id="org-fname" autocomplete="given-name" placeholder="Jane" data-input="checkOrgAccount" />
             </div>
             <div class="field">
               <label for="org-lname">Last name <span style="color:#dc2626">*</span></label>
-              <input type="text" id="org-lname" autocomplete="family-name" placeholder="Doe" oninput="checkOrgAccount()" />
+              <input type="text" id="org-lname" autocomplete="family-name" placeholder="Doe" data-input="checkOrgAccount" />
             </div>
           </div>
           <div class="field">
             <label for="org-login-email">Your login email <span style="color:#dc2626">*</span></label>
-            <input type="email" id="org-login-email" autocomplete="email" placeholder="jane@yourorg.org" oninput="checkOrgAccount()" />
+            <input type="email" id="org-login-email" autocomplete="email" placeholder="jane@yourorg.org" data-input="checkOrgAccount" />
           </div>
           <div class="field">
             <label for="org-pw">Password <span style="color:#dc2626">*</span></label>
-            <input type="password" id="org-pw" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" oninput="checkOrgAccount(); updateOrgStrength(this.value)" />
+            <input type="password" id="org-pw" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" data-input="orgPwInput" data-args="[{&quot;oninput="checkOrgAccount(); updateOrgStrength(this.value)"quot;:&quot;value&quot;}]" />
             <div style="margin-top:8px">
               <div style="display:flex;gap:4px;margin-bottom:4px">
                 <div class="str-seg" id="org-str-1"></div><div class="str-seg" id="org-str-2"></div>
@@ -872,21 +862,21 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           </div>
           <div class="field">
             <label for="org-pw2">Confirm password <span style="color:#dc2626">*</span></label>
-            <input type="password" id="org-pw2" autocomplete="new-password" minlength="8" placeholder="Re-enter password" oninput="checkOrgAccount()" />
+            <input type="password" id="org-pw2" autocomplete="new-password" minlength="8" placeholder="Re-enter password" data-input="checkOrgAccount" />
           </div>
         </div>
         <div class="check-row" style="margin-bottom:12px">
-          <input type="checkbox" id="org-agree" onchange="checkOrgAccount()" />
+          <input type="checkbox" id="org-agree" data-change="checkOrgAccount" />
           <label for="org-agree">I agree to the MigrantPortal <a href="/terms"  target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy"  target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</label>
         </div>
         <div class="check-row" style="margin-bottom:24px">
-          <input type="checkbox" id="org-agree-data" onchange="checkOrgAccount()" />
+          <input type="checkbox" id="org-agree-data" data-change="checkOrgAccount" />
           <label for="org-agree-data">I agree to handle all migrant information with strict confidentiality and will not share or misuse any personal data.</label>
         </div>
         <div id="org-reg-error" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.9rem;line-height:1.4"></div>
         <div class="btn-row">
-          <button class="btn-back" onclick="goOrgTo(4)">Back</button>
-          <button class="btn-next" id="btn-org-5" disabled onclick="submitOrgForm()">Submit Application</button>
+          <button class="btn-back" data-action="goOrgTo" data-args="[4]">Back</button>
+          <button class="btn-next" id="btn-org-5" disabled data-action="submitOrgForm">Submit Application</button>
         </div>
       </div>
 
@@ -912,7 +902,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           <p style="font-size:13px;color:var(--gray-600);margin:0 0 12px;line-height:1.55">Your account can respond to needs and submit them for families. To add a colleague who will submit family needs, share this code. Send them straight to <span id="org-invite-link" style="font-weight:600">migrantportal.com/register?invite=…</span> and it's pre-filled.</p>
           <div id="org-invite-box" style="background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
             <span id="org-invite-code" style="font-family:monospace;font-weight:700;font-size:15px;letter-spacing:.06em;color:var(--teal-d)">—</span>
-            <button type="button" id="org-invite-copy-btn" onclick="copyOrgInviteCode()" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0">Copy code</button>
+            <button type="button" id="org-invite-copy-btn" data-action="copyOrgInviteCode" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0">Copy code</button>
           </div>
           <p style="font-size:11.5px;color:#94a3b8;margin-top:8px">Not ready yet? Find this code anytime under Org Dashboard → Team.</p>
         </div>
@@ -939,770 +929,11 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
   </div>
 
   <script src="api.js?v=2"></script>
-  <script>
-    // Read role from URL — skip step 1 if provided
-    // Same allowlist as login.html: a page slug or a single need link, never an external URL.
-    function getSafeNextPath() {
-      const next = new URLSearchParams(window.location.search).get('next');
-      if (!next) return null;
-      const stripped = next.replace(/\.html$/i, '');
-      return /^([a-z0-9-]+|need\?id=[0-9a-f-]{36})$/i.test(stripped) ? stripped : null;
-    }
-    const _urlRole = new URLSearchParams(window.location.search).get('role');
-    const _roleMap = { navigator: 'navigator', responder: 'responder' };
-    const _preselectedRole = _urlRole ? (_roleMap[_urlRole] || null) : null;
-
-    // An org invite code (?invite=CODE) always means "join as this org's
-    // Case Submitter" — the backend forces role=connector for any invite_code
-    // registration, so preselect the matching card here too.
-    const _urlInviteCode = new URLSearchParams(window.location.search).get('invite');
-
-    const ORG_SIDE_STEPS = ['Organization type', 'How you’ll use it', 'Services', 'Organization details', 'Create account'];
-    const TOTAL = 5;
-    let currentStep = 1;
-    // Screens the user has actually left, in order. Back pops this, so it
-    // never lands on a step that was skipped (e.g. step 1 on ?role= links).
-    const stepHistory = [];
-    let selectedPlace = null; // { city, state, zip } once resolved
-    const ZIP_API = 'https://api.zippopotam.us/us/';
-    const US_STATES = 'AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC'.split(' ');
-    let notificationRadius = 50;
-    const ALL_NEED_CATEGORIES = ['housing','food','clothing','furniture','transportation','employment','legal','medical','education','translation','childcare','financial','other'];
-    let needCategories = [];
-    let referralSource = '';
-
-    // ── Org flow (completely separate from navigator/responder) ──────────────
-    let isOrgFlow = false;
-    let currentOrgStep = 1;
-    const ORG_TOTAL = 5;
-    let orgUsageChoice = '';
-    let orgInviteCode = '';
-
-    if (_urlRole === 'organization') {
-      isOrgFlow = true;
-      // Orgs that respond get the same alert settings (radius + need types) as
-      // individual responders, so reuse that block inside the org services step.
-      const alerts = document.getElementById('responder-only-sections');
-      document.getElementById('org-alerts-mount').appendChild(alerts);
-      alerts.style.display = '';
-      // Need types are derived from the services ticked above (see checkOrgServices).
-      document.getElementById('need-types-block').style.display = 'none';
-      alerts.querySelector('.section-label').textContent = 'Alert us about needs within... of your organization ZIP (entered next)';
-      document.getElementById('step-1').classList.remove('visible');
-      goOrgTo(1);
-    } else if (_urlInviteCode) {
-      const connectorCard = document.querySelector('#cards-1 .card[data-val="connector"]');
-      if (connectorCard) {
-        connectorCard.classList.add('selected');
-        document.getElementById('btn-1').disabled = false;
-        document.getElementById('btn-1').classList.add('ready');
-      }
-      showStep(2);
-    } else if (_preselectedRole) {
-      // ── Navigator / Responder auto-skip ─────────────────────────────────
-      const cardVal = _preselectedRole === 'navigator' ? 'church' : 'own';
-      const matchingCard = document.querySelector(`#cards-1 .card[data-val="${cardVal}"]`);
-      if (matchingCard) {
-        matchingCard.classList.add('selected');
-        document.getElementById('btn-1').disabled = false;
-        document.getElementById('btn-1').classList.add('ready');
-      }
-      // showStep, not goTo: step 1 was skipped, so it must not enter the history.
-      showStep(_preselectedRole === 'responder' ? 'rt' : 2);
-    }
-
-    /* ── Navigation ─────────────────────────── */
-    let responderType = '';
-
-    function goTo(n) {
-      if (!(typeof n === 'number' && n > TOTAL)) stepHistory.push(currentStep);
-      showStep(n);
-    }
-
-    function showStep(n) {
-      // Hide current step
-      const curEl = document.getElementById('step-' + currentStep);
-      if (curEl) curEl.classList.remove('visible');
-
-      // Capture responder type when leaving step-rt
-      if (currentStep === 'rt') {
-        const sel = document.querySelector('#cards-rt .card.selected');
-        if (sel) responderType = sel.dataset.val;
-      }
-
-      currentStep = n;
-
-      if (n === '3b') {
-        document.getElementById('step-3b').classList.add('visible');
-        updateProgress(4);
-        window.scrollTo(0, 0);
-        return;
-      }
-
-      const isSuccess = n > TOTAL;
-      if (isSuccess) {
-        document.getElementById('step-success').classList.add('visible');
-        document.getElementById('progress').style.display = 'none';
-        document.getElementById('prog-back-btn').style.display = 'none';
-        return;
-      }
-      document.getElementById('step-' + n).classList.add('visible');
-      if (n === 2) { updateStep2Sections(); updateStep2Summary(); }
-      if (n === 3) checkStep3();
-      updateProgress(n === 'rt' ? 1 : n);
-      window.scrollTo(0, 0);
-    }
-
-    function goBack() {
-      if (isOrgFlow) {
-        if (currentOrgStep === 4) { goBackFromOrgDetails(); return; }
-        if (currentOrgStep > 1) goOrgTo(currentOrgStep - 1);
-        return;
-      }
-      if (stepHistory.length) showStep(stepHistory.pop());
-    }
-
-    function goFromStep1() {
-      const sel = document.querySelector('#cards-1 .card.selected');
-      if (!sel) return;
-      // church/navigator/connector all sign up as role=navigator, which never sends
-      // responder_type, so only Individual Helper gets "How will you help?".
-      const skipsHelpType = ['church', 'navigator', 'connector'].includes(sel.dataset.val);
-      goTo(skipsHelpType ? 2 : 'rt');
-    }
-
-    /* ══ ORG FLOW FUNCTIONS ════════════════════════════════════════════════ */
-    function goOrgTo(n) {
-      if (currentOrgStep >= 1) {
-        const cur = document.getElementById('step-org-' + currentOrgStep);
-        if (cur) cur.classList.remove('visible');
-      }
-      currentOrgStep = n;
-      if (n === 4) document.getElementById('org-public-wrap').hidden = orgUsageChoice === 'submit';
-      const next = document.getElementById('step-org-' + n);
-      if (next) next.classList.add('visible');
-      updateOrgProgress(n);
-      window.scrollTo(0, 0);
-    }
-
-    function selectOrgUsage(el) {
-      document.querySelectorAll('#cards-org-usage .card').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      orgUsageChoice = el.dataset.val;
-      setBtn('btn-org-2', true);
-    }
-
-    function goFromOrgUsage() {
-      // "Submit needs" orgs skip the services step — it only applies to the
-      // responder side (public directory listing).
-      goOrgTo(orgUsageChoice === 'submit' ? 4 : 3);
-    }
-
-    function goBackFromOrgDetails() {
-      goOrgTo(orgUsageChoice === 'submit' ? 2 : 3);
-    }
-
-    function updateOrgProgress(n) {
-      for (let i = 1; i <= 5; i++) {
-        const seg = document.getElementById('seg-' + i);
-        if (!seg) continue;
-        seg.className = 'progress-seg';
-        if (i < n)         seg.classList.add('done');
-        else if (i === n)  seg.classList.add('active');
-      }
-      document.getElementById('prog-back-btn').classList.toggle('hidden', n === 1);
-      renderSideSteps(n, ORG_SIDE_STEPS);
-    }
-
-    function updateOrgStrength(pw) {
-      let score = 0;
-      if (pw.length >= 8)  score++;
-      if (pw.length >= 12) score++;
-      if (/[0-9]/.test(pw) || /[^a-zA-Z0-9]/.test(pw)) score++;
-      if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
-      const colors = ['', '#ef4444', '#f97316', '#eab308', '#22c55e'];
-      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-      for (let i = 1; i <= 4; i++) {
-        document.getElementById('org-str-' + i).style.background = i <= score ? colors[score] : 'var(--gray-200)';
-      }
-      const lbl = document.getElementById('org-str-label');
-      lbl.textContent = pw.length ? labels[score] : '';
-      lbl.style.color = colors[score] || 'var(--gray-400)';
-    }
-
-    const SERVICE_TO_NEED = {
-      food: 'food', shelter: 'housing', clothing: 'clothing', medical: 'medical',
-      legal: 'legal', employment: 'employment', education: 'education',
-      immigration: 'other', transportation: 'transportation', mental_health: 'other',
-      financial: 'financial', childcare: 'childcare',
-    };
-    const NEED_LABELS = { housing: 'Housing', food: 'Food', clothing: 'Clothing', transportation: 'Transportation', employment: 'Employment', legal: 'Legal Aid', medical: 'Medical', education: 'Education', childcare: 'Childcare', financial: 'Financial', other: 'Other' };
-
-    function checkOrgServices() {
-      const checked = [...document.querySelectorAll('#org-services-grid input[type=checkbox]:checked')];
-      needCategories = [...new Set(checked.map(c => SERVICE_TO_NEED[c.value]).filter(Boolean))];
-      const ready = checked.length > 0;
-      const note = document.getElementById('org-alert-note');
-      note.style.display = ready ? '' : 'none';
-      note.innerHTML = '<strong>You’ll be alerted about:</strong> ' + needCategories.map(c => NEED_LABELS[c]).join(', ') + ' needs.';
-      setBtn('btn-org-3', ready);
-      document.getElementById('org-step3-hint').style.display = ready ? 'none' : '';
-    }
-
-    let orgZipResolved = false;
-
-    function checkOrgDetails() {
-      const ok = document.getElementById('org-name').value.trim() &&
-                 orgZipResolved &&
-                 document.getElementById('org-city').value.trim() &&
-                 document.getElementById('org-state').value;
-      setBtn('btn-org-4', ok);
-    }
-
-    function setOrgLocationResult(kind, text) {
-      const el = document.getElementById('org-loc-result');
-      el.className = 'loc-result' + (kind ? ' ' + kind : '');
-      el.textContent = text;
-    }
-
-    async function onOrgZipInput(input) {
-      input.value = input.value.replace(/\D/g, '');
-      const zip = input.value;
-      orgZipResolved = false;
-      checkOrgDetails();
-      if (!/^\d{5}$/.test(zip)) { setOrgLocationResult('', ''); return; }
-      try {
-        const data = await fetchPlace(zip);
-        if (input.value !== zip) return; // stale response
-        if (!data) {
-          setOrgLocationResult('bad', "We couldn't find ZIP " + zip + '. Check it and try again.');
-          return;
-        }
-        const place = data.places[0];
-        document.getElementById('org-city').value = place['place name'];
-        document.getElementById('org-state').value = place['state abbreviation'];
-        orgZipResolved = true;
-        setOrgLocationResult('ok', '✓ ' + place['place name'] + ', ' + place['state abbreviation'] + ' ' + zip);
-      } catch (err) {
-        setOrgLocationResult('bad', "We couldn't look up that ZIP right now. Please try again in a moment.");
-      }
-      checkOrgDetails();
-    }
-
-    function checkOrgAccount() {
-      const pw  = document.getElementById('org-pw').value;
-      const pw2 = document.getElementById('org-pw2').value;
-      const ok  = document.getElementById('org-fname').value.trim() &&
-                  document.getElementById('org-lname').value.trim() &&
-                  document.getElementById('org-login-email').value.includes('@') &&
-                  pw.length >= 8 && pw === pw2 &&
-                  document.getElementById('org-agree').checked &&
-                  document.getElementById('org-agree-data').checked;
-      setBtn('btn-org-5', ok);
-    }
-
-    async function apiPostWithToken(path, body, token) {
-      const r = await fetch(API + path, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(body),
-      });
-      const data = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(_extractDetail(data.detail));
-      return data;
-    }
-
-    function showOrgSuccess(loginEmail) {
-      document.getElementById('step-org-5').classList.remove('visible');
-      document.getElementById('step-org-success').classList.add('visible');
-      document.getElementById('progress').style.display = 'none';
-      document.getElementById('prog-back-btn').style.display = 'none';
-      document.getElementById('org-success-email').textContent = loginEmail + ' — created just now.';
-      document.getElementById('org-invite-code').textContent = orgInviteCode || '—';
-      const linkEl = document.getElementById('org-invite-link');
-      if (linkEl) linkEl.textContent = orgInviteCode ? `migrantportal.com/register?invite=${orgInviteCode}` : 'migrantportal.com/register?invite=…';
-      window.scrollTo(0, 0);
-    }
-
-    function copyOrgInviteCode() {
-      if (!orgInviteCode) return;
-      navigator.clipboard?.writeText(orgInviteCode).then(() => {
-        const btn = document.getElementById('org-invite-copy-btn');
-        btn.textContent = 'Copied ✓';
-        setTimeout(() => { btn.textContent = 'Copy code'; }, 2000);
-      }).catch(() => {});
-    }
-
-    async function submitOrgForm() {
-      const btn = document.getElementById('btn-org-5');
-      const errEl = document.getElementById('org-reg-error');
-      errEl.style.display = 'none';
-      btn.disabled = true;
-      btn.textContent = 'Submitting…';
-
-      const fname = document.getElementById('org-fname').value.trim();
-      const lname = document.getElementById('org-lname').value.trim();
-      const loginEmail = document.getElementById('org-login-email').value.trim();
-      const password   = document.getElementById('org-pw').value;
-
-      const orgType = document.querySelector('#cards-org-type .card.selected')?.dataset.val || 'nonprofit';
-      const services = [...document.querySelectorAll('#org-services-grid input:checked')].map(c => c.value).join(',');
-
-      const orgPayload = {
-        org_name:    document.getElementById('org-name').value.trim(),
-        org_type:    orgType,
-        description: document.getElementById('org-desc').value.trim() || null,
-        services:    services || null,
-        address:     document.getElementById('org-address').value.trim() || null,
-        city:        document.getElementById('org-city').value.trim() || null,
-        state:       document.getElementById('org-state').value.trim().toUpperCase() || null,
-        zipcode:     document.getElementById('org-zip').value.trim(),
-        phone:       document.getElementById('org-phone').value.trim() || null,
-        email:       document.getElementById('org-email').value.trim() || null,
-        website:     document.getElementById('org-website').value.trim() || null,
-        hours:       document.getElementById('org-hours').value.trim() || null,
-        contact_name: fname + ' ' + lname,
-      };
-
-      // 'submit' orgs register as connector (needed to actually submit needs);
-      // 'respond' and 'both' register as responder (public directory listing).
-      const role = orgUsageChoice === 'submit' ? 'navigator' : 'responder';
-      const userPayload = {
-        name: fname + ' ' + lname,
-        email: loginEmail,
-        password,
-        role,
-        responder_type: role === 'responder' ? 'church' : null,
-        registration_notes: `Organization application (${orgUsageChoice}): ${orgPayload.org_name} (${orgType})` +
-          (orgUsageChoice !== 'submit' && !document.getElementById('org-public').checked ? '. Opted out of the public Find Help listing.' : ''),
-        city: orgPayload.city,
-        state: orgPayload.state,
-        zip_code: orgPayload.zipcode,
-      };
-      if (orgUsageChoice !== 'submit') {
-        userPayload.notification_radius = notificationRadius;
-        userPayload.need_categories = needCategories;
-      }
-
-      try {
-        // 1. Register user account
-        const userData = await apiPost('/auth/register', userPayload);
-
-        // 2. Submit nonprofit directory listing — only orgs that respond need
-        // a public listing; pure "submit" orgs skip it.
-        let nonprofitId = null;
-        if (orgUsageChoice !== 'submit' && document.getElementById('org-public').checked) {
-          const npData = await apiPost('/nonprofits/apply', orgPayload);
-          nonprofitId = npData.id || null;
-        }
-
-        // 3. "Both": create the Organization now so we have an invite code to
-        // hand the org a second, connector-role login for submitting needs.
-        // Pass nonprofit_id so admin can see which account owns which listing.
-        if (orgUsageChoice === 'both' && userData.access_token) {
-          try {
-            const org = await apiPostWithToken('/orgs', {
-              name: orgPayload.org_name,
-              description: orgPayload.description,
-              website: orgPayload.website,
-              city: orgPayload.city,
-              state: orgPayload.state,
-              ...(nonprofitId ? { nonprofit_id: nonprofitId } : {}),
-            }, userData.access_token);
-            orgInviteCode = org.invite_code || '';
-          } catch (orgEx) {
-            console.error('[MP] org creation failed, continuing without invite code', orgEx);
-          }
-        }
-
-        // 4. Route to the right confirmation screen
-        if (orgUsageChoice === 'both') {
-          showOrgSuccess(loginEmail);
-        } else if (userData.user?.status === 'pending') {
-          window.location.href = '/pending';
-        } else {
-          saveSession(userData.access_token, userData.user);
-          setTimeout(() => { window.location.href = getSafeNextPath() || 'dashboard'; }, 1500);
-        }
-      } catch (ex) {
-        btn.disabled = false;
-        btn.textContent = 'Submit Application';
-        const msg = ex.message || 'Something went wrong. Please try again.';
-        const isEmailTaken = msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists');
-        errEl.innerHTML = isEmailTaken
-          ? `That email is already registered. <a href="/login" style="color:#dc2626;font-weight:600;text-decoration:underline">Sign in instead?</a>`
-          : msg;
-        errEl.style.display = 'block';
-      }
-    }
-
-    function renderSideSteps(n, labels) {
-      document.querySelectorAll('#side-steps li').forEach(li => {
-        const idx = Number(li.dataset.s);
-        if (labels) li.lastChild.textContent = labels[idx - 1];
-        li.classList.toggle('cur', idx === n);
-        li.classList.toggle('done', idx < n);
-      });
-    }
-
-    function updateProgress(n) {
-      for (let i = 1; i <= TOTAL; i++) {
-        const seg = document.getElementById('seg-' + i);
-        seg.className = 'progress-seg';
-        if (i < n)        seg.classList.add('done');
-        else if (i === n) seg.classList.add('active');
-      }
-      const backBtn = document.getElementById('prog-back-btn');
-      backBtn.classList.toggle('hidden', stepHistory.length === 0);
-      renderSideSteps(n);
-    }
-
-    /* ── Step 1: Card selection ──────────────── */
-    function selectCard(groupId, el, btnId) {
-      document.querySelectorAll('#' + groupId + ' .card').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      const btn = document.getElementById(btnId);
-      btn.disabled = false;
-      btn.classList.add('ready');
-    }
-
-    /* ── Step 2: Location ────────────────────── */
-    function setLocationResult(kind, text) {
-      const el = document.getElementById('loc-result');
-      el.className = 'loc-result' + (kind ? ' ' + kind : '');
-      el.textContent = text;
-    }
-
-    function updateLocBtn() {
-      const btn = document.getElementById('btn-2');
-      btn.disabled = !selectedPlace;
-      btn.classList.toggle('ready', !!selectedPlace);
-      updateStep2Summary();
-    }
-
-    function applyPlace(place) {
-      selectedPlace = place;
-      if (place) setLocationResult('ok', '✓ ' + place.city + ', ' + place.state + (place.zip ? ' ' + place.zip : ''));
-      updateLocBtn();
-    }
-
-    async function fetchPlace(path) {
-      const res = await fetch(ZIP_API + path);
-      if (!res.ok) return null;
-      const data = await res.json();
-      return data.places && data.places[0] ? data : null;
-    }
-
-    async function lookupZip(zip) {
-      selectedPlace = null;
-      updateLocBtn();
-      if (!/^\d{5}$/.test(zip)) { setLocationResult('', ''); return; }
-      try {
-        const data = await fetchPlace(zip);
-        if (document.getElementById('loc-zip').value !== zip) return; // stale response
-        if (!data) {
-          setLocationResult('bad', "We couldn't find ZIP " + zip + '. Check it, or enter city and state instead.');
-          return;
-        }
-        const place = data.places[0];
-        applyPlace({ city: place['place name'], state: place['state abbreviation'], zip });
-      } catch (err) {
-        setLocationResult('bad', "We couldn't look up that ZIP right now. Try city and state instead.");
-      }
-    }
-
-    function onZipInput(input) {
-      input.value = input.value.replace(/\D/g, '');
-      lookupZip(input.value);
-    }
-
-    function updateStep2Summary() {
-      const el = document.getElementById('step2-summary');
-      if (!el) return;
-      const parts = [];
-      const showNeeds = document.getElementById('responder-only-sections').style.display !== 'none';
-      if (showNeeds) {
-        parts.push(needCategories.length + (needCategories.length === 1 ? ' need' : ' needs'));
-        parts.push(notificationRadius ? 'within ' + notificationRadius + ' mi' : 'any distance');
-      }
-      if (selectedPlace) parts.push(selectedPlace.city + ', ' + selectedPlace.state);
-      el.textContent = parts.join(' \u00b7 ');
-      el.classList.toggle('show', parts.length > 0 && !!selectedPlace);
-    }
-
-    async function useMyLocation() {
-      const btn = document.getElementById('btn-geo');
-      if (!navigator.geolocation) {
-        setLocationResult('bad', 'Location is not available in this browser. Enter your ZIP instead.');
-        return;
-      }
-      btn.disabled = true;
-      setLocationResult('', '');
-      navigator.geolocation.getCurrentPosition(async pos => {
-        try {
-          const url = 'https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&lat='
-            + pos.coords.latitude + '&lon=' + pos.coords.longitude;
-          const res = await fetch(url);
-          const data = res.ok ? await res.json() : null;
-          const addr = data && data.address ? data.address : null;
-          const zip = addr && addr.postcode ? String(addr.postcode).slice(0, 5) : '';
-          if (!/^\d{5}$/.test(zip) || (addr.country_code && addr.country_code !== 'us')) {
-            setLocationResult('bad', "We couldn't find a US ZIP for your location. Enter it manually.");
-          } else {
-            document.getElementById('loc-zip').value = zip;
-            await lookupZip(zip);
-          }
-        } catch (err) {
-          setLocationResult('bad', "We couldn't look up your location. Enter your ZIP instead.");
-        } finally {
-          btn.disabled = false;
-        }
-      }, () => {
-        btn.disabled = false;
-        setLocationResult('bad', 'Location permission was denied. Enter your ZIP instead.');
-      }, { timeout: 10000 });
-    }
-
-    function pickQuickZip(zip) {
-      document.getElementById('loc-zip').value = zip;
-      lookupZip(zip);
-    }
-
-    function toggleManualLocation() {
-      const box = document.getElementById('loc-manual');
-      box.style.display = box.style.display === 'none' ? 'block' : 'none';
-    }
-
-    async function lookupCityState() {
-      const city = document.getElementById('loc-city').value.trim();
-      const state = document.getElementById('loc-state').value;
-      selectedPlace = null;
-      updateLocBtn();
-      if (!city || !state) return;
-      try {
-        const data = await fetchPlace(state.toLowerCase() + '/' + encodeURIComponent(city.toLowerCase()));
-        if (!data) {
-          setLocationResult('bad', 'We couldn’t find "' + city + ', ' + state + '". Check the spelling.');
-          return;
-        }
-        const titleCity = city.replace(/\b\w/g, c => c.toUpperCase());
-        applyPlace({ city: titleCity, state, zip: data.places[0]['post code'] });
-      } catch (err) {
-        setLocationResult('bad', "We couldn't look that up right now. Try a ZIP code instead.");
-      }
-    }
-
-    (function initStateSelects() {
-      const options = '<option value="">--</option>' + US_STATES.map(s => '<option>' + s + '</option>').join('');
-      ['loc-state', 'org-state'].forEach(id => { document.getElementById(id).innerHTML = options; });
-    })();
-
-    /* ── Step 3: Personal info ───────────────── */
-    const MIN_NOTES_LENGTH = 10;
-
-    // Every card except Individual Helper registers as role=navigator.
-    function isNavigatorSignup() {
-      const sel = document.querySelector('#cards-1 .card.selected');
-      return !!sel && sel.dataset.val !== 'own';
-    }
-
-    // Invitees join an org that already vouches for them, so they skip the notes.
-    function notesRequired() {
-      return isNavigatorSignup() && !_urlInviteCode;
-    }
-
-    // Same characters the backend accepts (PHONE_PATTERN in auth.py).
-    const PHONE_PATTERN = /^[0-9+().\- ]*$/;
-
-    function checkStep3() {
-      const notes = document.getElementById('reg-notes').value.trim();
-      const phoneOk = PHONE_PATTERN.test(document.getElementById('phone').value);
-      document.getElementById('phone-error').hidden = phoneOk;
-      const ok = document.getElementById('fname').value.trim() &&
-                 document.getElementById('lname').value.trim() &&
-                 document.getElementById('email').value.includes('@') &&
-                 phoneOk &&
-                 (!notesRequired() || notes.length >= MIN_NOTES_LENGTH);
-      setBtn('btn-3', !!ok);
-    }
-
-    /* ── Step 5: Password ────────────────────── */
-    function updateStrength(pw) {
-      let score = 0;
-      if (pw.length >= 8)  score++;
-      if (pw.length >= 12) score++;
-      if (/[0-9]/.test(pw) || /[^a-zA-Z0-9]/.test(pw)) score++;
-      if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
-      const colors = ['', '#ef4444', '#f97316', '#eab308', '#22c55e'];
-      const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-      for (let i = 1; i <= 4; i++) {
-        document.getElementById('str-' + i).style.background = i <= score ? colors[score] : 'var(--gray-200)';
-      }
-      const lbl = document.getElementById('str-label');
-      lbl.textContent = pw.length ? labels[score] : '';
-      lbl.style.color = colors[score] || 'var(--gray-400)';
-    }
-
-    function checkStep5() {
-      const errEl = document.getElementById('reg-error');
-      if (errEl) errEl.style.display = 'none';
-      const pw  = document.getElementById('pw').value;
-      const pw2 = document.getElementById('pw2').value;
-      const ok  = pw.length >= 8 && pw === pw2
-                  && document.getElementById('agree').checked
-                  && document.getElementById('agree-data').checked;
-      setBtn('btn-5', ok);
-    }
-
-    function setBtn(id, ok) {
-      const btn = document.getElementById(id);
-      btn.disabled = !ok;
-      btn.classList.toggle('ready', ok);
-    }
-
-    /* ── Step 2: Responder sections visibility ── */
-    function updateStep2Sections() {
-      const sel = document.querySelector('#cards-1 .card.selected');
-      // Only responders get "new need nearby" alerts (backend matching filters on
-      // role=responder), so navigator cards, church included, skip radius + need types.
-      const isResponder = sel && sel.dataset.val === 'own';
-      document.getElementById('responder-only-sections').style.display = isResponder ? '' : 'none';
-      // Step 2 and 3 wording (and the notes field) differ for navigators.
-      document.querySelectorAll('[data-for="responder"]').forEach(el => { el.hidden = !isResponder; });
-      document.querySelectorAll('[data-for="navigator"]').forEach(el => { el.hidden = !!isResponder || (el.id === 'field-notes' && !notesRequired()); });
-    }
-
-    /* ── Step 2: Radius pills ────────────────── */
-    function selectRadius(el, value) {
-      document.querySelectorAll('.radius-pill').forEach(p => p.classList.remove('selected'));
-      el.classList.add('selected');
-      notificationRadius = value;
-      updateStep2Summary();
-    }
-
-    /* ── Step 2: Need category chips ─────────── */
-    function toggleNeedChip(el) {
-      const cat = el.dataset.cat;
-      if (el.classList.contains('selected')) {
-        el.classList.remove('selected');
-        needCategories = needCategories.filter(c => c !== cat);
-      } else {
-        el.classList.add('selected');
-        if (!needCategories.includes(cat)) needCategories.push(cat);
-      }
-      const toggleBtn = document.getElementById('needs-toggle');
-      if (toggleBtn) toggleBtn.textContent = needCategories.length === 0 ? 'Select All' : 'Clear All';
-      if (needCategories.length) clearNeedError();
-      updateStep2Summary();
-      if (isOrgFlow) checkOrgServices();
-    }
-
-    function toggleAllNeeds(btn) {
-      const chips = document.querySelectorAll('.need-chip');
-      if (needCategories.length > 0) {
-        chips.forEach(c => c.classList.remove('selected'));
-        needCategories = [];
-        btn.textContent = 'Select All';
-      } else {
-        chips.forEach(c => c.classList.add('selected'));
-        needCategories = [...ALL_NEED_CATEGORIES];
-        btn.textContent = 'Clear All';
-        clearNeedError();
-      }
-      updateStep2Summary();
-      if (isOrgFlow) checkOrgServices();
-    }
-
-    function clearNeedError() {
-      document.getElementById('need-chips').classList.remove('err');
-      document.getElementById('need-error').style.display = 'none';
-    }
-
-    function goFromStep2() {
-      const needsRequired = document.getElementById('responder-only-sections').style.display !== 'none';
-      if (needsRequired && needCategories.length === 0) {
-        const chips = document.getElementById('need-chips');
-        chips.classList.add('err');
-        document.getElementById('need-error').style.display = '';
-        chips.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-      goTo(3);
-    }
-
-    /* ── Step 3b: Referral source ────────────── */
-    function selectReferral(el, value) {
-      document.querySelectorAll('.referral-chip').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      referralSource = value;
-    }
-
-    /* ── Submit ──────────────────────────────── */
-    async function submitForm() {
-      const btn   = document.getElementById('btn-5');
-      const name  = (document.getElementById('fname').value + ' ' + document.getElementById('lname').value).trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('pw').value;
-
-      btn.disabled = true;
-      btn.textContent = 'Creating account…';
-      document.querySelectorAll('#step-5 input, #step-5 select, #step-5 textarea').forEach(el => { el.disabled = true; });
-
-      const serveChoice = document.querySelector('#cards-1 .card.selected')?.dataset.val;
-      const isOrgSignup = serveChoice === 'church' || serveChoice === 'navigator';
-      const role = (serveChoice === 'connector' || isOrgSignup) ? 'navigator' : 'responder';
-      const notes = notesRequired() ? document.getElementById('reg-notes').value.trim() : '';
-
-      try {
-        const payload = { name, email, password, role };
-        if (notes) payload.registration_notes = notes;
-        if (responderType && role === 'responder') payload.responder_type = responderType;
-        if (referralSource) payload.referral_source = referralSource;
-        if (_urlInviteCode) payload.invite_code = _urlInviteCode;
-        const phone = document.getElementById('phone').value.trim();
-        if (phone) payload.phone = phone;
-        if (selectedPlace) {
-          payload.city = selectedPlace.city;
-          payload.state = selectedPlace.state;
-          if (selectedPlace.zip) payload.zip_code = selectedPlace.zip;
-        }
-        // Saved whenever step 2 showed the radius and need chips (individual helpers).
-        if (document.getElementById('responder-only-sections').style.display !== 'none') {
-          payload.notification_radius = notificationRadius;
-          payload.need_categories = needCategories;
-        }
-        const data = await apiPost('/auth/register', payload);
-        goTo(6);
-        if (data.user?.status === 'pending') {
-          // Do NOT save session — pending users must wait for admin approval
-          window.location.href = '/pending';
-        } else {
-          saveSession(data.access_token, data.user);
-          const dest = getSafeNextPath() || (isOrgSignup ? 'org-dashboard' : 'dashboard');
-          setTimeout(() => window.location.href = dest, 2000);
-        }
-      } catch (ex) {
-        btn.disabled = false;
-        btn.textContent = 'Create Account';
-        const errEl = document.getElementById('reg-error');
-        const msg = ex.message || 'Something went wrong. Please try again.';
-        const isEmailTaken = msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists');
-        errEl.innerHTML = isEmailTaken
-          ? `That email is already registered. <a href="/login" style="color:#dc2626;font-weight:600;text-decoration:underline;">Sign in instead?</a>`
-          : msg;
-        errEl.style.display = 'block';
-      }
-    }
-  </script>
+  <script src="/js/mp-actions.js?v=1"></script>
+<script src="/js/register.js?v=1"></script>
 
 <script src="i18n.js?v=20261115" defer></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/sw.js').catch(function () {});
-    });
-  }
-</script>
+<script src="/js/index-5.js?v=1"></script>
 <style>
   .mp-app-footer{background:#0d7a8a;color:#fff;text-align:center;padding:20px 16px;font-size:13px;line-height:1.8}
   .mp-app-footer a{color:#fff;text-decoration:underline;margin:0 8px}
