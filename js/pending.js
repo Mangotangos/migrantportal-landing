@@ -8,7 +8,17 @@ if (user) {
 }
 
 // Handlers were inline attributes; bound here so the page can run without 'unsafe-inline'.
-// NOTE: resendVerificationEmail is not defined anywhere (pre-existing bug, the inline onclick threw the same
-// ReferenceError on click). Wrapped so the missing function fails on click only, not at page load.
-document.getElementById('resendVerifyBtn')?.addEventListener('click', function () { resendVerificationEmail(); });
+async function resendVerificationEmail() {
+  const btn = document.getElementById('resendVerifyBtn');
+  btn.disabled = true;
+  try {
+    await apiPost('/auth/send-verification-email', {});
+    btn.textContent = 'Sent. Check your inbox';
+  } catch (ex) {
+    btn.textContent = (ex && ex.message) || 'Could not resend. Try again.';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('resendVerifyBtn')?.addEventListener('click', resendVerificationEmail);
 document.getElementById('logoutLink')?.addEventListener('click', logout);
