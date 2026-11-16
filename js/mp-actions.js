@@ -16,7 +16,14 @@
     back: function () { history.back(); },
     reload: function () { location.reload(); },
     print: function () { window.print(); },
+    // data-target="id": hide that element / scroll it into view. stop: event.stopPropagation() (pass the event).
+    hide: function () { const t = document.getElementById(this.dataset.target); if (t) t.style.display = 'none'; },
+    scrollTo: function () { const t = document.getElementById(this.dataset.target); if (t) t.scrollIntoView({ behavior: 'smooth' }); },
+    stop: function (event) { event.stopPropagation(); },
   });
+
+  // Lets tests (and the console) check that markup names a registered action; a typo would otherwise be a silent no-op.
+  window.mpHasAction = function (name) { return name in registry; };
 
   window.mpRegister = function (fns) {
     Object.assign(registry, fns);
