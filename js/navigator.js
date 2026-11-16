@@ -199,4 +199,4 @@ document.getElementById('followup-modal').addEventListener('click', function(e) 
 loadDashboard();
 
 // Delegated handlers (js/mp-actions.js dispatches data-action / data-change / data-input / data-submit / data-keydown).
-mpRegister({ closeFollowupModal, handleFollowupDone, handleRenew, handleRenewCard, openFollowupModal, saveFollowup, signOut });
+mpRegister({ handleSnooze, closeFollowupModal, handleFollowupDone, handleRenew, handleRenewCard, openFollowupModal, saveFollowup, signOut });

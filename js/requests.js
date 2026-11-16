@@ -620,4 +620,4 @@ function railUrgencyChange(value) {
 function railRadiusInput(value) { setRadius(RADIUS_STOPS[value]); }
 
 // Delegated handlers (js/mp-actions.js dispatches data-action / data-change / data-input / data-submit / data-keydown).
-mpRegister({ railUrgencyChange, railRadiusInput, applyFilters, clearFilters, debounceTopSearch, filterCards, setCategoryChip, setRadius, setRemote, setSort, setView, showAllNeeds, submitOriginZip, submitWaitlist, toggleFilter, toggleMapView });
+mpRegister({ selectCard, railUrgencyChange, railRadiusInput, applyFilters, clearFilters, debounceTopSearch, filterCards, setCategoryChip, setRadius, setRemote, setSort, setView, showAllNeeds, submitOriginZip, submitWaitlist, toggleFilter, toggleMapView });
