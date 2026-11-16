@@ -678,11 +678,15 @@
 
   function injectToggle() {
     // Inject once into .nav-right (desktop) and .mobile-nav (first child area)
-    const target =
-      document.querySelector('.nav-right') ||
-      document.querySelector('nav');
+    // Prefer the first candidate that is actually rendered (some pages hide nav.page-nav
+    // at every width, e.g. /requests, and keep their controls in .topbar-right).
+    const isVisible = function (el) { return !!(el && el.getClientRects().length); };
+    const candidates = ['.nav-right', 'nav', '.topbar-right']
+      .map(function (sel) { return document.querySelector(sel); })
+      .filter(Boolean);
+    const target = candidates.find(isVisible) || candidates[0];
     if (!target) return;
-    if (target.querySelector('.mp-lang-toggle')) return;
+    if (document.querySelector('.mp-lang-toggle')) return;
 
     const btn = document.createElement('button');
     btn.type = 'button';
