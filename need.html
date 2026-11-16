@@ -598,11 +598,11 @@
             <div id="donate-disbursed-label" style="font-size:11px;color:#15803d;margin-top:4px;display:none"></div>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
-            <button class="amt-btn" onclick="selectAmt(this,500)">$5</button>
-            <button class="amt-btn" onclick="selectAmt(this,1000)">$10</button>
-            <button class="amt-btn" onclick="selectAmt(this,2500)">$25</button>
-            <button class="amt-btn" onclick="selectAmt(this,5000)">$50</button>
-            <button class="amt-btn" onclick="selectAmt(this,10000)">$100</button>
+            <button class="amt-btn" data-amt="500" onclick="selectAmt(this,500)">$5</button>
+            <button class="amt-btn" data-amt="1000" onclick="selectAmt(this,1000)">$10</button>
+            <button class="amt-btn" data-amt="2500" onclick="selectAmt(this,2500)">$25</button>
+            <button class="amt-btn" data-amt="5000" onclick="selectAmt(this,5000)">$50</button>
+            <button class="amt-btn" data-amt="10000" onclick="selectAmt(this,10000)">$100</button>
           </div>
           <button id="donate-btn" onclick="startDonation()" style="width:100%;background:var(--orange);color:white;font-size:13px;font-weight:700;padding:11px;border-radius:8px;border:none;cursor:pointer">Donate</button>
           <div style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:center">🔒 Secure · Funds held until verified delivery</div>
@@ -1055,25 +1055,25 @@
               </label>`).join('') : '<div style="color:var(--gray-400);font-size:12px">All items are covered — consider donating instead!</div>'}
           </div>
           <textarea id="respond-msg" placeholder="Optional message to navigator…" style="width:100%;height:60px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
-          <button onclick="submitResponse()" style="width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Yes, I Can Help!</button>`;
+          <button data-role="submit-response" onclick="submitResponse()" style="width:100%;background:var(--orange);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Yes, I Can Help!</button>`;
       } else if (type === 'service') {
         sub.innerHTML = `
           <div style="font-size:12px;color:var(--gray-600);margin-bottom:8px">Describe the service you can offer:</div>
           <textarea id="respond-msg" placeholder="e.g. I can provide free legal consultation, translation in Spanish, or medical advice…" style="width:100%;height:90px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
-          <button onclick="submitResponse()" style="width:100%;background:var(--teal);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Offer My Service</button>`;
+          <button data-role="submit-response" onclick="submitResponse()" style="width:100%;background:var(--teal);color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Offer My Service</button>`;
       } else if (type === 'volunteer') {
         sub.innerHTML = `
           <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;color:#1d4ed8">
             ⏰ Volunteer shifts are coordinated through the app. Submit your offer and the navigator will reach out with details.
           </div>
           <textarea id="respond-msg" placeholder="When are you available? Any skills to mention?" style="width:100%;height:70px;border:1px solid var(--gray-200);border-radius:7px;padding:8px;font-size:12px;font-family:Inter,sans-serif;resize:vertical;margin-bottom:10px"></textarea>
-          <button onclick="submitResponse()" style="width:100%;background:#7c3aed;color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Sign Up to Volunteer</button>`;
+          <button data-role="submit-response" onclick="submitResponse()" style="width:100%;background:#7c3aed;color:white;font-size:14px;font-weight:700;padding:13px;border-radius:8px;border:none;cursor:pointer;">Sign Up to Volunteer</button>`;
       }
     }
 
     // ── Submit response
     async function submitResponse() {
-      const btn = document.querySelector('[onclick="submitResponse()"]');
+      const btn = document.querySelector('[data-role="submit-response"]');
       const origText = btn?.textContent;
       if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
       const checkedIds = [...document.querySelectorAll('#item-checks input:checked')].map(c => c.value);
@@ -1786,7 +1786,7 @@
       if (card) {
         card.style.display = '';
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        const amt = card.querySelector('.amt-btn[onclick*="2500"]');
+        const amt = card.querySelector('.amt-btn[data-amt="2500"]');
         if (amt && !card.querySelector('.amt-btn.selected')) amt.classList.add('selected');
       } else {
         startDonation();
@@ -1898,7 +1898,7 @@
         // Donations sidebar card (active needs only, non-navigator)
         if (need.status === 'active' && !isConnector(currentUser) && currentUser?.role !== 'admin') {
           document.getElementById('donate-card').style.display = '';
-          document.querySelector('.amt-btn[onclick*="2500"]')?.classList.add('selected');
+          document.querySelector('.amt-btn[data-amt="2500"]')?.classList.add('selected');
           loadDonationTotal();
         }
 

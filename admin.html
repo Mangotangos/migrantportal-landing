@@ -770,52 +770,52 @@
   <!-- SIDEBAR -->
   <nav class="sidebar">
     <div class="sidebar-section">Overview</div>
-    <button type="button" class="nav-item active" aria-current="page" onclick="switchTab('home')">
+    <button type="button" class="nav-item active" aria-current="page" data-tab="home" onclick="switchTab('home')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-home"/></svg></span> Home
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('pending')">
+    <button type="button" class="nav-item" data-tab="pending" onclick="switchTab('pending')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-clock"/></svg></span> Pending Queue
       <span class="nav-badge zero" id="pendingBadge">0</span>
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('all')">
+    <button type="button" class="nav-item" data-tab="all" onclick="switchTab('all')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-list"/></svg></span> All Needs
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('reports')">
+    <button type="button" class="nav-item" data-tab="reports" onclick="switchTab('reports')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-bars"/></svg></span> Reports
     </button>
 
     <div class="sidebar-section">Moderation</div>
-    <button type="button" class="nav-item" onclick="switchTab('flagged')">
+    <button type="button" class="nav-item" data-tab="flagged" onclick="switchTab('flagged')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-flag"/></svg></span> Flagged
       <span class="nav-badge zero" id="flaggedBadge">0</span>
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('disbursements')">
+    <button type="button" class="nav-item" data-tab="disbursements" onclick="switchTab('disbursements')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-dollar"/></svg></span> Disbursements
       <span class="nav-badge zero" id="disbBadge">0</span>
     </button>
 
     <div class="sidebar-section">Management</div>
-    <button type="button" class="nav-item" onclick="switchTab('users')">
+    <button type="button" class="nav-item" data-tab="users" onclick="switchTab('users')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-users"/></svg></span> Users
       <span class="nav-badge zero" id="usersBadge">0</span>
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('orgs')">
+    <button type="button" class="nav-item" data-tab="orgs" onclick="switchTab('orgs')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-building"/></svg></span> Organizations
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('resources')">
+    <button type="button" class="nav-item" data-tab="resources" onclick="switchTab('resources')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-book"/></svg></span> Resources
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('announcements')">
+    <button type="button" class="nav-item" data-tab="announcements" onclick="switchTab('announcements')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-megaphone"/></svg></span> Announcements
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('email')">
+    <button type="button" class="nav-item" data-tab="email" onclick="switchTab('email')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-send"/></svg></span> Email
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('nonprofits')">
+    <button type="button" class="nav-item" data-tab="nonprofits" onclick="switchTab('nonprofits')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-landmark"/></svg></span> Directory
       <span class="nav-badge zero" id="nonprofitsBadge">0</span>
     </button>
-    <button type="button" class="nav-item" onclick="switchTab('audit')">
+    <button type="button" class="nav-item" data-tab="audit" onclick="switchTab('audit')">
       <span class="nav-icon"><svg class="ic" viewBox="0 0 24 24"><use href="#i-scroll"/></svg></span> Audit Log
     </button>
 
@@ -1410,8 +1410,7 @@
 
   function switchTab(name) {
     document.querySelectorAll('.nav-item').forEach(el => {
-      const m = (el.getAttribute('onclick') || '').match(/switchTab\('(\w+)'\)/);
-      const isActive = !!m && m[1] === name;
+      const isActive = el.dataset.tab === name;
       el.classList.toggle('active', isActive);
       if (isActive) el.setAttribute('aria-current', 'page');
       else el.removeAttribute('aria-current');
