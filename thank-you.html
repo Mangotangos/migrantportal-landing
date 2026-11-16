@@ -9,8 +9,7 @@
   <meta name="robots" content="noindex" />
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="manifest" href="/manifest.json" />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --teal: #0D7A8A; --teal-d: #095d6a; --text: #111827; --muted: #6b7280; --border: #e5e7eb; --cream: #FAF7F0; }
@@ -113,46 +112,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
     </div>
   </main>
 
-  <script>
-    // Read ?amount= and ?need= query params (backend will append these on success redirect)
-    (function () {
-      const params = new URLSearchParams(location.search);
-      const amountRaw = params.get('amount');
-      const needTitle = params.get('need');
-      const needId = params.get('need_id');
-
-      const amountBox = document.getElementById('amount-box');
-      if (amountRaw) {
-        const n = parseFloat(amountRaw);
-        if (!isNaN(n) && n > 0) {
-          document.getElementById('amount').textContent = '$' + n.toFixed(2);
-          amountBox.style.display = 'block';
-        }
-      }
-      if (needTitle) {
-        document.getElementById('amount-need').textContent = 'toward: ' + needTitle;
-      }
-      if (needId) {
-        document.getElementById('primary-cta').href = '/need?id=' + encodeURIComponent(needId);
-      }
-
-      // Share link setup
-      const shareUrl = location.origin + '/';
-      const shareMsg = 'I just donated through MigrantPortal to help a migrant neighbor in need. Join me:';
-      document.getElementById('share-fb').href =
-        'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
-      document.getElementById('share-tw').href =
-        'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareMsg) + '&url=' + encodeURIComponent(shareUrl);
-      document.getElementById('share-em').href =
-        'mailto:?subject=' + encodeURIComponent('Help a migrant neighbor') +
-        '&body=' + encodeURIComponent(shareMsg + ' ' + shareUrl);
-    })();
-
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(function () {});
-    }
-  </script>
+  <script src="/js/thank-you.js?v=1"></script>
   <script src="i18n.js?v=20261115" defer></script>
 </body>
 </html>

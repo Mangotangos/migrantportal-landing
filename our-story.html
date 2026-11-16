@@ -8,8 +8,7 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -501,13 +500,6 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
 
   </footer>
 
-<script>
-  window.onerror = function(msg, src, line, col, err) {
-    console.error('[MigrantPortal]', msg, src + ':' + line);
-  };
-  window.addEventListener('unhandledrejection', function(e) {
-    console.error('[MigrantPortal] Unhandled promise rejection:', e.reason);
-  });
-</script>
+<script src="/js/mp-onerror-log.js?v=1"></script>
 </body>
 </html>
