@@ -196,6 +196,7 @@
 
     /* ── HOME TAB ── */
     .home-action-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:14px; }
+    .admin-settings-btn:hover { border-color: var(--teal) !important; }
     .home-action-card {
       background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;
       display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s,box-shadow .15s;
@@ -751,7 +752,7 @@
       <kbd>⌘K</kbd>
     </button>
     <div class="live-dot" title="Live — auto-refreshes every 60s"></div>
-    <button data-action="openAdminSettings" style="display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--text);font-size:13px;font-weight:600;transition:all .15s;" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--border-2)'">
+    <button data-action="openAdminSettings" class="admin-settings-btn" style="display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--text);font-size:13px;font-weight:600;transition:all .15s;">
       <span id="adminName"></span>
       <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--text-3)"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
     </button>
