@@ -141,11 +141,11 @@ function renderItems() {
   list.innerHTML = items.map(item => `
     <div class="item-row">
       <input type="text" id="item-name-${item.id}" aria-label="Item name" placeholder="Item name (e.g. Winter jacket, size M)"
-        value="${esc(item.name)}" data-input="updateItem" data-args="[null,&quot;name&quot;,{&quot;$&quot;:&quot;value&quot;}]" data-n0="item.id" />
+        value="${esc(item.name)}" data-input="updateItem" data-args="[null,&quot;name&quot;,{&quot;$&quot;:&quot;value&quot;}]" data-n0="${item.id}" />
       <input type="number" id="item-qty-${item.id}" aria-label="Quantity" placeholder="Qty" min="1" max="999"
-        value="${item.quantity}" data-input="updateItem" data-args="[null,&quot;qty&quot;,{&quot;$&quot;:&quot;value&quot;}]" data-n0="item.id"
+        value="${item.quantity}" data-input="updateItem" data-args="[null,&quot;qty&quot;,{&quot;$&quot;:&quot;value&quot;}]" data-n0="${item.id}"
         style="text-align:center;" />
-      <button class="remove-btn" data-action="removeItem" data-n0="item.id">×</button>
+      <button class="remove-btn" data-action="removeItem" data-n0="${item.id}">×</button>
     </div>
   `).join('');
 }
