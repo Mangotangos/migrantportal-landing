@@ -90,3 +90,11 @@
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /reset-password.html
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/find-help
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/find-help.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/org-dashboard
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
+/org-dashboard.html
+  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'

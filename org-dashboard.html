@@ -9,8 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://migrant-portal-production-3826.up.railway.app" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -200,18 +199,9 @@
       .header-actions { width: 100%; }
     }
     /* Responder accounts without can_submit_needs can't use the submit form — hide every entry point */
-    body.no-submit [onclick*="submit-need"], body.no-submit a[href="submit-need"] { display: none !important; }
+    body.no-submit [data-href="submit-need"], body.no-submit a[href="submit-need"] { display: none !important; }
   </style>
-<script>
-  (function() {
-    window.addEventListener('error', function(e) {
-      console.error('[MP]', e.message, e.filename + ':' + e.lineno + ':' + e.colno);
-    });
-    window.addEventListener('unhandledrejection', function(e) {
-      console.error('[MP Promise]', e.reason);
-    });
-  })();
-</script>
+<script src="/js/mp-error-log.js?v=1"></script>
 </head>
 <body>
 
@@ -223,7 +213,7 @@
     <div class="topbar-right">
       <a href="requests" class="nav-link">Browse Needs</a>
       <a href="dashboard" class="nav-link">My Dashboard</a>
-      <div class="user-chip" onclick="window.location.href='profile'">
+      <div class="user-chip" data-href="profile">
         <div class="user-avatar" id="topAvatar">?</div>
         <span class="user-name" id="topName">Loading…</span>
       </div>
@@ -244,20 +234,20 @@
 
       <div class="sidebar-section">
         <div class="sidebar-label">Overview</div>
-        <div class="sidebar-item active" onclick="showSection('overview', this)">
+        <div class="sidebar-item active" data-section="overview">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
           Dashboard
         </div>
-        <div class="sidebar-item" onclick="showSection('needs', this)">
+        <div class="sidebar-item" data-section="needs">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
           Submitted Needs
           <span class="sidebar-badge" id="needsBadge">0</span>
         </div>
-        <div class="sidebar-item" onclick="showSection('members', this)">
+        <div class="sidebar-item" data-section="members">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Team Members
         </div>
-        <div class="sidebar-item" onclick="showSection('activity', this)">
+        <div class="sidebar-item" data-section="activity">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           Activity
         </div>
@@ -265,15 +255,15 @@
 
       <div class="sidebar-section" style="margin-top:16px;">
         <div class="sidebar-label">Support</div>
-        <div class="sidebar-item" onclick="showSection('howitworks', this)">
+        <div class="sidebar-item" data-section="howitworks">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           How It Works
         </div>
-        <div class="sidebar-item" onclick="window.location.href='faq'">
+        <div class="sidebar-item" data-href="faq">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
           Resources
         </div>
-        <div class="sidebar-item" onclick="window.location.href='contact'">
+        <div class="sidebar-item" data-href="contact">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           Help &amp; Support
         </div>
@@ -281,11 +271,11 @@
 
       <div class="sidebar-section" style="margin-top:16px;">
         <div class="sidebar-label">Account</div>
-        <div class="sidebar-item" onclick="window.location.href='profile'">
+        <div class="sidebar-item" data-href="profile">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
           Profile &amp; Settings
         </div>
-        <div class="sidebar-item" onclick="logout()">
+        <div class="sidebar-item" data-action="logout">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Sign Out
         </div>
@@ -300,14 +290,14 @@
         <div class="page-header">
           <div>
             <h1 class="page-title" style="margin:0">Organization Dashboard</h1>
-            <div class="page-sub">Manage your team's submitted needs and responses · <a class="hiw-link" href="#howitworks" onclick="openHowItWorks();return false;">New here? See how it works →</a></div>
+            <div class="page-sub">Manage your team's submitted needs and responses · <a class="hiw-link" href="#howitworks" data-action="openHowItWorks">New here? See how it works →</a></div>
           </div>
           <div class="header-actions">
-            <button class="btn-outline" onclick="window.location.href='requests'">
+            <button class="btn-outline" data-href="requests">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               Browse Needs
             </button>
-            <button class="btn-primary" onclick="window.location.href='submit-need'">
+            <button class="btn-primary" data-href="submit-need">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Submit a Need
             </button>
@@ -326,8 +316,8 @@
             </div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;">
-            <button class="btn-outline" onclick="window.location.href='requests'">Help a Family Nearby</button>
-            <button class="btn-primary" onclick="window.location.href='submit-need'">Submit Your First Need</button>
+            <button class="btn-outline" data-href="requests">Help a Family Nearby</button>
+            <button class="btn-primary" data-href="submit-need">Submit Your First Need</button>
           </div>
         </div>
 
@@ -348,7 +338,7 @@
             <div class="stat-value" id="statNearby">—</div>
             <div class="stat-delta neutral" id="statNearbyDelta">Within 25 mi</div>
           </div>
-          <div class="stat-card" style="cursor:pointer;" onclick="openMembersSection()">
+          <div class="stat-card" style="cursor:pointer;" data-action="openMembers">
             <div class="stat-label">Team Members</div>
             <div class="stat-value" id="statMembers">—</div>
             <div class="stat-delta neutral" id="statMembersDelta">Active volunteers</div>
@@ -374,7 +364,7 @@
         <!-- RECENT NEEDS TABLE -->
         <div class="section-row">
           <div class="section-heading">Recent Needs</div>
-          <a class="see-all" href="#" onclick="showSection('needs', document.querySelector('[onclick*=needs]'))">See all →</a>
+          <a class="see-all" href="#" data-action="seeAllNeeds">See all →</a>
         </div>
         <div class="table-card" style="margin-bottom:24px;">
           <table>
@@ -410,7 +400,7 @@
             <div class="page-sub">All needs submitted by your organization</div>
           </div>
           <div class="header-actions">
-            <button class="btn-primary" onclick="window.location.href='submit-need'">
+            <button class="btn-primary" data-href="submit-need">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Submit a Need
             </button>
@@ -419,7 +409,7 @@
         <div class="table-card">
           <div class="table-toolbar">
             <div class="search-wrap">
-              <input type="text" placeholder="Search needs…" oninput="filterTable(this.value)" />
+              <input type="text" placeholder="Search needs…" data-filter-table />
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </div>
             <button class="filter-chip">
@@ -473,7 +463,7 @@
           <input id="dropoffHours" maxlength="200" placeholder="Mon-Fri 9-5" style="width:100%;margin:4px 0 10px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;">
           <label for="dropoffNotes" style="font-size:12px;font-weight:600;">Note (optional)</label>
           <input id="dropoffNotes" maxlength="500" placeholder="Use the side door, ask for Maria" style="width:100%;margin:4px 0 10px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;">
-          <button class="btn-outline" id="saveDropoffBtn" onclick="saveDropoff()">Save drop-off site</button>
+          <button class="btn-outline" id="saveDropoffBtn" data-action="saveDropoff">Save drop-off site</button>
           <span id="dropoffStatus" role="status" style="margin-left:10px;font-size:12px;color:var(--text-sub);"></span>
         </div>
 
@@ -504,13 +494,13 @@
         <div class="page-header">
           <div><div class="page-title">How It Works</div><div class="page-sub">Everything your organization needs to know to use this dashboard</div></div>
           <div class="header-actions">
-            <button class="btn-primary" onclick="window.location.href='submit-need'">Submit a Need</button>
+            <button class="btn-primary" data-href="submit-need">Submit a Need</button>
           </div>
         </div>
 
         <div class="section-row"><div class="section-heading">From need to help, step by step</div></div>
         <ol class="hiw-steps">
-          <li><b class="h">Invite your team</b>Open <a href="#members" onclick="openMembersSection();return false;">Team Members</a> and share your invite code. Staff and volunteers who sign up with it join your organization.</li>
+          <li><b class="h">Invite your team</b>Open <a href="#members" data-action="openMembers">Team Members</a> and share your invite code. Staff and volunteers who sign up with it join your organization.</li>
           <li><b class="h">Set your drop-off site</b>Also in Team Members. It tells responders where to bring items. Only you and the responder whose offer you accept can see it.</li>
           <li><b class="h">Submit a need</b>Click <b>Submit a Need</b> and describe what a family needs. The family's name and your private notes stay with your organization.</li>
           <li><b class="h">We review it</b>New needs show <b>Awaiting Admin Approval</b> until our team checks them. Once approved, the need goes live.</li>
@@ -560,8 +550,8 @@
         <div class="quick-card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--primary-lt);border-color:var(--primary);">
           <div style="font-size:13px;"><b>Still have questions?</b> <span style="color:var(--text-sub)">Read the FAQ or send us a message. We're happy to help.</span></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn-outline" onclick="window.location.href='faq'">Resources</button>
-            <button class="btn-primary" onclick="window.location.href='contact'">Contact Support</button>
+            <button class="btn-outline" data-href="faq">Resources</button>
+            <button class="btn-primary" data-href="contact">Contact Support</button>
           </div>
         </div>
       </div>
@@ -571,23 +561,23 @@
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="mobile-nav">
-    <button class="mob-nav-item active" onclick="showSection('overview',this)">
+    <button class="mob-nav-item active" data-section="overview">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Overview
     </button>
-    <button class="mob-nav-item" onclick="showSection('needs',this)">
+    <button class="mob-nav-item" data-section="needs">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
       Needs
     </button>
-    <button class="mob-nav-item" onclick="window.location.href='submit-need'">
+    <button class="mob-nav-item" data-href="submit-need">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke="var(--orange)" fill="#fff5f0"/><line x1="12" y1="8" x2="12" y2="16" stroke="var(--orange)"/><line x1="8" y1="12" x2="16" y2="12" stroke="var(--orange)"/></svg>
       Submit
     </button>
-    <button class="mob-nav-item" onclick="showSection('members',this)">
+    <button class="mob-nav-item" data-section="members">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Team
     </button>
-    <button class="mob-nav-item" onclick="window.location.href='profile'">
+    <button class="mob-nav-item" data-href="profile">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       Profile
     </button>
@@ -596,359 +586,6 @@
   <script src="api.js?v=2"></script>
   <script src="announcements.js?v=1"></script>
   <script src="notif-bell.js"></script>
-  <script>
-    requireAuth();
-    const user = getUser() || {};
-    // Not named canSubmitNeeds: api.js declares that global, and redeclaring it with const kills this whole script.
-    const orgCanSubmit = u => u.role !== 'responder' || u.can_submit_needs === true;
-    document.body.classList.toggle('no-submit', !orgCanSubmit(user));
-    // Refresh the cached profile so an admin grant takes effect without re-login
-    apiGet('/auth/me').then(me => {
-      if (!me) return;
-      localStorage.setItem('mp_user', JSON.stringify(me));
-      document.body.classList.toggle('no-submit', !orgCanSubmit(me));
-    }).catch(() => {});
-    const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('topAvatar').textContent = initials;
-    document.getElementById('topName').textContent = user.name || user.email || 'User';
-    if (user.organization) document.getElementById('orgName').textContent = user.organization;
-
-    const URGENCY_BADGE = { urgent:'badge-urgent', high:'badge-high', medium:'badge-medium', low:'badge-low' };
-    const CAT_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', childcare:'👶', financial:'💰', other:'📦' };
-
-    function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : '—'; }
-    function timeAgo(d) {
-      // API timestamps are naive UTC; without the Z they parse as local time and go negative
-      const utc = /Z$|[+-]\d\d:\d\d$/.test(d) ? d : d + 'Z';
-      const diff = Math.max(0, Math.floor((Date.now() - new Date(utc)) / 86400000));
-      if (diff === 0) return 'Today'; if (diff === 1) return '1d ago';
-      return diff + 'd ago';
-    }
-
-    const STATUS_BADGE = {
-      pending:   ['badge-pending', 'Awaiting Approval'],
-      approved:  ['badge-open',    'Approved'],
-      active:    ['badge-open',    'Open'],
-      fulfilled: ['badge-closed',  'Fulfilled'],
-      closed:    ['badge-closed',  'Closed'],
-    };
-    function statusBadge(status) {
-      const [cls, label] = STATUS_BADGE[status] || ['badge-closed', cap(status || 'unknown')];
-      return `<span class="badge ${cls}">${label}</span>`;
-    }
-
-    function needRow(n, cols) {
-      const urg  = n.urgency || 'low';
-      const loc  = [n.city, n.state].filter(Boolean).join(', ');
-      const fam  = `${n.family_adults||1}A ${n.family_children||0}C`;
-      const date = n.created_at ? timeAgo(n.created_at) : '—';
-      const id   = '#MP' + String(n.id).padStart(3,'0');
-
-      if (cols === 'short') return `
-        <tr>
-          <td><a href="need?id=${n.id}" style="font-weight:600;color:var(--teal);">${esc(n.title)}</a></td>
-          <td>${CAT_EMOJI[n.category]||''} ${cap(n.category)}</td>
-          <td><span class="badge ${URGENCY_BADGE[urg]}"><span class="dot"></span>${cap(urg)}</span></td>
-          <td>${esc(loc)}</td>
-          <td>${fam}</td>
-          <td>${statusBadge(n.status)}</td>
-          <td><a href="need?id=${n.id}" style="font-size:12px;color:var(--teal);font-weight:600;">View →</a></td>
-        </tr>`;
-      return `
-        <tr>
-          <td style="font-size:12px;color:var(--gray-600);font-weight:600;">${id}</td>
-          <td><a href="need?id=${n.id}" style="font-weight:600;color:var(--teal);">${esc(n.title)}</a></td>
-          <td>${CAT_EMOJI[n.category]||''} ${cap(n.category)}</td>
-          <td><span class="badge ${URGENCY_BADGE[urg]}"><span class="dot"></span>${cap(urg)}</span></td>
-          <td>${esc(loc)}</td>
-          <td>${fam}</td>
-          <td style="color:var(--gray-400);">${date}</td>
-          <td>${statusBadge(n.status)}</td>
-          <td><a href="need?id=${n.id}" style="font-size:12px;color:var(--teal);font-weight:600;">View →</a></td>
-        </tr>`;
-    }
-
-    function openMembersSection() {
-      showSection('members', document.querySelectorAll('.sidebar-item')[2]);
-    }
-
-    let allNeeds = [];
-
-    // ── Needs near you ───────────────────────────────────────────────────────
-    const NEARBY_RADIUS_MI = 25;
-    const NEARBY_MAX_ROWS = 5;
-    const URGENCY_RANK = { urgent: 3, high: 2, medium: 1, low: 0 };
-
-    function distanceMiles(a, b) {
-      const rad = d => d * Math.PI / 180;
-      const h = Math.sin(rad(b.lat - a.lat) / 2) ** 2 +
-        Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lng - a.lng) / 2) ** 2;
-      return 3958.8 * 2 * Math.asin(Math.sqrt(h));
-    }
-
-    async function geocodeOrg(org) {
-      if (!org || !org.city || !org.state) return null;
-      const key = `mp_org_geo_${esc(org.city)}_${esc(org.state)}`.toLowerCase();
-      const cached = localStorage.getItem(key);
-      if (cached) return JSON.parse(cached);
-      try {
-        const q = encodeURIComponent(`${esc(org.city)}, ${esc(org.state)}, USA`);
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${q}`);
-        const hits = res.ok ? await res.json() : [];
-        if (!hits.length) return null;
-        const point = { lat: parseFloat(hits[0].lat), lng: parseFloat(hits[0].lon) };
-        localStorage.setItem(key, JSON.stringify(point));
-        return point;
-      } catch (err) {
-        console.warn('Org geocode failed', err);
-        return null;
-      }
-    }
-
-    function nearbyRow(n) {
-      const urg = n.urgency || 'low';
-      const loc = [n.city, n.state].filter(Boolean).join(', ');
-      const dist = n.distance == null ? '—' : `${Math.round(n.distance)} mi`;
-      return `
-        <tr>
-          <td><a href="need?id=${esc(n.id)}" style="font-weight:600;color:var(--teal);">${esc(n.title)}</a></td>
-          <td>${CAT_EMOJI[n.category] || ''} ${cap(n.category)}</td>
-          <td><span class="badge ${URGENCY_BADGE[urg]}"><span class="dot"></span>${cap(urg)}</span></td>
-          <td>${esc(loc)}</td>
-          <td>${dist}</td>
-          <td><a href="need?id=${esc(n.id)}" style="font-size:12px;color:var(--teal);font-weight:600;">Respond →</a></td>
-        </tr>`;
-    }
-
-    async function loadNearbyNeeds(org) {
-      const body = document.getElementById('nearbyNeedsBody');
-      const tile = document.getElementById('statNearby');
-      const tileDelta = document.getElementById('statNearbyDelta');
-      const emptyRow = msg => `<tr><td colspan="6" style="text-align:center;color:var(--text-sub);padding:28px;">${msg}</td></tr>`;
-      try {
-        const [res, origin] = await Promise.all([fetch(`${API}/needs/public`), geocodeOrg(org)]);
-        if (!res.ok) throw new Error(`needs/public ${res.status}`);
-        const needs = await res.json();
-
-        const withDistance = needs.map(n => ({
-          ...n,
-          distance: origin && n.lat != null && n.lng != null ? distanceMiles(origin, n) : null,
-        }));
-        const nearby = origin
-          ? withDistance.filter(n => n.distance != null && n.distance <= NEARBY_RADIUS_MI)
-          : withDistance.filter(n => org && org.state && n.state === org.state);
-
-        nearby.sort((a, b) =>
-          (URGENCY_RANK[b.urgency] || 0) - (URGENCY_RANK[a.urgency] || 0) ||
-          (a.distance ?? Infinity) - (b.distance ?? Infinity));
-
-        tile.textContent = nearby.length;
-        tileDelta.textContent = origin ? `Within ${NEARBY_RADIUS_MI} mi` : 'In your state';
-        body.innerHTML = nearby.length
-          ? nearby.slice(0, NEARBY_MAX_ROWS).map(nearbyRow).join('')
-          : emptyRow(`No open needs ${origin ? `within ${NEARBY_RADIUS_MI} mi` : 'near you'} right now. New needs are posted by navigators every week. <a href="requests">Browse all needs →</a> or <a href="submit-need">submit one from your caseload →</a>`);
-      } catch (err) {
-        console.error('Nearby needs failed', err);
-        tile.textContent = '—';
-        body.innerHTML = emptyRow('Could not load nearby needs. <a href="requests">Browse all needs →</a>');
-      }
-    }
-
-    async function loadData() {
-      const [needsRes, orgRes, statsRes, membersRes] = await Promise.allSettled([
-        apiGet('/needs?limit=100'),
-        apiGet('/orgs/mine'),
-        apiGet('/orgs/mine/stats'),
-        apiGet('/orgs/mine/members'),
-      ]);
-
-      allNeeds = needsRes.status === 'fulfilled'
-        ? (Array.isArray(needsRes.value) ? needsRes.value : (needsRes.value.items || needsRes.value.needs || []))
-        : [];
-
-      const org     = orgRes.status     === 'fulfilled' ? orgRes.value     : null;
-      const stats   = statsRes.status   === 'fulfilled' ? statsRes.value   : null;
-      const members = membersRes.status === 'fulfilled'
-        ? (Array.isArray(membersRes.value) ? membersRes.value : (membersRes.value.items || membersRes.value.members || []))
-        : [];
-
-      renderInviteCard(org, orgRes.status === 'fulfilled');
-      fillDropoff(org);
-      renderMembersTable(members, membersRes.status === 'fulfilled');
-
-      // Org name
-      if (org) document.getElementById('orgName').textContent = org.name;
-
-      // First-run nudge — only while nothing has ever been submitted
-      document.getElementById('firstNeedNudge').style.display = allNeeds.length ? 'none' : 'flex';
-
-      // Stats
-      document.getElementById('statTotal').textContent    = allNeeds.length || '0';
-      const openCount = allNeeds.filter(n => n.status === 'active').length;
-      document.getElementById('statOpen').textContent     = openCount;
-      loadNearbyNeeds(org);
-      document.getElementById('statMembers').textContent  = stats ? stats.member_count : (members.length || '1');
-      document.getElementById('needsBadge').textContent   = openCount;
-
-      // Recent needs table (5 rows)
-      const recent = allNeeds.slice(0, 5);
-      const rBody = document.getElementById('recentNeedsBody');
-      rBody.innerHTML = recent.length
-        ? recent.map(n => needRow(n, 'short')).join('')
-        : '<tr><td colspan="7" style="text-align:center;color:var(--text-sub);padding:28px;">No needs submitted yet. <a href="submit-need">Submit your first need →</a></td></tr>';
-
-      // All needs table
-      renderAllNeeds(allNeeds);
-
-      // Activity feed
-      renderActivity(allNeeds);
-
-      // Solo-team nudge — invite link only while the team is just the admin
-      const memberCount = stats ? stats.member_count : (members.length || 1);
-      document.getElementById('statMembersDelta').innerHTML = memberCount <= 1
-        ? 'Just you so far. <a href="#" onclick="event.stopPropagation();event.preventDefault();openMembersSection()" style="color:var(--teal);font-weight:600;">Invite a teammate →</a>'
-        : 'Active volunteers';
-    }
-
-    function renderAllNeeds(needs) {
-      const body = document.getElementById('allNeedsBody');
-      body.innerHTML = needs.length
-        ? needs.map(n => needRow(n, 'full')).join('')
-        : '<tr><td colspan="9" style="text-align:center;color:var(--text-sub);padding:28px;">No needs found. <a href="submit-need">Submit one →</a></td></tr>';
-    }
-
-    function filterTable(q) {
-      const term = q.toLowerCase();
-      document.querySelectorAll('#allNeedsBody tr').forEach(row => {
-        row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
-      });
-    }
-
-    function renderActivity(needs) {
-      const items = needs.slice(0, 8).map(n => `
-        <div class="feed-item">
-          <div class="feed-dot teal">${CAT_EMOJI[n.category]||'📦'}</div>
-          <div>
-            <div class="feed-text">Need submitted: <a href="need?id=${n.id}" style="font-weight:600;">${esc(n.title)}</a></div>
-            <div class="feed-time">${n.created_at ? timeAgo(n.created_at) : '—'} · ${[n.city,n.state].filter(Boolean).join(', ')}</div>
-          </div>
-        </div>`).join('');
-      const html = items || '<div style="padding:20px;text-align:center;color:var(--text-sub);font-size:13px;">No activity yet.</div>';
-      document.getElementById('activityFeed').innerHTML = html;
-      document.getElementById('activityFeedFull').innerHTML = html;
-    }
-
-    function fillDropoff(org) {
-      const card = document.getElementById('dropoffCard');
-      if (!org) { card.style.display = 'none'; return; }
-      document.getElementById('dropoffAddress').value = org.dropoff_address || '';
-      document.getElementById('dropoffHours').value = org.dropoff_hours || '';
-      document.getElementById('dropoffNotes').value = org.dropoff_notes || '';
-    }
-
-    async function saveDropoff() {
-      const status = document.getElementById('dropoffStatus');
-      const btn = document.getElementById('saveDropoffBtn');
-      btn.disabled = true;
-      status.textContent = 'Saving…';
-      try {
-        await apiPatch('/orgs/mine/dropoff', {
-          dropoff_address: document.getElementById('dropoffAddress').value,
-          dropoff_hours: document.getElementById('dropoffHours').value,
-          dropoff_notes: document.getElementById('dropoffNotes').value,
-        });
-        status.textContent = 'Saved.';
-      } catch (err) {
-        console.error('Save drop-off failed', err);
-        status.textContent = /owner/i.test(err.message || '') ? 'Only the org owner can change this.' : 'Could not save. Try again.';
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    function renderInviteCard(org, ok) {
-      const el = document.getElementById('inviteCardBody');
-      if (!ok) {
-        el.innerHTML = `<div style="color:var(--text-sub);">Couldn't load your invite code right now. <a href="#" onclick="loadData();return false;" style="color:var(--teal);font-weight:600;">Try again</a></div>`;
-        return;
-      }
-      const code = org && org.invite_code;
-      if (!code) {
-        el.innerHTML = `<div style="color:var(--text-sub);">No invite code is set up for this organization yet.</div>`;
-        return;
-      }
-      el.innerHTML = `
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
-          <code id="inviteCodeText" style="background:var(--gray-100);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:15px;font-weight:700;letter-spacing:.04em;color:var(--text);">${esc(code)}</code>
-          <button class="btn-outline" id="copyInviteBtn" onclick="copyInviteCode('${esc(code)}')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy code
-          </button>
-        </div>
-        <div style="color:var(--text-sub);">A teammate can enter this code at <strong>migrantportal.com/register?invite=${esc(code)}</strong> to join your org as a navigator with needs-submission access.</div>`;
-    }
-
-    function copyInviteCode(code) {
-      const btn = document.getElementById('copyInviteBtn');
-      navigator.clipboard.writeText(code).then(() => {
-        if (!btn) return;
-        const original = btn.innerHTML;
-        btn.innerHTML = 'Copied!';
-        setTimeout(() => { btn.innerHTML = original; }, 1500);
-      }).catch(() => {
-        if (btn) btn.innerHTML = 'Copy failed';
-      });
-    }
-
-    function renderMembersTable(members, ok) {
-      const body = document.getElementById('membersBody');
-      if (!ok) {
-        body.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-sub);padding:28px;">Couldn\'t load team members right now. <a href="#" onclick="loadData();return false;" style="color:var(--teal);font-weight:600;">Try again</a></td></tr>';
-        return;
-      }
-      if (!members.length) {
-        body.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-sub);padding:28px;">No team members yet. Share your invite code above to bring your team on.</td></tr>';
-        return;
-      }
-      body.innerHTML = members.map(m => {
-        const name = m.name || m.email || 'Unknown';
-        const youTag = m.id === user.id ? ' <span style="color:var(--gray-400);font-weight:500;">(You)</span>' : '';
-        return `<tr>
-          <td style="font-weight:600;">${esc(name)}${youTag}</td>
-          <td style="color:var(--text-sub);">${esc(m.email || '—')}</td>
-          <td>${esc(cap(m.responder_type) || '—')}</td>
-        </tr>`;
-      }).join('');
-    }
-
-    // Section switching
-    const sections = ['overview','needs','members','activity','howitworks'];
-    function showSection(id, btn) {
-      sections.forEach(s => {
-        const el = document.getElementById('sec-' + s);
-        if (el) el.style.display = s === id ? '' : 'none';
-      });
-      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-      document.querySelectorAll('.mob-nav-item').forEach(i => i.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-    }
-
-    function openHowItWorks() {
-      const item = [...document.querySelectorAll('.sidebar-item')]
-        .find(i => (i.getAttribute('onclick') || '').includes("'howitworks'"));
-      showSection('howitworks', item);
-      window.scrollTo(0, 0);
-    }
-
-    // Deep link from other pages' sidebars, e.g. org-dashboard#members
-    const _hashSection = location.hash.slice(1);
-    if (sections.includes(_hashSection)) {
-      const _item = [...document.querySelectorAll('.sidebar-item')]
-        .find(i => (i.getAttribute('onclick') || '').includes("'" + _hashSection + "'"));
-      showSection(_hashSection, _item);
-    }
-
-    loadData();
-  </script>
+  <script src="/js/org-dashboard.js?v=1"></script>
 </body>
 </html>
