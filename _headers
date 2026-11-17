@@ -1,10 +1,14 @@
+# Scripts: no inline <script> blocks and no on* attributes anywhere (handlers are delegated, see js/mp-actions.js and
+# migrantportal-e2e/docs/csp-design.md), so script-src has no 'unsafe-inline' and script-src-attr is 'none'.
+# style-src still allows 'unsafe-inline' (inline style attributes); that is a separate cleanup.
+# The per-page rules at the bottom are now redundant for scripts; they only narrow third-party hosts per page.
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://static.cloudflareinsights.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://migrant-portal-production-3826.up.railway.app https://emailoctopus.com https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://www.google.com https://nominatim.openstreetmap.org https://api.zippopotam.us; img-src 'self' data: https:; frame-src 'self' https://www.google.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://static.cloudflareinsights.com https://www.google.com https://www.gstatic.com; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://migrant-portal-production-3826.up.railway.app https://emailoctopus.com https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com https://www.google.com https://nominatim.openstreetmap.org https://api.zippopotam.us; img-src 'self' data: https:; frame-src 'self' https://www.google.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
   Cache-Control: public, max-age=3600, must-revalidate
 
 /admin
