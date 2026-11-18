@@ -2,22 +2,147 @@
   "meta": {
     "updated": "2026-11-17",
     "acsPeriod": "2020-2024",
-    "complete": false
+    "complete": true
   },
   "areas": [
-    { "name": "Kansas statewide", "foreignBornPct": 7.4, "period": "2020-2024", "source": "Census QuickFacts" },
-    { "name": "Kansas City metro", "foreignBornPct": 7.2, "period": "2019-2023", "source": "USAFacts" }
+    {
+      "name": "Kansas statewide",
+      "foreignBornPct": 7.4,
+      "period": "2020-2024",
+      "source": "Census ACS"
+    },
+    {
+      "name": "Kansas City metro",
+      "foreignBornPct": 7.2,
+      "period": "2019-2023",
+      "source": "USAFacts"
+    }
   ],
   "counties": [
-    { "name": "Wyandotte", "state": "KS", "metro": true, "foreignBornPct": 17.9, "foreignBornMoe": null, "nonEnglishPct": null, "population": null },
-    { "name": "Johnson", "state": "KS", "metro": true, "foreignBornPct": 9.2, "foreignBornMoe": null, "nonEnglishPct": 12.1, "population": null },
-    { "name": "Leavenworth", "state": "KS", "metro": true, "foreignBornPct": null, "foreignBornMoe": null, "nonEnglishPct": null, "population": null },
-    { "name": "Jackson", "state": "MO", "metro": true, "foreignBornPct": null, "foreignBornMoe": null, "nonEnglishPct": null, "population": null },
-    { "name": "Clay", "state": "MO", "metro": true, "foreignBornPct": null, "foreignBornMoe": null, "nonEnglishPct": null, "population": null }
+    {
+      "name": "Wyandotte",
+      "state": "KS",
+      "metro": true,
+      "foreignBornPct": 17.9,
+      "foreignBornMoe": 0.8,
+      "nonEnglishPct": 31.8,
+      "population": 167654
+    },
+    {
+      "name": "Johnson",
+      "state": "KS",
+      "metro": true,
+      "foreignBornPct": 9.2,
+      "foreignBornMoe": 0.3,
+      "nonEnglishPct": 12.1,
+      "population": 620631
+    },
+    {
+      "name": "Leavenworth",
+      "state": "KS",
+      "metro": true,
+      "foreignBornPct": 3.6,
+      "foreignBornMoe": 0.7,
+      "nonEnglishPct": 5.5,
+      "population": 83123
+    },
+    {
+      "name": "Miami",
+      "state": "KS",
+      "metro": true,
+      "foreignBornPct": 1.0,
+      "foreignBornMoe": 0.4,
+      "nonEnglishPct": 2.8,
+      "population": 34938
+    },
+    {
+      "name": "Jackson",
+      "state": "MO",
+      "metro": true,
+      "foreignBornPct": 6.6,
+      "foreignBornMoe": 0.3,
+      "nonEnglishPct": 10.5,
+      "population": 719976
+    },
+    {
+      "name": "Clay",
+      "state": "MO",
+      "metro": true,
+      "foreignBornPct": 5.5,
+      "foreignBornMoe": 0.5,
+      "nonEnglishPct": 7.9,
+      "population": 258122
+    },
+    {
+      "name": "Platte",
+      "state": "MO",
+      "metro": true,
+      "foreignBornPct": 5.7,
+      "foreignBornMoe": 0.7,
+      "nonEnglishPct": 8.2,
+      "population": 110371
+    },
+    {
+      "name": "Cass",
+      "state": "MO",
+      "metro": true,
+      "foreignBornPct": 1.8,
+      "foreignBornMoe": 0.3,
+      "nonEnglishPct": 3.3,
+      "population": 110773
+    },
+    {
+      "name": "Sedgwick",
+      "state": "KS",
+      "metro": false,
+      "foreignBornPct": 8.6,
+      "foreignBornMoe": 0.3,
+      "nonEnglishPct": 15.2,
+      "population": 528226
+    },
+    {
+      "name": "Finney",
+      "state": "KS",
+      "metro": false,
+      "foreignBornPct": 23.9,
+      "foreignBornMoe": 1.6,
+      "nonEnglishPct": 46.5,
+      "population": 38084
+    },
+    {
+      "name": "Seward",
+      "state": "KS",
+      "metro": false,
+      "foreignBornPct": 29.3,
+      "foreignBornMoe": 2.4,
+      "nonEnglishPct": 61.4,
+      "population": 21486
+    },
+    {
+      "name": "Ford",
+      "state": "KS",
+      "metro": false,
+      "foreignBornPct": 25.1,
+      "foreignBornMoe": 2.3,
+      "nonEnglishPct": 47.8,
+      "population": 34074
+    }
   ],
   "growth": [
-    { "year": 1990, "value": 33000 },
-    { "year": 2015, "value": 135000 }
+    {
+      "year": 1990,
+      "value": 33000
+    },
+    {
+      "year": 2015,
+      "value": 135000
+    }
   ],
-  "originsKansas": ["Mexico", "India", "Vietnam", "Guatemala", "China"]
+  "originsKansas": [
+    "Mexico",
+    "India",
+    "Vietnam",
+    "Guatemala",
+    "China"
+  ]
 }

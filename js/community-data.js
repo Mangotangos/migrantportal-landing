@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var SVG_NS = 'http://www.w3.org/2000/svg';
-  var BAR_SCALE_MAX = 20;
+  var BAR_SCALE_STEP = 5;
   var GROWTH_TICK_STEP = 50000;
   var state = { data: null, scope: 'metro' };
 
@@ -38,12 +38,17 @@
   function renderBars() {
     var host = document.getElementById('cd-bars');
     host.textContent = '';
-    barRows(state.data, state.scope).forEach(function (r) {
+    var rows = barRows(state.data, state.scope);
+    var top = rows.length ? rows[0].value : 0;
+    var scaleMax = Math.max(BAR_SCALE_STEP, Math.ceil(top / BAR_SCALE_STEP) * BAR_SCALE_STEP);
+    document.getElementById('cd-scale-note').textContent =
+      'All bars use one scale, 0 to ' + scaleMax + ' percent. Statewide and metro figures cover slightly different years because the Census releases estimates on a rolling basis.';
+    rows.forEach(function (r) {
       var row = el('div', 'cd-bar-row');
       row.appendChild(el('div', 'cd-bar-name', r.name));
       var track = el('div', 'cd-bar-track');
       var fill = el('div', 'cd-bar-fill');
-      fill.style.width = Math.min(100, r.value / BAR_SCALE_MAX * 100) + '%';
+      fill.style.width = Math.min(100, r.value / scaleMax * 100) + '%';
       track.appendChild(fill);
       row.appendChild(track);
       row.appendChild(el('div', 'cd-bar-val', pct(r.value)));
