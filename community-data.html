@@ -3,11 +3,95 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Community Data: Kansas City and Suburbs | MigrantPortal</title>
+  <title>Immigrants in Kansas City: County &amp; City Data | MigrantPortal</title>
   <link rel="canonical" href="https://migrantportal.com/community-data" />
-  <meta name="description" content="How many people in Kansas City and its suburbs were born outside the U.S., where they come from, and how fast the community is growing. Public Census data, explained plainly." />
-  <meta property="og:title" content="Community Data: Kansas City and Suburbs | MigrantPortal" />
-  <meta property="og:description" content="Foreign-born population in Kansas City and its suburbs: by county, by city, by region of birth, and over time." />
+  <meta name="description" content="How many immigrants live in Kansas City? Foreign-born population by county and city, countries of origin, languages and growth since 2010, from Census data." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta property="og:site_name" content="MigrantPortal" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://migrantportal.com/community-data" />
+  <meta property="og:title" content="Immigrants in Kansas City: County &amp; City Data | MigrantPortal" />
+  <meta property="og:description" content="How many immigrants live in Kansas City? Foreign-born population by county and city, countries of origin, languages and growth since 2010, from Census data." />
+  <meta property="og:image" content="https://migrantportal.com/og-community-data.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Map of the Kansas City area shaded by the share of residents born outside the U.S." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Immigrants in Kansas City: County &amp; City Data | MigrantPortal" />
+  <meta name="twitter:description" content="How many immigrants live in Kansas City? Foreign-born population by county and city, countries of origin, languages and growth since 2010, from Census data." />
+  <meta name="twitter:image" content="https://migrantportal.com/og-community-data.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Immigrant and foreign-born population of the Kansas City area, by county and city",
+  "description": "Foreign-born population of Kansas City and its suburbs by county and city, with region and country of birth, languages spoken at home, and year-by-year change since 2010. Compiled from U.S. Census Bureau American Community Survey 5-year estimates.",
+  "url": "https://migrantportal.com/community-data",
+  "sameAs": "https://migrantportal.com/community-data",
+  "keywords": [
+    "immigrants in Kansas City",
+    "foreign-born population",
+    "Kansas City demographics",
+    "Johnson County Kansas",
+    "Wyandotte County Kansas",
+    "Jackson County Missouri",
+    "immigrant population by county"
+  ],
+  "creator": {
+    "@type": "Organization",
+    "name": "MigrantPortal Inc.",
+    "url": "https://migrantportal.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "MigrantPortal Inc.",
+    "url": "https://migrantportal.com"
+  },
+  "isBasedOn": "https://www.census.gov/programs-surveys/acs",
+  "license": "https://www.usa.gov/government-works",
+  "temporalCoverage": "2006/2024",
+  "dateModified": "2026-11-17",
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "Kansas City metropolitan area, Kansas and Missouri"
+  },
+  "variableMeasured": [
+    "Foreign-born population",
+    "Foreign-born share of residents",
+    "Region of birth",
+    "Country of birth",
+    "Language spoken at home"
+  ],
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://migrantportal.com/data/community-data.json"
+    }
+  ],
+  "image": "https://migrantportal.com/og-community-data.png"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://migrantportal.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Community Data",
+      "item": "https://migrantportal.com/community-data"
+    }
+  ]
+}
+  </script>
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -122,6 +206,8 @@
     @media (max-width:480px) { #cdm-rank { grid-template-columns:1fr; } }
     #cdm-rank li { display:flex; justify-content:space-between; gap:8px; cursor:pointer; }
     #cdm-rank li:hover { color:var(--teal); }
+    .cd-answers { grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr)); }
+    ol.cd-prerender { margin:0 0 0 20px; display:grid; gap:6px; font-size:14px; }
     [hidden] { display:none !important; }
   </style>
   <style id="mp-nav-v2">
@@ -154,21 +240,32 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
 <main class="cd-wrap">
   <header class="cd-hero">
     <div class="cd-eyebrow">Community data</div>
-    <h1>Who lives in the Kansas City region</h1>
-    <p class="cd-lede">A plain look at the foreign-born community in Kansas City and its suburbs, built from public Census data. See how it has grown, where neighbors were born, which languages they speak, and how your city compares. Switch to Kansas statewide any time.</p>
+    <h1>Immigrants in Kansas City and its suburbs</h1>
+    <p class="cd-lede">How many immigrants live in Kansas City, and where do they come from? This page shows the foreign-born population of Kansas City and its suburbs by county and city, with countries of origin, languages spoken, and growth since 2010, all from public U.S. Census data. Switch to Kansas statewide any time.</p>
     <div class="cd-controls">
       <div class="cd-toggle" role="group" aria-label="Choose area">
         <button id="cd-btn-metro" type="button" aria-pressed="true">Kansas City metro</button>
         <button id="cd-btn-ks" type="button" aria-pressed="false">Kansas statewide</button>
       </div>
-      <span class="cd-updated" id="cd-updated"></span>
+      <span class="cd-updated" id="cd-updated">Census ACS 2020-2024. Last updated 2026-11-17.</span>
     </div>
     <div class="cd-error" id="cd-error" hidden>The data could not be loaded. Please refresh the page or try again later.</div>
   </header>
 
   <section class="cd-sec" aria-labelledby="take-h">
-    <h2 id="take-h">The short version</h2>
+    <h2 id="take-h">Immigrant population at a glance</h2>
     <div class="cd-grid" id="cd-stats"></div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="answers-h">
+    <h2 id="answers-h">Immigrants in Kansas City: quick answers</h2>
+    <div class="cd-grid cd-answers">
+      <div class="cd-panel"><h3>How many immigrants live in Kansas City?</h3><p style="margin-top:8px">About 160,492 foreign-born residents, or 7.6% of the population, live in the Kansas City area (Wyandotte, Johnson, Leavenworth, Miami, Jackson, Clay, Platte and Cass counties), according to the Census Bureau&#x27;s 2020-2024 American Community Survey. That is 35% more than in 2006-2010, an increase of about 41,474 people.</p></div>
+      <div class="cd-panel"><h3>Which Kansas City counties and suburbs have the most immigrants?</h3><p style="margin-top:8px">By share of residents, the highest are Wyandotte County, KS (17.9%), Johnson County, KS (9.2%), Jackson County, MO (6.6%). By number of people, Johnson County, KS (57,261 people) and Jackson County, MO (47,328 people) lead. Among cities and suburbs, the highest shares are Kansas City, KS (18.8%), Overland Park, KS (11.7%), Olathe, KS (11.2%), Grandview, MO (9.1%), Kansas City, MO (8.6%).</p></div>
+      <div class="cd-panel"><h3>Where do Kansas City&#x27;s immigrants come from?</h3><p style="margin-top:8px">About 47% were born in Latin America, 31% in Asia and 12% in Africa. The most common countries of birth are Mexico (45,184), India (11,769), Honduras (6,025), Guatemala (5,678), China, excluding Hong Kong and Taiwan (5,347), Vietnam (4,883).</p></div>
+      <div class="cd-panel"><h3>What languages do Kansas City&#x27;s immigrants speak?</h3><p style="margin-top:8px">Spanish is the most common language other than English, spoken at home by about 136,601 residents of the Kansas City area. About 52,893 of them speak English less than &quot;very well&quot;. Switch to Kansas statewide above to compare.</p></div>
+    </div>
+    <p class="cd-small" style="margin-top:12px">Figures are U.S. Census Bureau American Community Survey estimates for 2020-2024, last updated 2026-11-17. Need help or want to help a neighbor? <a href="/find-help">Find help near you</a> or <a href="/register">become a Navigator</a>.</p>
   </section>
 
   <section class="cd-sec" aria-labelledby="map-h">
@@ -199,7 +296,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   </section>
 
   <section class="cd-sec" aria-labelledby="share-h">
-    <h2 id="share-h">Share of residents born outside the U.S.</h2>
+    <h2 id="share-h">Share of residents born outside the U.S., by county</h2>
     <div class="cd-panel">
       <div class="cd-bars" id="cd-bars"></div>
       <p class="cd-small" id="cd-scale-note" style="margin-top:14px"></p>
@@ -207,16 +304,16 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   </section>
 
   <section class="cd-sec" aria-labelledby="city-h">
-    <h2 id="city-h">Cities and suburbs</h2>
+    <h2 id="city-h">Immigrant population by city and suburb</h2>
     <div class="cd-panel">
-      <div class="cd-bars" id="cd-cities"></div>
+      <div class="cd-bars" id="cd-cities"><ol class="cd-prerender"><li>Kansas City, KS: 18.8% of 155,135 residents born outside the U.S.</li><li>Overland Park, KS: 11.7% of 200,306 residents born outside the U.S.</li><li>Olathe, KS: 11.2% of 145,057 residents born outside the U.S.</li><li>Grandview, MO: 9.1% of 26,527 residents born outside the U.S.</li><li>Kansas City, MO: 8.6% of 510,612 residents born outside the U.S.</li><li>Shawnee, KS: 8.5% of 68,542 residents born outside the U.S.</li><li>Lenexa, KS: 8.2% of 58,384 residents born outside the U.S.</li><li>Merriam, KS: 7.4% of 11,085 residents born outside the U.S.</li><li>Gladstone, MO: 7.3% of 27,207 residents born outside the U.S.</li><li>Gardner, KS: 6.1% of 24,526 residents born outside the U.S.</li><li>Roeland Park, KS: 6.0% of 6,763 residents born outside the U.S.</li><li>Independence, MO: 5.7% of 121,740 residents born outside the U.S.</li><li>Mission, KS: 5.5% of 9,915 residents born outside the U.S.</li><li>Leawood, KS: 5.4% of 33,809 residents born outside the U.S.</li><li>Lee&#x27;s Summit, MO: 4.3% of 103,656 residents born outside the U.S.</li><li>Raytown, MO: 3.9% of 29,445 residents born outside the U.S.</li><li>Blue Springs, MO: 2.9% of 59,965 residents born outside the U.S.</li><li>Prairie Village, KS: 2.8% of 22,874 residents born outside the U.S.</li><li>Raymore, MO: 2.8% of 24,526 residents born outside the U.S.</li><li>Liberty, MO: 2.5% of 30,689 residents born outside the U.S.</li><li>Belton, MO: 1.5% of 25,008 residents born outside the U.S.</li></ol></div>
       <p class="cd-small" style="margin-top:14px">Share of residents born outside the U.S. The ± number is the margin of error: a city at 18.8% ±0.9 is very likely between 17.9% and 19.7%. If two cities' ranges overlap, treat them as tied. Cities overlap counties: Kansas City, MO spans parts of Jackson, Clay, Platte and Cass counties. Source: Census ACS table B05002.</p>
     </div>
   </section>
 
   <section class="cd-sec" aria-labelledby="line-h">
     <div class="cd-head">
-      <h2 id="line-h" style="margin:0">Growth over time</h2>
+      <h2 id="line-h" style="margin:0">Immigrant population growth since 2010</h2>
       <div class="cd-toggle" role="group" aria-label="Show growth as">
         <button id="cd-mode-num" type="button" aria-pressed="true">Number of people</button>
         <button id="cd-mode-pct" type="button" aria-pressed="false">Share of residents</button>
@@ -244,11 +341,11 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   </section>
 
   <section class="cd-sec" aria-labelledby="county-h">
-    <h2 id="county-h">By county</h2>
+    <h2 id="county-h">Foreign-born population by county</h2>
     <div class="cd-panel"><div class="cd-scroll">
       <table>
         <thead><tr><th>County</th><th>State</th><th>Born outside U.S.</th><th>Non-English at home</th><th>Population</th></tr></thead>
-        <tbody id="cd-county-body"></tbody>
+        <tbody id="cd-county-body"><tr><td>Wyandotte</td><td>KS</td><td>17.9% ±0.8</td><td>31.8%</td><td>167,654</td></tr><tr><td>Johnson</td><td>KS</td><td>9.2% ±0.3</td><td>12.1%</td><td>620,631</td></tr><tr><td>Leavenworth</td><td>KS</td><td>3.6% ±0.7</td><td>5.5%</td><td>83,123</td></tr><tr><td>Miami</td><td>KS</td><td>1.0% ±0.4</td><td>2.8%</td><td>34,938</td></tr><tr><td>Jackson</td><td>MO</td><td>6.6% ±0.3</td><td>10.5%</td><td>719,976</td></tr><tr><td>Clay</td><td>MO</td><td>5.5% ±0.5</td><td>7.9%</td><td>258,122</td></tr><tr><td>Platte</td><td>MO</td><td>5.7% ±0.7</td><td>8.2%</td><td>110,371</td></tr><tr><td>Cass</td><td>MO</td><td>1.8% ±0.3</td><td>3.3%</td><td>110,773</td></tr></tbody>
       </table>
     </div></div>
   </section>
@@ -263,7 +360,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   </section>
 
   <section class="cd-sec" aria-labelledby="country-h">
-    <h2 id="country-h">Top countries of birth</h2>
+    <h2 id="country-h">Top countries of origin</h2>
     <div class="cd-panel">
       <p class="cd-small" id="cd-country-scope" style="margin-bottom:14px"></p>
       <div class="cd-bars" id="cd-countries"></div>
