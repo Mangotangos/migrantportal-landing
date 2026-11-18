@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Community Data: Kansas City and Kansas | MigrantPortal</title>
+  <title>Community Data: Kansas City and Suburbs | MigrantPortal</title>
   <link rel="canonical" href="https://migrantportal.com/community-data" />
-  <meta name="description" content="How many people in Kansas City and Kansas were born outside the U.S., where they live, and where to find help. Public Census data, explained plainly." />
-  <meta property="og:title" content="Community Data: Kansas City and Kansas | MigrantPortal" />
-  <meta property="og:description" content="Foreign-born population by county in the Kansas City region and Kansas, with local help listings." />
+  <meta name="description" content="How many people in Kansas City and its suburbs were born outside the U.S., where they come from, and how fast the community is growing. Public Census data, explained plainly." />
+  <meta property="og:title" content="Community Data: Kansas City and Suburbs | MigrantPortal" />
+  <meta property="og:description" content="Foreign-born population in Kansas City and its suburbs: by county, by city, by region of birth, and over time." />
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -77,6 +77,12 @@
     details p { margin-top:8px; color:var(--muted); max-width:66ch; font-size:15px; }
     .cd-sources { margin:48px 0 56px; padding-top:18px; border-top:1px solid var(--line); font-size:13px; color:var(--muted); }
     .cd-error { background:#fbead2; color:#7a4100; border-radius:8px; padding:12px 16px; margin-top:16px; font-size:14px; }
+    .cd-head { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:end; gap:10px; margin-bottom:14px; }
+    .cd-city-row { display:grid; grid-template-columns:230px 1fr 110px; gap:12px; align-items:center; font-size:14px; }
+    .cd-change-row { display:grid; grid-template-columns:130px 1fr 120px; gap:10px; align-items:center; font-size:14px; }
+    .cd-change-row small { font-weight:400; color:var(--muted); }
+    .cd-bar-fill-coral { background:var(--coral); height:100%; }
+    @media (max-width:560px) { .cd-city-row { grid-template-columns:1fr 110px; } .cd-change-row { grid-template-columns:1fr 120px; } .cd-city-row .cd-bar-track, .cd-change-row .cd-bar-track { grid-column:1 / -1; order:3; } }
     [hidden] { display:none !important; }
   </style>
   <style id="mp-nav-v2">
@@ -110,7 +116,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <header class="cd-hero">
     <div class="cd-eyebrow">Community data</div>
     <h1>Who lives in the Kansas City region</h1>
-    <p class="cd-lede">A plain look at the foreign-born community across Kansas City and Kansas, built from public Census and refugee data. Use it to see where neighbors live, which languages they speak, and where to find help.</p>
+    <p class="cd-lede">A plain look at the foreign-born community in Kansas City and its suburbs, built from public Census data. See how it has grown, where neighbors were born, which languages they speak, and how your city compares. Switch to Kansas statewide any time.</p>
     <div class="cd-controls">
       <div class="cd-toggle" role="group" aria-label="Choose area">
         <button id="cd-btn-metro" type="button" aria-pressed="true">Kansas City metro</button>
@@ -123,11 +129,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
 
   <section class="cd-sec" aria-labelledby="take-h">
     <h2 id="take-h">The short version</h2>
-    <div class="cd-grid">
-      <div class="cd-panel"><div class="cd-big">4x</div><p>The Kansas City metro's foreign-born population grew from about 33,000 in 1990 to about 135,000 in 2015.</p><p class="cd-small" style="margin-top:8px">Migration Policy Institute</p></div>
-      <div class="cd-panel"><div class="cd-big">17.9%</div><p>of Wyandotte County residents were born outside the U.S., the highest share in the region.</p><p class="cd-small" style="margin-top:8px">Census QuickFacts, 2020-2024</p></div>
-      <div class="cd-panel"><div class="cd-big">12.1%</div><p>of Johnson County residents age 5 and up speak a language other than English at home.</p><p class="cd-small" style="margin-top:8px">Census QuickFacts, 2020-2024</p></div>
-    </div>
+    <div class="cd-grid" id="cd-stats"></div>
   </section>
 
   <section class="cd-sec" aria-labelledby="share-h">
@@ -138,9 +140,41 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     </div>
   </section>
 
-  <section class="cd-sec" aria-labelledby="growth-h">
-    <h2 id="growth-h">Growth over time</h2>
-    <div class="cd-panel cd-chart"><div id="cd-growth"></div><p class="cd-small" style="margin-top:8px">Foreign-born residents of the Kansas City metro. Source: Migration Policy Institute.</p></div>
+  <section class="cd-sec" aria-labelledby="city-h">
+    <h2 id="city-h">Cities and suburbs</h2>
+    <div class="cd-panel">
+      <div class="cd-bars" id="cd-cities"></div>
+      <p class="cd-small" style="margin-top:14px">Share of residents born outside the U.S., with the Census margin of error. Cities overlap counties: Kansas City, MO spans parts of Jackson, Clay, Platte and Cass counties. Source: Census ACS table B05002.</p>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="line-h">
+    <div class="cd-head">
+      <h2 id="line-h" style="margin:0">Growth over time</h2>
+      <div class="cd-toggle" role="group" aria-label="Show growth as">
+        <button id="cd-mode-num" type="button" aria-pressed="true">Number of people</button>
+        <button id="cd-mode-pct" type="button" aria-pressed="false">Share of residents</button>
+      </div>
+    </div>
+    <div class="cd-panel cd-chart"><div id="cd-line"></div><p class="cd-small" id="cd-line-note" style="margin:8px 0 0"></p></div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="stack-h">
+    <h2 id="stack-h">Where newcomers were born, year by year</h2>
+    <div class="cd-panel cd-chart">
+      <div class="cd-legend" id="cd-stack-legend"></div>
+      <div id="cd-stack"></div>
+      <p class="cd-small" style="margin:8px 0 0">Each column is one Census 5-year estimate. Hover or tap a segment for the exact number. Source: Census ACS table B05006.</p>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="change-h">
+    <h2 id="change-h"><span id="cd-change-title">Change since 2010</span></h2>
+    <div class="cd-grid" style="margin-top:12px">
+      <div class="cd-panel"><h3>By region of birth</h3><div class="cd-bars" id="cd-change-region" style="margin-top:12px"></div></div>
+      <div class="cd-panel"><h3>By county</h3><div class="cd-bars" id="cd-change-county" style="margin-top:12px"></div></div>
+    </div>
+    <p class="cd-small" style="margin-top:12px">The first and last Census windows do not overlap, so the two end points are independent counts. Years in between share survey years, so read them as a trend line.</p>
   </section>
 
   <section class="cd-sec" aria-labelledby="county-h">
@@ -203,7 +237,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   </section>
 
   <div class="cd-sources">
-    <p><strong>Sources.</strong> U.S. Census Bureau QuickFacts for <a href="https://www.census.gov/quickfacts/KS" rel="noopener">Kansas</a>, <a href="https://www.census.gov/quickfacts/wyandottecountykansas" rel="noopener">Wyandotte County</a> and <a href="https://www.census.gov/quickfacts/johnsoncountykansas" rel="noopener">Johnson County</a> (2020-2024); <a href="https://usafacts.org/answers/how-many-immigrants-are-in-the-us/state/missouri" rel="noopener">USAFacts</a> (Kansas City metro, 2019-2023); <a href="https://www.migrationpolicy.org/research/immigration-heartland-profile-immigrants-kansas-city-region" rel="noopener">Migration Policy Institute</a> (metro growth, 1990-2015); Census ACS tables B05006 (place of birth), C16001 (language) and B05002 (foreign-born share) for counties and Kansas.</p>
+    <p><strong>Sources.</strong> U.S. Census Bureau American Community Survey 5-year estimates: tables B05002 (place of birth and nativity), B05006 (region and country of birth) and C16001 (language at home), plus the ACS data profile DP02. Kansas City area means Wyandotte, Johnson, Leavenworth, Miami, Jackson, Clay, Platte and Cass counties, which is narrower than the official metro area. Figures from other sources, such as an earlier 135,000 foreign-born estimate for the wider metro in 2015 (<a href="https://www.migrationpolicy.org/research/immigration-heartland-profile-immigrants-kansas-city-region" rel="noopener">Migration Policy Institute</a>), use different boundaries and are not directly comparable.</p>
   </div>
 </main>
 
@@ -300,6 +334,6 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     </div>
 
   </footer>
-<script src="/js/community-data.js?v=1"></script>
+<script src="/js/community-data.js?v=2"></script>
 </body>
 </html>

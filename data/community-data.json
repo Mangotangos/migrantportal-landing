@@ -12,10 +12,10 @@
       "source": "Census ACS"
     },
     {
-      "name": "Kansas City metro",
-      "foreignBornPct": 7.2,
-      "period": "2019-2023",
-      "source": "USAFacts"
+      "name": "Kansas City area (8 counties)",
+      "foreignBornPct": 7.6,
+      "period": "2020-2024",
+      "source": "Census ACS"
     }
   ],
   "counties": [
@@ -212,16 +212,6 @@
       }
     }
   ],
-  "growth": [
-    {
-      "year": 1990,
-      "value": 33000
-    },
-    {
-      "year": 2015,
-      "value": 135000
-    }
-  ],
   "profiles": {
     "metro": {
       "countries": [
@@ -402,5 +392,550 @@
     "Africa",
     "Europe",
     "Other"
+  ],
+  "series": {
+    "years": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "metro": {
+      "foreign": [
+        119018,
+        124350,
+        125086,
+        127312,
+        130087,
+        131526,
+        130842,
+        137048,
+        140079,
+        144453,
+        145355,
+        147126,
+        148978,
+        155843,
+        160492
+      ],
+      "pop": [
+        1859921,
+        1878998,
+        1895945,
+        1912453,
+        1928582,
+        1943976,
+        1958849,
+        1977768,
+        1995685,
+        2013540,
+        2033008,
+        2064574,
+        2078942,
+        2089890,
+        2105588
+      ],
+      "regions": {
+        "Latin America": [
+          60225,
+          62262,
+          60484,
+          61367,
+          61088,
+          60899,
+          59870,
+          62936,
+          63010,
+          64553,
+          63562,
+          65652,
+          66382,
+          73181,
+          75612
+        ],
+        "Asia": [
+          34120,
+          36036,
+          37379,
+          38477,
+          39863,
+          41869,
+          43005,
+          45565,
+          48000,
+          49411,
+          50959,
+          49346,
+          49360,
+          48023,
+          49224
+        ],
+        "Africa": [
+          8828,
+          9781,
+          11001,
+          11479,
+          12759,
+          12424,
+          12437,
+          12799,
+          13964,
+          14972,
+          15408,
+          16327,
+          17546,
+          18112,
+          18476
+        ],
+        "Europe": [
+          12450,
+          12552,
+          12412,
+          12323,
+          12394,
+          12351,
+          12061,
+          12273,
+          11431,
+          11776,
+          11320,
+          11602,
+          11661,
+          12458,
+          12761
+        ],
+        "Other": [
+          3395,
+          3719,
+          3802,
+          3656,
+          3974,
+          3974,
+          3459,
+          3475,
+          3674,
+          3741,
+          4106,
+          4199,
+          4029,
+          4069,
+          4419
+        ]
+      }
+    },
+    "ks": {
+      "foreign": [
+        177139,
+        182690,
+        186524,
+        191100,
+        195894,
+        200282,
+        200769,
+        203780,
+        206683,
+        207845,
+        204029,
+        205076,
+        207290,
+        211197,
+        216817
+      ],
+      "pop": [
+        2809329,
+        2830985,
+        2851183,
+        2868107,
+        2882946,
+        2892987,
+        2898292,
+        2903820,
+        2908776,
+        2910652,
+        2912619,
+        2932099,
+        2935922,
+        2937569,
+        2947197
+      ],
+      "regions": {
+        "Latin America": [
+          100288,
+          102776,
+          104154,
+          107003,
+          108308,
+          109378,
+          109737,
+          109590,
+          109083,
+          109340,
+          106502,
+          107213,
+          108917,
+          114310,
+          117990
+        ],
+        "Asia": [
+          49944,
+          52442,
+          54449,
+          55405,
+          57704,
+          60780,
+          61599,
+          63152,
+          66530,
+          66919,
+          67626,
+          65863,
+          65722,
+          62774,
+          64060
+        ],
+        "Africa": [
+          8233,
+          8957,
+          9237,
+          9926,
+          10942,
+          11572,
+          10732,
+          11958,
+          12254,
+          12749,
+          12167,
+          13394,
+          14151,
+          15092,
+          15167
+        ],
+        "Europe": [
+          14573,
+          14784,
+          14908,
+          15002,
+          15299,
+          14853,
+          14834,
+          14808,
+          14456,
+          14332,
+          13680,
+          14161,
+          14090,
+          14775,
+          15240
+        ],
+        "Other": [
+          4094,
+          3724,
+          3763,
+          3750,
+          3632,
+          3690,
+          3857,
+          4272,
+          4357,
+          4501,
+          4051,
+          4444,
+          4409,
+          4246,
+          4360
+        ]
+      }
+    }
+  },
+  "countyChange": [
+    {
+      "name": "Platte",
+      "state": "MO",
+      "metro": true,
+      "from": 4030,
+      "to": 6336,
+      "pct": 57.2,
+      "add": 2306
+    },
+    {
+      "name": "Clay",
+      "state": "MO",
+      "metro": true,
+      "from": 9855,
+      "to": 14236,
+      "pct": 44.5,
+      "add": 4381
+    },
+    {
+      "name": "Johnson",
+      "state": "KS",
+      "metro": true,
+      "from": 41834,
+      "to": 57261,
+      "pct": 36.9,
+      "add": 15427
+    },
+    {
+      "name": "Wyandotte",
+      "state": "KS",
+      "metro": true,
+      "from": 22086,
+      "to": 30083,
+      "pct": 36.2,
+      "add": 7997
+    },
+    {
+      "name": "Leavenworth",
+      "state": "KS",
+      "metro": true,
+      "from": 2294,
+      "to": 2969,
+      "pct": 29.4,
+      "add": 675
+    },
+    {
+      "name": "Jackson",
+      "state": "MO",
+      "metro": true,
+      "from": 36833,
+      "to": 47328,
+      "pct": 28.5,
+      "add": 10495
+    },
+    {
+      "name": "Finney",
+      "state": "KS",
+      "metro": false,
+      "from": 7363,
+      "to": 9111,
+      "pct": 23.7,
+      "add": 1748
+    },
+    {
+      "name": "Sedgwick",
+      "state": "KS",
+      "metro": false,
+      "from": 37184,
+      "to": 45286,
+      "pct": 21.8,
+      "add": 8102
+    },
+    {
+      "name": "Cass",
+      "state": "MO",
+      "metro": true,
+      "from": 1762,
+      "to": 1944,
+      "pct": 10.3,
+      "add": 182
+    },
+    {
+      "name": "Ford",
+      "state": "KS",
+      "metro": false,
+      "from": 8057,
+      "to": 8537,
+      "pct": 6.0,
+      "add": 480
+    },
+    {
+      "name": "Miami",
+      "state": "KS",
+      "metro": true,
+      "from": 324,
+      "to": 335,
+      "pct": 3.4,
+      "add": 11
+    },
+    {
+      "name": "Seward",
+      "state": "KS",
+      "metro": false,
+      "from": 6807,
+      "to": 6290,
+      "pct": -7.6,
+      "add": -517
+    }
+  ],
+  "cities": [
+    {
+      "name": "Kansas City",
+      "state": "KS",
+      "foreignBornPct": 18.8,
+      "foreignBornMoe": 0.9,
+      "nonEnglishPct": 33.4,
+      "population": 155135
+    },
+    {
+      "name": "Overland Park",
+      "state": "KS",
+      "foreignBornPct": 11.7,
+      "foreignBornMoe": 0.7,
+      "nonEnglishPct": 14.7,
+      "population": 200306
+    },
+    {
+      "name": "Olathe",
+      "state": "KS",
+      "foreignBornPct": 11.2,
+      "foreignBornMoe": 1.1,
+      "nonEnglishPct": 15.5,
+      "population": 145057
+    },
+    {
+      "name": "Grandview",
+      "state": "MO",
+      "foreignBornPct": 9.1,
+      "foreignBornMoe": 2.1,
+      "nonEnglishPct": 14.3,
+      "population": 26527
+    },
+    {
+      "name": "Kansas City",
+      "state": "MO",
+      "foreignBornPct": 8.6,
+      "foreignBornMoe": 0.4,
+      "nonEnglishPct": 13.1,
+      "population": 510612
+    },
+    {
+      "name": "Shawnee",
+      "state": "KS",
+      "foreignBornPct": 8.5,
+      "foreignBornMoe": 1.2,
+      "nonEnglishPct": 11.0,
+      "population": 68542
+    },
+    {
+      "name": "Lenexa",
+      "state": "KS",
+      "foreignBornPct": 8.2,
+      "foreignBornMoe": 1.3,
+      "nonEnglishPct": 10.0,
+      "population": 58384
+    },
+    {
+      "name": "Merriam",
+      "state": "KS",
+      "foreignBornPct": 7.4,
+      "foreignBornMoe": 2.4,
+      "nonEnglishPct": 12.1,
+      "population": 11085
+    },
+    {
+      "name": "Gladstone",
+      "state": "MO",
+      "foreignBornPct": 7.3,
+      "foreignBornMoe": 2.4,
+      "nonEnglishPct": 10.1,
+      "population": 27207
+    },
+    {
+      "name": "Gardner",
+      "state": "KS",
+      "foreignBornPct": 6.1,
+      "foreignBornMoe": 1.9,
+      "nonEnglishPct": 10.3,
+      "population": 24526
+    },
+    {
+      "name": "Roeland Park",
+      "state": "KS",
+      "foreignBornPct": 6.0,
+      "foreignBornMoe": 3.7,
+      "nonEnglishPct": 9.3,
+      "population": 6763
+    },
+    {
+      "name": "Independence",
+      "state": "MO",
+      "foreignBornPct": 5.7,
+      "foreignBornMoe": 0.7,
+      "nonEnglishPct": 9.4,
+      "population": 121740
+    },
+    {
+      "name": "Mission",
+      "state": "KS",
+      "foreignBornPct": 5.5,
+      "foreignBornMoe": 2.1,
+      "nonEnglishPct": 10.1,
+      "population": 9915
+    },
+    {
+      "name": "Leawood",
+      "state": "KS",
+      "foreignBornPct": 5.4,
+      "foreignBornMoe": 1.1,
+      "nonEnglishPct": 6.7,
+      "population": 33809
+    },
+    {
+      "name": "Lee's Summit",
+      "state": "MO",
+      "foreignBornPct": 4.3,
+      "foreignBornMoe": 0.8,
+      "nonEnglishPct": 6.1,
+      "population": 103656
+    },
+    {
+      "name": "Raytown",
+      "state": "MO",
+      "foreignBornPct": 3.9,
+      "foreignBornMoe": 1.5,
+      "nonEnglishPct": 7.2,
+      "population": 29445
+    },
+    {
+      "name": "Blue Springs",
+      "state": "MO",
+      "foreignBornPct": 2.9,
+      "foreignBornMoe": 0.6,
+      "nonEnglishPct": 4.9,
+      "population": 59965
+    },
+    {
+      "name": "Prairie Village",
+      "state": "KS",
+      "foreignBornPct": 2.8,
+      "foreignBornMoe": 0.7,
+      "nonEnglishPct": 3.1,
+      "population": 22874
+    },
+    {
+      "name": "Raymore",
+      "state": "MO",
+      "foreignBornPct": 2.8,
+      "foreignBornMoe": 1.0,
+      "nonEnglishPct": 3.2,
+      "population": 24526
+    },
+    {
+      "name": "Liberty",
+      "state": "MO",
+      "foreignBornPct": 2.5,
+      "foreignBornMoe": 1.0,
+      "nonEnglishPct": 3.3,
+      "population": 30689
+    },
+    {
+      "name": "Belton",
+      "state": "MO",
+      "foreignBornPct": 1.5,
+      "foreignBornMoe": 0.6,
+      "nonEnglishPct": 3.5,
+      "population": 25008
+    }
   ]
 }
