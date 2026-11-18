@@ -83,6 +83,41 @@
     .cd-change-row small { font-weight:400; color:var(--muted); }
     .cd-bar-fill-coral { background:var(--coral); height:100%; }
     @media (max-width:560px) { .cd-city-row { grid-template-columns:1fr 110px; } .cd-change-row { grid-template-columns:1fr 120px; } .cd-city-row .cd-bar-track, .cd-change-row .cd-bar-track { grid-column:1 / -1; order:3; } }
+    .cdm-controls { display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; }
+    .cdm-check { display:inline-flex; align-items:center; gap:7px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; }
+    .cdm-check input { width:16px; height:16px; accent-color:var(--teal); }
+    .cdm-layout { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(250px,1fr); gap:16px; align-items:start; margin-top:14px; }
+    .cdm-layout > * { min-width:0; }
+    @media (max-width:780px) { .cdm-layout { grid-template-columns:1fr; } }
+    #cdm-map { width:100%; height:auto; display:block; }
+    .cdm-county { stroke:#ffffff; stroke-width:.8; cursor:pointer; }
+    .cdm-county.core { stroke:#14232b; stroke-width:1.4; }
+    .cdm-county.sel { stroke:#F59E0B; stroke-width:3; }
+    .cdm-hatch { pointer-events:none; stroke:none; }
+    .cdm-county:focus-visible, .cdm-dot:focus-visible { outline:3px solid var(--amber); outline-offset:2px; }
+    .cdm-lbl { font:600 11px 'Inter',sans-serif; fill:#14232b; paint-order:stroke; stroke:rgba(255,255,255,.85); stroke-width:3px; stroke-linejoin:round; pointer-events:none; text-anchor:middle; }
+    .cdm-lbl.city { font-size:10px; font-weight:500; }
+    .cdm-lbl.dark { fill:#fff; stroke:rgba(10,85,96,.9); }
+    .cdm-dot { stroke:#ffffff; stroke-width:1.6; cursor:pointer; }
+    .cdm-dot.sel { stroke:#F59E0B; stroke-width:3; }
+    .cdm-legend { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12px; color:var(--muted); margin-top:12px; align-items:center; }
+    .cdm-legend span { display:inline-flex; align-items:center; gap:6px; }
+    .cdm-legend i { width:18px; height:12px; border-radius:2px; display:inline-block; border:1px solid rgba(0,0,0,.08); }
+    .cdm-legend .hat { background:repeating-linear-gradient(45deg,#fff 0 3px,#8d9ba3 3px 4px); }
+    .cdm-legend .dotkey { width:12px; height:12px; border-radius:50%; background:#1d93a2; border:2px solid #fff; box-shadow:0 0 0 1px #8d9ba3; }
+    .cdm-big { font-family:'Montserrat',sans-serif; font-weight:800; font-size:40px; color:var(--teal); line-height:1; margin:8px 0 4px; }
+    #cdm-detail dl { margin:14px 0 0; display:grid; grid-template-columns:1fr auto; gap:6px 12px; font-size:14px; }
+    #cdm-detail dt { color:var(--muted); }
+    #cdm-detail dd { margin:0; font-weight:600; text-align:right; font-variant-numeric:tabular-nums; }
+    .cdm-note { font-size:13px; color:var(--muted); margin-top:10px; }
+    .cdm-warn { background:#fbead2; color:#7a4100; border-radius:8px; padding:8px 10px; font-size:13px; margin-top:12px; }
+    .cdm-spark { margin-top:14px; padding-top:12px; border-top:1px solid var(--line); }
+    .cdm-spark svg { height:64px; margin-top:4px; width:100%; display:block; }
+    .cdm-btn { font:inherit; font-size:13px; font-weight:600; padding:7px 14px; border-radius:999px; border:1px solid var(--line); background:#fff; color:var(--teal); cursor:pointer; margin-top:14px; max-width:100%; overflow-wrap:anywhere; }
+    .cdm-btn:focus-visible { outline:3px solid var(--amber); outline-offset:2px; }
+    #cdm-rank { margin:8px 0 0; padding:0; list-style:none; display:grid; gap:4px; font-size:14px; }
+    #cdm-rank li { display:flex; justify-content:space-between; gap:8px; cursor:pointer; }
+    #cdm-rank li:hover { color:var(--teal); }
     [hidden] { display:none !important; }
   </style>
   <style id="mp-nav-v2">
@@ -130,6 +165,33 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   <section class="cd-sec" aria-labelledby="take-h">
     <h2 id="take-h">The short version</h2>
     <div class="cd-grid" id="cd-stats"></div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="map-h">
+    <div class="cd-head">
+      <h2 id="map-h" style="margin:0">County map</h2>
+      <div class="cdm-controls">
+        <div class="cd-toggle" role="group" aria-label="Map measure">
+          <button id="cdm-fb" type="button" aria-pressed="true">Born outside U.S.</button>
+          <button id="cdm-ne" type="button" aria-pressed="false">Non-English at home</button>
+          <button id="cdm-gr" type="button" aria-pressed="false">Growth since 2010</button>
+        </div>
+        <label class="cdm-check" id="cdm-cities-wrap"><input id="cdm-show-cities" type="checkbox" checked> Show cities</label>
+      </div>
+    </div>
+    <div class="cd-error" id="cdm-error" hidden>The map could not be loaded. The charts below still work.</div>
+    <div class="cdm-layout">
+      <div class="cd-panel">
+        <svg id="cdm-map" role="group" aria-label="County map"></svg>
+        <div class="cdm-legend" id="cdm-legend"></div>
+        <p class="cd-small" id="cdm-note" style="margin-top:10px"></p>
+      </div>
+      <div>
+        <div class="cd-panel" id="cdm-detail" aria-live="polite"></div>
+        <div class="cd-panel" style="margin-top:16px"><h3 id="cdm-rank-title"></h3><ol id="cdm-rank"></ol><p class="cd-small" style="margin-top:10px">Rough-estimate counties are left out. For growth, so are counties with fewer than 500 foreign-born residents in 2006-2010.</p></div>
+      </div>
+    </div>
+    <p class="cd-small" style="margin-top:12px">Darker counties have a higher share. Black outlines mark the eight counties used throughout this page, and the area toggle at the top switches this map between the Kansas City area and Kansas. Hover, tap, or press Tab on a county or city. County outlines: Census Bureau via the US Atlas project; city points: Census place gazetteer.</p>
   </section>
 
   <section class="cd-sec" aria-labelledby="share-h">
@@ -231,6 +293,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
     <div class="cd-panel">
       <details open><summary>What does "born outside the U.S." mean?</summary><p>People who were born in another country, including naturalized citizens, green card holders, refugees, and others. It says nothing about legal status.</p></details>
       <details><summary>Does this page estimate undocumented residents?</summary><p>No. We publish group totals from official sources. We never estimate immigration status, never show individuals, and never map areas smaller than a county.</p></details>
+      <details><summary>What do the hatched counties on the map mean?</summary><p>A county is hatched when it has fewer than 300 foreign-born residents, or when the margin of error is at least half the estimate. Those numbers are rougher than the others, so compare them with care.</p></details>
       <details><summary>How accurate are county numbers?</summary><p>The Census publishes 5-year estimates with a margin of error. Small counties have wider margins, and the margin is shown next to each figure when available.</p></details>
       <details><summary>How often is it updated?</summary><p>Once a year, when the Census releases new 5-year data, usually in December. The date of the last update is shown at the top.</p></details>
     </div>
@@ -335,5 +398,6 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
 
   </footer>
 <script src="/js/community-data-2.js?v=1"></script>
+<script src="/js/community-map.js?v=1"></script>
 </body>
 </html>
