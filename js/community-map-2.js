@@ -8,6 +8,7 @@
   var KS_VIEW = 'ks';
   var RANK_SIZE = 6;
   var MIN_GROWTH_BASE = 500;
+  var PEAK_NEAR_END = 2;
   var SHORT = { '20209': 'Wyandotte', '20091': 'Johnson', '20103': 'Leavenworth', '20121': 'Miami', '29095': 'Jackson', '29047': 'Clay', '29165': 'Platte', '29037': 'Cass' };
   /* Vertical nudge (px) for county names so they sit clear of the city dots in the crowded middle. */
   var LABEL_DY = { '20209': -30, '20091': 54, '29095': 46, '29047': -34, '29165': -26 };
@@ -173,30 +174,59 @@
     return idx < 0 ? 'n/a' : '#' + (idx + 1) + ' of ' + vals.length;
   }
 
+  function windowText(i) { var y = state.data.years[i]; return (y - 4) + '-' + y; }
+
+  function sparkText(x, y, anchor, text, strong) {
+    return sv('text', { x: x, y: y, 'text-anchor': anchor, 'font-size': 10, 'font-weight': strong ? 600 : 400, fill: strong ? '#14232b' : '#55666f' }, text);
+  }
+
+  /* Line with the first and last values labeled, years underneath, and the peak marked when the line peaks before the end. */
   function sparkline(series) {
     var pts = series.filter(function (v) { return v !== null; });
     if (pts.length < 2) return null;
     var max = Math.max.apply(null, pts), min = Math.min.apply(null, pts);
     var pad = (max - min) * 0.15 || 1;
-    var L = 4, R = 236, T = 8, B = 56, n = pts.length;
-    var x = function (i) { return L + i * (R - L) / (n - 1); };
+    var L = 8, R = 232, T = 26, B = 64, n = pts.length, last = n - 1;
+    var x = function (i) { return L + i * (R - L) / last; };
     var y = function (v) { return B - (v - (min - pad)) / ((max + pad) - (min - pad)) * (B - T); };
-    var svg = sv('svg', { viewBox: '0 0 240 64', role: 'img', 'aria-label': 'Foreign-born residents, 2010 to 2024' });
+    var svg = sv('svg', { viewBox: '0 0 240 96', role: 'img', 'aria-label': 'Foreign-born residents: ' + fmt(pts[0]) + ' in ' + windowText(0) + ' to ' + fmt(pts[last]) + ' in ' + windowText(state.data.years.length - 1) });
     var d = pts.map(function (v, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1); }).join(' ');
     svg.appendChild(sv('path', { d: d, fill: 'none', stroke: '#0D7A8A', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }));
-    svg.appendChild(sv('circle', { cx: x(n - 1), cy: y(pts[n - 1]), r: 3.5, fill: '#0D7A8A' }));
+    var peak = pts.indexOf(max);
+    var endLabelY = y(pts[last]) - 8;
+    if (peak > 0 && peak < last && max > pts[last]) {
+      svg.appendChild(sv('circle', { cx: x(peak), cy: y(max), r: 3, fill: '#ffffff', stroke: '#0D7A8A', 'stroke-width': 1.8 }));
+      var nearEnd = last - peak <= PEAK_NEAR_END;
+      if (nearEnd) endLabelY = y(pts[last]) + 16;
+      svg.appendChild(nearEnd ? sparkText(x(peak) - 7, y(max) + 3, 'end', fmt(max), false)
+        : sparkText(x(peak), y(max) - 7, 'middle', fmt(max), false));
+    }
+    svg.appendChild(sv('circle', { cx: x(0), cy: y(pts[0]), r: 3.5, fill: '#0D7A8A' }));
+    svg.appendChild(sv('circle', { cx: x(last), cy: y(pts[last]), r: 3.5, fill: '#0D7A8A' }));
+    svg.appendChild(sparkText(L, y(pts[0]) - 8, 'start', fmt(pts[0]), true));
+    svg.appendChild(sparkText(R, endLabelY, 'end', fmt(pts[last]), true));
+    svg.appendChild(sparkText(L, 88, 'start', windowText(0), false));
+    svg.appendChild(sparkText(R, 88, 'end', windowText(state.data.years.length - 1), false));
     return svg;
   }
 
-  function windowText(i) { var y = state.data.years[i]; return (y - 4) + '-' + y; }
+  function changeText(v) {
+    var diff = v.fbn - v.series[0];
+    var sign = diff < 0 ? '−' : '+';
+    var pct = v.growth === null ? '' : ' (' + valueText(v.growth, 'gr') + ')';
+    return sign + fmt(Math.abs(diff)) + ' people' + pct;
+  }
 
   function sparkBox(v) {
     var sp = sparkline(v.series);
     if (!sp) return null;
-    var last = state.data.years.length - 1;
     var box = el('div', 'cdm-spark');
-    box.appendChild(el('div', 'cd-small', 'Foreign-born residents: ' + fmt(v.series[0]) + ' (' + windowText(0) + ') to ' + fmt(v.fbn) + ' (' + windowText(last) + ')'));
+    box.appendChild(el('div', 'cdm-spark-change', changeText(v)));
+    box.appendChild(el('div', 'cd-small', 'Change in foreign-born residents since ' + windowText(0)));
     box.appendChild(sp);
+    box.appendChild(el('p', 'cdm-note', v.flag
+      ? 'Small counties vary from year to year, so read the overall direction, not single dips. Each point is a rolling 5-year estimate.'
+      : 'Each point is a rolling 5-year Census estimate, so single years blend together.'));
     return box;
   }
 
