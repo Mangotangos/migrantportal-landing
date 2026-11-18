@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "updated": "2026-11-17",
+    "acsPeriod": "2020-2024",
+    "complete": false
+  },
+  "areas": [
+    { "name": "Kansas statewide", "foreignBornPct": 7.4, "period": "2020-2024", "source": "Census QuickFacts" },
+    { "name": "Kansas City metro", "foreignBornPct": 7.2, "period": "2019-2023", "source": "USAFacts" }
+  ],
+  "counties": [
+    { "name": "Wyandotte", "state": "KS", "metro": true, "foreignBornPct": 17.9, "foreignBornMoe": null, "nonEnglishPct": null, "population": null },
+    { "name": "Johnson", "state": "KS", "metro": true, "foreignBornPct": 9.2, "foreignBornMoe": null, "nonEnglishPct": 12.1, "population": null },
+    { "name": "Leavenworth", "state": "KS", "metro": true, "foreignBornPct": null, "foreignBornMoe": null, "nonEnglishPct": null, "population": null },
+    { "name": "Jackson", "state": "MO", "metro": true, "foreignBornPct": null, "foreignBornMoe": null, "nonEnglishPct": null, "population": null },
+    { "name": "Clay", "state": "MO", "metro": true, "foreignBornPct": null, "foreignBornMoe": null, "nonEnglishPct": null, "population": null }
+  ],
+  "growth": [
+    { "year": 1990, "value": 33000 },
+    { "year": 2015, "value": 135000 }
+  ],
+  "originsKansas": ["Mexico", "India", "Vietnam", "Guatemala", "China"]
+}
