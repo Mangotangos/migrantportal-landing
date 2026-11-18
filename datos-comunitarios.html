@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inmigrantes en Kansas City: Datos por Condado | MigrantPortal</title>
+  <link rel="canonical" href="https://migrantportal.com/datos-comunitarios" />
+  <link rel="alternate" hreflang="en" href="https://migrantportal.com/community-data" />
+  <link rel="alternate" hreflang="es" href="https://migrantportal.com/datos-comunitarios" />
+  <link rel="alternate" hreflang="x-default" href="https://migrantportal.com/community-data" />
+  <meta name="description" content="¿Cuántos inmigrantes viven en Kansas City? Población nacida en el extranjero por condado y ciudad, países de origen, idiomas y crecimiento desde 2010, con datos del Censo." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta property="og:site_name" content="MigrantPortal" />
+  <meta property="og:type" content="article" />
+  <meta property="og:locale" content="es_US" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:url" content="https://migrantportal.com/datos-comunitarios" />
+  <meta property="og:title" content="Inmigrantes en Kansas City: Datos por Condado | MigrantPortal" />
+  <meta property="og:description" content="¿Cuántos inmigrantes viven en Kansas City? Población nacida en el extranjero por condado y ciudad, países de origen, idiomas y crecimiento desde 2010, con datos del Censo." />
+  <meta property="og:image" content="https://migrantportal.com/og-datos-comunitarios.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Mapa del área de Kansas City sombreado según el porcentaje de residentes nacidos fuera de EE. UU." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Inmigrantes en Kansas City: Datos por Condado | MigrantPortal" />
+  <meta name="twitter:description" content="¿Cuántos inmigrantes viven en Kansas City? Población nacida en el extranjero por condado y ciudad, países de origen, idiomas y crecimiento desde 2010, con datos del Censo." />
+  <meta name="twitter:image" content="https://migrantportal.com/og-datos-comunitarios.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Población inmigrante y nacida en el extranjero del área de Kansas City, por condado y ciudad",
+  "description": "Población nacida en el extranjero de Kansas City y sus suburbios por condado y ciudad, con región y país de nacimiento, idiomas que se hablan en casa y cambio año por año desde 2010. Elaborado con las estimaciones quinquenales de la Encuesta sobre la Comunidad Estadounidense de la Oficina del Censo de EE. UU.",
+  "url": "https://migrantportal.com/datos-comunitarios",
+  "inLanguage": "es",
+  "keywords": [
+    "inmigrantes en Kansas City",
+    "población nacida en el extranjero",
+    "demografía de Kansas City",
+    "Condado de Johnson Kansas",
+    "Condado de Wyandotte Kansas",
+    "Condado de Jackson Missouri",
+    "población inmigrante por condado"
+  ],
+  "creator": {
+    "@type": "Organization",
+    "name": "MigrantPortal Inc.",
+    "url": "https://migrantportal.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "MigrantPortal Inc.",
+    "url": "https://migrantportal.com"
+  },
+  "isBasedOn": "https://www.census.gov/programs-surveys/acs",
+  "license": "https://www.usa.gov/government-works",
+  "temporalCoverage": "2006/2024",
+  "dateModified": "2026-11-17",
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "Área metropolitana de Kansas City, Kansas y Missouri"
+  },
+  "variableMeasured": [
+    "Población nacida en el extranjero",
+    "Porcentaje de residentes nacidos en el extranjero",
+    "Región de nacimiento",
+    "País de nacimiento",
+    "Idioma que se habla en casa"
+  ],
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://migrantportal.com/data/community-data.json"
+    }
+  ],
+  "image": "https://migrantportal.com/og-datos-comunitarios.png"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "https://migrantportal.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Datos de la comunidad",
+      "item": "https://migrantportal.com/datos-comunitarios"
+    }
+  ]
+}
+  </script>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <script src="/js/mp-onerror-log.js?v=1"></script>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root { --teal:#0D7A8A; --teal-lt:#e6f7f8; --ink:#14232b; --muted:#55666f; --line:#d6dde1; --bg:#F0F2F5; --amber:#F59E0B; --navy:#1a2e44; --coral:#D13A06; --stone:#8d9ba3; }
+    body { font-family:'Inter',sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
+    a { color:var(--teal); }
+    .cd-wrap { max-width:960px; margin:0 auto; padding:0 20px; }
+    .cd-hero { padding:48px 0 8px; }
+    .cd-eyebrow { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--teal); font-weight:600; }
+    h1, h2, h3 { font-family:'Montserrat',sans-serif; line-height:1.15; }
+    h1 { font-size:clamp(28px,5vw,40px); font-weight:800; margin-top:10px; }
+    h2 { font-size:21px; font-weight:800; margin-bottom:14px; }
+    h3 { font-size:16px; font-weight:700; }
+    .cd-lede { color:var(--muted); max-width:62ch; margin-top:12px; }
+    .cd-controls { display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; margin-top:22px; }
+    .cd-toggle { display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden; background:#fff; }
+    .cd-toggle button { font:inherit; font-size:14px; font-weight:600; padding:9px 18px; border:0; background:transparent; color:var(--muted); cursor:pointer; }
+    .cd-toggle button[aria-pressed="true"] { background:var(--teal); color:#fff; }
+    .cd-toggle button:focus-visible { outline:3px solid var(--amber); outline-offset:-3px; }
+    .cd-updated { font-size:13px; color:var(--muted); }
+    section.cd-sec { margin-top:40px; }
+    .cd-panel { background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; }
+    .cd-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
+    .cd-grid > * { min-width:0; }
+    .cd-big { font-family:'Montserrat',sans-serif; font-size:38px; font-weight:800; color:var(--teal); line-height:1; margin-bottom:8px; }
+    .cd-small { font-size:13px; color:var(--muted); }
+    .cd-bars { display:grid; gap:12px; }
+    .cd-bar-row { display:grid; grid-template-columns:230px 1fr 60px; gap:12px; align-items:center; font-size:14px; }
+    .cd-bar-track { background:var(--teal-lt); height:16px; border-radius:4px; overflow:hidden; }
+    .cd-bar-fill { background:var(--teal); height:100%; }
+    .cd-bar-val { text-align:right; font-weight:600; font-variant-numeric:tabular-nums; }
+    @media (max-width:560px) { .cd-bar-row { grid-template-columns:1fr 60px; } .cd-bar-track { grid-column:1 / -1; order:3; } }
+    .cd-scroll { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; font-size:14px; }
+    th, td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); white-space:nowrap; }
+    th { font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+    td.cd-na { color:#a85a00; }
+    .cd-chart svg { width:100%; height:auto; display:block; }
+    .cd-legend { display:flex; flex-wrap:wrap; gap:6px 18px; font-size:13px; color:var(--muted); margin-bottom:14px; }
+    .cd-legend span { display:inline-flex; align-items:center; gap:6px; }
+    .cd-swatch { display:inline-block; width:12px; height:12px; border-radius:3px; }
+    .cd-swatch-lep { background:var(--navy); }
+    .cd-swatch-well { background:var(--teal-lt); border:1px solid var(--teal); }
+    .cd-stack { display:grid; gap:12px; }
+    .cd-stack-row { display:grid; grid-template-columns:150px 1fr; gap:12px; align-items:center; font-size:14px; }
+    .cd-stack-bar { display:flex; height:28px; border-radius:5px; overflow:hidden; background:var(--line); }
+    .cd-seg { display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:600; min-width:0; overflow:hidden; white-space:nowrap; }
+    .cd-seg.dark-text { color:#14232b; }
+    .cd-stack-total { display:block; font-size:12px; color:var(--muted); }
+    @media (max-width:560px) { .cd-stack-row { grid-template-columns:1fr; gap:4px; } }
+    .cd-bar-fill-lep { background:var(--navy); height:100%; float:left; }
+    .cd-bar-fill-well { background:var(--teal-lt); border:1px solid var(--teal); border-left:0; height:100%; float:left; box-sizing:border-box; }
+    .cd-bar-fill-teal { background:var(--teal); height:100%; }
+    .cd-bar-count { text-align:right; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .cd-lang-row, .cd-country-row { display:grid; grid-template-columns:230px 1fr 110px; gap:12px; align-items:center; font-size:14px; }
+    @media (max-width:560px) { .cd-lang-row, .cd-country-row { grid-template-columns:1fr 110px; } .cd-lang-row .cd-bar-track, .cd-country-row .cd-bar-track { grid-column:1 / -1; order:3; } }
+    .cd-cta-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:16px; }
+    .cd-cta { display:block; text-decoration:none; color:var(--ink); background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; }
+    .cd-cta:hover, .cd-cta:focus-visible { border-color:var(--teal); outline:none; }
+    .cd-cta strong { display:block; font-family:'Montserrat',sans-serif; color:var(--teal); margin-bottom:4px; }
+    details { border-bottom:1px solid var(--line); padding:12px 0; }
+    details summary { cursor:pointer; font-weight:600; }
+    details p { margin-top:8px; color:var(--muted); max-width:66ch; font-size:15px; }
+    .cd-sources { margin:48px 0 56px; padding-top:18px; border-top:1px solid var(--line); font-size:13px; color:var(--muted); }
+    .cd-error { background:#fbead2; color:#7a4100; border-radius:8px; padding:12px 16px; margin-top:16px; font-size:14px; }
+    .cd-head { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:end; gap:10px; margin-bottom:14px; }
+    .cd-city-row { display:grid; grid-template-columns:230px 1fr 110px; gap:12px; align-items:center; font-size:14px; }
+    .cd-change-row { display:grid; grid-template-columns:130px 1fr 120px; gap:10px; align-items:center; font-size:14px; }
+    .cd-change-row small { font-weight:400; color:var(--muted); }
+    .cd-bar-fill-coral { background:var(--coral); height:100%; }
+    @media (max-width:560px) { .cd-city-row { grid-template-columns:1fr 110px; } .cd-change-row { grid-template-columns:1fr 120px; } .cd-city-row .cd-bar-track, .cd-change-row .cd-bar-track { grid-column:1 / -1; order:3; } }
+    .cdm-controls { display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; }
+    .cdm-check { display:inline-flex; align-items:center; gap:7px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; }
+    .cdm-check input { width:16px; height:16px; accent-color:var(--teal); }
+    .cdm-layout { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(250px,1fr); gap:16px; align-items:stretch; margin-top:14px; }
+    .cdm-layout > div:last-child > .cd-panel { height:100%; }
+    .cdm-layout > * { min-width:0; }
+    @media (max-width:780px) { .cdm-layout { grid-template-columns:1fr; } }
+    #cdm-map { width:100%; height:auto; display:block; }
+    .cdm-county { stroke:#ffffff; stroke-width:.8; cursor:pointer; }
+    .cdm-county.core { stroke:#14232b; stroke-width:1.4; }
+    .cdm-county.sel { stroke:#F59E0B; stroke-width:3; }
+    .cdm-hatch { pointer-events:none; stroke:none; }
+    .cdm-county:focus-visible, .cdm-dot:focus-visible { outline:3px solid var(--amber); outline-offset:2px; }
+    .cdm-lbl { font:600 11px 'Inter',sans-serif; fill:#14232b; paint-order:stroke; stroke:rgba(255,255,255,.85); stroke-width:3px; stroke-linejoin:round; pointer-events:none; text-anchor:middle; }
+    .cdm-lbl.city { font-size:10px; font-weight:500; }
+    .cdm-lbl.dark { fill:#fff; stroke:rgba(10,85,96,.9); }
+    .cdm-dot { stroke:#ffffff; stroke-width:1.6; cursor:pointer; }
+    .cdm-dot.sel { stroke:#F59E0B; stroke-width:3; }
+    .cdm-legend { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12px; color:var(--muted); margin-top:12px; align-items:center; }
+    .cdm-legend span { display:inline-flex; align-items:center; gap:6px; }
+    .cdm-legend i { width:18px; height:12px; border-radius:2px; display:inline-block; border:1px solid rgba(0,0,0,.08); }
+    .cdm-legend .hat { background:repeating-linear-gradient(45deg,#fff 0 3px,#8d9ba3 3px 4px); }
+    .cdm-legend .dotkey { width:12px; height:12px; border-radius:50%; background:#1d93a2; border:2px solid #fff; box-shadow:0 0 0 1px #8d9ba3; }
+    .cdm-big { font-family:'Montserrat',sans-serif; font-weight:800; font-size:40px; color:var(--teal); line-height:1; margin:8px 0 4px; }
+    #cdm-detail dl { margin:14px 0 0; display:grid; grid-template-columns:1fr auto; gap:6px 12px; font-size:14px; }
+    #cdm-detail dt { color:var(--muted); }
+    #cdm-detail dd { margin:0; font-weight:600; text-align:right; font-variant-numeric:tabular-nums; }
+    .cdm-note { font-size:13px; color:var(--muted); margin-top:10px; }
+    .cdm-warn { background:#fbead2; color:#7a4100; border-radius:8px; padding:8px 10px; font-size:13px; margin-top:12px; }
+    .cdm-spark { margin-top:14px; padding-top:12px; border-top:1px solid var(--line); }
+    .cdm-spark svg { height:auto; margin-top:6px; width:100%; display:block; }
+    .cdm-spark-change { font-family:'Montserrat',sans-serif; font-weight:800; font-size:20px; color:var(--ink); }
+    .cdm-btn { font:inherit; font-size:13px; font-weight:600; padding:7px 14px; border-radius:999px; border:1px solid var(--line); background:#fff; color:var(--teal); cursor:pointer; margin-top:14px; max-width:100%; overflow-wrap:anywhere; }
+    .cdm-btn:focus-visible { outline:3px solid var(--amber); outline-offset:2px; }
+    #cdm-rank { margin:12px 0 0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(3,1fr); gap:8px 32px; font-size:14px; }
+    @media (max-width:780px) { #cdm-rank { grid-template-columns:1fr 1fr; } }
+    @media (max-width:480px) { #cdm-rank { grid-template-columns:1fr; } }
+    #cdm-rank li { display:flex; justify-content:space-between; gap:8px; cursor:pointer; }
+    #cdm-rank li:hover { color:var(--teal); }
+    .cd-answers { grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr)); }
+    ol.cd-prerender { margin:0 0 0 20px; display:grid; gap:6px; font-size:14px; }
+    .cd-lang { font-size:14px; font-weight:600; padding:7px 14px; border:1px solid var(--line); border-radius:999px; background:#fff; text-decoration:none; color:var(--teal); }
+    .cd-lang:hover, .cd-lang:focus-visible { border-color:var(--teal); outline:none; }
+    .footer-live { white-space:normal; flex-wrap:wrap; max-width:100%; }
+    .footer-live small { white-space:normal; }
+    html[lang="es"] nav.mpnav { gap:10px; }
+    html[lang="es"] nav.mpnav .mpnav-links { gap:11px; }
+    html[lang="es"] nav.mpnav .mpnav-links a { font-size:13px; }
+    html[lang="es"] nav.mpnav .mpnav-cta { padding:10px 18px; }
+    @media (max-width:1180px) { html[lang="es"] nav.mpnav .mpnav-links { display:none; } }
+    [hidden] { display:none !important; }
+  </style>
+  <style id="mp-nav-v2">
+/* NAV v2: floating bar (shared) */
+nav.mpnav{position:sticky;top:3px;z-index:200;margin:3px 24px 0;height:64px;padding:0 12px 0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid #e3ecee;border-radius:18px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 30px rgba(8,50,61,.10)}
+nav.mpnav .mpnav-logo{display:flex;align-items:center;gap:10px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.3px;color:#1a2e44;text-decoration:none;min-height:44px;flex-shrink:0}
+nav.mpnav .mpnav-logo img{width:36px;height:36px;border-radius:8px;object-fit:contain}
+nav.mpnav .mpnav-links{display:flex;align-items:center;gap:18px}
+nav.mpnav .mpnav-links a{position:relative;padding:8px 4px;font-size:14px;font-weight:600;color:#27434d;text-decoration:none;white-space:nowrap}
+nav.mpnav .mpnav-links a:hover,nav.mpnav .mpnav-links a.active{color:#0D7A8A}
+nav.mpnav .mpnav-links a::after{content:"";position:absolute;left:4px;right:4px;bottom:2px;height:2px;background:#F59E0B;transform:scaleX(0);transition:transform .15s}
+nav.mpnav .mpnav-links a:hover::after,nav.mpnav .mpnav-links a.active::after{transform:scaleX(1)}
+nav.mpnav .mpnav-right{display:flex;align-items:center;gap:8px}
+nav.mpnav .mpnav-cta{background:#0973A7;color:#fff;padding:11px 24px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;transition:background .15s}
+nav.mpnav .mpnav-cta:hover{background:#075d8a;color:#fff}
+nav.mpnav .mp-lang-toggle{border-radius:999px!important}
+@media(max-width:1000px){nav.mpnav .mpnav-links{display:none}nav.mpnav .hamburger{display:flex!important}}
+@media(max-width:700px){nav.mpnav{margin:3px 12px 0;top:3px;padding:0 10px 0 14px}nav.mpnav .mpnav-cta{padding:9px 16px}}
+</style>
+  <link rel="stylesheet" href="/footer.css?v=3" />
+</head>
+<body>
+
+<nav class="mpnav" aria-label="Main navigation">
+  <a href="/" class="mpnav-logo"><img src="logo.png" alt="" /><span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span></a>
+  <div class="mpnav-links"><a href="/">Inicio</a><a href="/how-migrantportal-works">Cómo Funciona</a><a href="/vision">Nuestra Visión</a><a href="/find-help">Buscar Ayuda</a><a href="/requests">Ver Solicitudes</a><a href="/faq">Preguntas Frecuentes</a><a href="/contact">Contacto</a></div>
+  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Iniciar Sesión</a></div>
+</nav>
+
+<main class="cd-wrap">
+  <header class="cd-hero">
+    <div class="cd-eyebrow">Datos de la comunidad</div>
+    <h1>Inmigrantes en Kansas City y sus suburbios</h1>
+    <p class="cd-lede">¿Cuántos inmigrantes viven en Kansas City y de dónde vienen? Esta página muestra la población nacida en el extranjero de Kansas City y sus suburbios por condado y ciudad, con los países de origen, los idiomas que se hablan y el crecimiento desde 2010, todo con datos públicos del Censo de EE. UU. Cambia a todo Kansas cuando quieras.</p>
+    <div class="cd-controls">
+      <div class="cd-toggle" role="group" aria-label="Elegir área">
+        <button id="cd-btn-metro" type="button" aria-pressed="true">Área de Kansas City</button>
+        <button id="cd-btn-ks" type="button" aria-pressed="false">Todo Kansas</button>
+      </div>
+      <span class="cd-updated" id="cd-updated">Censo ACS 2020-2024. Última actualización: 2026-11-17.</span>
+      <a class="cd-lang" href="/community-data" hreflang="en" lang="en">English</a>
+    </div>
+    <div class="cd-error" id="cd-error" hidden>No se pudieron cargar los datos. Actualiza la página o inténtalo de nuevo más tarde.</div>
+  </header>
+
+  <section class="cd-sec" aria-labelledby="take-h">
+    <h2 id="take-h">La población inmigrante de un vistazo</h2>
+    <div class="cd-grid" id="cd-stats"></div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="answers-h">
+    <h2 id="answers-h">Inmigrantes en Kansas City: respuestas rápidas</h2>
+    <div class="cd-grid cd-answers">
+      <div class="cd-panel"><h3>¿Cuántos inmigrantes viven en Kansas City?</h3><p style="margin-top:8px">Unos 160,492 residentes nacidos en el extranjero, el 7.6% de la población, viven en el área de Kansas City (los condados de Wyandotte, Johnson, Leavenworth, Miami, Jackson, Clay, Platte y Cass), según la Encuesta sobre la Comunidad Estadounidense de 2020-2024 de la Oficina del Censo. Son 35% más que en 2006-2010, un aumento de unas 41,474 personas.</p></div>
+      <div class="cd-panel"><h3>¿Qué condados y suburbios de Kansas City tienen más inmigrantes?</h3><p style="margin-top:8px">Por porcentaje de residentes, los más altos son el condado de Wyandotte, KS (17.9%), condado de Johnson, KS (9.2%), condado de Jackson, MO (6.6%). Por número de personas, lideran el condado de Johnson, KS (57,261 personas) y condado de Jackson, MO (47,328 personas). Entre las ciudades y suburbios, los porcentajes más altos son Kansas City, KS (18.8%), Overland Park, KS (11.7%), Olathe, KS (11.2%), Grandview, MO (9.1%), Kansas City, MO (8.6%).</p></div>
+      <div class="cd-panel"><h3>¿De dónde vienen los inmigrantes de Kansas City?</h3><p style="margin-top:8px">Alrededor del 47% nació en América Latina, el 31% en Asia y el 12% en África. Los países de nacimiento más comunes son México (45,184), India (11,769), Honduras (6,025), Guatemala (5,678), China (5,347), Vietnam (4,883).</p></div>
+      <div class="cd-panel"><h3>¿Qué idiomas hablan los inmigrantes de Kansas City?</h3><p style="margin-top:8px">El español es el idioma más común aparte del inglés: lo hablan en casa unos 136,601 residentes del área de Kansas City. Unos 52,893 de ellos hablan inglés menos que &quot;muy bien&quot;. Cambia a todo Kansas arriba para comparar.</p></div>
+    </div>
+    <p class="cd-small" style="margin-top:12px">Las cifras son estimaciones de la Encuesta sobre la Comunidad Estadounidense de la Oficina del Censo de EE. UU. para 2020-2024, última actualización 2026-11-17. ¿Necesitas ayuda o quieres ayudar a un vecino? <a href="/find-help">Busca ayuda cerca de ti</a> o <a href="/register">conviértete en Navegador</a>.</p>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="map-h">
+    <div class="cd-head">
+      <h2 id="map-h" style="margin:0">Mapa de condados</h2>
+      <div class="cdm-controls">
+        <div class="cd-toggle" role="group" aria-label="Medida del mapa">
+          <button id="cdm-fb" type="button" aria-pressed="true">Nacidos fuera de EE. UU.</button>
+          <button id="cdm-ne" type="button" aria-pressed="false">Idioma distinto del inglés en casa</button>
+          <button id="cdm-gr" type="button" aria-pressed="false">Crecimiento desde 2010</button>
+        </div>
+        <label class="cdm-check" id="cdm-cities-wrap"><input id="cdm-show-cities" type="checkbox" checked> Mostrar ciudades</label>
+      </div>
+    </div>
+    <div class="cd-error" id="cdm-error" hidden>No se pudo cargar el mapa. Los gráficos de abajo siguen funcionando.</div>
+    <div class="cdm-layout">
+      <div class="cd-panel">
+        <svg id="cdm-map" role="group" aria-label="Mapa de condados"></svg>
+        <div class="cdm-legend" id="cdm-legend"></div>
+        <p class="cd-small" id="cdm-note" style="margin-top:10px"></p>
+      </div>
+      <div>
+        <div class="cd-panel" id="cdm-detail" aria-live="polite"></div>
+      </div>
+    </div>
+    <div class="cd-panel" style="margin-top:16px"><h3 id="cdm-rank-title"></h3><ol id="cdm-rank"></ol><p class="cd-small" style="margin-top:10px">Los condados con estimaciones aproximadas no se incluyen. En el crecimiento, tampoco los condados con menos de 500 residentes nacidos en el extranjero en 2006-2010.</p></div>
+    <p class="cd-small" style="margin-top:12px">Los condados más oscuros tienen un porcentaje más alto. Los contornos negros marcan los ocho condados que se usan en toda esta página, y el selector de área de arriba cambia este mapa entre el área de Kansas City y Kansas. Pasa el cursor, toca o usa la tecla Tab en un condado o ciudad. Contornos de los condados: Oficina del Censo, a través del proyecto US Atlas; puntos de las ciudades: gazetteer de lugares del Censo.</p>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="share-h">
+    <h2 id="share-h">Porcentaje de residentes nacidos fuera de EE. UU., por condado</h2>
+    <div class="cd-panel">
+      <div class="cd-bars" id="cd-bars"></div>
+      <p class="cd-small" id="cd-scale-note" style="margin-top:14px"></p>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="city-h">
+    <h2 id="city-h">Población inmigrante por ciudad y suburbio</h2>
+    <div class="cd-panel">
+      <div class="cd-bars" id="cd-cities"><ol class="cd-prerender"><li>Kansas City, KS: 18.8% de 155,135 residentes nacidos fuera de EE. UU.</li><li>Overland Park, KS: 11.7% de 200,306 residentes nacidos fuera de EE. UU.</li><li>Olathe, KS: 11.2% de 145,057 residentes nacidos fuera de EE. UU.</li><li>Grandview, MO: 9.1% de 26,527 residentes nacidos fuera de EE. UU.</li><li>Kansas City, MO: 8.6% de 510,612 residentes nacidos fuera de EE. UU.</li><li>Shawnee, KS: 8.5% de 68,542 residentes nacidos fuera de EE. UU.</li><li>Lenexa, KS: 8.2% de 58,384 residentes nacidos fuera de EE. UU.</li><li>Merriam, KS: 7.4% de 11,085 residentes nacidos fuera de EE. UU.</li><li>Gladstone, MO: 7.3% de 27,207 residentes nacidos fuera de EE. UU.</li><li>Gardner, KS: 6.1% de 24,526 residentes nacidos fuera de EE. UU.</li><li>Roeland Park, KS: 6.0% de 6,763 residentes nacidos fuera de EE. UU.</li><li>Independence, MO: 5.7% de 121,740 residentes nacidos fuera de EE. UU.</li><li>Mission, KS: 5.5% de 9,915 residentes nacidos fuera de EE. UU.</li><li>Leawood, KS: 5.4% de 33,809 residentes nacidos fuera de EE. UU.</li><li>Lee&#x27;s Summit, MO: 4.3% de 103,656 residentes nacidos fuera de EE. UU.</li><li>Raytown, MO: 3.9% de 29,445 residentes nacidos fuera de EE. UU.</li><li>Blue Springs, MO: 2.9% de 59,965 residentes nacidos fuera de EE. UU.</li><li>Prairie Village, KS: 2.8% de 22,874 residentes nacidos fuera de EE. UU.</li><li>Raymore, MO: 2.8% de 24,526 residentes nacidos fuera de EE. UU.</li><li>Liberty, MO: 2.5% de 30,689 residentes nacidos fuera de EE. UU.</li><li>Belton, MO: 1.5% de 25,008 residentes nacidos fuera de EE. UU.</li></ol></div>
+      <p class="cd-small" style="margin-top:14px">Porcentaje de residentes nacidos fuera de EE. UU. El número con ± es el margen de error: una ciudad con 18.8% ±0.9 está muy probablemente entre 17.9% y 19.7%. Si los rangos de dos ciudades se traslapan, trátalas como empatadas. Las ciudades se traslapan con los condados: Kansas City, MO abarca partes de los condados de Jackson, Clay, Platte y Cass. Fuente: tabla B05002 de la ACS del Censo.</p>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="line-h">
+    <div class="cd-head">
+      <h2 id="line-h" style="margin:0">Crecimiento de la población inmigrante desde 2010</h2>
+      <div class="cd-toggle" role="group" aria-label="Mostrar el crecimiento como">
+        <button id="cd-mode-num" type="button" aria-pressed="true">Número de personas</button>
+        <button id="cd-mode-pct" type="button" aria-pressed="false">Porcentaje de residentes</button>
+      </div>
+    </div>
+    <div class="cd-panel cd-chart"><div id="cd-line"></div><p class="cd-small" id="cd-line-note" style="margin:8px 0 0"></p></div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="stack-h">
+    <h2 id="stack-h">Dónde nacieron los recién llegados, año por año</h2>
+    <div class="cd-panel cd-chart">
+      <div class="cd-legend" id="cd-stack-legend"></div>
+      <div id="cd-stack"></div>
+      <p class="cd-small" style="margin:8px 0 0">Cada columna es una estimación quinquenal del Censo. Pasa el cursor o toca un segmento para ver el número exacto. Fuente: tabla B05006 de la ACS del Censo.</p>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="change-h">
+    <h2 id="change-h"><span id="cd-change-title">Cambio desde 2010</span></h2>
+    <div class="cd-grid" style="margin-top:12px">
+      <div class="cd-panel"><h3>Por región de nacimiento</h3><div class="cd-bars" id="cd-change-region" style="margin-top:12px"></div></div>
+      <div class="cd-panel"><h3>Por condado</h3><div class="cd-bars" id="cd-change-county" style="margin-top:12px"></div></div>
+    </div>
+    <p class="cd-small" style="margin-top:12px">La primera y la última ventana del Censo no se traslapan, así que los dos extremos son conteos independientes. Los años intermedios comparten años de encuesta, así que léelos como una línea de tendencia.</p>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="county-h">
+    <h2 id="county-h">Población nacida en el extranjero por condado</h2>
+    <div class="cd-panel"><div class="cd-scroll">
+      <table>
+        <thead><tr><th>Condado</th><th>Estado</th><th>Nacidos fuera de EE. UU.</th><th>Idioma distinto del inglés en casa</th><th>Población</th></tr></thead>
+        <tbody id="cd-county-body"><tr><td>Wyandotte</td><td>KS</td><td>17.9% ±0.8</td><td>31.8%</td><td>167,654</td></tr><tr><td>Johnson</td><td>KS</td><td>9.2% ±0.3</td><td>12.1%</td><td>620,631</td></tr><tr><td>Leavenworth</td><td>KS</td><td>3.6% ±0.7</td><td>5.5%</td><td>83,123</td></tr><tr><td>Miami</td><td>KS</td><td>1.0% ±0.4</td><td>2.8%</td><td>34,938</td></tr><tr><td>Jackson</td><td>MO</td><td>6.6% ±0.3</td><td>10.5%</td><td>719,976</td></tr><tr><td>Clay</td><td>MO</td><td>5.5% ±0.5</td><td>7.9%</td><td>258,122</td></tr><tr><td>Platte</td><td>MO</td><td>5.7% ±0.7</td><td>8.2%</td><td>110,371</td></tr><tr><td>Cass</td><td>MO</td><td>1.8% ±0.3</td><td>3.3%</td><td>110,773</td></tr></tbody>
+      </table>
+    </div></div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="region-h">
+    <h2 id="region-h">Dónde nacieron las personas, condado por condado</h2>
+    <div class="cd-panel">
+      <div class="cd-legend" id="cd-region-legend"></div>
+      <div class="cd-stack" id="cd-region-mix"></div>
+      <p class="cd-small" style="margin-top:14px">Cada barra muestra la mezcla de regiones de nacimiento entre los residentes nacidos en el extranjero de ese condado. Pasa el cursor o toca un segmento para ver el número. Fuente: tabla B05006 de la ACS del Censo.</p>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="country-h">
+    <h2 id="country-h">Principales países de origen</h2>
+    <div class="cd-panel">
+      <p class="cd-small" id="cd-country-scope" style="margin-bottom:14px"></p>
+      <div class="cd-bars" id="cd-countries"></div>
+      <p class="cd-small" style="margin-top:14px">Número de residentes nacidos en el extranjero según el país donde nacieron. "China" no incluye Hong Kong ni Taiwán. Fuente: tabla B05006 de la ACS del Censo.</p>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="lang-h">
+    <h2 id="lang-h">Idiomas que se hablan en casa</h2>
+    <div class="cd-panel">
+      <div class="cd-legend">
+        <span><i class="cd-swatch cd-swatch-lep"></i>Hablan inglés menos que "muy bien"</span>
+        <span><i class="cd-swatch cd-swatch-well"></i>Hablan inglés "muy bien"</span>
+      </div>
+      <div class="cd-bars" id="cd-languages"></div>
+      <p class="cd-small" style="margin-top:14px">Residentes de 5 años o más que hablan cada idioma en casa, hayan nacido o no en el extranjero. No se muestran los hogares donde solo se habla inglés. Fuente: tabla C16001 de la ACS del Censo.</p>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="help-h">
+    <h2 id="help-h">Qué puedes hacer</h2>
+    <div class="cd-cta-row" style="margin-top:0">
+      <a class="cd-cta" href="/find-help"><strong>Pide ayuda</strong>Publica una necesidad y te conectamos con un Navegador.</a>
+      <a class="cd-cta" href="/register"><strong>Conviértete en Navegador</strong>Ayuda a un nuevo vecino a establecerse.</a>
+      <a class="cd-cta" href="/donate"><strong>Dona</strong>Apoya el trabajo en tu zona.</a>
+    </div>
+  </section>
+
+  <section class="cd-sec" aria-labelledby="faq-h">
+    <h2 id="faq-h">Sobre estos datos</h2>
+    <div class="cd-panel">
+      <details open><summary>¿Qué significa "nacido fuera de EE. UU."?</summary><p>Personas que nacieron en otro país, incluidos ciudadanos naturalizados, residentes con tarjeta verde, refugiados y otros. No dice nada sobre el estatus legal.</p></details>
+      <details><summary>¿Esta página estima cuántos residentes son indocumentados?</summary><p>No. Publicamos totales de grupos de fuentes oficiales. Nunca estimamos el estatus migratorio, nunca mostramos a personas individuales y nunca mapeamos áreas más pequeñas que un condado.</p></details>
+      <details><summary>¿Qué significan los condados con rayas en el mapa?</summary><p>Un condado aparece con rayas cuando tiene menos de 300 residentes nacidos en el extranjero, o cuando el margen de error es al menos la mitad de la estimación. Esas cifras son menos precisas que las demás, así que compáralas con cuidado.</p></details>
+      <details><summary>¿Qué tan precisas son las cifras de los condados?</summary><p>El Censo publica estimaciones quinquenales con un margen de error. Los condados pequeños tienen márgenes más amplios, y el margen se muestra junto a cada cifra cuando está disponible.</p></details>
+      <details><summary>¿Con qué frecuencia se actualiza?</summary><p>Una vez al año, cuando el Censo publica nuevos datos quinquenales, normalmente en diciembre. La fecha de la última actualización aparece arriba.</p></details>
+    </div>
+  </section>
+
+  <div class="cd-sources">
+    <p><strong>Fuentes.</strong> Estimaciones quinquenales de la Encuesta sobre la Comunidad Estadounidense (ACS) de la Oficina del Censo de EE. UU.: tablas B05002 (lugar de nacimiento y nativos), B05006 (región y país de nacimiento) y C16001 (idioma en casa), más el perfil de datos DP02 de la ACS. El área de Kansas City significa los condados de Wyandotte, Johnson, Leavenworth, Miami, Jackson, Clay, Platte y Cass, que es más reducida que el área metropolitana oficial. Las cifras de otras fuentes, como una estimación anterior de 135,000 nacidos en el extranjero para el área metropolitana más amplia en 2015 (<a href="https://www.migrationpolicy.org/research/immigration-heartland-profile-immigrants-kansas-city-region" rel="noopener">Migration Policy Institute</a>), usan límites distintos y no son directamente comparables.</p>
+  </div>
+</main>
+
+<footer class="footer" aria-label="Site footer">
+
+    <!-- Main footer -->
+    <div class="footer-main">
+      <div class="footer-main-inner">
+
+        <!-- Brand + stats -->
+        <div>
+          <div class="footer-brand">
+            <div class="footer-brand-logo">
+              <picture><source srcset="logo.webp" type="image/webp" /><img src="logo.png" class="footer-brand-logo-icon" alt="MigrantPortal" loading="lazy" /></picture>
+              <span style="font-family:'Montserrat',sans-serif;font-weight:800;letter-spacing:-0.3px;color:#fff">Migrant<span style="color:#fff">Portal</span></span>
+            </div>
+            <p>Conectando personas migrantes y sus familias con comunidades de fe, voluntarios y donantes, una necesidad a la vez.</p>
+          </div>
+          <div class="footer-live"><span class="footer-live-dot" aria-hidden="true"></span>Activo en Kansas City, MO <small>· listo para expandirse a tu ciudad</small></div>
+          <nav class="footer-social" aria-label="Social media links">
+            <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@migrantportal" target="_blank" rel="noopener" aria-label="TikTok">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            </a>
+            <!-- TO ADD A SOCIAL ICON: uncomment one block below and replace the href. Icons auto-style via .footer-social a.
+            <a href="https://www.youtube.com/@YOUR_HANDLE" target="_blank" rel="noopener" aria-label="YouTube">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+            </a>
+            <a href="https://x.com/YOUR_HANDLE" target="_blank" rel="noopener" aria-label="X">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/company/YOUR_HANDLE" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+            </a>
+            -->
+          </nav>
+        </div>
+
+        <!-- Links -->
+        <div class="footer-col">
+          <div class="footer-col-title">Acerca de</div>
+          <ul>
+            <li><a href="/how-migrantportal-works">Cómo Funciona</a></li>
+            <li><a href="/vision">Nuestra Visión</a></li>
+            <li><a href="/contact">Contáctanos</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Involúcrate</div>
+          <ul>
+            <li><a href="/submit-need">Enviar una Solicitud</a></li>
+            <li><a href="/requests">Ayuda a Alguien</a></li>
+            <li><a href="/requests">Ver Mapa de Necesidades</a></li>
+            <li><a href="/register">Lanzar una Red</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Recursos</div>
+          <ul>
+            <li><a href="/privacy">Política de Privacidad</a></li>
+            <li><a href="/terms">Términos de Servicio</a></li>
+            <li><a href="/faq">Centro de ayuda</a></li>
+            <li><a href="/community-data">Datos de la comunidad</a></li>
+            
+          </ul>
+          <div class="footer-col-title footer-col-title-app">Descarga la App</div>
+        <div class="footer-badges">
+          <a href="https://apps.apple.com/us/app/migrantportal/id6768141465" class="footer-badge" target="_blank" rel="noopener">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            <span><small>Descarga en</small><b>App Store</b></span>
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.migrantportal.app" class="footer-badge" target="_blank" rel="noopener">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.18 23.76c.37.21.8.22 1.19.04l12.34-6.96-2.7-2.7-10.83 9.62zM.5 1.57C.19 1.96 0 2.5 0 3.18v17.65c0 .67.19 1.21.51 1.6L.6 22.5l9.89-9.89v-.23L.6 2.49.5 1.57zM20.04 10.3l-2.62-1.48-3.01 3.01 3.01 3.01 2.63-1.49c.75-.42.75-1.62-.01-2.05zM4.37.2 16.71 7.16l-2.7 2.7L3.18.24C3.57.06 4 .07 4.37.2z"/></svg>
+            <span><small>Disponible en</small><b>Google Play</b></span>
+          </a>
+        </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <p class="footer-copy">MigrantPortal © 2026 · Hecho con compasión</p>
+      </div>
+    </div>
+
+  </footer>
+<script src="/js/community-i18n.js?v=1"></script>
+<script src="/js/community-data-3.js?v=1"></script>
+<script src="/js/community-map-3.js?v=1"></script>
+</body>
+</html>
