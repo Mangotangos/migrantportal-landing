@@ -3,6 +3,14 @@
   var SVG_NS = 'http://www.w3.org/2000/svg';
   var BAR_SCALE_STEP = 5;
   var GROWTH_TICK_STEP = 50000;
+  var SEGMENT_LABEL_MIN = 8;
+  var REGION_COLORS = {
+    'Latin America': '#0D7A8A', 'Asia': '#F59E0B', 'Africa': '#D13A06', 'Europe': '#1a2e44', 'Other': '#8d9ba3'
+  };
+  var SCOPE_NOTES = {
+    metro: 'Kansas City area: Wyandotte, Johnson, Leavenworth, Miami, Jackson, Clay, Platte and Cass counties combined.',
+    ks: 'All of Kansas.'
+  };
   var state = { data: null, scope: 'metro' };
 
   function el(tag, cls, text) {
@@ -104,10 +112,91 @@
     host.appendChild(svg);
   }
 
-  function renderOrigins() {
-    var host = document.getElementById('cd-origins');
+  function regionTotal(regions) {
+    return Object.keys(regions).reduce(function (sum, k) { return sum + regions[k]; }, 0);
+  }
+
+  function renderRegionMix() {
+    var order = state.data.regionOrder || [];
+    var legend = document.getElementById('cd-region-legend');
+    legend.textContent = '';
+    order.forEach(function (name) {
+      var item = el('span');
+      var sw = el('i', 'cd-swatch');
+      sw.style.background = REGION_COLORS[name];
+      item.appendChild(sw);
+      item.appendChild(document.createTextNode(name));
+      legend.appendChild(item);
+    });
+    var host = document.getElementById('cd-region-mix');
     host.textContent = '';
-    (state.data.originsKansas || []).forEach(function (name) { host.appendChild(el('li', '', name)); });
+    state.data.counties.forEach(function (c) {
+      if (!c.regions || (state.scope === 'metro' && !c.metro)) return;
+      var total = regionTotal(c.regions);
+      if (!total) return;
+      var row = el('div', 'cd-stack-row');
+      var label = el('div', '', c.name + ', ' + c.state);
+      label.appendChild(el('span', 'cd-stack-total', num(total) + ' born abroad'));
+      row.appendChild(label);
+      var bar = el('div', 'cd-stack-bar');
+      bar.setAttribute('role', 'img');
+      bar.setAttribute('aria-label', c.name + ' County birth regions: ' + order.map(function (n) {
+        return n + ' ' + Math.round(c.regions[n] / total * 100) + '%';
+      }).join(', '));
+      order.forEach(function (name) {
+        var share = c.regions[name] / total * 100;
+        if (share <= 0) return;
+        var seg = el('div', name === 'Asia' ? 'cd-seg dark-text' : 'cd-seg', share >= SEGMENT_LABEL_MIN ? Math.round(share) + '%' : '');
+        seg.style.width = share + '%';
+        seg.style.background = REGION_COLORS[name];
+        seg.title = name + ': ' + num(c.regions[name]) + ' (' + share.toFixed(1) + '%)';
+        bar.appendChild(seg);
+      });
+      row.appendChild(bar);
+      host.appendChild(row);
+    });
+  }
+
+  function shortCountry(name) { return name.replace(/,\s*excluding.*$/i, ''); }
+
+  function renderCountries() {
+    var profile = state.data.profiles[state.scope];
+    document.getElementById('cd-country-scope').textContent = SCOPE_NOTES[state.scope];
+    var host = document.getElementById('cd-countries');
+    host.textContent = '';
+    var max = profile.countries.length ? profile.countries[0].count : 1;
+    profile.countries.forEach(function (c, i) {
+      var row = el('div', 'cd-country-row');
+      row.appendChild(el('div', '', (i + 1) + '. ' + shortCountry(c.name)));
+      var track = el('div', 'cd-bar-track');
+      var fill = el('div', 'cd-bar-fill-teal');
+      fill.style.width = (c.count / max * 100) + '%';
+      track.appendChild(fill);
+      row.appendChild(track);
+      row.appendChild(el('div', 'cd-bar-count', num(c.count)));
+      host.appendChild(row);
+    });
+  }
+
+  function renderLanguages() {
+    var profile = state.data.profiles[state.scope];
+    var host = document.getElementById('cd-languages');
+    host.textContent = '';
+    var max = profile.languages.length ? profile.languages[0].speakers : 1;
+    profile.languages.forEach(function (l) {
+      var row = el('div', 'cd-lang-row');
+      row.appendChild(el('div', '', l.name));
+      var track = el('div', 'cd-bar-track');
+      var limited = el('div', 'cd-bar-fill-lep');
+      limited.style.width = (l.limited / max * 100) + '%';
+      var well = el('div', 'cd-bar-fill-well');
+      well.style.width = ((l.speakers - l.limited) / max * 100) + '%';
+      track.appendChild(limited);
+      track.appendChild(well);
+      row.appendChild(track);
+      row.appendChild(el('div', 'cd-bar-count', num(l.speakers)));
+      host.appendChild(row);
+    });
   }
 
   function renderMeta() {
@@ -120,7 +209,9 @@
     renderBars();
     renderTable();
     renderGrowth();
-    renderOrigins();
+    renderRegionMix();
+    renderCountries();
+    renderLanguages();
     document.getElementById('cd-btn-metro').setAttribute('aria-pressed', String(state.scope === 'metro'));
     document.getElementById('cd-btn-ks').setAttribute('aria-pressed', String(state.scope === 'ks'));
   }

@@ -26,7 +26,14 @@
       "foreignBornPct": 17.9,
       "foreignBornMoe": 0.8,
       "nonEnglishPct": 31.8,
-      "population": 167654
+      "population": 167654,
+      "regions": {
+        "Latin America": 22482,
+        "Asia": 5642,
+        "Africa": 972,
+        "Europe": 779,
+        "Other": 208
+      }
     },
     {
       "name": "Johnson",
@@ -35,7 +42,14 @@
       "foreignBornPct": 9.2,
       "foreignBornMoe": 0.3,
       "nonEnglishPct": 12.1,
-      "population": 620631
+      "population": 620631,
+      "regions": {
+        "Latin America": 18791,
+        "Asia": 24455,
+        "Africa": 7307,
+        "Europe": 5300,
+        "Other": 1408
+      }
     },
     {
       "name": "Leavenworth",
@@ -44,7 +58,14 @@
       "foreignBornPct": 3.6,
       "foreignBornMoe": 0.7,
       "nonEnglishPct": 5.5,
-      "population": 83123
+      "population": 83123,
+      "regions": {
+        "Latin America": 884,
+        "Asia": 942,
+        "Africa": 240,
+        "Europe": 727,
+        "Other": 176
+      }
     },
     {
       "name": "Miami",
@@ -53,7 +74,14 @@
       "foreignBornPct": 1.0,
       "foreignBornMoe": 0.4,
       "nonEnglishPct": 2.8,
-      "population": 34938
+      "population": 34938,
+      "regions": {
+        "Latin America": 162,
+        "Asia": 90,
+        "Africa": 10,
+        "Europe": 67,
+        "Other": 6
+      }
     },
     {
       "name": "Jackson",
@@ -62,7 +90,14 @@
       "foreignBornPct": 6.6,
       "foreignBornMoe": 0.3,
       "nonEnglishPct": 10.5,
-      "population": 719976
+      "population": 719976,
+      "regions": {
+        "Latin America": 26053,
+        "Asia": 9974,
+        "Africa": 5995,
+        "Europe": 3591,
+        "Other": 1715
+      }
     },
     {
       "name": "Clay",
@@ -71,7 +106,14 @@
       "foreignBornPct": 5.5,
       "foreignBornMoe": 0.5,
       "nonEnglishPct": 7.9,
-      "population": 258122
+      "population": 258122,
+      "regions": {
+        "Latin America": 5048,
+        "Asia": 5148,
+        "Africa": 2283,
+        "Europe": 1295,
+        "Other": 462
+      }
     },
     {
       "name": "Platte",
@@ -80,7 +122,14 @@
       "foreignBornPct": 5.7,
       "foreignBornMoe": 0.7,
       "nonEnglishPct": 8.2,
-      "population": 110371
+      "population": 110371,
+      "regions": {
+        "Latin America": 1419,
+        "Asia": 2293,
+        "Africa": 1565,
+        "Europe": 767,
+        "Other": 292
+      }
     },
     {
       "name": "Cass",
@@ -89,7 +138,14 @@
       "foreignBornPct": 1.8,
       "foreignBornMoe": 0.3,
       "nonEnglishPct": 3.3,
-      "population": 110773
+      "population": 110773,
+      "regions": {
+        "Latin America": 773,
+        "Asia": 680,
+        "Africa": 104,
+        "Europe": 235,
+        "Other": 152
+      }
     },
     {
       "name": "Sedgwick",
@@ -98,7 +154,14 @@
       "foreignBornPct": 8.6,
       "foreignBornMoe": 0.3,
       "nonEnglishPct": 15.2,
-      "population": 528226
+      "population": 528226,
+      "regions": {
+        "Latin America": 23123,
+        "Asia": 16098,
+        "Africa": 2573,
+        "Europe": 2780,
+        "Other": 712
+      }
     },
     {
       "name": "Finney",
@@ -107,7 +170,14 @@
       "foreignBornPct": 23.9,
       "foreignBornMoe": 1.6,
       "nonEnglishPct": 46.5,
-      "population": 38084
+      "population": 38084,
+      "regions": {
+        "Latin America": 7105,
+        "Asia": 1236,
+        "Africa": 677,
+        "Europe": 50,
+        "Other": 43
+      }
     },
     {
       "name": "Seward",
@@ -116,7 +186,14 @@
       "foreignBornPct": 29.3,
       "foreignBornMoe": 2.4,
       "nonEnglishPct": 61.4,
-      "population": 21486
+      "population": 21486,
+      "regions": {
+        "Latin America": 5656,
+        "Asia": 353,
+        "Africa": 226,
+        "Europe": 34,
+        "Other": 21
+      }
     },
     {
       "name": "Ford",
@@ -125,7 +202,14 @@
       "foreignBornPct": 25.1,
       "foreignBornMoe": 2.3,
       "nonEnglishPct": 47.8,
-      "population": 34074
+      "population": 34074,
+      "regions": {
+        "Latin America": 7936,
+        "Asia": 236,
+        "Africa": 299,
+        "Europe": 65,
+        "Other": 1
+      }
     }
   ],
   "growth": [
@@ -138,11 +222,185 @@
       "value": 135000
     }
   ],
-  "originsKansas": [
-    "Mexico",
-    "India",
-    "Vietnam",
-    "Guatemala",
-    "China"
+  "profiles": {
+    "metro": {
+      "countries": [
+        {
+          "name": "Mexico",
+          "count": 45184
+        },
+        {
+          "name": "India",
+          "count": 11769
+        },
+        {
+          "name": "Honduras",
+          "count": 6025
+        },
+        {
+          "name": "Guatemala",
+          "count": 5678
+        },
+        {
+          "name": "China, excluding Hong Kong and Taiwan",
+          "count": 5347
+        },
+        {
+          "name": "Vietnam",
+          "count": 4883
+        },
+        {
+          "name": "Philippines",
+          "count": 4848
+        },
+        {
+          "name": "El Salvador",
+          "count": 4151
+        },
+        {
+          "name": "Ethiopia",
+          "count": 3944
+        },
+        {
+          "name": "Kenya",
+          "count": 3431
+        }
+      ],
+      "languages": [
+        {
+          "name": "Spanish",
+          "speakers": 136601,
+          "limited": 52893
+        },
+        {
+          "name": "Other Asian and Pacific Island languages",
+          "speakers": 18015,
+          "limited": 6449
+        },
+        {
+          "name": "Other Indo-European languages",
+          "speakers": 16870,
+          "limited": 5198
+        },
+        {
+          "name": "Chinese (incl. Mandarin, Cantonese)",
+          "speakers": 7497,
+          "limited": 3460
+        },
+        {
+          "name": "French, Haitian, or Cajun",
+          "speakers": 5989,
+          "limited": 1801
+        },
+        {
+          "name": "Vietnamese",
+          "speakers": 5837,
+          "limited": 3265
+        },
+        {
+          "name": "Arabic",
+          "speakers": 5171,
+          "limited": 1552
+        },
+        {
+          "name": "Russian, Polish, or other Slavic languages",
+          "speakers": 4826,
+          "limited": 1822
+        }
+      ]
+    },
+    "ks": {
+      "countries": [
+        {
+          "name": "Mexico",
+          "count": 84719
+        },
+        {
+          "name": "India",
+          "count": 13810
+        },
+        {
+          "name": "Vietnam",
+          "count": 10999
+        },
+        {
+          "name": "Guatemala",
+          "count": 7807
+        },
+        {
+          "name": "China, excluding Hong Kong and Taiwan",
+          "count": 7123
+        },
+        {
+          "name": "Philippines",
+          "count": 6138
+        },
+        {
+          "name": "El Salvador",
+          "count": 5153
+        },
+        {
+          "name": "Honduras",
+          "count": 4667
+        },
+        {
+          "name": "Germany",
+          "count": 3862
+        },
+        {
+          "name": "Korea",
+          "count": 3351
+        }
+      ],
+      "languages": [
+        {
+          "name": "Spanish",
+          "speakers": 223357,
+          "limited": 91513
+        },
+        {
+          "name": "Other Asian and Pacific Island languages",
+          "speakers": 21927,
+          "limited": 8548
+        },
+        {
+          "name": "Other Indo-European languages",
+          "speakers": 17768,
+          "limited": 4957
+        },
+        {
+          "name": "Vietnamese",
+          "speakers": 12367,
+          "limited": 7846
+        },
+        {
+          "name": "German or other West Germanic languages",
+          "speakers": 11869,
+          "limited": 1857
+        },
+        {
+          "name": "Chinese (incl. Mandarin, Cantonese)",
+          "speakers": 9735,
+          "limited": 4660
+        },
+        {
+          "name": "Arabic",
+          "speakers": 6226,
+          "limited": 1877
+        },
+        {
+          "name": "French, Haitian, or Cajun",
+          "speakers": 5276,
+          "limited": 1596
+        }
+      ]
+    }
+  },
+  "regionOrder": [
+    "Latin America",
+    "Asia",
+    "Africa",
+    "Europe",
+    "Other"
   ]
 }
