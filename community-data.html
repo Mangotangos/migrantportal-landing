@@ -86,7 +86,8 @@
     .cdm-controls { display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; }
     .cdm-check { display:inline-flex; align-items:center; gap:7px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; }
     .cdm-check input { width:16px; height:16px; accent-color:var(--teal); }
-    .cdm-layout { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(250px,1fr); gap:16px; align-items:start; margin-top:14px; }
+    .cdm-layout { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(250px,1fr); gap:16px; align-items:stretch; margin-top:14px; }
+    .cdm-layout > div:last-child > .cd-panel { height:100%; }
     .cdm-layout > * { min-width:0; }
     @media (max-width:780px) { .cdm-layout { grid-template-columns:1fr; } }
     #cdm-map { width:100%; height:auto; display:block; }
@@ -116,7 +117,9 @@
     .cdm-spark-change { font-family:'Montserrat',sans-serif; font-weight:800; font-size:20px; color:var(--ink); }
     .cdm-btn { font:inherit; font-size:13px; font-weight:600; padding:7px 14px; border-radius:999px; border:1px solid var(--line); background:#fff; color:var(--teal); cursor:pointer; margin-top:14px; max-width:100%; overflow-wrap:anywhere; }
     .cdm-btn:focus-visible { outline:3px solid var(--amber); outline-offset:2px; }
-    #cdm-rank { margin:8px 0 0; padding:0; list-style:none; display:grid; gap:4px; font-size:14px; }
+    #cdm-rank { margin:12px 0 0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(3,1fr); gap:8px 32px; font-size:14px; }
+    @media (max-width:780px) { #cdm-rank { grid-template-columns:1fr 1fr; } }
+    @media (max-width:480px) { #cdm-rank { grid-template-columns:1fr; } }
     #cdm-rank li { display:flex; justify-content:space-between; gap:8px; cursor:pointer; }
     #cdm-rank li:hover { color:var(--teal); }
     [hidden] { display:none !important; }
@@ -189,9 +192,9 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
       </div>
       <div>
         <div class="cd-panel" id="cdm-detail" aria-live="polite"></div>
-        <div class="cd-panel" style="margin-top:16px"><h3 id="cdm-rank-title"></h3><ol id="cdm-rank"></ol><p class="cd-small" style="margin-top:10px">Rough-estimate counties are left out. For growth, so are counties with fewer than 500 foreign-born residents in 2006-2010.</p></div>
       </div>
     </div>
+    <div class="cd-panel" style="margin-top:16px"><h3 id="cdm-rank-title"></h3><ol id="cdm-rank"></ol><p class="cd-small" style="margin-top:10px">Rough-estimate counties are left out. For growth, so are counties with fewer than 500 foreign-born residents in 2006-2010.</p></div>
     <p class="cd-small" style="margin-top:12px">Darker counties have a higher share. Black outlines mark the eight counties used throughout this page, and the area toggle at the top switches this map between the Kansas City area and Kansas. Hover, tap, or press Tab on a county or city. County outlines: Census Bureau via the US Atlas project; city points: Census place gazetteer.</p>
   </section>
 
