@@ -104,7 +104,7 @@
   <script src="/js/mp-onerror-log.js?v=1"></script>
   <style>
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-    :root { --teal:#0D7A8A; --teal-lt:#e6f7f8; --ink:#14232b; --muted:#55666f; --line:#d6dde1; --bg:#F0F2F5; --amber:#F59E0B; --navy:#1a2e44; --coral:#D13A06; --stone:#8d9ba3; }
+    :root { --teal:#0C7685; --teal-lt:#e6f7f8; --ink:#14232b; --muted:#55666f; --line:#d6dde1; --bg:#F0F2F5; --amber:#F59E0B; --navy:#1a2e44; --coral:#D13A06; --stone:#8d9ba3; }
     body { font-family:'Inter',sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
     a { color:var(--teal); }
     .cd-wrap { max-width:960px; margin:0 auto; padding:0 20px; }
@@ -124,6 +124,9 @@
     section.cd-sec { margin-top:40px; }
     .cd-panel { background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; }
     .cd-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
+    /* Stat cards are filled in by JS after the data loads; reserve their height so the sections below do not jump. */
+    #cd-stats { min-height:280px; }
+    @media (max-width:560px) { #cd-stats { min-height:560px; } }
     .cd-grid > * { min-width:0; }
     .cd-big { font-family:'Montserrat',sans-serif; font-size:38px; font-weight:800; color:var(--teal); line-height:1; margin-bottom:8px; }
     .cd-small { font-size:13px; color:var(--muted); }
