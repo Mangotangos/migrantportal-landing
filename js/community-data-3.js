@@ -28,6 +28,13 @@
   function pct(v) { return v === null || v === undefined ? null : v.toFixed(1) + '%'; }
   function num(v) { return v === null || v === undefined ? null : v.toLocaleString('en-US'); }
   function pctChange(a, b) { return (b - a) / a * 100; }
+  // Charts draw in a 720-wide viewBox; on a ~350px phone that shrinks 12px labels to ~6px.
+  // Below this host width, draw in a phone-sized viewBox instead so labels stay about 1:1.
+  var NARROW_HOST_PX = 600, NARROW_VIEW_W = 360, WIDE_VIEW_W = 720;
+  function chartViewWidth(host) {
+    return host.clientWidth && host.clientWidth < NARROW_HOST_PX ? NARROW_VIEW_W : WIDE_VIEW_W;
+  }
+
   function clear(id) { var n = document.getElementById(id); n.textContent = ''; return n; }
   function scopeSeries() { return state.data.series[state.scope]; }
   function windowLabel(i) { var y = state.data.series.years[i]; return (y - 4) + '-' + y; }
@@ -152,10 +159,11 @@
     var host = clear('cd-line');
     var vals = lineValues();
     var isShare = state.lineMode === 'pct';
-    var geo = { left: 56, right: 700, top: 24, bottom: 256 };
+    var viewW = chartViewWidth(host);
+    var geo = { left: viewW < WIDE_VIEW_W ? 44 : 56, right: viewW - 20, top: 24, bottom: 256 };
     var scale = niceScale(Math.max.apply(null, vals));
     var last = vals.length - 1;
-    var svg = svgEl('svg', { viewBox: '0 0 720 300', role: 'img', 'aria-label': t('line.aria') });
+    var svg = svgEl('svg', { viewBox: '0 0 ' + viewW + ' 300', role: 'img', 'aria-label': t('line.aria') });
     drawGrid(svg, scale, geo, isShare);
     var xs = vals.map(function (_, i) { return geo.left + 20 + i * ((geo.right - geo.left - 40) / last); });
     var ys = vals.map(function (v) { return geo.bottom - v / scale.max * (geo.bottom - geo.top); });
@@ -199,8 +207,9 @@
     renderRegionLegend('cd-stack-legend', order);
     var host = clear('cd-stack');
     var scale = niceScale(Math.max.apply(null, s.foreign));
-    var geo = { left: 56, right: 700, top: 20, bottom: 262 };
-    var svg = svgEl('svg', { viewBox: '0 0 720 300', role: 'img', 'aria-label': t('stack.aria') });
+    var viewW = chartViewWidth(host);
+    var geo = { left: viewW < WIDE_VIEW_W ? 44 : 56, right: viewW - 20, top: 20, bottom: 262 };
+    var svg = svgEl('svg', { viewBox: '0 0 ' + viewW + ' 300', role: 'img', 'aria-label': t('stack.aria') });
     drawGrid(svg, scale, geo, false);
     var slot = (geo.right - geo.left) / years.length;
     var barWidth = slot * 0.66;
@@ -381,6 +390,15 @@
     bind('cd-btn-ks', function () { state.scope = 'ks'; render(); });
     bind('cd-mode-num', function () { state.lineMode = 'num'; renderLine(); });
     bind('cd-mode-pct', function () { state.lineMode = 'pct'; renderLine(); });
+    var lastViewW = null;
+    window.addEventListener('resize', function () {
+      if (!state.data) return;
+      var viewW = chartViewWidth(document.getElementById('cd-line'));
+      if (viewW === lastViewW) return;
+      lastViewW = viewW;
+      renderLine();
+      renderStack();
+    });
     fetch('/data/community-data.json?v=2')
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
