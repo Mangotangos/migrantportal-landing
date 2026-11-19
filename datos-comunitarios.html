@@ -180,6 +180,9 @@
     .cdm-layout > * { min-width:0; }
     @media (max-width:780px) { .cdm-layout { grid-template-columns:1fr; } }
     #cdm-map { width:100%; height:auto; display:block; }
+    .cdm-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .cdm-swipe { display:none; }
+    @media (max-width:780px) { #cdm-map { min-width:560px; } .cdm-swipe { display:block; margin:6px 0 0; } }
     .cdm-county { stroke:#ffffff; stroke-width:.8; cursor:pointer; }
     .cdm-county.core { stroke:#14232b; stroke-width:1.4; }
     .cdm-county.sel { stroke:#F59E0B; stroke-width:3; }
@@ -323,7 +326,10 @@ nav.mpnav .hamburger svg{width:22px;height:22px}
     <div class="cd-error" id="cdm-error" hidden>No se pudo cargar el mapa. Los gráficos de abajo siguen funcionando.</div>
     <div class="cdm-layout">
       <div class="cd-panel">
-        <svg id="cdm-map" role="group" aria-label="Mapa de condados"></svg>
+        <div class="cdm-scroll">
+          <svg id="cdm-map" role="group" aria-label="Mapa de condados"></svg>
+        </div>
+        <p class="cd-small cdm-swipe">Deslice hacia los lados para ver todo el mapa.</p>
         <div class="cdm-legend" id="cdm-legend"></div>
         <p class="cd-small" id="cdm-note" style="margin-top:10px"></p>
       </div>
