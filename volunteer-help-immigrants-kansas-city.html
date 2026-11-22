@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volunteer to Help Immigrants in Kansas City | MigrantPortal</title>
+  <meta name="description" content="Ways to volunteer with immigrants and refugees in Kansas City: mentoring, tutoring, rides, move-in help and donations, with links to sign up." />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #007C84;
+      --teal-d:  #0D7A8A;
+      --teal-lt: #e6f7f8;
+      --orange:  #D13A06;
+      --navy:    #172936;
+      --cream:   #FAF7F0;
+      --text:    #0D0D0D;
+      --gray-600:#555;
+      --gray-200:#E8E8E8;
+      --gray-100:#F4F4F4;
+    }
+    html { scroll-behavior: smooth; overflow-x: clip; max-width: 100vw; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: #fff; line-height: 1.7; overflow-x: clip; }
+    a { text-decoration: none; color: var(--teal); }
+
+    /* ── NAV ── */
+    .announce { background: var(--teal-d); color: white; text-align: center; padding: 10px 20px; font-size: 13px; }
+    .announce a { color: #fff; font-weight: 600; text-decoration: underline; }
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: white; border-bottom: 1px solid var(--gray-200);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 19px;
+      color: var(--text);
+    }
+    .nav-logo-icon { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { font-size: 14px; color: var(--gray-600); font-weight: 500; }
+    .nav-links a:hover, .nav-links a.active { color: var(--teal); }
+    .nav-cta {
+      background: #0973A7; color: #fff !important; padding: 9px 20px;
+      border-radius: 6px; font-size: 14px; font-weight: 600;
+    }
+    .nav-cta:hover { background: #075d8a; color: white; }
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy); color: white;
+      padding: 80px 40px 72px; text-align: center;
+    }
+    .hero-label {
+      font-size: 12px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: #4FD1D9; margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif; font-size: 48px; font-weight: 800;
+      line-height: 1.15; margin-bottom: 20px; max-width: 720px; margin-inline: auto;
+    }
+    .hero h1 em { color: #4FD1D9; font-style: normal; }
+    .hero .tagline {
+      font-size: 20px; color: rgba(255,255,255,0.75); max-width: 560px;
+      margin: 0 auto 32px;
+    }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--teal); color: white; padding: 13px 28px;
+      border-radius: 8px; font-weight: 600; font-size: 15px;
+      transition: background .15s;
+    }
+    .btn-primary:hover { background: var(--teal-d); color: white; }
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.4); color: white; padding: 13px 28px;
+      border-radius: 8px; font-weight: 600; font-size: 15px;
+      transition: border-color .15s;
+    }
+    .btn-outline:hover { border-color: white; color: white; }
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 32px; }
+      .hero { padding: 60px 24px; }
+    }
+
+    /* ── STORY ── */
+    .section { padding: 72px 40px; max-width: 860px; margin: 0 auto; }
+    .section-sm { padding: 60px 40px; max-width: 760px; margin: 0 auto; }
+    .label {
+      font-size: 12px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+    }
+    h2 {
+      font-family: 'Montserrat', sans-serif; font-size: 34px; font-weight: 800;
+      color: var(--navy); line-height: 1.2; margin-bottom: 20px;
+    }
+    h3 {
+      font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700;
+      color: var(--navy); margin-bottom: 10px;
+    }
+    p { color: var(--gray-600); font-size: 16px; margin-bottom: 16px; }
+    p:last-child { margin-bottom: 0; }
+
+    .pullquote {
+      border-left: 4px solid var(--teal); margin: 36px 0;
+      padding: 20px 28px; background: var(--teal-lt); border-radius: 0 10px 10px 0;
+    }
+    .pullquote p {
+      font-size: 20px; font-style: italic; color: var(--navy);
+      font-weight: 500; line-height: 1.5; margin: 0;
+    }
+
+    /* ── STATS ── */
+    .stats-band {
+      background: var(--teal); padding: 60px 40px;
+    }
+    .stats-inner {
+      max-width: 860px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Montserrat', sans-serif; font-size: 44px; font-weight: 800;
+      color: white; line-height: 1;
+    }
+    .stat-label { font-size: 14px; color: #fff; margin-top: 8px; }
+    @media (max-width: 700px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-band { background: var(--gray-100); padding: 72px 40px; }
+    .how-inner { max-width: 860px; margin: 0 auto; }
+    .how-inner .label, .how-inner h2 { text-align: center; }
+    .steps {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px;
+    }
+    .step {
+      background: white; border-radius: 14px; padding: 32px 24px;
+      border: 1px solid var(--gray-200); text-align: center;
+    }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--teal-lt); color: var(--teal-d);
+      font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .step h3 { font-size: 18px; margin-bottom: 10px; }
+    .step p { font-size: 14px; color: var(--gray-600); margin: 0; }
+    @media (max-width: 700px) {
+      .steps { grid-template-columns: 1fr; }
+    }
+
+    /* ── WHO WE SERVE ── */
+    .serve-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px;
+    }
+    .serve-card {
+      border: 1.5px solid var(--gray-200); border-radius: 12px;
+      padding: 24px 20px;
+    }
+    .serve-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 12px;
+    }
+    .serve-card h3 { font-size: 16px; margin-bottom: 6px; }
+    .serve-card p { font-size: 14px; color: var(--gray-600); margin: 0; }
+    @media (max-width: 700px) {
+      .serve-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── MISSION STATEMENT ── */
+    .mission-band { background: var(--cream); padding: 72px 40px; text-align: center; }
+    .mission-inner { max-width: 700px; margin: 0 auto; }
+    .mission-text {
+      font-family: 'Montserrat', sans-serif; font-size: 26px; font-weight: 800;
+      color: var(--navy); line-height: 1.4; margin-bottom: 16px;
+    }
+    .mission-text em { color: var(--teal); font-style: normal; }
+
+    /* ── CTA ── */
+    .cta-band { background: var(--navy); padding: 72px 40px; text-align: center; }
+    .cta-inner { max-width: 600px; margin: 0 auto; }
+    .cta-band h2 { color: white; margin-bottom: 12px; }
+    .cta-band p { color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white {
+      background: white; color: var(--navy); padding: 13px 28px;
+      border-radius: 8px; font-weight: 700; font-size: 15px;
+      transition: opacity .15s;
+    }
+    .btn-white:hover { opacity: .9; color: var(--navy); }
+
+    /* ── FOOTER ── */
+
+    /* ── PRINT ── */
+    @media print {
+      .announce, nav, .cta-band, footer { display: none; }
+      .hero { padding: 40px 0; background: white; color: var(--navy); }
+      .hero h1 em, .hero-label { color: var(--teal-d); }
+      .hero .tagline { color: var(--gray-600); }
+      .hero-actions { display: none; }
+      .section, .section-sm { padding: 40px 0; }
+      .stats-band { background: var(--teal-lt); }
+      .stat-num { color: var(--teal-d); }
+      .stat-label { color: var(--navy); }
+      body { font-size: 14px; }
+    }
+  
+    /* ── Footer ── */
+    @media (max-width: 800px) {
+    }
+  </style>
+  <style>
+    /* ─── SYNCED FOOTER (from homepage) ───────────── */
+    @media (max-width: 800px) {
+    }
+  </style>
+  <link rel="canonical" href="https://migrantportal.com/volunteer-help-immigrants-kansas-city" />
+  <meta property="og:title" content="Volunteer to Help Immigrants in Kansas City | MigrantPortal" />
+  <meta property="og:description" content="Ways to volunteer with immigrants and refugees in Kansas City: mentoring, tutoring, rides, move-in help and donations, with links to sign up." />
+  <meta property="og:url" content="https://migrantportal.com/volunteer-help-immigrants-kansas-city" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://migrantportal.com/community.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+<style id="mp-nav-v2">
+/* NAV v2: floating bar (shared) */
+nav.mpnav{position:sticky;top:3px;z-index:200;margin:3px 24px 0;height:64px;padding:0 12px 0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid #e3ecee;border-radius:18px;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 30px rgba(8,50,61,.10)}
+nav.mpnav .mpnav-logo{display:flex;align-items:center;gap:10px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.3px;color:#1a2e44;text-decoration:none;min-height:44px;flex-shrink:0}
+nav.mpnav .mpnav-logo img{width:36px;height:36px;border-radius:8px;object-fit:contain}
+nav.mpnav .mpnav-links{display:flex;align-items:center;gap:18px}
+nav.mpnav .mpnav-links a{position:relative;padding:8px 4px;font-size:14px;font-weight:600;color:#27434d;text-decoration:none;white-space:nowrap}
+nav.mpnav .mpnav-links a:hover,nav.mpnav .mpnav-links a.active{color:#0D7A8A}
+nav.mpnav .mpnav-links a::after{content:"";position:absolute;left:4px;right:4px;bottom:2px;height:2px;background:#F59E0B;transform:scaleX(0);transition:transform .15s}
+nav.mpnav .mpnav-links a:hover::after,nav.mpnav .mpnav-links a.active::after{transform:scaleX(1)}
+nav.mpnav .mpnav-right{display:flex;align-items:center;gap:8px}
+nav.mpnav .mpnav-cta{background:#0973A7;color:#fff;padding:11px 24px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;transition:background .15s}
+nav.mpnav .mpnav-cta:hover{background:#075d8a;color:#fff}
+nav.mpnav .mp-lang-toggle{border-radius:999px!important}
+@media(max-width:1000px){nav.mpnav .mpnav-links{display:none}nav.mpnav .hamburger{display:flex!important}}
+@media(max-width:700px){nav.mpnav{margin:3px 12px 0;top:3px;padding:0 10px 0 14px}nav.mpnav .mpnav-cta{padding:9px 16px}}
+</style>
+  <link rel="stylesheet" href="/footer.css?v=3" />
+</head>
+<body>
+
+<nav class="mpnav" aria-label="Main navigation">
+  <a href="/" class="mpnav-logo"><img src="logo.png" alt="" /><span><span style="color:#1a2e44">Migrant</span><span style="color:#0D7A8A">Portal</span></span></a>
+  <div class="mpnav-links"><a href="/">Home</a><a href="/how-migrantportal-works">How It Works</a><a href="/vision">Our Vision</a><a href="/find-help">Find Help</a><a href="/requests">Browse Requests</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></div>
+  <div class="mpnav-right nav-right"><a href="/login" class="mpnav-cta">Sign In</a></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-label">Kansas City Resources</p>
+  <h1>How to Volunteer and Help Immigrants in Kansas City</h1>
+  <p class="tagline">Local organizations that welcome volunteers, and what each one asks you to do.</p>
+  <div class="hero-actions">
+    <a href="/requests" class="btn-primary">See Real Needs</a>
+    <a href="/how-migrantportal-works" class="btn-outline">How It Works</a>
+  </div>
+</section>
+
+<div class="section">
+  <p class="label">Start Here</p>
+  <h2>Pick what fits your time</h2>
+  <p>
+    <strong>One day or one weekend:</strong> help set up an apartment for a newly arrived family or volunteer at a community event.
+    <strong>A regular weekly commitment:</strong> tutor English, mentor a family, or give rides to appointments.
+    <strong>Flexible:</strong> join a conversation practice group, or donate winter clothing and household items.
+  </p>
+  <p style="font-size:14px;color:#555">Everything below was checked against each organization's own page on November 21, 2026. Volunteer needs change, so contact them before you plan your day.</p>
+</div>
+
+<div class="section">
+  <p class="label">Where to Volunteer</p>
+  <h2>Catholic Charities of Northeast Kansas, Refugee &amp; Immigration (Kansas City, KS)</h2>
+  <p>
+    Open to individuals, families with children, youth groups and corporate groups. Roles include welcoming new refugees (setting up apartments, greeting families at the airport, helping with transportation, supplying culturally familiar food), tutoring, mentoring and teaching, and volunteering at events such as World Refugee Day and Welcoming Week.
+  </p>
+  <p>
+    <strong>Time:</strong> one-time commitments of a day or a weekend, or ongoing weekly, every-other-week and monthly. Some mentoring programs ask for a year. English and citizenship classes usually meet once a week in the evening, and you do not need formal teaching training.
+  </p>
+  <p><a href="https://catholiccharitiesks.org/refugee-and-immigration/volunteer-refugee/" rel="noopener">Volunteer application and details</a></p>
+
+  <h2>Della Lamb Community Services, Refugee &amp; Immigrant Services (Kansas City, MO)</h2>
+  <p>
+    Volunteers help in the digital literacy lab, tutor English as a second language, or drive newcomers to appointments. Companies, faith groups, and families or friends can volunteer as a team, built around a single event or an ongoing commitment. You can create a volunteer profile or ask for a tour of their facilities.
+  </p>
+  <p><a href="https://www.dellalamb.org/involvement/volunteer/" rel="noopener">Della Lamb volunteer page</a></p>
+
+  <h2>KC for Refugees (greater Kansas City)</h2>
+  <p>
+    Welcomes people who want to support refugee families. Ways to help include mentorship (visiting and spending time with a family to offer friendship and orient them to life here), finding interpreters for special circumstances, collecting household goods and furniture, and clothing drives. Winter hats, jackets and boots are listed as especially needed as seasons change. Upcoming events are posted on their Facebook page.
+  </p>
+  <p><a href="https://www.kcforrefugees.org/" rel="noopener">kcforrefugees.org</a></p>
+
+  <h2>Kansas City Public Library, RISE (Kansas City, MO)</h2>
+  <p>
+    The library's Let's Talk conversation group pairs learners with volunteer tutors for English practice, with at least three sessions a week. See the library's RISE volunteer page for how to sign up.
+  </p>
+  <p><a href="https://kclibrary.org/volunteer/rise" rel="noopener">RISE volunteer page</a></p>
+
+  <h2>International Rescue Committee, Kansas City office (Kansas City, KS)</h2>
+  <p>
+    The IRC's Kansas City office is at 402 State Ave, Kansas City, KS 66101, phone 913-558-1659. Its page links to current volunteer opportunities.
+  </p>
+  <p><a href="https://www.rescue.org/united-states/kansas-city-ks" rel="noopener">IRC Kansas City</a></p>
+</div>
+
+<div class="section">
+  <p class="label">Help a Neighbor Directly</p>
+  <h2>Respond to a real need on MigrantPortal</h2>
+  <p>
+    Verified navigators post needs from local families, such as food, rides and supplies. Faith communities and volunteers can see the requests and offer help. <a href="/requests">Browse current needs</a> or <a href="/how-migrantportal-works">learn how responding works</a>.
+  </p>
+  <p>
+    Looking for English classes to share with someone? See <a href="/free-english-classes-immigrants-kansas-city">free English classes in Kansas City</a>. Know a volunteer opportunity we missed, or see something out of date? <a href="/contact">Tell us</a>.
+  </p>
+</div>
+
+<!-- FOOTER -->
+
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Site footer">
+
+    <!-- Main footer -->
+    <div class="footer-main">
+      <div class="footer-main-inner">
+
+        <!-- Brand + stats -->
+        <div>
+          <div class="footer-brand">
+            <div class="footer-brand-logo">
+              <picture><source srcset="logo.webp" type="image/webp" /><img src="logo.png" class="footer-brand-logo-icon" alt="MigrantPortal" loading="lazy" /></picture>
+              <span style="font-family:'Montserrat',sans-serif;font-weight:800;letter-spacing:-0.3px;color:#fff">Migrant<span style="color:#fff">Portal</span></span>
+            </div>
+            <p>Connecting migrants and their families with faith communities, volunteers, and donors, one need at a time.</p>
+          </div>
+          <div class="footer-live"><span class="footer-live-dot" aria-hidden="true"></span>Live in Kansas City, MO <small>· ready to expand to your city</small></div>
+          <nav class="footer-social" aria-label="Social media links">
+            <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@migrantportal" target="_blank" rel="noopener" aria-label="TikTok">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            </a>
+            <!-- TO ADD A SOCIAL ICON: uncomment one block below and replace the href. Icons auto-style via .footer-social a.
+            <a href="https://www.youtube.com/@YOUR_HANDLE" target="_blank" rel="noopener" aria-label="YouTube">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+            </a>
+            <a href="https://x.com/YOUR_HANDLE" target="_blank" rel="noopener" aria-label="X">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/company/YOUR_HANDLE" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+            </a>
+            -->
+          </nav>
+        </div>
+
+        <!-- Links -->
+        <div class="footer-col">
+          <div class="footer-col-title">About</div>
+          <ul>
+            <li><a href="/how-migrantportal-works">How It Works</a></li>
+            <li><a href="/vision">Our Vision</a></li>
+            <li><a href="/our-story">Our Story</a></li>
+            <li><a href="/free-english-classes-immigrants-kansas-city">Free English Classes</a></li>
+            <li><a href="/volunteer-help-immigrants-kansas-city">Volunteer in KC</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Get Involved</div>
+          <ul>
+            <li><a href="/submit-need">Submit a Need</a></li>
+            <li><a href="/requests">Meet a Need</a></li>
+            <li><a href="/requests">View Needs Map</a></li>
+            <li><a href="/register">Launch a Network</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Resources</div>
+          <ul>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+            <li><a href="/faq">Help Center</a></li>
+            <li><a href="/community-data">Community Data</a></li>
+            
+          </ul>
+          <div class="footer-col-title footer-col-title-app">Get the app</div>
+        <div class="footer-badges">
+          <a href="https://apps.apple.com/us/app/migrantportal/id6768141465" class="footer-badge" target="_blank" rel="noopener">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            <span><small>Download on the</small><b>App Store</b></span>
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.migrantportal.app" class="footer-badge" target="_blank" rel="noopener">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.18 23.76c.37.21.8.22 1.19.04l12.34-6.96-2.7-2.7-10.83 9.62zM.5 1.57C.19 1.96 0 2.5 0 3.18v17.65c0 .67.19 1.21.51 1.6L.6 22.5l9.89-9.89v-.23L.6 2.49.5 1.57zM20.04 10.3l-2.62-1.48-3.01 3.01 3.01 3.01 2.63-1.49c.75-.42.75-1.62-.01-2.05zM4.37.2 16.71 7.16l-2.7 2.7L3.18.24C3.57.06 4 .07 4.37.2z"/></svg>
+            <span><small>Get it on</small><b>Google Play</b></span>
+          </a>
+        </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <p class="footer-copy">MigrantPortal © 2026 · Built with compassion</p>
+      </div>
+    </div>
+
+  </footer>
+
+<script src="/js/mp-onerror-log.js?v=1"></script>
+</body>
+</html>
