@@ -70,6 +70,7 @@
     'Where Help Meets Hope': 'Donde la Ayuda Se Encuentra con la Esperanza',
     'MigrantPortal — Migrant Resource Platform & Needs Network': 'MigrantPortal — Plataforma de recursos para migrantes y red de necesidades',
     'Connecting Migrant Neighbors with the Help They Need': 'Conectamos a vecinos migrantes con la ayuda que necesitan',
+    'Help for Immigrant and Refugee Families in Kansas City': 'Ayuda para familias inmigrantes y refugiadas en Kansas City',
     'A free network for families, faith communities, and volunteers': 'Una red gratuita para familias, comunidades de fe y voluntarios',
     'respond with practical help, close to home.': 'responden con ayuda práctica, cerca de casa.',
     'Every need is reviewed by a navigator before it is published. We never sell personal information.': 'Un navegador revisa cada necesidad antes de publicarla. Nunca vendemos información personal.',
@@ -255,6 +256,7 @@
 
     // ── Find Help
     'Find Help Near You': 'Encuentra Ayuda Cerca de Ti',
+    'Find Immigrant Help in Kansas City': 'Encuentra ayuda para inmigrantes en Kansas City',
     'Enter your zipcode to see local nonprofits and partner organizations ready to help migrants in your area. No account needed.': 'Escribe tu código postal para ver organizaciones locales listas para ayudar a migrantes en tu área. No necesitas una cuenta.',
     'Showing results within 25 miles': 'Resultados dentro de 25 millas',
     'All Services': 'Todos los servicios',
