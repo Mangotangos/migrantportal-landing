@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>https://migrantportal.com/</loc><lastmod>2026-11-06</lastmod><priority>1.0</priority></url>
   <url><loc>https://migrantportal.com/how-migrantportal-works</loc><lastmod>2026-11-06</lastmod><priority>0.8</priority></url>
   <url><loc>https://migrantportal.com/faq</loc><lastmod>2026-11-10</lastmod><priority>0.7</priority></url>
@@ -9,12 +9,36 @@
   <url><loc>https://migrantportal.com/donate</loc><lastmod>2026-11-06</lastmod><priority>0.6</priority></url>
   <url><loc>https://migrantportal.com/vision</loc><lastmod>2026-11-06</lastmod><priority>0.6</priority></url>
   <url><loc>https://migrantportal.com/our-story</loc><lastmod>2026-11-06</lastmod><priority>0.6</priority></url>
-  <url><loc>https://migrantportal.com/free-english-classes-immigrants-kansas-city</loc><lastmod>2026-11-21</lastmod><priority>0.8</priority></url>
-  <url><loc>https://migrantportal.com/volunteer-help-immigrants-kansas-city</loc><lastmod>2026-11-21</lastmod><priority>0.8</priority></url>
-  <url><loc>https://migrantportal.com/clases-de-ingles-gratis-kansas-city</loc><lastmod>2026-11-21</lastmod><priority>0.8</priority></url>
-  <url><loc>https://migrantportal.com/voluntariado-inmigrantes-kansas-city</loc><lastmod>2026-11-21</lastmod><priority>0.8</priority></url>
-  <url><loc>https://migrantportal.com/community-data</loc><lastmod>2026-11-17</lastmod><changefreq>yearly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://migrantportal.com/datos-comunitarios</loc><lastmod>2026-11-18</lastmod><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://migrantportal.com/free-english-classes-immigrants-kansas-city</loc><lastmod>2026-11-21</lastmod><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://migrantportal.com/free-english-classes-immigrants-kansas-city"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://migrantportal.com/clases-de-ingles-gratis-kansas-city"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://migrantportal.com/free-english-classes-immigrants-kansas-city"/>
+  </url>
+  <url><loc>https://migrantportal.com/volunteer-help-immigrants-kansas-city</loc><lastmod>2026-11-21</lastmod><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://migrantportal.com/volunteer-help-immigrants-kansas-city"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://migrantportal.com/voluntariado-inmigrantes-kansas-city"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://migrantportal.com/volunteer-help-immigrants-kansas-city"/>
+  </url>
+  <url><loc>https://migrantportal.com/clases-de-ingles-gratis-kansas-city</loc><lastmod>2026-11-21</lastmod><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://migrantportal.com/free-english-classes-immigrants-kansas-city"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://migrantportal.com/clases-de-ingles-gratis-kansas-city"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://migrantportal.com/free-english-classes-immigrants-kansas-city"/>
+  </url>
+  <url><loc>https://migrantportal.com/voluntariado-inmigrantes-kansas-city</loc><lastmod>2026-11-21</lastmod><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://migrantportal.com/volunteer-help-immigrants-kansas-city"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://migrantportal.com/voluntariado-inmigrantes-kansas-city"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://migrantportal.com/volunteer-help-immigrants-kansas-city"/>
+  </url>
+  <url><loc>https://migrantportal.com/community-data</loc><lastmod>2026-11-17</lastmod><changefreq>yearly</changefreq><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://migrantportal.com/community-data"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://migrantportal.com/datos-comunitarios"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://migrantportal.com/community-data"/>
+  </url>
+  <url><loc>https://migrantportal.com/datos-comunitarios</loc><lastmod>2026-11-18</lastmod><changefreq>yearly</changefreq><priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://migrantportal.com/community-data"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://migrantportal.com/datos-comunitarios"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://migrantportal.com/community-data"/>
+  </url>
   <url><loc>https://migrantportal.com/impact</loc><lastmod>2026-11-06</lastmod><priority>0.6</priority></url>
   <url><loc>https://migrantportal.com/contact</loc><lastmod>2026-11-06</lastmod><priority>0.6</priority></url>
   <url><loc>https://migrantportal.com/privacy</loc><lastmod>2026-11-06</lastmod><priority>0.4</priority></url>

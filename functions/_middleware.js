@@ -25,10 +25,31 @@ function isSpam(url) {
   );
 }
 
+// ?lang=es never selected a language (the UI reads localStorage.mp_lang), so Google saw English
+// duplicates. Send it to the real Spanish page if there is one, else to the same path without it.
+const ES_PAGES = {
+  '/free-english-classes-immigrants-kansas-city': '/clases-de-ingles-gratis-kansas-city',
+  '/volunteer-help-immigrants-kansas-city': '/voluntariado-inmigrantes-kansas-city',
+  '/community-data': '/datos-comunitarios',
+};
+
+// Splits the raw query so other params (reset tokens, invite codes) are not re-encoded.
+function spanishRedirectTarget(url) {
+  const params = url.search.slice(1).split('&');
+  const kept = params.filter((p) => p !== 'lang=es');
+  if (kept.length === params.length) return null;
+  const path = ES_PAGES[url.pathname.replace(/\.html$/, '')] || url.pathname;
+  return url.origin + path + (kept.length ? `?${kept.join('&')}` : '');
+}
+
 export async function onRequest(context) {
   const url = new URL(context.request.url);
   if (isSpam(url)) {
     return new Response('Gone', { status: 410, headers: GONE_HEADERS });
+  }
+  const target = spanishRedirectTarget(url);
+  if (target) {
+    return Response.redirect(target, 301);
   }
   return context.next();
 }

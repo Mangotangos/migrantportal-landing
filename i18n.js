@@ -594,10 +594,28 @@
     document.head.appendChild(style);
   }
 
+  // Pages with a real Spanish version. Links carrying hreflang are explicit language links: leave them.
+  const ES_PAGES = {
+    '/free-english-classes-immigrants-kansas-city': '/clases-de-ingles-gratis-kansas-city',
+    '/volunteer-help-immigrants-kansas-city': '/voluntariado-inmigrantes-kansas-city',
+    '/community-data': '/datos-comunitarios',
+  };
+
+  function swapPairedLinks(toEs) {
+    document.querySelectorAll('a[href]:not([hreflang])').forEach(function (a) {
+      const original = a.getAttribute('data-en-href') || a.getAttribute('href');
+      const spanish = ES_PAGES['/' + original.replace(/^\//, '')];
+      if (!spanish) return;
+      a.setAttribute('data-en-href', original);
+      a.setAttribute('href', toEs ? spanish : original);
+    });
+  }
+
   function applyLang(lang) {
     const toEs = lang === 'es';
     document.documentElement.lang = toEs ? 'es' : 'en';
     injectLangStyles();
+    swapPairedLinks(toEs);
 
     // Explicit data-i18n wins
     document.querySelectorAll('[' + DATA_ATTR + ']').forEach(function (el) {
