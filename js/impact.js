@@ -14,7 +14,9 @@ async function loadImpact() {
 
     // Stats
     document.getElementById('s-fulfilled').textContent = d.total_fulfilled;
-    document.getElementById('s-families').textContent = d.total_families_helped;
+    // +6 families helped outside the portal (Thanksgiving 2026). Keep in sync with index-4.js.
+    const OFFLINE_FAMILIES = 6;
+    document.getElementById('s-families').textContent = d.total_families_helped + OFFLINE_FAMILIES;
     document.getElementById('s-active').textContent = d.total_active;
     document.getElementById('s-responders').textContent = d.total_responders;
     document.getElementById('s-rate').textContent = d.fulfillment_rate + '%';
