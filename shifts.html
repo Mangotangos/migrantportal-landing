@@ -34,6 +34,14 @@
     .topbar-logo span { color:var(--teal); }
     .topbar-logo img { width:30px; height:30px; border-radius:7px; object-fit:contain; }
     .topbar-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
+    /* Phones: logo and account buttons on the first row, page links on a second row.
+       !important is needed because the links carry inline styles. */
+    @media (max-width:640px) {
+      .topbar { flex-wrap:wrap; height:auto; column-gap:8px; row-gap:0; padding:0 16px; }
+      .topbar-logo { height:52px; }
+      .topbar > nav { order:3; width:100%; margin-left:0 !important; border-top:1px solid var(--gray-200); }
+      .topbar > nav a { flex:1; justify-content:center; height:44px !important; padding:0 4px !important; }
+    }
     .btn-logout { height:30px; padding:0 12px; border:1px solid var(--gray-200); border-radius:6px; font-size:12px; background:white; color:var(--gray-600); }
     .btn-logout:hover { border-color:var(--red); color:var(--red); }
 

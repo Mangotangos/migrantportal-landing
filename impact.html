@@ -33,6 +33,14 @@
     .topbar-logo span { color:var(--teal); }
     .topbar-logo img { width:30px; height:30px; border-radius:7px; object-fit:contain; }
     .topbar-right { margin-left:auto; display:flex; align-items:center; gap:10px; font-size:13px; }
+    /* Phones: logo and account buttons on the first row, page links on a second row.
+       !important is needed because the links carry inline styles. */
+    @media (max-width:640px) {
+      .topbar { flex-wrap:wrap; height:auto; column-gap:8px; row-gap:0; padding:0 16px; }
+      .topbar-logo { height:52px; }
+      .topbar > nav { order:3; width:100%; margin-left:0 !important; border-top:1px solid var(--gray-200); }
+      .topbar > nav a { flex:1; justify-content:center; height:44px !important; padding:0 4px !important; }
+    }
 
     /* ── HERO ── */
     .hero {
@@ -120,7 +128,7 @@
     @media (max-width: 800px) {
     }
   </style>
-  <link rel="stylesheet" href="/footer.css?v=3" />
+  <link rel="stylesheet" href="/footer.css?v=4" />
 </head>
 <body>
 
@@ -212,7 +220,7 @@
             </div>
             <p>Connecting migrants and their families with faith communities, volunteers, and donors, one need at a time.</p>
           </div>
-          <div class="footer-live"><span class="footer-live-dot" aria-hidden="true"></span>Live in Kansas City, MO <small>· ready to expand to your city</small></div>
+          <div class="footer-live"><span class="footer-live-dot" aria-hidden="true"></span>Live in Kansas City, MO <small><span class="footer-live-sep">· </span>ready to expand to your city</small></div>
           <nav class="footer-social" aria-label="Social media links">
             <a href="https://www.facebook.com/migrantportalusa" target="_blank" rel="noopener" aria-label="Facebook">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>

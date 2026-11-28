@@ -102,6 +102,14 @@
 
 
 
+/* Phones: let the "Live in" badge wrap instead of running off the screen.
+   Only the brand column is allowed to shrink; link columns keep their own minimum width. */
+.footer-main-inner > div:not(.footer-col) { min-width: 0; max-width: 100%; }
+@media (max-width: 480px) {
+  .footer-live { flex-wrap: wrap; row-gap: 2px; max-width: 100%; white-space: normal; border-radius: 16px; }
+  .footer-live small { flex-basis: 100%; padding-left: 19px; }
+  .footer-live-sep { display: none; }
+}
 @media (max-width: 800px) {
   .footer-main { padding: 0 20px 32px; }
   .footer-bottom { padding: 16px 20px; }
