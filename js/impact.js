@@ -13,20 +13,14 @@ async function loadImpact() {
     const d = await apiGet('/impact');
 
     // Stats
-    // +10 needs fulfilled outside the portal (Thanksgiving 2026). Keep in sync with index-4.js.
-    const OFFLINE_NEEDS = 10;
-    document.getElementById('s-fulfilled').textContent = d.total_fulfilled + OFFLINE_NEEDS;
-    // +6 families helped outside the portal (Thanksgiving 2026). Keep in sync with index-4.js.
-    const OFFLINE_FAMILIES = 6;
-    document.getElementById('s-families').textContent = d.total_families_helped + OFFLINE_FAMILIES;
+    document.getElementById('s-fulfilled').textContent = d.total_fulfilled + window.MP_OFFLINE.needs;
+    document.getElementById('s-families').textContent = d.total_families_helped + window.MP_OFFLINE.families;
     document.getElementById('s-active').textContent = d.total_active;
     document.getElementById('s-responders').textContent = d.total_responders;
     document.getElementById('s-rate').textContent = d.fulfillment_rate + '%';
     const fundsUsd = (d.total_funds_disbursed_cents || 0) / 100;
     document.getElementById('s-funds').textContent = '$' + fundsUsd.toLocaleString('en-US', { maximumFractionDigits: 0 });
-    // +11 items delivered that the live data does not include.
-    const OFFLINE_ITEMS = 11;
-    document.getElementById('s-items').textContent = (d.total_items_delivered || 0) + OFFLINE_ITEMS;
+    document.getElementById('s-items').textContent = (d.total_items_delivered || 0) + window.MP_OFFLINE.items;
     document.getElementById('s-services').textContent = d.total_service_offers || 0;
 
     // Recent wins

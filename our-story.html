@@ -296,22 +296,22 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
 </div>
 
 <!-- STATS -->
-<div class="stats-band">
+<div class="stats-band" id="os-stats" hidden>
   <div class="stats-inner">
     <div>
-      <div class="stat-num">120+</div>
+      <div class="stat-num" id="os-families"></div>
       <div class="stat-label">Families Helped</div>
     </div>
     <div>
-      <div class="stat-num">340+</div>
+      <div class="stat-num" id="os-responders"></div>
       <div class="stat-label">Community Responders</div>
     </div>
     <div>
-      <div class="stat-num">85+</div>
+      <div class="stat-num" id="os-needs"></div>
       <div class="stat-label">Needs Fulfilled</div>
     </div>
     <div>
-      <div class="stat-num">30+</div>
+      <div class="stat-num" id="os-orgs"></div>
       <div class="stat-label">Partner Organizations</div>
     </div>
   </div>
@@ -506,5 +506,7 @@ nav.mpnav .mp-lang-toggle{border-radius:999px!important}
   </footer>
 
 <script src="/js/mp-onerror-log.js?v=1"></script>
+<script src="/js/offline-totals.js?v=1"></script>
+<script src="/js/our-story.js?v=1"></script>
 </body>
 </html>
