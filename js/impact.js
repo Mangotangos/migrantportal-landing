@@ -24,7 +24,9 @@ async function loadImpact() {
     document.getElementById('s-rate').textContent = d.fulfillment_rate + '%';
     const fundsUsd = (d.total_funds_disbursed_cents || 0) / 100;
     document.getElementById('s-funds').textContent = '$' + fundsUsd.toLocaleString('en-US', { maximumFractionDigits: 0 });
-    document.getElementById('s-items').textContent = d.total_items_delivered || 0;
+    // +11 items delivered that the live data does not include.
+    const OFFLINE_ITEMS = 11;
+    document.getElementById('s-items').textContent = (d.total_items_delivered || 0) + OFFLINE_ITEMS;
     document.getElementById('s-services').textContent = d.total_service_offers || 0;
 
     // Recent wins
