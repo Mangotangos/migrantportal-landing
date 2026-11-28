@@ -242,7 +242,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
       <!-- STEP 1: NEED BASICS -->
       <div class="card">
-        <div class="card-title"><span class="step-badge">1</span> Need Details</div>
+        <div class="card-title"><span class="step-badge">1</span> <span>Need Details</span></div>
         <div class="form-grid">
           <div class="form-group full">
             <label for="title">Need Title <span class="req">*</span></label>
@@ -251,20 +251,20 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
           <div class="form-group">
             <label for="category">Category <span class="req">*</span></label>
             <select id="category" name="category" required>
-              <option value="">Select category…</option>
-              <option value="housing">Housing</option>
-              <option value="food">Food</option>
-              <option value="clothing">Clothing</option>
-              <option value="furniture">Furniture</option>
-              <option value="transportation">Transportation</option>
-              <option value="employment">Employment</option>
-              <option value="legal">Legal</option>
-              <option value="medical">Medical</option>
-              <option value="education">Education</option>
-              <option value="translation">Translation</option>
-              <option value="childcare">Childcare</option>
-              <option value="financial">Financial</option>
-              <option value="other">Other</option>
+              <option data-i18n value="">Select category…</option>
+              <option data-i18n value="housing">Housing</option>
+              <option data-i18n value="food">Food</option>
+              <option data-i18n value="clothing">Clothing</option>
+              <option data-i18n value="furniture">Furniture</option>
+              <option data-i18n value="transportation">Transportation</option>
+              <option data-i18n value="employment">Employment</option>
+              <option data-i18n value="legal">Legal</option>
+              <option data-i18n value="medical">Medical</option>
+              <option data-i18n value="education">Education</option>
+              <option data-i18n value="translation">Translation</option>
+              <option data-i18n value="childcare">Childcare</option>
+              <option data-i18n value="financial">Financial</option>
+              <option data-i18n value="other">Other</option>
             </select>
           </div>
           <div class="form-group">
@@ -296,34 +296,34 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
       <!-- STEP 2: URGENCY -->
       <div class="card">
-        <div class="card-title"><span class="step-badge">2</span> Urgency Level</div>
+        <div class="card-title"><span class="step-badge">2</span> <span>Urgency Level</span></div>
         <div class="urgency-grid" id="urgencyGrid">
           <div class="urgency-option" data-action="selectUrgency" data-args="[&quot;urgent&quot;]" data-value="urgent">
             <div class="urgency-dot dot-urgent"></div>
-            <div class="urgency-label">Urgent</div>
-            <div class="urgency-desc">Needed within 24 hrs</div>
+            <div class="urgency-label" data-i18n>Urgent</div>
+            <div class="urgency-desc" data-i18n>Needed within 24 hrs</div>
           </div>
           <div class="urgency-option" data-action="selectUrgency" data-args="[&quot;high&quot;]" data-value="high">
             <div class="urgency-dot dot-high"></div>
-            <div class="urgency-label">High</div>
-            <div class="urgency-desc">Needed within 1 week</div>
+            <div class="urgency-label" data-i18n>High</div>
+            <div class="urgency-desc" data-i18n>Needed within 1 week</div>
           </div>
           <div class="urgency-option selected" data-action="selectUrgency" data-args="[&quot;medium&quot;]" data-value="medium">
             <div class="urgency-dot dot-medium"></div>
-            <div class="urgency-label">Medium</div>
-            <div class="urgency-desc">Needed within 1 month</div>
+            <div class="urgency-label" data-i18n>Medium</div>
+            <div class="urgency-desc" data-i18n>Needed within 1 month</div>
           </div>
           <div class="urgency-option" data-action="selectUrgency" data-args="[&quot;low&quot;]" data-value="low">
             <div class="urgency-dot dot-low"></div>
-            <div class="urgency-label">Low</div>
-            <div class="urgency-desc">No immediate deadline</div>
+            <div class="urgency-label" data-i18n>Low</div>
+            <div class="urgency-desc" data-i18n>No immediate deadline</div>
           </div>
         </div>
       </div>
 
       <!-- STEP 3: FAMILY SIZE -->
       <div class="card">
-        <div class="card-title"><span class="step-badge">3</span> Family Information</div>
+        <div class="card-title"><span class="step-badge">3</span> <span>Family Information</span></div>
         <div class="form-grid">
           <div class="form-group">
             <label>Adults in household</label>
@@ -346,7 +346,7 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
       <!-- STEP 4: SPECIFIC ITEMS -->
       <div class="card">
-        <div class="card-title"><span class="step-badge">4</span> Specific Items <span style="font-size:12px;font-weight:500;color:var(--gray-400);margin-left:4px;">(optional)</span></div>
+        <div class="card-title"><span class="step-badge">4</span> <span>Specific Items</span> <span style="font-size:12px;font-weight:500;color:var(--gray-400);margin-left:4px;">(optional)</span></div>
         <div class="items-list" id="itemsList"></div>
         <button class="add-item-btn" data-action="addItem">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -383,8 +383,8 @@ nav{position:sticky!important;top:12px!important;margin:12px 24px 0!important;bo
 
   <script src="api.js?v=2"></script>
   <script src="/js/mp-actions.js?v=3"></script>
-<script src="/js/submit-need.js?v=1"></script>
-<script src="i18n.js?v=20261125" defer></script>
+<script src="/js/submit-need.js?v=2"></script>
+<script src="i18n.js?v=20261127" defer></script>
 <script src="/js/index-5.js?v=1"></script>
   <!-- FOOTER -->
   <footer class="footer" aria-label="Site footer">

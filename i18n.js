@@ -560,7 +560,75 @@
     'Received': 'Recibido',
     'Remove': 'Quitar',
     'Their part is complete.': 'Su parte está completa.',
-    'Accepted. Arrange details in the chat below.': 'Aceptado. Coordinen los detalles en el chat de abajo.'
+    'Accepted. Arrange details in the chat below.': 'Aceptado. Coordinen los detalles en el chat de abajo.',
+    // Submit a Need page and shared footer
+    "e.g. Kansas City": "Ej.: Kansas City",
+    "e.g. MO": "Ej.: MO",
+    "e.g. 64108": "Ej.: 64108",
+    "Browse Needs": "Ver solicitudes",
+    "/ Submit a Need": "/ Enviar una solicitud",
+    "Submit a Family Need": "Enviar la solicitud de una familia",
+    "Fill out the form below to connect a migrant with local helpers, faith communities, and volunteers.": "Completa este formulario para conectar a una persona migrante con personas que ayudan en su zona, comunidades de fe y voluntarios.",
+    "Need Title": "Título de la solicitud",
+    "Select category…": "Elige una categoría…",
+    "Location — City": "Ubicación: ciudad",
+    "State": "Estado",
+    "Supporters can help remotely": "Se puede ayudar a distancia",
+    "Tick this if people far away can help, for example by donating, translating, tutoring online, or giving phone or video advice.": "Marca esta casilla si personas que están lejos pueden ayudar, por ejemplo donando, traduciendo, dando clases en línea u orientando por teléfono o video.",
+    "Urgency Level": "Nivel de urgencia",
+    "Needed within 24 hrs": "Se necesita en 24 horas",
+    "Needed within 1 week": "Se necesita en 1 semana",
+    "Needed within 1 month": "Se necesita en 1 mes",
+    "No immediate deadline": "Sin fecha límite cercana",
+    "Family Information": "Información de la familia",
+    "Adults in household": "Adultos en el hogar",
+    "Children in household": "Niños en el hogar",
+    "Specific Items": "Artículos específicos",
+    "(optional)": "(opcional)",
+    "Add specific item": "Agregar un artículo",
+    "We never sell personal information.": "Nunca vendemos información personal.",
+    "e.g. Family of 4 needs winter clothing": "Ej.: Familia de 4 necesita ropa de invierno",
+    "Describe the situation and what is needed. Be specific to help responders understand the need.": "Describe la situación y lo que se necesita. Da detalles para que quienes ayudan entiendan la solicitud.",
+    "Item name (e.g. Winter jacket, size M)": "Artículo (ej.: chaqueta de invierno, talla M)",
+    "Item name": "Nombre del artículo",
+    "Qty": "Cant.",
+    "Title must be at least 5 characters.": "El título debe tener al menos 5 caracteres.",
+    "Please select a category.": "Elige una categoría.",
+    "Please fill in city and state.": "Escribe la ciudad y el estado.",
+    "Please enter a valid 5-digit ZIP code (e.g. 64108).": "Escribe un código postal válido de 5 dígitos (ej.: 64108).",
+    "Description must be at least 20 characters.": "La descripción debe tener al menos 20 caracteres.",
+    "Submitting…": "Enviando…",
+    "View All Needs": "Ver todas las solicitudes",
+    "Back to Dashboard": "Volver al panel",
+    "Admin": "Administrador",
+    "Member": "Miembro",
+    "Overview": "Resumen",
+    "Submitted Needs": "Solicitudes enviadas",
+    "Team Members": "Miembros del equipo",
+    "Activity": "Actividad",
+    "Account": "Cuenta",
+    "My Profile": "Mi perfil",
+    "Families": "Familias",
+    "Login Required": "Debes iniciar sesión",
+    "You must be logged in with an approved account to submit a family need.": "Para enviar la solicitud de una familia, debes iniciar sesión con una cuenta aprobada.",
+    "Log In to Continue": "Inicia sesión para continuar",
+    "Account Pending Approval": "Cuenta pendiente de aprobación",
+    "Your account is awaiting admin approval. You will be able to submit needs once approved.": "Un administrador aún debe aprobar tu cuenta. Podrás enviar solicitudes cuando esté aprobada.",
+    "Go to Dashboard": "Ir al panel",
+    "Account Not Approved": "Cuenta no aprobada",
+    "Your account was not approved. Contact support@migrantportal.com for help.": "Tu cuenta no fue aprobada. Escribe a support@migrantportal.com para recibir ayuda.",
+    "Contact Support": "Contactar a soporte",
+    "Navigator Account Required": "Se necesita una cuenta de navegador",
+    "Only Navigator accounts, or organizations approved to submit needs, can submit family needs. If you believe this is an error, contact your administrator.": "Solo las cuentas de navegador o las organizaciones aprobadas pueden enviar solicitudes de familias. Si crees que es un error, comunícate con tu administrador.",
+    "Live in Kansas City, MO": "Activo en Kansas City, MO",
+    "ready to expand to your city": "listo para expandirse a tu ciudad",
+    "Resources": "Recursos",
+    "Free English Classes": "Clases de inglés gratis",
+    "Volunteer in KC": "Voluntariado en KC",
+    "Help Center": "Centro de ayuda",
+    "Community Data": "Datos de la comunidad",
+    "Download on the": "Descárgala en el",
+    "MigrantPortal © 2026 · Built with compassion": "MigrantPortal © 2026 · Hecho con compasión"
   };
 
   function cacheOriginal(el) {
@@ -577,8 +645,15 @@
 
   function translatableElements() {
     return document.querySelectorAll(
-      'h1, h2, h3, h4, h5, h6, p, li, span, button, label, a, th, td, figcaption, legend, summary, strong, em'
+      'h1, h2, h3, h4, h5, h6, p, li, span, button, label, a, th, td, figcaption, legend, summary, strong, em, ' +
+      '.footer-col-title, .footer-live, .footer-live small, .footer-badge small, .footer-bottom div'
     );
+  }
+
+  // The brand is written as two pieces, "Migrant" + "Portal". "Migrant" alone is also a role label.
+  function isBrandHalf(node) {
+    const next = node.nextSibling;
+    return !!next && (node.textContent || '').trim() === 'Migrant' && (next.textContent || '').trim() === 'Portal';
   }
 
   // Spanish nav labels are longer; keep them on one line between the mobile and wide layouts.
@@ -631,7 +706,7 @@
 
     // Auto-match on text content — leaf elements AND text nodes inside mixed content
     translatableElements().forEach(function (el) {
-      if (el.hasAttribute(DATA_ATTR) || el.hasAttribute('data-no-i18n')) return;
+      if (el.hasAttribute(DATA_ATTR) || el.hasAttribute('data-no-i18n') || isBrandHalf(el)) return;
 
       if (el.children.length === 0) {
         // Pure text leaf — replace whole textContent
@@ -648,7 +723,7 @@
       } else {
         // Mixed content (e.g. <p> with <a> inside) — walk direct text nodes only
         el.childNodes.forEach(function (node) {
-          if (node.nodeType !== Node.TEXT_NODE) return;
+          if (node.nodeType !== Node.TEXT_NODE || isBrandHalf(node)) return;
           const txt = (node.textContent || '').trim();
           if (!txt) return;
           if (!ORIG_CACHE.has(node)) ORIG_CACHE.set(node, node.textContent);
@@ -749,6 +824,11 @@
   } else {
     init();
   }
+
+  // One-off messages created after load (form errors): translate in the current language.
+  window.mpT = function (text) {
+    return (document.documentElement.lang === 'es' && esLookup(text)) || text;
+  };
 
   // Re-apply whenever dynamic content is rendered (requests/dashboard lists)
   window.mpReapplyI18n = function () {

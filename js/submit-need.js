@@ -17,12 +17,12 @@
   }
   function renderOrgSidebar(u, org) {
     document.getElementById('sidebar').innerHTML =
-      '<div class="org-chip"><div class="org-icon">⛪</div><div><div class="org-name" id="sbOrgName"></div><div class="org-role" id="sbOrgRole"></div></div></div>' +
-      '<div class="sidebar-section"><div class="sidebar-label">Overview</div>' +
+      '<div class="org-chip"><div class="org-icon">⛪</div><div><div class="org-name" id="sbOrgName"></div><div class="org-role" id="sbOrgRole" data-i18n></div></div></div>' +
+      '<div class="sidebar-section"><div class="sidebar-label" data-i18n>Overview</div>' +
         sbItem('org-dashboard#overview', 'grid', 'Dashboard') + sbItem('org-dashboard#needs', 'needs', 'Submitted Needs') +
         sbItem('org-dashboard#members', 'user', 'Team Members') + sbItem('org-dashboard#activity', 'pulse', 'Activity') +
         sbItem('submit-need', 'plus', 'Submit a Need', true) + '</div>' +
-      '<div class="sidebar-section"><div class="sidebar-label">Account</div>' + sbItem('profile', 'me', 'My Profile') +
+      '<div class="sidebar-section"><div class="sidebar-label" data-i18n>Account</div>' + sbItem('profile', 'me', 'My Profile') +
         '<a class="sidebar-item" href="#" data-action="logout" data-prevent><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + SB_ICON.out + '</svg>Sign Out</a></div>';
     document.getElementById('sbOrgName').textContent = (org && org.name) || 'My Organization';
     document.getElementById('sbOrgRole').textContent = org ? (org.owner_id === u.id ? 'Admin' : 'Member') : '';
@@ -31,11 +31,11 @@
   }
   function renderNavigatorSidebar(u) {
     document.getElementById('sidebar').innerHTML =
-      '<div class="org-chip"><div class="org-icon">🧭</div><div><div class="org-name" id="sbNavName"></div><div class="org-role">Navigator</div></div></div>' +
-      '<div class="sidebar-section"><div class="sidebar-label">Overview</div>' +
+      '<div class="org-chip"><div class="org-icon">🧭</div><div><div class="org-name" id="sbNavName"></div><div class="org-role" data-i18n>Navigator</div></div></div>' +
+      '<div class="sidebar-section"><div class="sidebar-label" data-i18n>Overview</div>' +
         sbItem('navigator-dashboard#overview', 'grid', 'Dashboard') + sbItem('navigator-dashboard#needs', 'needs', 'My Needs') +
         sbItem('navigator-dashboard#families', 'user', 'Families') + '</div>' +
-      '<div class="sidebar-section"><div class="sidebar-label">Account</div>' + sbItem('profile', 'me', 'My Profile') +
+      '<div class="sidebar-section"><div class="sidebar-label" data-i18n>Account</div>' + sbItem('profile', 'me', 'My Profile') +
         '<a class="sidebar-item" href="#" data-action="logout" data-prevent><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' + SB_ICON.out + '</svg>Sign Out</a></div>';
     document.getElementById('sbNavName').textContent = u.name || 'My account';
     document.getElementById('crumbDash').href = 'navigator-dashboard';
@@ -48,7 +48,7 @@
     if (sbTok) {
       fetch(API + '/orgs/mine', { headers: { 'Authorization': 'Bearer ' + sbTok } })
         .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
-        .then(function(org) { renderOrgSidebar(user, org); })
+        .then(function(org) { renderOrgSidebar(user, org); if (window.mpReapplyI18n) window.mpReapplyI18n(); })
         .catch(function() { /* keep generic chip */ });
     }
   }
@@ -148,6 +148,7 @@ function renderItems() {
       <button class="remove-btn" data-action="removeItem" data-n0="${item.id}">×</button>
     </div>
   `).join('');
+  if (window.mpReapplyI18n) window.mpReapplyI18n();
 }
 
 function updateItem(id, field, val) {
@@ -195,7 +196,7 @@ async function handleSubmit() {
   };
 
   btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div> Submitting…';
+  btn.innerHTML = '<div class="spinner"></div> ' + (window.mpT ? window.mpT('Submitting…') : 'Submitting…');
 
   try {
     await apiPost('/needs', payload);
@@ -210,13 +211,13 @@ async function handleSubmit() {
   } catch (ex) {
     showError(ex.message);
     btn.disabled = false;
-    btn.innerHTML = 'Submit Need';
+    btn.innerHTML = window.mpT ? window.mpT('Submit Need') : 'Submit Need';
   }
 }
 
 function showError(msg) {
   const err = document.getElementById('alertError');
-  err.textContent = msg;
+  err.textContent = window.mpT ? window.mpT(msg) : msg;
   err.style.display = 'block';
   err.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
