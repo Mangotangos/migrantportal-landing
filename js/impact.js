@@ -13,7 +13,9 @@ async function loadImpact() {
     const d = await apiGet('/impact');
 
     // Stats
-    document.getElementById('s-fulfilled').textContent = d.total_fulfilled;
+    // +10 needs fulfilled outside the portal (Thanksgiving 2026). Keep in sync with index-4.js.
+    const OFFLINE_NEEDS = 10;
+    document.getElementById('s-fulfilled').textContent = d.total_fulfilled + OFFLINE_NEEDS;
     // +6 families helped outside the portal (Thanksgiving 2026). Keep in sync with index-4.js.
     const OFFLINE_FAMILIES = 6;
     document.getElementById('s-families').textContent = d.total_families_helped + OFFLINE_FAMILIES;
