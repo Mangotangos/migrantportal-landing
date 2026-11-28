@@ -62,10 +62,6 @@
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /vision.html
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
-/donate
-  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
-/donate.html
-  Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /impact
   Content-Security-Policy: script-src 'self' https://static.cloudflareinsights.com; script-src-attr 'none'
 /impact.html

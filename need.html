@@ -359,6 +359,8 @@
       .network-layout { flex-direction: column; }
       .more-card { width: calc(50% - 6px); }
     }
+    /* Online giving is not open: keep the donation card hidden. */
+    #donate-card { display: none !important; }
     /* ─── VISITOR (logged-out) VIEW ───────────── */
     body.visitor #chat-card, body.visitor #more-requests,
     body.visitor #donate-card, body.visitor #donor-impact-card, body.visitor #navigator-funds-card,
@@ -643,7 +645,7 @@
 
   <script src="api.js?v=2"></script>
   <script src="notif-bell.js"></script>
-  <script src="/js/need.js?v=1"></script>
+  <script src="/js/need.js?v=20261127"></script>
 
   <!-- MOBILE BOTTOM NAV -->
   <style>

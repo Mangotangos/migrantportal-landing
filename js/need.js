@@ -274,7 +274,6 @@ function renderPanel(need, alreadyResponded) {
     } else {
       const openItems = need.items.filter(i => i.amount_received < i.amount_needed);
       const HELP_TYPES = [
-        { id: 'donate',    icon: '💰', label: 'Donate Money',   sub: 'Send funds directly via secure payment' },
         { id: 'goods',     icon: '📦', label: 'Buy / Ship Item', sub: 'Contribute a specific item they need' },
         { id: 'service',   icon: '⚖️', label: 'Offer a Service', sub: 'Legal, medical, translation, etc.' },
         { id: 'volunteer', icon: '⏰', label: 'Volunteer Time',  sub: 'Show up and help in person' },
@@ -1239,12 +1238,6 @@ async function loadNeed() {
     );
     initChat(chatAuthorized);
 
-    // Donations sidebar card (active needs only, non-navigator)
-    if (need.status === 'active' && !isConnector(currentUser) && currentUser?.role !== 'admin') {
-      document.getElementById('donate-card').style.display = '';
-      document.querySelector('.amt-btn[data-amt="2500"]')?.classList.add('selected');
-      loadDonationTotal();
-    }
 
   } catch(err) {
     console.warn('Could not load need:', err.message);

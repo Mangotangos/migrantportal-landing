@@ -320,7 +320,6 @@ function renderCoverage(withDist) {
     ${signup}
     <div class="no-cover-sub">Meanwhile, you can still help</div>
     <div class="no-cover-actions">
-      <button type="button" data-action="showAllNeeds" data-args="[false]">Fund a need in Kansas City<small>Open needs accept donations from anywhere</small></button>
       <button type="button" data-action="showAllNeeds" data-args="[true]">Help online<small>Translation, tutoring, benefits and legal questions by phone or video</small></button>
       <a href="register">Become a launch partner in ${city}<small>Know a church or nonprofit serving migrants there? Start a partner application.</small></a>
     </div>`;

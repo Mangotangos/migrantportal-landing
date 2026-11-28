@@ -13,7 +13,7 @@ function mount() {
     { id: 'responses', icon: 'chat', label: 'My Responses' },
   ];
   if (canSubmit()) items.push({ id: 'families', icon: 'families', label: 'Families' }, { id: 'submitted', icon: 'needs', label: 'My Submitted Needs' });
-  items.push({ href: 'shifts', icon: 'calendar', label: 'Shifts' }, { href: 'donate', icon: 'heart', label: 'Donations' });
+  items.push({ href: 'shifts', icon: 'calendar', label: 'Shifts' });
   const mobile = [
     { id: 'overview', icon: 'dash', label: 'Overview' },
     { id: 'near', icon: 'pin', label: 'Near You' },
