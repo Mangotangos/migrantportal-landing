@@ -8,6 +8,12 @@ if (user) {
 
 const CAT_EMOJI = { housing:'🏠', food:'🍽️', clothing:'👗', furniture:'🛋️', transportation:'🚗', employment:'💼', legal:'⚖️', medical:'🏥', education:'📚', translation:'🌐', childcare:'👶', financial:'💰', other:'📦' };
 
+function showIfAboveZero(name, value, label) {
+  if (!(value > 0)) return;
+  document.getElementById('s-' + name).textContent = label;
+  document.getElementById('card-' + name).hidden = false;
+}
+
 async function loadImpact() {
   try {
     const d = await apiGet('/impact');
@@ -15,13 +21,14 @@ async function loadImpact() {
     // Stats
     document.getElementById('s-fulfilled').textContent = d.total_fulfilled + window.MP_OFFLINE.needs;
     document.getElementById('s-families').textContent = d.total_families_helped + window.MP_OFFLINE.families;
-    document.getElementById('s-active').textContent = d.total_active;
     document.getElementById('s-responders').textContent = d.total_responders;
-    document.getElementById('s-rate').textContent = d.fulfillment_rate + '%';
-    const fundsUsd = (d.total_funds_disbursed_cents || 0) / 100;
-    document.getElementById('s-funds').textContent = '$' + fundsUsd.toLocaleString('en-US', { maximumFractionDigits: 0 });
     document.getElementById('s-items').textContent = (d.total_items_delivered || 0) + window.MP_OFFLINE.items;
-    document.getElementById('s-services').textContent = d.total_service_offers || 0;
+
+    // These cards appear only when there is something to show.
+    const fundsUsd = (d.total_funds_disbursed_cents || 0) / 100;
+    showIfAboveZero('active', d.total_active, String(d.total_active));
+    showIfAboveZero('funds', fundsUsd, '$' + fundsUsd.toLocaleString('en-US', { maximumFractionDigits: 0 }));
+    showIfAboveZero('services', d.total_service_offers, String(d.total_service_offers));
 
     // Recent wins
     const wins = document.getElementById('wins-grid');

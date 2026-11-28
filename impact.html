@@ -43,15 +43,14 @@
     .hero p { font-size:15px; opacity:.88; max-width:480px; margin:0 auto; line-height:1.6; }
 
     /* ── STATS ROW ── */
-    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; max-width:1000px; margin:-32px auto 0; padding:0 20px; position:relative; z-index:1; }
-    .stats-row-2 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; max-width:1000px; margin:14px auto 0; padding:0 20px; }
-    .stat-card { background:white; border-radius:12px; padding:20px 16px; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .stats-row { display:flex; flex-wrap:wrap; gap:14px; max-width:1000px; margin:-32px auto 0; padding:0 20px; position:relative; z-index:1; }
+    .stat-card { flex:1 1 200px; background:white; border-radius:12px; padding:20px 16px; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,.1); }
     .stat-num { font-family:'Montserrat',sans-serif; font-size:30px; font-weight:800; color:var(--teal); }
     .stat-label { font-size:12px; color:var(--gray-600); margin-top:4px; }
     .stat-sub { font-size:11px; color:var(--gray-400); margin-top:2px; }
 
     /* ── PAGE BODY ── */
-    .page { max-width:1000px; margin:0 auto; padding:40px 20px 80px; }
+    .page { max-width:1000px; margin:0 auto; padding:20px 20px 80px; }
     .section-title { font-family:'Montserrat',sans-serif; font-size:18px; font-weight:800; margin-bottom:16px; }
 
     .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:32px; }
@@ -102,8 +101,12 @@
     }
     .cta-btn:hover { opacity:.92; }
 
+    /* Two per row below desktop width, so four cards never split three and one. */
+    @media(max-width:900px) {
+      .stat-card { flex-basis:calc(50% - 7px); }
+    }
+
     @media(max-width:640px) {
-      .stats-row, .stats-row-2 { grid-template-columns:repeat(2,1fr); }
       .grid-2 { grid-template-columns:1fr; }
     }
   
@@ -144,14 +147,11 @@
 <div class="stats-row" id="stats-row">
   <div class="stat-card"><div class="stat-num" id="s-fulfilled">—</div><div class="stat-label">Needs Fulfilled</div></div>
   <div class="stat-card"><div class="stat-num" id="s-families">—</div><div class="stat-label">Families Helped</div></div>
-  <div class="stat-card"><div class="stat-num" id="s-active">—</div><div class="stat-label">Active Needs</div></div>
-  <div class="stat-card"><div class="stat-num" id="s-rate">—</div><div class="stat-label">Fulfillment Rate</div><div class="stat-sub">of submitted needs</div></div>
-</div>
-<div class="stats-row-2">
-  <div class="stat-card"><div class="stat-num" style="color:#16A34A" id="s-funds">—</div><div class="stat-label">💰 Funds Disbursed</div><div class="stat-sub">confirmed receipts</div></div>
-  <div class="stat-card"><div class="stat-num" style="color:#E85D26" id="s-items">—</div><div class="stat-label">📦 Items Delivered</div><div class="stat-sub">goods delivered & confirmed</div></div>
-  <div class="stat-card"><div class="stat-num" style="color:#7C3AED" id="s-services">—</div><div class="stat-label">🔧 Services Offered</div><div class="stat-sub">service responders</div></div>
-  <div class="stat-card"><div class="stat-num" id="s-responders">—</div><div class="stat-label">🤝 Responders</div><div class="stat-sub">active helpers</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-items">—</div><div class="stat-label">Items Delivered</div><div class="stat-sub">goods delivered</div></div>
+  <div class="stat-card"><div class="stat-num" id="s-responders">—</div><div class="stat-label">Responders</div><div class="stat-sub">registered helpers</div></div>
+  <div class="stat-card" id="card-active" hidden><div class="stat-num" id="s-active">—</div><div class="stat-label">Active Needs</div></div>
+  <div class="stat-card" id="card-funds" hidden><div class="stat-num" id="s-funds">—</div><div class="stat-label">Funds Disbursed</div><div class="stat-sub">confirmed receipts</div></div>
+  <div class="stat-card" id="card-services" hidden><div class="stat-num" id="s-services">—</div><div class="stat-label">Services Offered</div><div class="stat-sub">service responders</div></div>
 </div>
 
 <div class="page">
@@ -195,7 +195,7 @@
 <script src="api.js?v=2"></script>
 <script src="notif-bell.js"></script>
 <script src="/js/offline-totals.js?v=1"></script>
-<script src="/js/impact.js?v=5"></script>
+<script src="/js/impact.js?v=6"></script>
   <!-- FOOTER -->
   <footer class="footer" aria-label="Site footer">
 
